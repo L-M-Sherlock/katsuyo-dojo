@@ -2,6 +2,8 @@
 
 一个独立运行的日语动词活用练习网站。课程沿用 Yokubi 的教学顺序，并以短轮次、自适应选题和即时拆解帮助学习者把活用规则练成直觉。
 
+在线体验：<https://l-m-sherlock.github.io/katsuyo-dojo/>
+
 ## 特色
 
 - 按细分规则记录置信度，优先练习当前最弱项
@@ -39,6 +41,10 @@ npm run build
 - `app/`：练习界面、题目编排与本地学习状态
 - `tests/`：自适应算法和活用规则测试
 - `public/`：静态资源
+
+## 部署
+
+`main` 分支的每次推送都会通过 GitHub Actions 自动验证并部署到 GitHub Pages。
 
 ## 许可
 
