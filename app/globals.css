@@ -246,6 +246,15 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 .progress-summary span { color: var(--muted); font-size: 12px; }
 .progress-summary strong { font-size: 22px; font-variant-numeric: tabular-nums; }
 .progress-summary p { grid-column: 1 / -1; margin: 2px 0 0; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.profile-transfer { margin: 0 0 18px; padding: 17px 18px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px 20px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.5); }
+.profile-transfer h3 { margin: 0; font-size: 15px; }
+.profile-transfer > div > p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.transfer-actions { display: flex; gap: 8px; }
+.transfer-actions button { padding: 8px 13px; border: 1px solid #c7c3b8; border-radius: 6px; background: var(--paper-light); cursor: pointer; font-size: 12px; }
+.transfer-actions button:hover { border-color: var(--ink); }
+.transfer-notice { grid-column: 1 / -1; margin: 0; padding-top: 11px; border-top: 1px solid var(--line); font-size: 12px; }
+.transfer-notice.success { color: var(--green); }
+.transfer-notice.error { color: var(--red-dark); }
 .course-progress-list { display: grid; gap: 8px; }
 .course-progress-list details { border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.38); overflow: hidden; }
 .course-progress-list summary { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; list-style: none; }
@@ -321,6 +330,8 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
   .completion-card { padding: 42px 24px; }
   .progress-drawer { padding: 24px 18px 30px; }
   .progress-drawer > header { top: -24px; margin: -24px -18px 0; padding: 22px 18px 16px; }
+  .profile-transfer { grid-template-columns: 1fr; }
+  .transfer-actions button { flex: 1; }
   .skill-progress-row { grid-template-columns: 1fr; gap: 9px; }
   .skill-progress-value { grid-template-columns: 1fr 34px; }
 }
