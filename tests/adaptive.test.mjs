@@ -199,3 +199,21 @@ test("an irregular-class focus prioritizes its missing coverage facet", () => {
   const initiallyBalanced = rankExercisesForFocus(exercises, "class.irregular", {});
   assert.equal(new Set(initiallyBalanced.slice(0, 2).flatMap(({ kcIds }) => kcIds.filter((id) => id.startsWith("facet.")))).size, 2);
 });
+
+test("a form parent with missing coverage consumes ordered facet candidates first", () => {
+  const focus = { id: "suffix.past", order: 0, coverageKcIds: ["facet.form.past.suru", "facet.form.past.kuru"] };
+  const exercises = [
+    { id: "regular", kcIds: ["suffix.past", "class.godan"] },
+    { id: "suru", kcIds: ["suffix.past", "facet.form.past.suru"] },
+    { id: "kuru", kcIds: ["suffix.past", "facet.form.past.kuru"] },
+  ];
+  const ranked = rankExercisesForFocus(exercises, focus.id, {}, focus.coverageKcIds);
+  const assignments = makeUniqueAssignments([focus, focus, focus], {
+    alternativesFor: () => [],
+    candidatesFor: () => ranked,
+    keyOf: (_item, candidate) => candidate.id,
+    orderedCandidates: (item) => item.coverageKcIds.length > 0,
+    seed: 17,
+  });
+  assert.deepEqual(new Set(assignments.slice(0, 2).map(({ candidate }) => candidate.id)), new Set(["suru", "kuru"]));
+});

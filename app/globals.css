@@ -232,6 +232,7 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 .completion-focus span, .completion-focus strong { display: block; }
 .completion-focus span { color: var(--muted); font-size: 11px; }
 .completion-focus strong { margin-top: 5px; font-size: 14px; }
+.completion-focus small { display: block; margin-top: 6px; color: var(--red-dark); font-size: 11px; }
 .back-adaptive { display: block; margin: 12px auto 0; padding: 8px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; }
 .mode-shortcuts { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-top: 14px; }
 .mode-shortcuts button { border: 0; padding: 6px 9px; background: transparent; color: var(--muted); cursor: pointer; font-size: 10px; }
