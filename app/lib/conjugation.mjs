@@ -687,12 +687,28 @@ export function classLabel(verbClass) {
   return verbClass === "godan" ? "五段动词" : verbClass === "ichidan" ? "一段动词" : "不规则动词";
 }
 
+const I_ROW_KANA = new Set([..."いきぎしじちぢにひびぴみり"]);
+const E_ROW_KANA = new Set([..."えけげせぜてでねへべぺめれ"]);
+
+function rowBeforeRu(verb) {
+  const reading = verb.reading ?? verb.surface;
+  if (!reading.endsWith("る")) return null;
+  const kana = [...reading].at(-2);
+  if (I_ROW_KANA.has(kana)) return { kana, row: "い" };
+  if (E_ROW_KANA.has(kana)) return { kana, row: "え" };
+  return kana ? { kana, row: null } : null;
+}
+
 /**
- * @param {{ surface: string, class: "godan" | "ichidan" | "irregular" }} verb
+ * @param {{ surface: string, reading?: string, class: "godan" | "ichidan" | "irregular" }} verb
  */
 export function explainClass(verb) {
   if (verb.class === "irregular") return `${verb.surface} 属于两类主要不规则动词之一，需要单独认识。`;
-  if (verb.class === "ichidan") return `${verb.surface} 是一段动词；活用时通常去掉 る，前面的词干保持不变。`;
-  if (verb.surface.endsWith("る")) return `${verb.surface} 虽然以 る 结尾，但属于例外的五段动词；活用时词尾仍会在不同元音段之间移动。`;
+  const beforeRu = rowBeforeRu(verb);
+  if (verb.class === "ichidan") return beforeRu?.row
+    ? `${verb.surface} 以 る 结尾，る 前的「${beforeRu.kana}」在${beforeRu.row}段，按常用初判通常是一段动词；活用时去掉 る，前面的词干保持不变。`
+    : `${verb.surface} 是一段动词；活用时去掉 る，前面的词干保持不变。`;
+  if (verb.surface.endsWith("る") && beforeRu?.row) return `${verb.surface} 以 る 结尾，る 前的「${beforeRu.kana}」在${beforeRu.row}段，表面上符合一段动词的常用初判；但它是常见的五段例外，词尾仍会在不同元音段之间移动。`;
+  if (verb.surface.endsWith("る")) return `${verb.surface} 以 る 结尾，但 る 前的「${beforeRu?.kana ?? "前一音"}」不在い段或え段，按常用初判应归为五段；活用时词尾会在不同元音段之间移动。`;
   return `${verb.surface} 是五段动词；最后一个假名会随活用在不同元音段之间移动。`;
 }

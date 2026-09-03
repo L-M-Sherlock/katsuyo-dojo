@@ -156,7 +156,7 @@ function loadProfile(): Profile {
 }
 
 function hintFor(verb: Verb, form: Form | null) {
-  if (!form) return "一段动词一定以 る 结尾，但以 る 结尾的不一定是一段动词。";
+  if (!form) return "初步判断：不以 る 结尾的规则动词是五段；以 る 结尾且前一个假名在 い段或え段的通常是一段。不过切る、走る、入る、帰る、喋る等是常见的五段例外。";
   if (verb.class === "irregular") return "这是不规则动词，回忆它的固定变化。";
   if (["past", "te"].includes(form)) return verb.class === "ichidan" ? "一段：去掉 る，再接目标词尾。" : "五段的过去形和て形使用同一组音便规律。";
   return explainConjugation(verb.surface, verb.class, form).rule;

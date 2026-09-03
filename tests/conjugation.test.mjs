@@ -3,8 +3,9 @@ import test from "node:test";
 import { acceptedConjugations, conjugate, explainClass, explainConjugation } from "../app/lib/conjugation.mjs";
 
 test("explains ru-ending godan verbs as classification exceptions", () => {
-  assert.match(explainClass({ surface: "喋る", class: "godan" }), /虽然以 る 结尾.*例外的五段动词/);
-  assert.match(explainClass({ surface: "食べる", class: "ichidan" }), /一段动词/);
+  assert.match(explainClass({ surface: "喋る", reading: "しゃべる", class: "godan" }), /「べ」在え段.*五段例外/);
+  assert.match(explainClass({ surface: "食べる", reading: "たべる", class: "ichidan" }), /「べ」在え段.*通常是一段动词/);
+  assert.match(explainClass({ surface: "終わる", reading: "おわる", class: "godan" }), /「わ」不在い段或え段.*应归为五段/);
   assert.doesNotMatch(explainClass({ surface: "書く", class: "godan" }), /例外/);
 });
 
