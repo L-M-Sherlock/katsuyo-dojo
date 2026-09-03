@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildKnowledgeModel, deriveExercise, diagnoseConjugation, isRuGodanException, requiredKcIds } from "../app/lib/knowledge-model.mjs";
+import { auditKnowledgeModel, buildKnowledgeModel, deriveExercise, diagnoseConjugation, isRuGodanException, requiredKcIds } from "../app/lib/knowledge-model.mjs";
 
 const yomu = { surface: "読む", reading: "よむ", meaning: "阅读", class: "godan" };
 const kaku = { surface: "書く", reading: "かく", meaning: "书写", class: "godan" };
@@ -69,6 +69,19 @@ test("builds a Q-matrix catalog and makes lexical facts non-gating", () => {
   assert.equal(model.components.find((kc) => kc.id === "lexeme.ru-godan.喋る").gating, false);
   assert.ok(model.courseKcIds.past.includes("onbin.hatsuon"));
   assert.ok(model.components.every((kc) => kc.prerequisites.every((id) => model.components.some((candidate) => candidate.id === id))));
+});
+
+test("audits gating support, coverage parents, and course supply", () => {
+  const healthy = buildKnowledgeModel([{ id: "classify", lesson: "04", forms: [] }], [yomu, kaku, taberu, shaberu, suru, kuru]);
+  assert.deepEqual(auditKnowledgeModel(healthy, { minEvidence: 1, sessionLength: 1 }), []);
+  const broken = {
+    components: [{ id: "exception.kuru.negative", gating: true, firstCourseIndex: 0, coverageKcIds: [] }],
+    exercises: [{ id: "one", courseId: "negative", courseIndex: 0, form: "negative", verb: kuru, kcIds: ["exception.kuru.negative"] }],
+  };
+  const codes = auditKnowledgeModel(broken).map(({ code }) => code);
+  assert.ok(codes.includes("undersupplied-gating-kc"));
+  assert.ok(codes.includes("isolated-lexical-gate"));
+  assert.ok(codes.includes("undersupplied-course"));
 });
 
 test("returns structured derivation evidence", () => {

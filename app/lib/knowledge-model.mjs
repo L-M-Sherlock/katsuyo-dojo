@@ -297,6 +297,44 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
   };
 }
 
+export function auditKnowledgeModel(model, { minEvidence = 5, sessionLength = 12 } = {}) {
+  const issues = [];
+  const byId = new Map(model.components.map((component) => [component.id, component]));
+  const exerciseKey = (exercise) => `${exercise.form ?? "classify"}:${exercise.verb.surface}`;
+
+  for (const exercise of model.exercises) {
+    for (const kcId of exercise.kcIds) {
+      if (!byId.has(kcId)) issues.push({ code: "unknown-kc", id: kcId, exerciseId: exercise.id });
+    }
+  }
+
+  for (const component of model.components) {
+    const introductoryExercises = model.exercises.filter((exercise) => exercise.courseIndex === component.firstCourseIndex && exercise.kcIds.includes(component.id));
+    const uniqueCount = new Set(introductoryExercises.map(exerciseKey)).size;
+    if (component.gating && uniqueCount < minEvidence) {
+      issues.push({ code: "undersupplied-gating-kc", id: component.id, uniqueCount, minimum: minEvidence });
+    }
+    if (component.gating && (/^exception\.(suru|kuru)\./.test(component.id) || component.id === "exception.iku-onbin")) {
+      issues.push({ code: "isolated-lexical-gate", id: component.id });
+    }
+    if (!component.gating && component.id.startsWith("facet.")) {
+      const parents = model.components.filter((candidate) => candidate.coverageKcIds.includes(component.id));
+      if (parents.length !== 1) issues.push({ code: "facet-parent-count", id: component.id, parentCount: parents.length });
+      const parent = parents[0];
+      if (parent && !model.exercises.some((exercise) => exercise.courseIndex === parent.firstCourseIndex && exercise.kcIds.includes(parent.id) && exercise.kcIds.includes(component.id))) {
+        issues.push({ code: "unreachable-coverage-facet", id: component.id, parentId: parent.id });
+      }
+    }
+  }
+
+  const courseIds = [...new Set(model.exercises.map((exercise) => exercise.courseId))];
+  for (const courseId of courseIds) {
+    const uniqueCount = new Set(model.exercises.filter((exercise) => exercise.courseId === courseId).map(exerciseKey)).size;
+    if (uniqueCount < sessionLength) issues.push({ code: "undersupplied-course", courseId, uniqueCount, minimum: sessionLength });
+  }
+  return issues;
+}
+
 function primaryClassKc(verb) {
   if (isRuGodanException(verb)) return `lexeme.ru-godan.${lexicalSurface(verb)}`;
   if (verb.class === "irregular") return `facet.class.irregular.${irregularKind(verb)}`;

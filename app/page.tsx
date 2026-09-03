@@ -95,12 +95,12 @@ function normalize(value: string) { return value.normalize("NFKC").replace(/[\sã
 
 function eligibleFor(verb: Verb, form: Form | null) { return form !== "tearu" || TRANSITIVE_VERBS.has(verb.surface); }
 
-const KNOWLEDGE = buildKnowledgeModel(COURSES, VERBS, { eligibleFor, formLabels: FORM_LABELS }) as {
+export const KNOWLEDGE = buildKnowledgeModel(COURSES, VERBS, { eligibleFor, formLabels: FORM_LABELS }) as {
   components: KnowledgeComponent[];
   exercises: Exercise[];
   courseKcIds: Record<ModeId, string[]>;
 };
-const ALL_KCS = KNOWLEDGE.components;
+export const ALL_KCS = KNOWLEDGE.components;
 const GATING_KCS = ALL_KCS.filter((kc) => kc.gating);
 const KC_BY_ID = new Map(ALL_KCS.map((kc) => [kc.id, kc]));
 const INITIAL_KC_IDS = GATING_KCS.length ? [GATING_KCS[0].id] : [];
