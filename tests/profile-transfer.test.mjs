@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createProfileExport, parseProfileImport } from "../app/lib/profile-transfer.mjs";
 
-const options = { today: "2026-09-03", kcIds: ["class.godan", "suffix.negative"], gatingKcIds: ["class.godan", "suffix.negative"], initialKcIds: ["class.godan"] };
+const options = { today: "2026-09-03", kcIds: ["class.godan", "class.irregular", "facet.class.irregular.suru", "facet.class.irregular.kuru", "suffix.negative"], gatingKcIds: ["class.godan", "class.irregular", "suffix.negative"], initialKcIds: ["class.godan"] };
 const stats = { attempts: 5, correct: 4, filteredAccuracy: 0.8, confidence: 0.9, bestConfidence: 1, cleanTimeTotal: 6000, cleanTimeCount: 3 };
 const profile = {
   version: 5,
@@ -49,4 +49,12 @@ test("clamps unsafe numeric values during import", () => {
   assert.equal(imported.attempted, 0);
   assert.equal(imported.byKc["class.godan"].confidence, 1);
   assert.equal(imported.byKc["class.godan"].cleanTimeTotal, 0);
+});
+
+test("merges legacy irregular-class atoms into non-gating coverage facets", () => {
+  const imported = parseProfileImport({ ...profile, introducedKcIds: ["class.godan", "class.irregular", "exception.suru.class", "exception.kuru.class"], byKc: { "class.irregular": stats, "exception.suru.class": stats, "exception.kuru.class": { ...stats, attempts: 4, correct: 4 } } }, options);
+  assert.deepEqual(imported.introducedKcIds, ["class.godan", "class.irregular"]);
+  assert.equal(imported.byKc["facet.class.irregular.suru"].correct, 4);
+  assert.equal(imported.byKc["facet.class.irregular.kuru"].attempts, 4);
+  assert.equal(imported.byKc["exception.kuru.class"], undefined);
 });

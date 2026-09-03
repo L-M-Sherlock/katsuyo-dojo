@@ -61,6 +61,20 @@ export function rankExercisesForFocus(exercises, focusId, byKc) {
     return lexicalId ? byKc[lexicalId]?.confidence ?? 0 : 1;
   };
   const burden = (exercise) => exercise.kcIds.reduce((sum, id) => sum + (id === focusId ? 0 : 1 - (byKc[id]?.confidence ?? 0)), 0);
+  if (focusId === "class.irregular") {
+    const groups = new Map();
+    for (const exercise of [...exercises].sort((a, b) => burden(a) - burden(b) || a.id.localeCompare(b.id))) {
+      const facetId = exercise.kcIds.find((id) => id.startsWith("facet.class.irregular.")) ?? "other";
+      if (!groups.has(facetId)) groups.set(facetId, []);
+      groups.get(facetId).push(exercise);
+    }
+    const orderedGroups = [...groups].sort(([a], [b]) => {
+      const aCovered = Math.min(byKc[a]?.correct ?? 0, 1);
+      const bCovered = Math.min(byKc[b]?.correct ?? 0, 1);
+      return aCovered - bCovered || a.localeCompare(b);
+    }).map(([, group]) => group);
+    return [...orderedGroups.map((group) => group[0]), ...orderedGroups.flatMap((group) => group.slice(1))];
+  }
   return [...exercises].sort((a, b) => {
     if (focusId === "exception.ru-godan") {
       const lexicalDifference = lexicalConfidence(a) - lexicalConfidence(b);
@@ -68,6 +82,16 @@ export function rankExercisesForFocus(exercises, focusId, byKc) {
     }
     return burden(a) - burden(b) || a.id.localeCompare(b.id);
   });
+}
+
+export function componentConfidence(component, byKc) {
+  const confidence = byKc[component.id]?.confidence ?? 0;
+  const coverageComplete = (component.coverageKcIds ?? []).every((id) => (byKc[id]?.correct ?? 0) >= 1);
+  return coverageComplete ? confidence : Math.min(confidence, 0.99);
+}
+
+export function isComponentMastered(component, byKc) {
+  return componentConfidence(component, byKc) >= 1;
 }
 
 export function selectFocus(components, byKc) {
@@ -81,8 +105,8 @@ export function selectFocus(components, byKc) {
   return [...components].sort((a, b) => {
     const aStats = byKc[a.id] ?? emptySkillStats();
     const bStats = byKc[b.id] ?? emptySkillStats();
-    const aScore = aStats.confidence - speedPenalty(aStats, baseline);
-    const bScore = bStats.confidence - speedPenalty(bStats, baseline);
+    const aScore = componentConfidence(a, byKc) - speedPenalty(aStats, baseline);
+    const bScore = componentConfidence(b, byKc) - speedPenalty(bStats, baseline);
     return aScore - bScore || a.order - b.order || a.id.localeCompare(b.id);
   })[0] ?? null;
 }
@@ -102,14 +126,17 @@ export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @t
 export function findNextIntroducible(components, introducedKcIds, byKc) {
   const introduced = new Set(introducedKcIds);
   const active = components.filter((component) => component.gating && introduced.has(component.id));
-  if (active.some((component) => (byKc[component.id]?.confidence ?? 0) < 1)) return null;
+  if (active.some((component) => !isComponentMastered(component, byKc))) return null;
 
   return components.find((component) => {
     if (!component.gating || introduced.has(component.id)) return false;
-    const prerequisitesReady = component.prerequisites.every((id) => (byKc[id]?.confidence ?? 0) >= 1);
+    const prerequisitesReady = component.prerequisites.every((id) => {
+      const prerequisite = components.find((candidate) => candidate.id === id);
+      return prerequisite ? isComponentMastered(prerequisite, byKc) : false;
+    });
     const earlierCoursesReady = components
       .filter((other) => other.gating && other.firstCourseIndex < component.firstCourseIndex)
-      .every((other) => introduced.has(other.id) && (byKc[other.id]?.confidence ?? 0) >= 1);
+      .every((other) => introduced.has(other.id) && isComponentMastered(other, byKc));
     return prerequisitesReady && earlierCoursesReady;
   }) ?? null;
 }
@@ -124,7 +151,7 @@ export function advanceIntroductions(components, introducedKcIds, byKc) {
     added.push(next);
     // Skip atoms that already gathered enough incidental or manual evidence,
     // but stop as soon as there is a genuinely new weakest atom to practise.
-    if ((byKc[next.id]?.confidence ?? 0) < 1) break;
+    if (!isComponentMastered(next, byKc)) break;
   }
   return { introducedKcIds: introduced, added };
 }
@@ -148,7 +175,7 @@ export function makeRoundPlan(focus, includedSkills, length = 12, rotationStart 
 
 /** Assign a candidate to every planned item without repeating the caller's exercise key. */
 export function makeUniqueAssignments(preferredItems, options) {
-  const { alternativesFor, candidatesFor, keyOf, seed = 0 } = options;
+  const { alternativesFor, candidatesFor, keyOf, orderedCandidates = false, seed = 0 } = options;
   const used = new Set();
 
   return preferredItems.map((preferred, index) => {
@@ -158,7 +185,8 @@ export function makeUniqueAssignments(preferredItems, options) {
     for (const item of choices) {
       const candidates = candidatesFor(item);
       if (candidates.length === 0) continue;
-      const start = (seed * 7 + index * 5 + (item.order ?? 0) * 3) % candidates.length;
+      const preserveOrder = typeof orderedCandidates === "function" ? orderedCandidates(item) : orderedCandidates;
+      const start = preserveOrder ? 0 : (seed * 7 + index * 5 + (item.order ?? 0) * 3) % candidates.length;
       for (let offset = 0; offset < candidates.length; offset += 1) {
         const candidate = candidates[(start + offset) % candidates.length];
         const key = keyOf(item, candidate);

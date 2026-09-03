@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { advanceIntroductions, confidenceOf, emptySkillStats, evidenceValue, findNextIntroducible, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats, updateSkillStats } from "../app/lib/adaptive.mjs";
+import { advanceIntroductions, componentConfidence, confidenceOf, emptySkillStats, evidenceValue, findNextIntroducible, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats, updateSkillStats } from "../app/lib/adaptive.mjs";
 
 const skills = [
   { id: "a", order: 0 },
@@ -129,6 +129,17 @@ test("skips pre-mastered atoms when advancing to the next weak atom", () => {
   assert.deepEqual(advanced.added.map(({ id }) => id), ["b", "c"]);
 });
 
+test("does not skip a high-confidence parent with missing coverage", () => {
+  const components = [
+    { id: "a", gating: true, firstCourseIndex: 0, prerequisites: [], coverageKcIds: [] },
+    { id: "b", gating: true, firstCourseIndex: 0, prerequisites: [], coverageKcIds: ["facet.b"] },
+    { id: "facet.b", gating: false, firstCourseIndex: 0, prerequisites: ["b"], coverageKcIds: [] },
+    { id: "c", gating: true, firstCourseIndex: 0, prerequisites: [], coverageKcIds: [] },
+  ];
+  const advanced = advanceIntroductions(components, ["a"], { a: { confidence: 1 }, b: { confidence: 1 } });
+  assert.deepEqual(advanced.introducedKcIds, ["a", "b"]);
+});
+
 test("a shared exception focus prioritizes the weakest individual exception word", () => {
   const exercises = [
     { id: "known", kcIds: ["exception.ru-godan", "lexeme.ru-godan.切る"] },
@@ -139,4 +150,39 @@ test("a shared exception focus prioritizes the weakest individual exception word
     "lexeme.ru-godan.喋る": { confidence: 0.2 },
   });
   assert.equal(ranked[0].id, "weak");
+});
+
+test("an irregular-class parent requires both coverage facets", () => {
+  const component = { id: "class.irregular", coverageKcIds: ["facet.class.irregular.suru", "facet.class.irregular.kuru"] };
+  const partial = {
+    "class.irregular": { confidence: 1 },
+    "facet.class.irregular.suru": { correct: 5 },
+  };
+  assert.equal(componentConfidence(component, partial), 0.99);
+  assert.equal(isComponentMastered(component, partial), false);
+  const complete = { ...partial, "facet.class.irregular.kuru": { correct: 1 } };
+  assert.equal(componentConfidence(component, complete), 1);
+  assert.equal(isComponentMastered(component, complete), true);
+});
+
+test("an irregular-class focus prioritizes its missing coverage facet", () => {
+  const exercises = [
+    { id: "suru-1", kcIds: ["class.irregular", "facet.class.irregular.suru"] },
+    { id: "suru-2", kcIds: ["class.irregular", "facet.class.irregular.suru"] },
+    { id: "kuru", kcIds: ["class.irregular", "facet.class.irregular.kuru"] },
+  ];
+  const ranked = rankExercisesForFocus(exercises, "class.irregular", {
+    "facet.class.irregular.suru": { correct: 4, confidence: 1 },
+  });
+  assert.equal(ranked[0].id, "kuru");
+  const assigned = makeUniqueAssignments([{ id: "class.irregular", order: 0 }], {
+    alternativesFor: () => [],
+    candidatesFor: () => ranked,
+    keyOf: (_item, candidate) => candidate.id,
+    orderedCandidates: true,
+    seed: 99,
+  });
+  assert.equal(assigned[0].candidate.id, "kuru");
+  const initiallyBalanced = rankExercisesForFocus(exercises, "class.irregular", {});
+  assert.equal(new Set(initiallyBalanced.slice(0, 2).flatMap(({ kcIds }) => kcIds.filter((id) => id.startsWith("facet.")))).size, 2);
 });

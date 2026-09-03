@@ -6,6 +6,8 @@ const yomu = { surface: "読む", reading: "よむ", meaning: "阅读", class: "
 const kaku = { surface: "書く", reading: "かく", meaning: "书写", class: "godan" };
 const taberu = { surface: "食べる", reading: "たべる", meaning: "吃", class: "ichidan" };
 const shaberu = { surface: "喋る", reading: "しゃべる", meaning: "聊天", class: "godan" };
+const suru = { surface: "する", reading: "する", meaning: "做", class: "irregular" };
+const kuru = { surface: "来る", reading: "くる", meaning: "来", class: "irregular" };
 
 test("maps a godan past item to class, sound change, voicing, and suffix KCs", () => {
   assert.deepEqual(requiredKcIds(yomu, "past"), ["class.godan", "onbin.hatsuon", "onbin.voicing", "suffix.past"]);
@@ -27,6 +29,16 @@ test("tracks ru-ending godan exceptions as a shared and per-word fact", () => {
   assert.ok(ids.includes("exception.ru-godan"));
   assert.ok(ids.includes("lexeme.ru-godan.喋る"));
   assert.ok(requiredKcIds(taberu, null).includes("heuristic.ru-ie"));
+});
+
+test("models suru and kuru as coverage facets of one irregular-class atom", () => {
+  assert.deepEqual(requiredKcIds(suru, null), ["class.irregular", "facet.class.irregular.suru"]);
+  assert.deepEqual(requiredKcIds(kuru, null), ["class.irregular", "facet.class.irregular.kuru"]);
+  const model = buildKnowledgeModel([{ id: "classify", lesson: "04", forms: [] }], [suru, kuru]);
+  const parent = model.components.find((kc) => kc.id === "class.irregular");
+  assert.deepEqual(parent.coverageKcIds, ["facet.class.irregular.suru", "facet.class.irregular.kuru"]);
+  assert.equal(model.components.find((kc) => kc.id === "facet.class.irregular.kuru").gating, false);
+  assert.equal(model.components.some((kc) => kc.id === "exception.kuru.class"), false);
 });
 
 test("builds a Q-matrix catalog and makes lexical facts non-gating", () => {

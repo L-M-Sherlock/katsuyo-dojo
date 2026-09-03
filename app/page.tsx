@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { advanceIntroductions, emptySkillStats, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats } from "./lib/adaptive.mjs";
+import { advanceIntroductions, componentConfidence, emptySkillStats, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats } from "./lib/adaptive.mjs";
 import { classLabel, conjugate, explainConjugation } from "./lib/conjugation.mjs";
 import { buildKnowledgeModel, deriveExercise, diagnoseConjugation, KC_FAMILY_LABELS } from "./lib/knowledge-model.mjs";
 import { createProfileExport, parseProfileImport } from "./lib/profile-transfer.mjs";
@@ -13,7 +13,7 @@ type PracticeMode = "adaptive" | ModeId;
 type Result = "correct" | "incorrect" | "revealed" | null;
 type Verb = { surface: string; reading: string; meaning: string; class: VerbClass };
 type Course = { id: ModeId; title: string; lesson: string; url: string; forms: readonly Form[] };
-type KnowledgeComponent = { id: string; order: number; label: string; family: keyof typeof KC_FAMILY_LABELS; gating: boolean; firstCourseId: ModeId; firstCourseIndex: number; firstLesson: string; prerequisites: string[] };
+type KnowledgeComponent = { id: string; order: number; label: string; family: keyof typeof KC_FAMILY_LABELS; gating: boolean; firstCourseId: ModeId; firstCourseIndex: number; firstLesson: string; prerequisites: string[]; coverageKcIds: string[] };
 type Exercise = { id: string; courseId: ModeId; courseIndex: number; form: Form | null; verb: Verb; kcIds: string[] };
 type SkillStats = ReturnType<typeof emptySkillStats>;
 type Profile = { version: 5; date: string; attempted: number; correct: number; streak: number; introducedKcIds: string[]; rotation: number; byKc: Record<string, SkillStats> };
@@ -112,6 +112,10 @@ const exercisesFor = (kc: KnowledgeComponent, mode: PracticeMode, profile: Profi
   profile.byKc,
 ) as Exercise[];
 function emptyProfile(): Profile { return { version: 5, date: todayKey(), attempted: 0, correct: 0, streak: 0, introducedKcIds: [...INITIAL_KC_IDS], rotation: 0, byKc: {} }; }
+function activateReadyKcs(profile: Profile) {
+  const advanced = advanceIntroductions(ALL_KCS, profile.introducedKcIds, profile.byKc) as { introducedKcIds: string[] };
+  return { ...profile, introducedKcIds: advanced.introducedKcIds };
+}
 function makePlan(mode: PracticeMode, profile: Profile) {
   const candidates = mode === "adaptive"
     ? profile.introducedKcIds.map((id) => KC_BY_ID.get(id)).filter(Boolean) as KnowledgeComponent[]
@@ -125,11 +129,13 @@ function loadProfile(): Profile {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
-      return parseProfileImport(JSON.parse(saved), importOptions()) as Profile;
+      const profile = activateReadyKcs(parseProfileImport(JSON.parse(saved), importOptions()) as Profile);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+      return profile;
     }
     const legacyV4 = localStorage.getItem(LEGACY_PROFILE_KEY_V4);
     if (legacyV4) {
-      const profile = parseProfileImport(JSON.parse(legacyV4), importOptions()) as Profile;
+      const profile = activateReadyKcs(parseProfileImport(JSON.parse(legacyV4), importOptions()) as Profile);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
       return profile;
     }
@@ -193,6 +199,7 @@ export default function Home() {
       },
       candidatesFor: (item: KnowledgeComponent) => exercisesFor(item, mode, planningProfile),
       keyOf: (_item: KnowledgeComponent, candidate: Exercise) => `${candidate.form ?? "classify"}:${candidate.verb.surface}`,
+      orderedCandidates: (item: KnowledgeComponent) => item.id === "class.irregular" || item.id === "exception.ru-godan",
     }) as { item: KnowledgeComponent; candidate: Exercise }[];
   }, [mode, planningProfile, roundPlan, seed]);
   const currentQuestion = roundQuestions[questionIndex];
@@ -258,7 +265,7 @@ export default function Home() {
     event.target.value = "";
     if (!file) return;
     try {
-      const imported = parseProfileImport(JSON.parse(await file.text()), importOptions()) as Profile;
+      const imported = activateReadyKcs(parseProfileImport(JSON.parse(await file.text()), importOptions()) as Profile);
       if (!window.confirm("导入会覆盖这台设备当前的练习进度。确定继续吗？")) return;
       save(imported);
       const next = makePlan("adaptive", imported);
@@ -269,34 +276,40 @@ export default function Home() {
     }
   }
 
-  const focusPercent = Math.round(focusStats.confidence * 100);
+  const focusPercent = Math.round((focusKc ? componentConfidence(focusKc, profile.byKc) : focusStats.confidence) * 100);
   const evidenceKcId = diagnosticKcId ?? targetKc.id;
-  const currentPercent = Math.round((profile.byKc[evidenceKcId]?.confidence ?? 0) * 100);
+  const evidenceKc = KC_BY_ID.get(evidenceKcId);
+  const currentPercent = Math.round((evidenceKc ? componentConfidence(evidenceKc, profile.byKc) : profile.byKc[evidenceKcId]?.confidence ?? 0) * 100);
   const introducedSet = new Set(profile.introducedKcIds);
   const introducedKcs = profile.introducedKcIds.map((id) => KC_BY_ID.get(id)).filter(Boolean) as KnowledgeComponent[];
-  const masteredKcCount = introducedKcs.filter((item) => (profile.byKc[item.id]?.confidence ?? 0) >= 1).length;
+  const masteredKcCount = introducedKcs.filter((item) => isComponentMastered(item, profile.byKc)).length;
   const focusDisplayLabel = mode === "adaptive" && focusKc ? COURSES[focusKc.firstCourseIndex].title : course.title;
   const weakestKc = selectFocus(mode === "adaptive" ? introducedKcs : kcsOf(mode).filter((kc) => kc.gating), profile.byKc) as KnowledgeComponent | null;
   const feedbackTitle = result === "correct" ? "正解！" : result === "revealed" ? "记住这个变化" : "差一点";
   const kcStatus = (kc: KnowledgeComponent) => {
     const stats = profile.byKc[kc.id] ?? emptySkillStats();
-    const active = kc.gating ? introducedSet.has(kc.id) : introducedSet.has("exception.ru-godan") || stats.attempts > 0;
+    const nonGatingParent = kc.id.startsWith("facet.class.irregular.") ? "class.irregular" : "exception.ru-godan";
+    const active = kc.gating ? introducedSet.has(kc.id) : introducedSet.has(nonGatingParent) || stats.attempts > 0;
+    if (kc.id.startsWith("facet.")) return !active ? "未引入" : (stats.correct ?? 0) >= 1 ? "已覆盖" : "待覆盖";
     if (focusKc?.id === kc.id && active) return "当前聚焦";
     if (!active && stats.attempts > 0) return "已预习";
     if (!active) return kc.gating ? "未引入" : "词汇记录";
-    if (stats.confidence >= 1) return "已达标";
+    if (isComponentMastered(kc, profile.byKc)) return "已达标";
+    if (kc.coverageKcIds.some((id) => (profile.byKc[id]?.correct ?? 0) < 1)) return "待覆盖";
     if (stats.bestConfidence >= 1) return "需加强";
     return stats.attempts === 0 ? "未练习" : "学习中";
   };
   const renderKcRow = (kc: KnowledgeComponent, reused = false) => {
     const stats = profile.byKc[kc.id] ?? emptySkillStats();
-    const percent = Math.round(stats.confidence * 100);
+    const percent = Math.round(componentConfidence(kc, profile.byKc) * 100);
     const isFocus = focusKc?.id === kc.id;
-    const isLexical = kc.id.startsWith("lexeme.");
+    const isLexical = kc.id.startsWith("lexeme.") || kc.id.startsWith("facet.");
+    const isFacet = kc.id.startsWith("facet.");
+    const coverage = kc.coverageKcIds.length ? `${kc.coverageKcIds.filter((id) => (profile.byKc[id]?.correct ?? 0) >= 1).length}/${kc.coverageKcIds.length}` : null;
     const prerequisiteLabels = kc.prerequisites.map((id) => KC_BY_ID.get(id)?.label).filter(Boolean);
     return <div className={`skill-progress-row ${isFocus ? "focus" : ""} ${isLexical ? "lexical" : ""}`} key={kc.id}>
-      <div className="skill-progress-copy"><span>{kc.label}</span><small>{isLexical ? "逐词例外 · " : ""}{kcStatus(kc)} · {stats.attempts} 次作答{reused ? ` · 沿用 L${kc.firstLesson}` : ""}{prerequisiteLabels.length ? ` · 先修：${prerequisiteLabels.join("、")}` : ""}</small></div>
-      <div className="skill-progress-value"><div><span style={{ width: `${percent}%` }} /></div><b>{percent}%</b></div>
+      <div className="skill-progress-copy"><span>{kc.label}</span><small>{kc.id.startsWith("lexeme.") ? "逐词例外 · " : kc.id.startsWith("facet.") ? "覆盖切面 · " : ""}{kcStatus(kc)} · {stats.attempts} 次作答{coverage ? ` · 覆盖 ${coverage}` : ""}{reused ? ` · 沿用 L${kc.firstLesson}` : ""}{prerequisiteLabels.length ? ` · 先修：${prerequisiteLabels.join("、")}` : ""}</small></div>
+      <div className="skill-progress-value"><div><span style={{ width: `${isFacet ? stats.correct >= 1 ? 100 : 0 : percent}%` }} /></div><b>{isFacet ? stats.correct >= 1 ? "✓" : "—" : `${percent}%`}</b></div>
     </div>;
   };
   const courseSummary = (item: Course) => {
@@ -305,9 +318,10 @@ export default function Home() {
     const courseIntroduced = item.id === "classify" || newKcs.some((kc) => introducedSet.has(kc.id));
     const introducedCount = required.filter((kc) => introducedSet.has(kc.id)).length;
     const practicedAhead = newKcs.some((kc) => (profile.byKc[kc.id]?.attempts ?? 0) > 0);
-    const percent = required.length ? Math.round(Math.min(...required.map((kc) => introducedSet.has(kc.id) ? profile.byKc[kc.id]?.confidence ?? 0 : 0)) * 100) : 0;
+    const percent = required.length ? Math.round(Math.min(...required.map((kc) => introducedSet.has(kc.id) ? componentConfidence(kc, profile.byKc) : 0)) * 100) : 0;
     const needsRecovery = required.some((kc) => introducedSet.has(kc.id) && (profile.byKc[kc.id]?.bestConfidence ?? 0) >= 1 && (profile.byKc[kc.id]?.confidence ?? 0) < 1);
-    const status = !courseIntroduced ? practicedAhead ? "已预习" : "未引入" : introducedCount < required.length ? `原子 ${introducedCount}/${required.length}` : percent >= 100 ? "已达标" : needsRecovery ? "需加强" : `${percent}%`;
+    const needsCoverage = required.some((kc) => introducedSet.has(kc.id) && kc.coverageKcIds.some((id) => (profile.byKc[id]?.correct ?? 0) < 1));
+    const status = !courseIntroduced ? practicedAhead ? "已预习" : "未引入" : introducedCount < required.length ? `原子 ${introducedCount}/${required.length}` : percent >= 100 ? "已达标" : needsCoverage ? "待覆盖" : needsRecovery ? "需加强" : `${percent}%`;
     return { required, status, percent };
   };
 

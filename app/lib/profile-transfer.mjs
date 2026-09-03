@@ -1,5 +1,9 @@
 const FORMAT = "katsuyo-dojo-profile";
 const FORMAT_VERSION = 2;
+const KC_ID_ALIASES = {
+  "exception.suru.class": "facet.class.irregular.suru",
+  "exception.kuru.class": "facet.class.irregular.kuru",
+};
 
 function record(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : null;
@@ -68,12 +72,13 @@ export function parseProfileImport(value, { today, kcIds = /** @type {string[]} 
   const allowedGating = new Set(gatingKcIds);
   const byKc = {};
   for (const [id, value] of Object.entries(source.byKc)) {
-    const stats = allowed.has(id) ? skillStats(value) : null;
-    if (stats) byKc[id] = stats;
+    const targetId = KC_ID_ALIASES[id] ?? id;
+    const stats = allowed.has(targetId) ? skillStats(value) : null;
+    if (stats && (!(targetId in byKc) || id === targetId)) byKc[targetId] = stats;
   }
   const introducedKcIds = [...new Set([
     ...initialKcIds,
-    ...(Array.isArray(source.introducedKcIds) ? source.introducedKcIds : []),
+    ...(Array.isArray(source.introducedKcIds) ? source.introducedKcIds.map((id) => KC_ID_ALIASES[id] ?? id) : []),
   ])].filter((id) => allowedGating.has(id));
   return {
     version: 5,

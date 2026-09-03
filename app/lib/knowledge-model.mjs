@@ -62,8 +62,6 @@ const STATIC_METADATA = {
   "heuristic.ru-ie": ["い／え段＋る的初步判断", "classification"],
   "heuristic.ru-other": ["非い／え段＋る的初步判断", "classification"],
   "exception.ru-godan": ["い／え段＋る的五段例外", "exception"],
-  "exception.suru.class": ["する类不规则词", "exception"],
-  "exception.kuru.class": ["来る的不规则词类", "exception"],
   "stem.ichidan.drop-ru": ["一段动词去掉る", "stem"],
   "stem.godan.a": ["五段词尾移到a段", "stem"],
   "stem.godan.i": ["五段词尾移到i段", "stem"],
@@ -119,7 +117,7 @@ function irregularKind(verb) {
 export function classificationKcIds(verb) {
   if (verb.class === "irregular") {
     const kind = irregularKind(verb);
-    return ["class.irregular", `exception.${kind}.class`];
+    return ["class.irregular", `facet.class.irregular.${kind}`];
   }
   if (verb.class === "ichidan") return ["class.ichidan", "heuristic.ru-ie"];
   const result = ["class.godan"];
@@ -191,6 +189,8 @@ function metadataFor(id, formLabels) {
   const fixed = STATIC_METADATA[id];
   if (fixed) return { label: fixed[0], family: fixed[1], gating: true };
   if (id.startsWith("lexeme.ru-godan.")) return { label: `${id.slice("lexeme.ru-godan.".length)}是五段动词`, family: "exception", gating: false };
+  if (id === "facet.class.irregular.suru") return { label: "する类题目覆盖", family: "classification", gating: false };
+  if (id === "facet.class.irregular.kuru") return { label: "来る题目覆盖", family: "classification", gating: false };
   if (id.startsWith("suffix.")) {
     const form = id.slice("suffix.".length);
     return { label: SUFFIX_LABELS[form] ?? `${formLabels[form] ?? form}的基本接续`, family: "connection", gating: true };
@@ -209,6 +209,7 @@ function prerequisitesFor(id) {
   if (id === "heuristic.ru-other") return ["class.godan"];
   if (id === "exception.ru-godan") return ["heuristic.ru-ie"];
   if (id.startsWith("lexeme.ru-godan.")) return ["exception.ru-godan"];
+  if (id.startsWith("facet.class.irregular.")) return ["class.irregular"];
   if (id.startsWith("exception.suru.") || id.startsWith("exception.kuru.")) return ["class.irregular"];
   if (id === "stem.ichidan.drop-ru") return ["class.ichidan"];
   if (id.startsWith("stem.godan.") || id.startsWith("onbin.") || id === "exception.iku-onbin") return ["class.godan"];
@@ -245,6 +246,7 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
               firstCourseIndex: courseIndex,
               firstLesson: course.lesson,
               prerequisites: prerequisitesFor(kcId),
+              coverageKcIds: kcId === "class.irregular" ? ["facet.class.irregular.suru", "facet.class.irregular.kuru"] : [],
               ...metadata,
             });
           }
@@ -257,6 +259,9 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
   for (const component of components) {
     for (const prerequisite of component.prerequisites) {
       if (!componentMap.has(prerequisite)) throw new Error(`Unknown prerequisite ${prerequisite} for ${component.id}`);
+    }
+    for (const facet of component.coverageKcIds) {
+      if (!componentMap.has(facet)) throw new Error(`Unknown coverage facet ${facet} for ${component.id}`);
     }
     if (component.gating && !exercises.some((exercise) => exercise.courseIndex === component.firstCourseIndex && exercise.kcIds.includes(component.id))) {
       throw new Error(`No introductory exercise for ${component.id}`);
@@ -272,6 +277,7 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
 
 function primaryClassKc(verb) {
   if (isRuGodanException(verb)) return `lexeme.ru-godan.${lexicalSurface(verb)}`;
+  if (verb.class === "irregular") return `facet.class.irregular.${irregularKind(verb)}`;
   return `class.${verb.class}`;
 }
 
