@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { advanceIntroductions, componentConfidence, emptySkillStats, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats } from "./lib/adaptive.mjs";
+import { advanceIntroductions, balanceComponentsForCourse, componentConfidence, emptySkillStats, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats } from "./lib/adaptive.mjs";
 import { classLabel, conjugate, explainConjugation } from "./lib/conjugation.mjs";
 import { buildKnowledgeModel, deriveExercise, diagnoseConjugation, KC_FAMILY_LABELS } from "./lib/knowledge-model.mjs";
 import { createProfileExport, parseProfileImport } from "./lib/profile-transfer.mjs";
@@ -106,8 +106,8 @@ const KC_BY_ID = new Map(ALL_KCS.map((kc) => [kc.id, kc]));
 const INITIAL_KC_IDS = GATING_KCS.length ? [GATING_KCS[0].id] : [];
 const importOptions = () => ({ today: todayKey(), kcIds: ALL_KCS.map((kc) => kc.id), gatingKcIds: GATING_KCS.map((kc) => kc.id), initialKcIds: INITIAL_KC_IDS });
 const kcsOf = (courseId: ModeId) => (KNOWLEDGE.courseKcIds[courseId] ?? []).map((id) => KC_BY_ID.get(id)).filter(Boolean) as KnowledgeComponent[];
-const exercisesFor = (kc: KnowledgeComponent, mode: PracticeMode, profile: Profile) => rankExercisesForFocus(
-  KNOWLEDGE.exercises.filter((exercise) => exercise.kcIds.includes(kc.id) && (mode === "adaptive" ? exercise.courseIndex === kc.firstCourseIndex : exercise.courseId === mode)),
+const exercisesFor = (kc: KnowledgeComponent, mode: PracticeMode, profile: Profile, adaptiveCourseIndex = kc.firstCourseIndex) => rankExercisesForFocus(
+  KNOWLEDGE.exercises.filter((exercise) => exercise.kcIds.includes(kc.id) && (mode === "adaptive" ? exercise.courseIndex === adaptiveCourseIndex : exercise.courseId === mode)),
   kc.id,
   profile.byKc,
   kc.coverageKcIds,
@@ -122,7 +122,10 @@ function makePlan(mode: PracticeMode, profile: Profile) {
     ? profile.introducedKcIds.map((id) => KC_BY_ID.get(id)).filter(Boolean) as KnowledgeComponent[]
     : kcsOf(mode).filter((kc) => kc.gating);
   const focus = selectFocus(candidates, profile.byKc) as KnowledgeComponent | null;
-  return { focus, plan: makeRoundPlan(focus, candidates, SESSION_LENGTH, profile.rotation) as KnowledgeComponent[] };
+  const balanced = mode === "adaptive" && focus
+    ? balanceComponentsForCourse(focus, candidates, KNOWLEDGE.courseKcIds[focus.firstCourseId] ?? []) as KnowledgeComponent[]
+    : candidates;
+  return { focus, plan: makeRoundPlan(focus, balanced, SESSION_LENGTH, profile.rotation) as KnowledgeComponent[] };
 }
 
 function loadProfile(): Profile {
@@ -189,8 +192,9 @@ export default function Home() {
   const progressCloseRef = useRef<HTMLButtonElement>(null);
   const startedAt = useRef(0);
   const roundQuestions = useMemo(() => {
+    const roundFocus = roundPlan[0] ?? focusKc;
     const available = mode === "adaptive"
-      ? planningProfile.introducedKcIds.map((id) => KC_BY_ID.get(id)).filter(Boolean) as KnowledgeComponent[]
+      ? balanceComponentsForCourse(roundFocus, planningProfile.introducedKcIds.map((id) => KC_BY_ID.get(id)).filter(Boolean), roundFocus ? KNOWLEDGE.courseKcIds[roundFocus.firstCourseId] ?? [] : []) as KnowledgeComponent[]
       : kcsOf(mode).filter((kc) => kc.gating);
     return makeUniqueAssignments(roundPlan, {
       seed,
@@ -198,11 +202,11 @@ export default function Home() {
         const others = available.filter((item) => item.id !== preferred.id);
         return others.length ? [...others.slice(index % others.length), ...others.slice(0, index % others.length)] : [];
       },
-      candidatesFor: (item: KnowledgeComponent) => exercisesFor(item, mode, planningProfile),
+      candidatesFor: (item: KnowledgeComponent) => exercisesFor(item, mode, planningProfile, roundFocus?.firstCourseIndex),
       keyOf: (_item: KnowledgeComponent, candidate: Exercise) => `${candidate.form ?? "classify"}:${candidate.verb.surface}`,
       orderedCandidates: (item: KnowledgeComponent) => item.id === "class.irregular" || item.id === "exception.ru-godan",
     }) as { item: KnowledgeComponent; candidate: Exercise }[];
-  }, [mode, planningProfile, roundPlan, seed]);
+  }, [focusKc, mode, planningProfile, roundPlan, seed]);
   const currentQuestion = roundQuestions[questionIndex];
   const targetKc = currentQuestion?.item ?? focusKc ?? GATING_KCS[0];
   const exercise = currentQuestion?.candidate ?? exercisesFor(targetKc, mode, profile)[0] ?? KNOWLEDGE.exercises[0];

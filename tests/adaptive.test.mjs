@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { advanceIntroductions, componentConfidence, confidenceOf, emptySkillStats, evidenceValue, findNextIntroducible, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats, updateSkillStats } from "../app/lib/adaptive.mjs";
+import { advanceIntroductions, balanceComponentsForCourse, componentConfidence, confidenceOf, emptySkillStats, evidenceValue, findNextIntroducible, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats, updateSkillStats } from "../app/lib/adaptive.mjs";
 
 const skills = [
   { id: "a", order: 0 },
@@ -45,6 +45,19 @@ test("builds a 3:1 Japanese-style focus rotation", () => {
   const plan = makeRoundPlan(skills[0], skills, 12, 0);
   assert.equal(plan.filter((skill) => skill.id === "a").length, 9);
   assert.deepEqual(plan.filter((_, index) => (index + 1) % 4 === 0).map((skill) => skill.id), ["b", "c", "b"]);
+});
+
+test("balances an adaptive round only with atoms used by the focus course", () => {
+  const introduced = [
+    { id: "class.godan", firstCourseId: "classify" },
+    { id: "suffix.negative", firstCourseId: "negative" },
+    { id: "onbin.i", firstCourseId: "past" },
+    { id: "suffix.past", firstCourseId: "past" },
+  ];
+  const balanced = balanceComponentsForCourse(introduced[2], introduced, ["class.godan", "onbin.i", "suffix.past"]);
+  assert.deepEqual(balanced.map(({ id }) => id), ["onbin.i", "class.godan", "suffix.past"]);
+  const plan = makeRoundPlan(introduced[2], balanced, 12, 0);
+  assert.equal(plan.some(({ id }) => id === "suffix.negative"), false);
 });
 
 test("assigns unique exercises within a round", () => {

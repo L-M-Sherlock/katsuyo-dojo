@@ -187,6 +187,12 @@ export function makeRoundPlan(focus, includedSkills, length = 12, rotationStart 
   return plan;
 }
 
+export function balanceComponentsForCourse(focus, introducedComponents, courseKcIds) {
+  if (!focus) return [];
+  const allowed = new Set(courseKcIds);
+  return [focus, ...introducedComponents.filter((component) => component.id !== focus.id && allowed.has(component.id))];
+}
+
 /** Assign a candidate to every planned item without repeating the caller's exercise key. */
 export function makeUniqueAssignments(preferredItems, options) {
   const { alternativesFor, candidatesFor, keyOf, orderedCandidates = false, seed = 0 } = options;
