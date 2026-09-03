@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>活用道場</title>
+  <circle cx="32" cy="32" r="30" fill="#c94b3d" />
+  <circle cx="32" cy="32" r="27" fill="none" stroke="#fffaf1" stroke-opacity="0.24" stroke-width="2" />
+  <text
+    x="32"
+    y="44"
+    fill="#fffaf1"
+    font-family="Yu Mincho, Hiragino Mincho ProN, Noto Serif CJK JP, serif"
+    font-size="36"
+    font-weight="600"
+    text-anchor="middle"
+  >活</text>
+</svg>
