@@ -108,6 +108,18 @@ export function isComponentMastered(component, byKc) {
   return componentConfidence(component, byKc) >= 1;
 }
 
+export function correctAnswersNeeded(component, byKc, maximum = 100) {
+  if (isComponentMastered(component, byKc)) return 0;
+  const missingCoverage = (component.coverageKcIds ?? []).filter((id) => (byKc[id]?.correct ?? 0) < 1).length;
+  let stats = byKc[component.id];
+  let correctAnswers = 0;
+  while ((stats?.confidence ?? 0) < 1 && correctAnswers < maximum) {
+    stats = updateSkillStats(stats, { correct: true });
+    correctAnswers += 1;
+  }
+  return Math.max(correctAnswers, missingCoverage);
+}
+
 export function selectFocus(components, byKc) {
   const timed = components
     .map((component) => byKc[component.id])
@@ -195,8 +207,8 @@ export function balanceComponentsForCourse(focus, introducedComponents, courseKc
 
 /** Assign a candidate to every planned item without repeating the caller's exercise key. */
 export function makeUniqueAssignments(preferredItems, options) {
-  const { alternativesFor, candidatesFor, keyOf, orderedCandidates = false, seed = 0 } = options;
-  const used = new Set();
+  const { alternativesFor, candidatesFor, keyOf, orderedCandidates = false, seed = 0, usedKeys = [] } = options;
+  const used = new Set(usedKeys);
 
   return preferredItems.map((preferred, index) => {
     const choices = [preferred, ...alternativesFor(preferred, index)]

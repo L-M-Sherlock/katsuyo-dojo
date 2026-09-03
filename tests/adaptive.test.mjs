@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { advanceIntroductions, balanceComponentsForCourse, componentConfidence, confidenceOf, emptySkillStats, evidenceValue, findNextIntroducible, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats, updateSkillStats } from "../app/lib/adaptive.mjs";
+import { advanceIntroductions, balanceComponentsForCourse, componentConfidence, confidenceOf, correctAnswersNeeded, emptySkillStats, evidenceValue, findNextIntroducible, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats, updateSkillStats } from "../app/lib/adaptive.mjs";
 
 const skills = [
   { id: "a", order: 0 },
@@ -22,6 +22,16 @@ test("requires five strong samples to reach target confidence", () => {
   stats = updateSkillStats(stats, { correct: true });
   assert.equal(stats.confidence, 1);
   assert.equal(confidenceOf(1, 5), 1);
+});
+
+test("estimates how many clean answers an atom still needs", () => {
+  const regular = { id: "regular", coverageKcIds: [] };
+  assert.equal(correctAnswersNeeded(regular, {}), 5);
+  let stats = emptySkillStats();
+  for (let index = 0; index < 4; index += 1) stats = updateSkillStats(stats, { correct: true });
+  assert.equal(correctAnswersNeeded(regular, { regular: stats }), 1);
+  const covered = { id: "parent", coverageKcIds: ["one", "two"] };
+  assert.equal(correctAnswersNeeded(covered, { parent: { ...stats, confidence: 1 }, one: { correct: 1 } }), 1);
 });
 
 test("a regression lowers current confidence but preserves best confidence", () => {
@@ -71,6 +81,18 @@ test("assigns unique exercises within a round", () => {
 
   assert.deepEqual(assignments.map(({ candidate }) => candidate).sort(), ["a", "b", "c", "d"]);
   assert.equal(new Set(assignments.map(({ candidate }) => candidate)).size, 4);
+});
+
+test("keeps replanned segments unique against earlier questions", () => {
+  const focus = { id: "focus", order: 0 };
+  const assignments = makeUniqueAssignments([focus, focus], {
+    alternativesFor: () => [],
+    candidatesFor: () => ["used", "fresh-1", "fresh-2"],
+    keyOf: (_item, candidate) => candidate,
+    orderedCandidates: true,
+    usedKeys: ["used"],
+  });
+  assert.deepEqual(assignments.map(({ candidate }) => candidate), ["fresh-1", "fresh-2"]);
 });
 
 test("keeps the preferred skill until its unique exercises are exhausted", () => {
