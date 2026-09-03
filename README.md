@@ -53,4 +53,4 @@ npm run build
 
 ## 内容来源
 
-课程顺序与部分教学表述参考 [Yokubi](https://yoku.bi)。详见 [CREDITS.md](./CREDITS.md)。
+课程顺序与部分教学表述参考 [Yokubi 中文版](https://l-m-sherlock.github.io/yokubi-zh-cn/)。详见 [CREDITS.md](./CREDITS.md)。
