@@ -7,6 +7,7 @@ const KC_ID_ALIASES = {
 
 function aliasKcId(id) {
   if (KC_ID_ALIASES[id]) return KC_ID_ALIASES[id];
+  if (id === "exception.iku-onbin") return "facet.onbin.sokuon.iku";
   const match = id.match(/^exception\.(suru|kuru)\.(.+)$/);
   return match ? `facet.form.${match[2]}.${match[1]}` : id;
 }

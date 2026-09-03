@@ -64,3 +64,9 @@ test("moves legacy per-form irregular atoms under the form coverage facet", () =
   assert.equal(imported.byKc["facet.form.negative.kuru"].correct, 4);
   assert.equal(imported.byKc["exception.kuru.negative"], undefined);
 });
+
+test("moves the legacy iku atom under sokuon coverage", () => {
+  const imported = parseProfileImport({ ...profile, introducedKcIds: ["class.godan", "exception.iku-onbin"], byKc: { "exception.iku-onbin": stats } }, { ...options, kcIds: [...options.kcIds, "onbin.sokuon", "facet.onbin.sokuon.iku"], gatingKcIds: [...options.gatingKcIds, "onbin.sokuon"] });
+  assert.equal(imported.byKc["facet.onbin.sokuon.iku"].correct, 4);
+  assert.equal(imported.byKc["exception.iku-onbin"], undefined);
+});

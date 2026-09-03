@@ -73,7 +73,6 @@ const STATIC_METADATA = {
   "onbin.hatsuon": ["撥音便（ぬ・ぶ・む）", "onbin"],
   "onbin.i": ["イ音便（く・ぐ）", "onbin"],
   "onbin.voicing": ["音便后的浊化（だ／で）", "onbin"],
-  "exception.iku-onbin": ["行く的促音便例外", "exception"],
   "compound.negative-past": ["否定形→否定过去", "compound"],
   "compound.polite-past": ["ます→ました", "compound"],
   "compound.polite-negative": ["ます→ません", "compound"],
@@ -143,7 +142,7 @@ function primitiveKcIds(verb, form) {
   else if (form === "volitional") result.unshift("stem.godan.o");
   else if (["potential", "imperative", "ba"].includes(form)) result.unshift("stem.godan.e");
   else if (["past", "te"].includes(form)) {
-    if (verb.surface === "行く" || verb.reading === "いく") result.unshift("exception.iku-onbin");
+    if (verb.surface === "行く" || verb.reading === "いく") result.unshift("onbin.sokuon", "facet.onbin.sokuon.iku");
     else if (["う", "つ", "る"].includes(ending)) result.unshift("onbin.sokuon");
     else if (["む", "ぶ", "ぬ"].includes(ending)) result.unshift("onbin.hatsuon", "onbin.voicing");
     else if (["く", "ぐ"].includes(ending)) {
@@ -191,6 +190,7 @@ function metadataFor(id, formLabels) {
   if (id.startsWith("lexeme.ru-godan.")) return { label: `${id.slice("lexeme.ru-godan.".length)}是五段动词`, family: "exception", gating: false };
   if (id === "facet.class.irregular.suru") return { label: "する类题目覆盖", family: "classification", gating: false };
   if (id === "facet.class.irregular.kuru") return { label: "来る题目覆盖", family: "classification", gating: false };
+  if (id === "facet.onbin.sokuon.iku") return { label: "行く的促音便例外覆盖", family: "exception", gating: false };
   if (id.startsWith("facet.form.")) {
     const [, , form, kind] = id.split(".");
     return { label: `${kind === "suru" ? "する类" : "来る"}在${formLabels[form] ?? form}中的覆盖`, family: "exception", gating: false };
@@ -215,6 +215,7 @@ function prerequisitesFor(id) {
   if (id.startsWith("lexeme.ru-godan.")) return ["exception.ru-godan"];
   if (id.startsWith("facet.class.irregular.")) return ["class.irregular"];
   if (id.startsWith("facet.form.")) return ["class.irregular"];
+  if (id === "facet.onbin.sokuon.iku") return ["onbin.sokuon"];
   if (id === "stem.ichidan.drop-ru") return ["class.ichidan"];
   if (id.startsWith("stem.godan.") || id.startsWith("onbin.") || id === "exception.iku-onbin") return ["class.godan"];
   if (["construction.chau", "construction.toku", "construction.teru", "construction.toru", "construction.teku"].includes(id)) {
@@ -263,6 +264,10 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
   const irregularClass = components.find((component) => component.id === "class.irregular");
   if (irregularClass) {
     irregularClass.coverageKcIds.push(...components.filter((component) => component.id.startsWith("facet.class.irregular.")).map((component) => component.id));
+  }
+  const sokuon = components.find((component) => component.id === "onbin.sokuon");
+  if (sokuon) {
+    sokuon.coverageKcIds.push(...components.filter((component) => component.id === "facet.onbin.sokuon.iku").map((component) => component.id));
   }
   for (const component of components) {
     if (component.id.startsWith("suffix.")) {
@@ -318,7 +323,7 @@ function diagnosticCandidates(verb, form) {
   }
 
   const ids = requiredKcIds(verb, form);
-  const onbinId = ids.find((id) => id.startsWith("onbin.") && id !== "onbin.voicing") ?? (ids.includes("exception.iku-onbin") ? "exception.iku-onbin" : null);
+  const onbinId = ids.includes("facet.onbin.sokuon.iku") ? "facet.onbin.sokuon.iku" : ids.find((id) => id.startsWith("onbin.") && id !== "onbin.voicing") ?? null;
   const baseForm = soundBaseForm(form);
   if (verb.class === "godan" && baseForm && onbinId) {
     const ending = verb.surface.at(-1);

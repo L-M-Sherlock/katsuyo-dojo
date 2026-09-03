@@ -8,6 +8,7 @@ const taberu = { surface: "食べる", reading: "たべる", meaning: "吃", cla
 const shaberu = { surface: "喋る", reading: "しゃべる", meaning: "聊天", class: "godan" };
 const suru = { surface: "する", reading: "する", meaning: "做", class: "irregular" };
 const kuru = { surface: "来る", reading: "くる", meaning: "来", class: "irregular" };
+const iku = { surface: "行く", reading: "いく", meaning: "去", class: "godan" };
 
 test("maps a godan past item to class, sound change, voicing, and suffix KCs", () => {
   assert.deepEqual(requiredKcIds(yomu, "past"), ["class.godan", "onbin.hatsuon", "onbin.voicing", "suffix.past"]);
@@ -49,6 +50,15 @@ test("models irregular form variants as non-gating coverage facets of the form",
   assert.equal(model.components.find((kc) => kc.id === "facet.form.negative.kuru").gating, false);
 });
 
+test("models the iku exception as coverage of the shared sokuon rule", () => {
+  assert.deepEqual(requiredKcIds(iku, "past"), ["class.godan", "onbin.sokuon", "facet.onbin.sokuon.iku", "suffix.past"]);
+  const model = buildKnowledgeModel([{ id: "past", lesson: "09", forms: ["past"] }], [iku]);
+  const sokuon = model.components.find((kc) => kc.id === "onbin.sokuon");
+  assert.deepEqual(sokuon.coverageKcIds, ["facet.onbin.sokuon.iku"]);
+  assert.equal(model.components.find((kc) => kc.id === "facet.onbin.sokuon.iku").gating, false);
+  assert.equal(model.components.some((kc) => kc.id === "exception.iku-onbin"), false);
+});
+
 test("builds a Q-matrix catalog and makes lexical facts non-gating", () => {
   const courses = [
     { id: "classify", lesson: "04", forms: [] },
@@ -74,6 +84,7 @@ test("diagnoses only exact, unique single-rule near misses", () => {
   assert.equal(diagnoseConjugation(yomu, "past", "読んた")?.kcId, "onbin.voicing");
   assert.equal(diagnoseConjugation(yomu, "teshimau", "読みてしまう")?.kcId, "onbin.hatsuon");
   assert.equal(diagnoseConjugation(yomu, "past", "xyz"), null);
+  assert.equal(diagnoseConjugation(iku, "past", "行きた")?.kcId, "facet.onbin.sokuon.iku");
   const kanaException = { ...shaberu, surface: shaberu.reading, lexicalSurface: shaberu.surface };
   assert.equal(diagnoseConjugation(kanaException, "negative", "しゃべない")?.kcId, "lexeme.ru-godan.喋る");
 });
