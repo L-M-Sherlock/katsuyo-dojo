@@ -11,6 +11,7 @@
     "start": "vite preview",
     "test": "node --test tests/*.test.mjs",
     "audit": "node scripts/audit-knowledge.mjs",
+    "simulate:perfect": "node scripts/simulate-perfect-learning.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },

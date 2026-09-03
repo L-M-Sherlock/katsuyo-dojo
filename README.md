@@ -35,6 +35,7 @@ npm run dev
 ```bash
 npm test
 npm run audit
+npm run simulate:perfect
 npm run typecheck
 npm run lint
 npm run build
