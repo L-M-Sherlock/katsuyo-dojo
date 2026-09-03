@@ -109,6 +109,14 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .mode-list button i { font-style: normal; color: #999d96; font-size: 12px; }
 .mode-list button.active { background: var(--ink); color: #fbf8f0; box-shadow: 0 6px 15px rgba(23,33,28,.1); }
 .mode-list button.active span, .mode-list button.active i { color: #d8d6cf; }
+.curriculum-boundary { width: 100%; margin-top: 16px; padding: 14px 15px; border: 1px dashed #bdb8ab; border-radius: 8px; background: rgba(255,255,255,.38); cursor: pointer; text-align: left; }
+.curriculum-boundary:hover:not(:disabled) { border-style: solid; border-color: var(--red); background: rgba(255,255,255,.64); }
+.curriculum-boundary:disabled { cursor: not-allowed; opacity: .58; }
+.curriculum-boundary span, .curriculum-boundary strong, .curriculum-boundary small { display: block; }
+.curriculum-boundary span { color: var(--red-dark); font-size: 10px; font-weight: 750; letter-spacing: .08em; }
+.curriculum-boundary strong { margin-top: 4px; font-size: 14px; }
+.curriculum-boundary small { margin-top: 4px; color: var(--muted); font-size: 11px; }
+.curriculum-boundary.compact { border-style: solid; }
 .reset-progress { margin: 18px 12px 0; padding: 0; border: 0; background: transparent; color: #9a9c96; cursor: pointer; font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
 .reset-progress:hover { color: var(--red-dark); }
 .rail-note { max-width: 230px; margin-top: 38px; padding-left: 14px; border-left: 2px solid #c7c3b8; }
@@ -228,6 +236,9 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 .restart-button:hover { background: var(--red-dark); }
 .restart-button span { display: flex; align-items: center; gap: 7px; color: #f3c6bf; font-size: 11px; }
 .restart-button kbd { border-color: #e48679; border-bottom-width: 1px; background: #b73f33; color: white; }
+.unlock-curriculum { width: min(360px, 100%); margin: 12px auto 0; padding: 13px 15px; border: 1px solid var(--red); border-radius: 5px; display: flex; align-items: center; justify-content: space-between; gap: 14px; background: transparent; color: var(--red-dark); cursor: pointer; font-size: 13px; }
+.unlock-curriculum:hover { background: #f7e9e5; }
+.unlock-curriculum span { color: var(--muted); font-size: 10px; }
 .completion-focus { width: min(360px, 100%); margin: 20px auto 0; padding: 13px; border: 1px solid var(--line); border-radius: 6px; background: rgba(255,255,255,.4); }
 .completion-focus span, .completion-focus strong { display: block; }
 .completion-focus span { color: var(--muted); font-size: 11px; }
