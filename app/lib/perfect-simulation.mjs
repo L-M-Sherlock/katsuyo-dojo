@@ -24,7 +24,7 @@ function assignmentSegment(model, focus, introduced, byKc, length, rotation, use
       byKc,
       component.coverageKcIds,
     ),
-    keyOf: (_component, exercise) => `${exercise.form ?? "classify"}:${exercise.verb.surface}`,
+    keyOf: (_component, exercise) => `${exercise.form ?? "classify"}:${exercise.item.surface}`,
     orderedCandidates: (component) => component.coverageKcIds.length > 0 || component.id === "exception.ru-godan",
     seed: rotation + 1,
     usedKeys,
@@ -75,7 +75,7 @@ export function simulatePerfectLearning(model, { maxRounds = 1000, sessionLength
 
       let mastered = false;
       for (const { item, candidate } of assignments) {
-        const key = `${candidate.form ?? "classify"}:${candidate.verb.surface}`;
+        const key = `${candidate.form ?? "classify"}:${candidate.item.surface}`;
         if (usedKeys.has(key)) return { completed: false, reason: "duplicate-round-exercise", focusId: focus.id, rounds, byKc, introducedKcIds };
         usedKeys.add(key);
         if (item.id === focus.id && isComponentMastered(focus, byKc)) {

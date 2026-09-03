@@ -239,7 +239,7 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
         if (!eligibleFor(verb, form)) continue;
         const kcIds = requiredKcIds(verb, form);
         const id = `${course.id}:${form ?? "classify"}:${verb.surface}`;
-        exercises.push({ id, courseId: course.id, courseIndex, form, verb, kcIds });
+        exercises.push({ id, courseId: course.id, courseIndex, form, item: verb, kcIds });
         for (const kcId of kcIds) {
           courseKcMap.get(course.id).add(kcId);
           if (!componentMap.has(kcId)) {
@@ -300,7 +300,7 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
 export function auditKnowledgeModel(model, { minEvidence = 5, sessionLength = 12 } = {}) {
   const issues = [];
   const byId = new Map(model.components.map((component) => [component.id, component]));
-  const exerciseKey = (exercise) => `${exercise.form ?? "classify"}:${exercise.verb.surface}`;
+  const exerciseKey = (exercise) => `${exercise.form ?? "classify"}:${exercise.item.surface}`;
 
   for (const exercise of model.exercises) {
     for (const kcId of exercise.kcIds) {

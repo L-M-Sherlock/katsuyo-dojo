@@ -70,3 +70,14 @@ test("moves the legacy iku atom under sokuon coverage", () => {
   assert.equal(imported.byKc["facet.onbin.sokuon.iku"].correct, 4);
   assert.equal(imported.byKc["exception.iku-onbin"], undefined);
 });
+
+test("preserves additive adjective progress without changing the profile format", () => {
+  const adjectiveStats = { ...stats, attempts: 6, correct: 6, confidence: 1 };
+  const imported = parseProfileImport({ ...profile, introducedKcIds: [...profile.introducedKcIds, "adj.class.i"], byKc: { ...profile.byKc, "adj.class.i": adjectiveStats } }, {
+    ...options,
+    kcIds: [...options.kcIds, "adj.class.i"],
+    gatingKcIds: [...options.gatingKcIds, "adj.class.i"],
+  });
+  assert.ok(imported.introducedKcIds.includes("adj.class.i"));
+  assert.deepEqual(imported.byKc["adj.class.i"], adjectiveStats);
+});

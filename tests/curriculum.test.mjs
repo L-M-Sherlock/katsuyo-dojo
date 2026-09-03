@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { advanceIntroductions, selectFocus } from "../app/lib/adaptive.mjs";
-import { CORE_COURSE_COUNT, CORE_COURSE_IDS, COURSES, componentsForScope, coursesForScope, knowledgeModelForScope } from "../app/lib/curriculum.mjs";
+import { ADJECTIVE_COURSES, CORE_COURSE_COUNT, CORE_COURSE_IDS, COURSES, componentsForScope, coursesForScope, knowledgeModelForScope } from "../app/lib/curriculum.mjs";
 
 const expectedCore = [
   "classify", "negative", "past", "te", "masu", "basicCompound", "imperative",
@@ -19,6 +19,13 @@ test("defaults the core scope to only the courses before the boundary", () => {
   assert.deepEqual(coursesForScope("core").map((course) => course.id), expectedCore);
   assert.equal(coursesForScope("full").length, COURSES.length);
   assert.throws(() => coursesForScope("unknown"), /Unknown curriculum scope/);
+});
+
+test("defines an independent adjective curriculum in Yokubi lesson order", () => {
+  assert.deepEqual(ADJECTIVE_COURSES.map((course) => course.id), ["adjectiveClassify", "adjectiveIBase", "adjectiveITe", "adjectiveNaBase", "adjectiveConditional", "adjectiveAdverb"]);
+  assert.deepEqual(ADJECTIVE_COURSES.map((course) => course.lesson), ["08", "08", "10", "15", "27", "31"]);
+  assert.ok(ADJECTIVE_COURSES.every((course) => course.domain === "adjective"));
+  assert.ok(COURSES.every((course) => course.domain === "verb"));
 });
 
 test("keeps existing downstream progress but excludes it from core focus and unlocking", () => {

@@ -5,7 +5,7 @@ const voiceForms = ["passivePast", "passiveNegative", "passiveNegativePast", "po
 
 // Course order is also the adaptive unlock order. Keep the core conjugation
 // route contiguous so it can be practised independently from later patterns.
-export const COURSES = [
+const VERB_COURSE_DEFINITIONS = [
   { id: "classify", title: "动词分类", lesson: "04", url: lessonUrl("Section1/Part1", 4), forms: [] },
   { id: "negative", title: "否定形", lesson: "07", url: lessonUrl("Section1/Part1", 7), forms: ["negative"] },
   { id: "past", title: "过去形", lesson: "09", url: lessonUrl("Section1/Part1", 9), forms: ["past"] },
@@ -47,6 +47,17 @@ export const COURSES = [
   { id: "sugiru", title: "すぎる", lesson: "61", url: lessonUrl("Section2/Part4", 61), forms: ["sugiru"] },
   { id: "tagaru", title: "たがる", lesson: "63", url: lessonUrl("Section2/Part4", 63), forms: ["tagaru"] },
 ];
+
+export const COURSES = VERB_COURSE_DEFINITIONS.map((course) => ({ ...course, domain: "verb" }));
+
+export const ADJECTIVE_COURSES = [
+  { id: "adjectiveClassify", title: "形容词分类", lesson: "08", url: lessonUrl("Section1/Part1", 8), forms: [] },
+  { id: "adjectiveIBase", title: "い形容词基础活用", lesson: "08", url: lessonUrl("Section1/Part1", 8), forms: ["adjectiveNegative", "adjectivePast", "adjectiveNegativePast"] },
+  { id: "adjectiveITe", title: "い形容词て形", lesson: "10", url: lessonUrl("Section1/Part1", 10), forms: ["adjectiveTe"] },
+  { id: "adjectiveNaBase", title: "な形容词基础活用", lesson: "15", url: lessonUrl("Section1/Part1", 15), forms: ["adjectiveAttributive", "adjectivePredicative", "adjectiveNaNegative", "adjectiveNaPast", "adjectiveNaNegativePast", "adjectiveNaTe"] },
+  { id: "adjectiveConditional", title: "形容词条件形", lesson: "27", url: lessonUrl("Section1/Part2", 27), forms: ["adjectiveBa"] },
+  { id: "adjectiveAdverb", title: "形容词副词形", lesson: "31", url: lessonUrl("Section2/Part3", 31), forms: ["adjectiveAdverb"] },
+].map((course) => ({ ...course, domain: "adjective" }));
 
 export const CORE_END_COURSE_ID = "voiceCompound";
 export const CORE_COURSE_COUNT = COURSES.findIndex((course) => course.id === CORE_END_COURSE_ID) + 1;

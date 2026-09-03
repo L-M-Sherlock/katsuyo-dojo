@@ -76,7 +76,7 @@ test("audits gating support, coverage parents, and course supply", () => {
   assert.deepEqual(auditKnowledgeModel(healthy, { minEvidence: 1, sessionLength: 1 }), []);
   const broken = {
     components: [{ id: "exception.kuru.negative", gating: true, firstCourseIndex: 0, coverageKcIds: [] }],
-    exercises: [{ id: "one", courseId: "negative", courseIndex: 0, form: "negative", verb: kuru, kcIds: ["exception.kuru.negative"] }],
+    exercises: [{ id: "one", courseId: "negative", courseIndex: 0, form: "negative", item: kuru, kcIds: ["exception.kuru.negative"] }],
   };
   const codes = auditKnowledgeModel(broken).map(({ code }) => code);
   assert.ok(codes.includes("undersupplied-gating-kc"));

@@ -75,8 +75,12 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 }
 .intro { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.8; max-width: 270px; }
 
+.domain-switch { margin-top: 24px; padding: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; border-radius: 8px; background: #e5e1d7; }
+.domain-switch button { padding: 9px 8px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; }
+.domain-switch button.active { background: var(--paper-light); color: var(--ink); box-shadow: 0 2px 7px rgba(23,33,28,.08); }
+
 .adaptive-entry {
-  width: 100%; margin-top: 28px; padding: 14px; border: 1px solid #d5d0c4; border-radius: 9px;
+  width: 100%; margin-top: 12px; padding: 14px; border: 1px solid #d5d0c4; border-radius: 9px;
   display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center;
   background: rgba(255,255,255,.45); text-align: left; cursor: pointer;
 }
@@ -178,6 +182,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .answer-note { margin: 8px 1px 0; color: #858780; font-size: 12px; }
 
 .class-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 28px; }
+.class-options.two-options { grid-template-columns: repeat(2, 1fr); }
 .class-options button { position: relative; padding: 16px 48px 16px 12px; border: 1px solid #d3d0c7; border-radius: 7px; background: #fff; cursor: pointer; text-align: left; transition: transform .18s, border .18s, background .18s; }
 .class-options button:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--ink); }
 .class-options button:disabled { opacity: .55; cursor: default; }

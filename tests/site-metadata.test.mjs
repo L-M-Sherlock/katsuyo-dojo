@@ -9,6 +9,7 @@ test("declares a deployable site favicon", async () => {
   ]);
 
   assert.match(html, /<link rel="icon" type="image\/svg\+xml" href="\/katsuyo-dojo\/favicon\.svg" \/>/);
+  assert.match(html, /日语动词与形容词活用练习/);
   assert.match(favicon, /<title>活用道場<\/title>/);
   assert.match(favicon, />活<\/text>/);
 });
