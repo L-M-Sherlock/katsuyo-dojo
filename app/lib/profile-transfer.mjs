@@ -5,6 +5,12 @@ const KC_ID_ALIASES = {
   "exception.kuru.class": "facet.class.irregular.kuru",
 };
 
+function aliasKcId(id) {
+  if (KC_ID_ALIASES[id]) return KC_ID_ALIASES[id];
+  const match = id.match(/^exception\.(suru|kuru)\.(.+)$/);
+  return match ? `facet.form.${match[2]}.${match[1]}` : id;
+}
+
 function record(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : null;
 }
@@ -72,13 +78,13 @@ export function parseProfileImport(value, { today, kcIds = /** @type {string[]} 
   const allowedGating = new Set(gatingKcIds);
   const byKc = {};
   for (const [id, value] of Object.entries(source.byKc)) {
-    const targetId = KC_ID_ALIASES[id] ?? id;
+    const targetId = aliasKcId(id);
     const stats = allowed.has(targetId) ? skillStats(value) : null;
     if (stats && (!(targetId in byKc) || id === targetId)) byKc[targetId] = stats;
   }
   const introducedKcIds = [...new Set([
     ...initialKcIds,
-    ...(Array.isArray(source.introducedKcIds) ? source.introducedKcIds.map((id) => KC_ID_ALIASES[id] ?? id) : []),
+    ...(Array.isArray(source.introducedKcIds) ? source.introducedKcIds.map(aliasKcId) : []),
   ])].filter((id) => allowedGating.has(id));
   return {
     version: 5,

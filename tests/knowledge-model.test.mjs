@@ -41,6 +41,14 @@ test("models suru and kuru as coverage facets of one irregular-class atom", () =
   assert.equal(model.components.some((kc) => kc.id === "exception.kuru.class"), false);
 });
 
+test("models irregular form variants as non-gating coverage facets of the form", () => {
+  assert.deepEqual(requiredKcIds(kuru, "negative"), ["class.irregular", "facet.class.irregular.kuru", "suffix.negative", "facet.form.negative.kuru"]);
+  const model = buildKnowledgeModel([{ id: "negative", lesson: "07", forms: ["negative"] }], [kuru]);
+  const negative = model.components.find((kc) => kc.id === "suffix.negative");
+  assert.deepEqual(negative.coverageKcIds, ["facet.form.negative.kuru"]);
+  assert.equal(model.components.find((kc) => kc.id === "facet.form.negative.kuru").gating, false);
+});
+
 test("builds a Q-matrix catalog and makes lexical facts non-gating", () => {
   const courses = [
     { id: "classify", lesson: "04", forms: [] },

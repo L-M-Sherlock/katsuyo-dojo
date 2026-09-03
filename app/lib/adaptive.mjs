@@ -55,12 +55,26 @@ function speedPenalty(stats, baseline) {
   return Math.min(Math.max(speed / baseline - 1, 0), 1) * 0.05;
 }
 
-export function rankExercisesForFocus(exercises, focusId, byKc) {
+export function rankExercisesForFocus(exercises, focusId, byKc, coverageKcIds = []) {
   const lexicalConfidence = (exercise) => {
     const lexicalId = exercise.kcIds.find((id) => id.startsWith("lexeme."));
     return lexicalId ? byKc[lexicalId]?.confidence ?? 0 : 1;
   };
   const burden = (exercise) => exercise.kcIds.reduce((sum, id) => sum + (id === focusId ? 0 : 1 - (byKc[id]?.confidence ?? 0)), 0);
+  if (coverageKcIds.length) {
+    const groups = new Map();
+    for (const exercise of [...exercises].sort((a, b) => burden(a) - burden(b) || a.id.localeCompare(b.id))) {
+      const facetId = exercise.kcIds.find((id) => coverageKcIds.includes(id)) ?? "other";
+      if (!groups.has(facetId)) groups.set(facetId, []);
+      groups.get(facetId).push(exercise);
+    }
+    const orderedGroups = [...groups].sort(([a], [b]) => {
+      const aCovered = Math.min(byKc[a]?.correct ?? 0, 1);
+      const bCovered = Math.min(byKc[b]?.correct ?? 0, 1);
+      return aCovered - bCovered || a.localeCompare(b);
+    }).map(([, group]) => group);
+    return [...orderedGroups.map((group) => group[0]), ...orderedGroups.flatMap((group) => group.slice(1))];
+  }
   if (focusId === "class.irregular") {
     const groups = new Map();
     for (const exercise of [...exercises].sort((a, b) => burden(a) - burden(b) || a.id.localeCompare(b.id))) {

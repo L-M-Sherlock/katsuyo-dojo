@@ -58,3 +58,9 @@ test("merges legacy irregular-class atoms into non-gating coverage facets", () =
   assert.equal(imported.byKc["facet.class.irregular.kuru"].attempts, 4);
   assert.equal(imported.byKc["exception.kuru.class"], undefined);
 });
+
+test("moves legacy per-form irregular atoms under the form coverage facet", () => {
+  const imported = parseProfileImport({ ...profile, introducedKcIds: ["class.godan", "exception.kuru.negative"], byKc: { "exception.kuru.negative": stats } }, { ...options, kcIds: [...options.kcIds, "facet.form.negative.kuru"], gatingKcIds: [...options.gatingKcIds, "suffix.negative"] });
+  assert.equal(imported.byKc["facet.form.negative.kuru"].correct, 4);
+  assert.equal(imported.byKc["exception.kuru.negative"], undefined);
+});

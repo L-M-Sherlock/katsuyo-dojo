@@ -110,6 +110,7 @@ const exercisesFor = (kc: KnowledgeComponent, mode: PracticeMode, profile: Profi
   KNOWLEDGE.exercises.filter((exercise) => exercise.kcIds.includes(kc.id) && (mode === "adaptive" ? exercise.courseIndex === kc.firstCourseIndex : exercise.courseId === mode)),
   kc.id,
   profile.byKc,
+  kc.coverageKcIds,
 ) as Exercise[];
 function emptyProfile(): Profile { return { version: 5, date: todayKey(), attempted: 0, correct: 0, streak: 0, introducedKcIds: [...INITIAL_KC_IDS], rotation: 0, byKc: {} }; }
 function activateReadyKcs(profile: Profile) {
@@ -288,7 +289,7 @@ export default function Home() {
   const feedbackTitle = result === "correct" ? "正解！" : result === "revealed" ? "记住这个变化" : "差一点";
   const kcStatus = (kc: KnowledgeComponent) => {
     const stats = profile.byKc[kc.id] ?? emptySkillStats();
-    const nonGatingParent = kc.id.startsWith("facet.class.irregular.") ? "class.irregular" : "exception.ru-godan";
+    const nonGatingParent = kc.id.startsWith("facet.class.irregular.") ? "class.irregular" : kc.id.startsWith("facet.form.") ? `suffix.${kc.id.split(".")[2]}` : "exception.ru-godan";
     const active = kc.gating ? introducedSet.has(kc.id) : introducedSet.has(nonGatingParent) || stats.attempts > 0;
     if (kc.id.startsWith("facet.")) return !active ? "未引入" : (stats.correct ?? 0) >= 1 ? "已覆盖" : "待覆盖";
     if (focusKc?.id === kc.id && active) return "当前聚焦";

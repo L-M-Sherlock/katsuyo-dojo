@@ -132,7 +132,7 @@ export function classificationKcIds(verb) {
 
 function primitiveKcIds(verb, form) {
   const result = [`suffix.${form}`];
-  if (verb.class === "irregular") return [...result, `exception.${irregularKind(verb)}.${form}`];
+  if (verb.class === "irregular") return [...result, `facet.form.${form}.${irregularKind(verb)}`];
   if (verb.class === "ichidan") return ["stem.ichidan.drop-ru", ...result];
 
   const ending = verb.surface.at(-1);
@@ -191,6 +191,10 @@ function metadataFor(id, formLabels) {
   if (id.startsWith("lexeme.ru-godan.")) return { label: `${id.slice("lexeme.ru-godan.".length)}是五段动词`, family: "exception", gating: false };
   if (id === "facet.class.irregular.suru") return { label: "する类题目覆盖", family: "classification", gating: false };
   if (id === "facet.class.irregular.kuru") return { label: "来る题目覆盖", family: "classification", gating: false };
+  if (id.startsWith("facet.form.")) {
+    const [, , form, kind] = id.split(".");
+    return { label: `${kind === "suru" ? "する类" : "来る"}在${formLabels[form] ?? form}中的覆盖`, family: "exception", gating: false };
+  }
   if (id.startsWith("suffix.")) {
     const form = id.slice("suffix.".length);
     return { label: SUFFIX_LABELS[form] ?? `${formLabels[form] ?? form}的基本接续`, family: "connection", gating: true };
@@ -210,7 +214,7 @@ function prerequisitesFor(id) {
   if (id === "exception.ru-godan") return ["heuristic.ru-ie"];
   if (id.startsWith("lexeme.ru-godan.")) return ["exception.ru-godan"];
   if (id.startsWith("facet.class.irregular.")) return ["class.irregular"];
-  if (id.startsWith("exception.suru.") || id.startsWith("exception.kuru.")) return ["class.irregular"];
+  if (id.startsWith("facet.form.")) return ["class.irregular"];
   if (id === "stem.ichidan.drop-ru") return ["class.ichidan"];
   if (id.startsWith("stem.godan.") || id.startsWith("onbin.") || id === "exception.iku-onbin") return ["class.godan"];
   if (["construction.chau", "construction.toku", "construction.teru", "construction.toru", "construction.teku"].includes(id)) {
@@ -246,7 +250,7 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
               firstCourseIndex: courseIndex,
               firstLesson: course.lesson,
               prerequisites: prerequisitesFor(kcId),
-              coverageKcIds: kcId === "class.irregular" ? ["facet.class.irregular.suru", "facet.class.irregular.kuru"] : [],
+              coverageKcIds: [],
               ...metadata,
             });
           }
@@ -256,6 +260,19 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
   });
 
   const components = [...componentMap.values()];
+  const irregularClass = components.find((component) => component.id === "class.irregular");
+  if (irregularClass) {
+    irregularClass.coverageKcIds.push(...components.filter((component) => component.id.startsWith("facet.class.irregular.")).map((component) => component.id));
+  }
+  for (const component of components) {
+    if (component.id.startsWith("suffix.")) {
+      const form = component.id.slice("suffix.".length);
+      const facets = components
+        .filter((candidate) => candidate.id.startsWith(`facet.form.${form}.`))
+        .map((candidate) => candidate.id);
+      component.coverageKcIds.push(...facets);
+    }
+  }
   for (const component of components) {
     for (const prerequisite of component.prerequisites) {
       if (!componentMap.has(prerequisite)) throw new Error(`Unknown prerequisite ${prerequisite} for ${component.id}`);
