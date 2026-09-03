@@ -129,11 +129,15 @@ export function selectFocus(components, byKc) {
   const baseline = timed.length ? timed[Math.floor(timed.length / 2)] : null;
 
   return [...components].sort((a, b) => {
+    const aMastered = isComponentMastered(a, byKc);
+    const bMastered = isComponentMastered(b, byKc);
+    if (aMastered !== bMastered) return aMastered ? 1 : -1;
     const aStats = byKc[a.id] ?? emptySkillStats();
     const bStats = byKc[b.id] ?? emptySkillStats();
-    const aScore = componentConfidence(a, byKc) - speedPenalty(aStats, baseline);
-    const bScore = componentConfidence(b, byKc) - speedPenalty(bStats, baseline);
-    return aScore - bScore || a.order - b.order || a.id.localeCompare(b.id);
+    const confidenceDifference = componentConfidence(a, byKc) - componentConfidence(b, byKc);
+    if (confidenceDifference) return confidenceDifference;
+    const speedDifference = speedPenalty(bStats, baseline) - speedPenalty(aStats, baseline);
+    return speedDifference || a.order - b.order || a.id.localeCompare(b.id);
   })[0] ?? null;
 }
 

@@ -51,6 +51,44 @@ test("focuses the least confident included skill using current confidence", () =
   assert.equal(focus.id, "b");
 });
 
+test("never lets a speed penalty rank a mastered atom ahead of an unmastered atom", () => {
+  const components = [
+    { id: "suffix.te", order: 0, coverageKcIds: [] },
+    { id: "fast-a", order: 1, coverageKcIds: [] },
+    { id: "fast-b", order: 2, coverageKcIds: [] },
+    { id: "suffix.masu", order: 3, coverageKcIds: ["facet.form.masu.suru"] },
+  ];
+  const timedStats = (millisecondsPerCharacter) => ({ ...emptySkillStats(), attempts: 7, correct: 7, filteredAccuracy: 1, confidence: 1, bestConfidence: 1, cleanTimeCount: 3, cleanTimeTotal: millisecondsPerCharacter * 3 });
+  const focus = selectFocus(components, {
+    "suffix.te": timedStats(2000),
+    "fast-a": timedStats(100),
+    "fast-b": timedStats(100),
+    "suffix.masu": { ...emptySkillStats(), attempts: 6, correct: 6, filteredAccuracy: 1, confidence: 1, bestConfidence: 1 },
+  });
+
+  assert.equal(componentConfidence(components[0], { "suffix.te": timedStats(2000) }), 1);
+  assert.equal(componentConfidence(components[3], { "suffix.masu": { confidence: 1 } }), 0.99);
+  assert.equal(focus.id, "suffix.masu");
+});
+
+test("uses answer speed only to break equal-confidence ties", () => {
+  const components = [
+    { id: "slower-but-stronger", order: 0, coverageKcIds: [] },
+    { id: "faster-but-weaker", order: 1, coverageKcIds: [] },
+    { id: "baseline-a", order: 2, coverageKcIds: [] },
+    { id: "baseline-b", order: 3, coverageKcIds: [] },
+  ];
+  const stats = (confidence, millisecondsPerCharacter) => ({ ...emptySkillStats(), attempts: 4, correct: 4, filteredAccuracy: confidence, confidence, cleanTimeCount: 3, cleanTimeTotal: millisecondsPerCharacter * 3 });
+  const focus = selectFocus(components, {
+    "slower-but-stronger": stats(0.8, 2000),
+    "faster-but-weaker": stats(0.79, 100),
+    "baseline-a": stats(0.95, 100),
+    "baseline-b": stats(0.95, 100),
+  });
+
+  assert.equal(focus.id, "faster-but-weaker");
+});
+
 test("builds a 3:1 Japanese-style focus rotation", () => {
   const plan = makeRoundPlan(skills[0], skills, 12, 0);
   assert.equal(plan.filter((skill) => skill.id === "a").length, 9);
