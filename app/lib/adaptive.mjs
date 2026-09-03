@@ -49,12 +49,6 @@ export function updateSkillStats(current, result) {
   };
 }
 
-function speedPenalty(stats, baseline) {
-  if (!stats || stats.cleanTimeCount < 3 || !baseline) return 0;
-  const speed = stats.cleanTimeTotal / stats.cleanTimeCount;
-  return Math.min(Math.max(speed / baseline - 1, 0), 1) * 0.05;
-}
-
 export function rankExercisesForFocus(exercises, focusId, byKc, coverageKcIds = []) {
   const lexicalConfidence = (exercise) => {
     const lexicalId = exercise.kcIds.find((id) => id.startsWith("lexeme."));
@@ -121,23 +115,12 @@ export function correctAnswersNeeded(component, byKc, maximum = 100) {
 }
 
 export function selectFocus(components, byKc) {
-  const timed = components
-    .map((component) => byKc[component.id])
-    .filter((stats) => stats?.cleanTimeCount >= 3)
-    .map((stats) => stats.cleanTimeTotal / stats.cleanTimeCount)
-    .sort((a, b) => a - b);
-  const baseline = timed.length ? timed[Math.floor(timed.length / 2)] : null;
-
   return [...components].sort((a, b) => {
     const aMastered = isComponentMastered(a, byKc);
     const bMastered = isComponentMastered(b, byKc);
     if (aMastered !== bMastered) return aMastered ? 1 : -1;
-    const aStats = byKc[a.id] ?? emptySkillStats();
-    const bStats = byKc[b.id] ?? emptySkillStats();
     const confidenceDifference = componentConfidence(a, byKc) - componentConfidence(b, byKc);
-    if (confidenceDifference) return confidenceDifference;
-    const speedDifference = speedPenalty(bStats, baseline) - speedPenalty(aStats, baseline);
-    return speedDifference || a.order - b.order || a.id.localeCompare(b.id);
+    return confidenceDifference || a.order - b.order || a.id.localeCompare(b.id);
   })[0] ?? null;
 }
 
