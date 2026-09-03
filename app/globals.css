@@ -202,9 +202,11 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .knowledge-tags span { padding: 4px 8px; border: 1px solid rgba(45,106,81,.2); border-radius: 999px; background: rgba(255,255,255,.45); color: var(--muted); font-size: 10px; }
 .knowledge-tags span.target { border-color: currentColor; color: var(--green); font-weight: 700; }
 .feedback.incorrect .knowledge-tags span.target, .feedback.revealed .knowledge-tags span.target { color: var(--red-dark); }
-.rule-line { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: "Yu Mincho", "Noto Serif JP", serif; font-size: 23px; }
+.rule-line { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: "Yu Mincho", "Noto Serif JP", serif; font-size: 23px; line-height: 1.75; }
 .rule-line > b { color: var(--red); font-family: var(--font-geist-sans), sans-serif; font-size: 11px; }
 .rule-line > span { display: inline-flex; align-items: center; gap: 10px; }
+.rule-line ruby { ruby-align: center; }
+.rule-line rt { color: var(--muted); font-family: var(--font-geist-sans), sans-serif; font-size: 10px; font-weight: 500; letter-spacing: .08em; }
 .rule-line .joiner { color: #9f9f98; font-family: sans-serif; font-size: 10px; }
 .answer-emphasis { color: var(--red-dark); font-weight: 700; }
 .grouped-forms { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(23,33,28,.11); display: grid; grid-template-columns: auto repeat(2, minmax(0, 1fr)); align-items: center; gap: 10px; }
