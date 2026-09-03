@@ -55,25 +55,78 @@ function speedPenalty(stats, baseline) {
   return Math.min(Math.max(speed / baseline - 1, 0), 1) * 0.05;
 }
 
-export function selectFocus(skills, bySkill) {
-  const timed = skills
-    .map((skill) => bySkill[skill.id])
+export function rankExercisesForFocus(exercises, focusId, byKc) {
+  const lexicalConfidence = (exercise) => {
+    const lexicalId = exercise.kcIds.find((id) => id.startsWith("lexeme."));
+    return lexicalId ? byKc[lexicalId]?.confidence ?? 0 : 1;
+  };
+  const burden = (exercise) => exercise.kcIds.reduce((sum, id) => sum + (id === focusId ? 0 : 1 - (byKc[id]?.confidence ?? 0)), 0);
+  return [...exercises].sort((a, b) => {
+    if (focusId === "exception.ru-godan") {
+      const lexicalDifference = lexicalConfidence(a) - lexicalConfidence(b);
+      if (lexicalDifference) return lexicalDifference;
+    }
+    return burden(a) - burden(b) || a.id.localeCompare(b.id);
+  });
+}
+
+export function selectFocus(components, byKc) {
+  const timed = components
+    .map((component) => byKc[component.id])
     .filter((stats) => stats?.cleanTimeCount >= 3)
     .map((stats) => stats.cleanTimeTotal / stats.cleanTimeCount)
     .sort((a, b) => a - b);
   const baseline = timed.length ? timed[Math.floor(timed.length / 2)] : null;
 
-  return [...skills].sort((a, b) => {
-    const aStats = bySkill[a.id] ?? emptySkillStats();
-    const bStats = bySkill[b.id] ?? emptySkillStats();
+  return [...components].sort((a, b) => {
+    const aStats = byKc[a.id] ?? emptySkillStats();
+    const bStats = byKc[b.id] ?? emptySkillStats();
     const aScore = aStats.confidence - speedPenalty(aStats, baseline);
     const bScore = bStats.confidence - speedPenalty(bStats, baseline);
     return aScore - bScore || a.order - b.order || a.id.localeCompare(b.id);
   })[0] ?? null;
 }
 
-export function allConfident(skills, bySkill) {
-  return skills.length > 0 && skills.every((skill) => (bySkill[skill.id]?.confidence ?? 0) >= 1);
+export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @type {string | null} */ (null), ...result }) {
+  const next = { ...byKc };
+  const affected = result.correct ? [...new Set(kcIds)] : [failedKcId ?? focusId].filter(Boolean);
+  for (const kcId of affected) {
+    next[kcId] = updateSkillStats(next[kcId], {
+      ...result,
+      responseMs: kcId === focusId ? result.responseMs : undefined,
+    });
+  }
+  return next;
+}
+
+export function findNextIntroducible(components, introducedKcIds, byKc) {
+  const introduced = new Set(introducedKcIds);
+  const active = components.filter((component) => component.gating && introduced.has(component.id));
+  if (active.some((component) => (byKc[component.id]?.confidence ?? 0) < 1)) return null;
+
+  return components.find((component) => {
+    if (!component.gating || introduced.has(component.id)) return false;
+    const prerequisitesReady = component.prerequisites.every((id) => (byKc[id]?.confidence ?? 0) >= 1);
+    const earlierCoursesReady = components
+      .filter((other) => other.gating && other.firstCourseIndex < component.firstCourseIndex)
+      .every((other) => introduced.has(other.id) && (byKc[other.id]?.confidence ?? 0) >= 1);
+    return prerequisitesReady && earlierCoursesReady;
+  }) ?? null;
+}
+
+export function advanceIntroductions(components, introducedKcIds, byKc) {
+  const introduced = [...introducedKcIds];
+  const added = [];
+  while (true) {
+    const next = findNextIntroducible(components, introduced, byKc);
+    if (!next) break;
+    introduced.push(next.id);
+    added.push(next);
+    // Skip atoms that already gathered enough incidental or manual evidence,
+    // but stop as soon as there is a genuinely new weakest atom to practise.
+    if ((byKc[next.id]?.confidence ?? 0) < 1) break;
+  }
+  return { introducedKcIds: introduced, added };
 }
 
 /** Build the same 3:1 focus/balance rhythm used by kanabr's Japanese generator. */
@@ -119,28 +172,6 @@ export function makeUniqueAssignments(preferredItems, options) {
     const candidates = candidatesFor(preferred);
     return { item: preferred, candidate: candidates[0] };
   });
-}
-
-/** Preserve skill confidence when the two cross-lesson courses are split. */
-export function migrateSplitCourseProgress(introducedCount, bySkill) {
-  const migratedSkills = {};
-  for (const [oldId, stats] of Object.entries(bySkill ?? {})) {
-    const newId = oldId
-      .replace(/^pastTe:past:/, "past:past:")
-      .replace(/^pastTe:te:/, "te:te:")
-      .replace(/^stemAux:sugiru:/, "sugiru:sugiru:")
-      .replace(/^stemAux:tagaru:/, "tagaru:tagaru:");
-    migratedSkills[newId] = stats;
-  }
-
-  const oldCount = Math.max(introducedCount ?? 1, 1);
-  const migratedCount = oldCount <= 2 ? oldCount : oldCount <= 31 ? oldCount + 1 : oldCount + 2;
-  return { introducedCount: migratedCount, bySkill: migratedSkills };
-}
-
-export function courseCountToSkillCount(courseCount, skills) {
-  const count = Math.max(courseCount ?? 1, 1);
-  return skills.filter((skill) => skill.courseIndex < count).length;
 }
 
 export const adaptiveConstants = {

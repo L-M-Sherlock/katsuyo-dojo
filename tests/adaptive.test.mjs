@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { allConfident, confidenceOf, courseCountToSkillCount, emptySkillStats, evidenceValue, makeRoundPlan, makeUniqueAssignments, migrateSplitCourseProgress, selectFocus, updateSkillStats } from "../app/lib/adaptive.mjs";
+import { advanceIntroductions, confidenceOf, emptySkillStats, evidenceValue, findNextIntroducible, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats, updateSkillStats } from "../app/lib/adaptive.mjs";
 
 const skills = [
   { id: "a", order: 0 },
@@ -72,34 +72,71 @@ test("keeps the preferred skill until its unique exercises are exhausted", () =>
   assert.deepEqual(assignments.map(({ item }) => item.id), ["focus", "focus", "balance"]);
 });
 
-test("migrates confidence and unlock position when cross-lesson courses split", () => {
-  const stats = { confidence: 0.6 };
-  const early = migrateSplitCourseProgress(2, { "pastTe:past:godan": stats });
-  const afterPastTe = migrateSplitCourseProgress(3, { "pastTe:past:godan": stats, "pastTe:te:ichidan": stats });
-  const afterStemAux = migrateSplitCourseProgress(32, { "stemAux:sugiru:godan": stats, "stemAux:tagaru:ichidan": stats });
-
-  assert.equal(early.introducedCount, 2);
-  assert.equal(afterPastTe.introducedCount, 4);
-  assert.equal(afterStemAux.introducedCount, 34);
-  assert.equal(afterPastTe.bySkill["past:past:godan"], stats);
-  assert.equal(afterPastTe.bySkill["te:te:ichidan"], stats);
-  assert.equal(afterStemAux.bySkill["sugiru:sugiru:godan"], stats);
-  assert.equal(afterStemAux.bySkill["tagaru:tagaru:ichidan"], stats);
+test("a correct answer updates every required KC but records time only for the focus", () => {
+  const byKc = updateKnowledgeStats({}, {
+    kcIds: ["class.godan", "onbin.hatsuon", "suffix.past"],
+    focusId: "onbin.hatsuon",
+    correct: true,
+    responseMs: 1200,
+    answerLength: 4,
+  });
+  assert.deepEqual(Object.keys(byKc), ["class.godan", "onbin.hatsuon", "suffix.past"]);
+  assert.equal(byKc["class.godan"].confidence, byKc["suffix.past"].confidence);
+  assert.equal(byKc["class.godan"].cleanTimeCount, 0);
+  assert.equal(byKc["onbin.hatsuon"].cleanTimeCount, 1);
 });
 
-test("converts legacy course unlocks into rule unlocks", () => {
-  const orderedSkills = [
-    { courseIndex: 0 }, { courseIndex: 0 },
-    { courseIndex: 1 }, { courseIndex: 1 }, { courseIndex: 1 },
-    { courseIndex: 2 },
+test("an incorrect answer changes only the uniquely diagnosed KC", () => {
+  const byKc = updateKnowledgeStats({}, {
+    kcIds: ["class.godan", "onbin.hatsuon", "suffix.past"],
+    focusId: "suffix.past",
+    failedKcId: "onbin.hatsuon",
+    correct: false,
+  });
+  assert.deepEqual(Object.keys(byKc), ["onbin.hatsuon"]);
+});
+
+test("an ambiguous error falls back to the focused KC", () => {
+  const byKc = updateKnowledgeStats({}, {
+    kcIds: ["class.godan", "onbin.hatsuon", "suffix.past"],
+    focusId: "suffix.past",
+    correct: false,
+  });
+  assert.deepEqual(Object.keys(byKc), ["suffix.past"]);
+});
+
+test("introduces one prerequisite-ready gating KC at a time", () => {
+  const components = [
+    { id: "a", gating: true, firstCourseIndex: 0, prerequisites: [] },
+    { id: "lexeme", gating: false, firstCourseIndex: 0, prerequisites: ["a"] },
+    { id: "b", gating: true, firstCourseIndex: 0, prerequisites: ["a"] },
+    { id: "c", gating: true, firstCourseIndex: 1, prerequisites: ["b"] },
   ];
-
-  assert.equal(courseCountToSkillCount(1, orderedSkills), 2);
-  assert.equal(courseCountToSkillCount(2, orderedSkills), 5);
-  assert.equal(courseCountToSkillCount(3, orderedSkills), 6);
+  const mastered = { a: { confidence: 1 }, b: { confidence: 1 } };
+  assert.equal(findNextIntroducible(components, ["a"], mastered).id, "b");
+  assert.equal(findNextIntroducible(components, ["a", "b"], mastered).id, "c");
+  assert.equal(findNextIntroducible(components, ["a", "b", "c"], { ...mastered, c: { confidence: 0.8 } }), null);
 });
 
-test("unlocks only when all current skills are confident", () => {
-  assert.equal(allConfident(skills, { a: { confidence: 1 }, b: { confidence: 1 }, c: { confidence: 1 } }), true);
-  assert.equal(allConfident(skills, { a: { confidence: 1 }, b: { confidence: 0.99 }, c: { confidence: 1 } }), false);
+test("skips pre-mastered atoms when advancing to the next weak atom", () => {
+  const components = [
+    { id: "a", gating: true, firstCourseIndex: 0, prerequisites: [] },
+    { id: "b", gating: true, firstCourseIndex: 0, prerequisites: [] },
+    { id: "c", gating: true, firstCourseIndex: 0, prerequisites: [] },
+  ];
+  const advanced = advanceIntroductions(components, ["a"], { a: { confidence: 1 }, b: { confidence: 1 } });
+  assert.deepEqual(advanced.introducedKcIds, ["a", "b", "c"]);
+  assert.deepEqual(advanced.added.map(({ id }) => id), ["b", "c"]);
+});
+
+test("a shared exception focus prioritizes the weakest individual exception word", () => {
+  const exercises = [
+    { id: "known", kcIds: ["exception.ru-godan", "lexeme.ru-godan.切る"] },
+    { id: "weak", kcIds: ["exception.ru-godan", "lexeme.ru-godan.喋る"] },
+  ];
+  const ranked = rankExercisesForFocus(exercises, "exception.ru-godan", {
+    "lexeme.ru-godan.切る": { confidence: 1 },
+    "lexeme.ru-godan.喋る": { confidence: 0.2 },
+  });
+  assert.equal(ranked[0].id, "weak");
 });

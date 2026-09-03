@@ -116,6 +116,12 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .rail-note p { margin: 6px 0 0; color: #898c85; font-size: 11px; line-height: 1.65; }
 
 .exercise-stage { display: flex; flex-direction: column; padding: 50px 0 24px clamp(46px, 7vw, 106px); min-width: 0; }
+.migration-notice { margin-bottom: 18px; padding: 13px 15px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border: 1px solid #d6c6ac; border-radius: 8px; background: #f5ead6; }
+.migration-notice p { margin: 0; }
+.migration-notice strong, .migration-notice span { display: block; }
+.migration-notice strong { font-size: 13px; }
+.migration-notice span { margin-top: 3px; color: var(--muted); font-size: 11px; }
+.migration-notice button { flex: 0 0 auto; padding: 6px 9px; border: 1px solid #c9b896; border-radius: 5px; background: rgba(255,255,255,.45); cursor: pointer; font-size: 11px; }
 .stage-meta { display: grid; grid-template-columns: auto minmax(100px, 240px) 1fr; align-items: center; gap: 18px; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
 .progress-track { height: 3px; background: #d9d5ca; border-radius: 3px; overflow: hidden; }
 .progress-track span { display: block; height: 100%; background: var(--red); transition: width .35s ease; }
@@ -184,6 +190,10 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .feedback.incorrect, .feedback.revealed { border-color: var(--red); }
 .feedback-copy strong { font-size: 17px; }
 .feedback-copy p { margin: 5px 0 14px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.knowledge-tags { margin: 0 0 15px; display: flex; flex-wrap: wrap; gap: 6px; }
+.knowledge-tags span { padding: 4px 8px; border: 1px solid rgba(45,106,81,.2); border-radius: 999px; background: rgba(255,255,255,.45); color: var(--muted); font-size: 10px; }
+.knowledge-tags span.target { border-color: currentColor; color: var(--green); font-weight: 700; }
+.feedback.incorrect .knowledge-tags span.target, .feedback.revealed .knowledge-tags span.target { color: var(--red-dark); }
 .rule-line { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: "Yu Mincho", "Noto Serif JP", serif; font-size: 23px; }
 .rule-line > b { color: var(--red); font-family: var(--font-geist-sans), sans-serif; font-size: 11px; }
 .rule-line > span { display: inline-flex; align-items: center; gap: 10px; }
@@ -255,6 +265,9 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 .transfer-notice { grid-column: 1 / -1; margin: 0; padding-top: 11px; border-top: 1px solid var(--line); font-size: 12px; }
 .transfer-notice.success { color: var(--green); }
 .transfer-notice.error { color: var(--red-dark); }
+.progress-view-tabs { margin: 0 0 12px; padding: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; border-radius: 8px; background: #e8e4da; }
+.progress-view-tabs button { padding: 8px 12px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; }
+.progress-view-tabs button.active { background: var(--paper-light); color: var(--ink); box-shadow: 0 1px 4px rgba(23,33,28,.08); }
 .course-progress-list { display: grid; gap: 8px; }
 .course-progress-list details { border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.38); overflow: hidden; }
 .course-progress-list summary { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; list-style: none; }
@@ -269,6 +282,7 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 .skill-progress-list { padding: 0 12px 12px; display: grid; gap: 5px; }
 .skill-progress-row { padding: 11px 12px; display: grid; grid-template-columns: minmax(0, 1fr) 150px; align-items: center; gap: 16px; border-radius: 6px; background: rgba(242,239,231,.68); }
 .skill-progress-row.focus { box-shadow: inset 3px 0 var(--red); background: #f2e9e3; }
+.skill-progress-row.lexical { margin-left: 16px; padding-block: 8px; background: rgba(242,239,231,.42); }
 .skill-progress-copy span, .skill-progress-copy small { display: block; }
 .skill-progress-copy span { overflow-wrap: anywhere; font-size: 14px; }
 .skill-progress-copy small { margin-top: 4px; color: var(--muted); font-size: 11px; }
@@ -318,6 +332,7 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 @media (max-width: 500px) {
   .brand small { display: none; }
   .daily-summary div + div { display: none; }
+  .migration-notice { align-items: flex-start; }
   .exercise-card { padding: 26px 22px; }
   .answer-row { grid-template-columns: 1fr; }
   .answer-row button { height: 43px; }

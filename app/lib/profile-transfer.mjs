@@ -1,5 +1,5 @@
 const FORMAT = "katsuyo-dojo-profile";
-const FORMAT_VERSION = 1;
+const FORMAT_VERSION = 2;
 
 function record(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : null;
@@ -34,35 +34,51 @@ export function createProfileExport(profile, exportedAt = new Date().toISOString
   return { format: FORMAT, formatVersion: FORMAT_VERSION, exportedAt, profile };
 }
 
-export function parseProfileImport(value, { today, skillIds, maxSkills }) {
+export function parseProfileImport(value, { today, kcIds = /** @type {string[]} */ ([]), gatingKcIds = kcIds, initialKcIds = /** @type {string[]} */ ([]) }) {
   const envelope = record(value);
   if (!envelope) throw new Error("文件内容不是有效的数据对象。");
-  if ("format" in envelope && (envelope.format !== FORMAT || envelope.formatVersion !== FORMAT_VERSION)) {
+  if ("format" in envelope && (envelope.format !== FORMAT || ![1, FORMAT_VERSION].includes(envelope.formatVersion))) {
     throw new Error("这不是受支持的活用道場备份文件。");
   }
 
   const source = record(envelope.profile) ?? envelope;
-  if (source.version !== 4 || !record(source.bySkill)) {
+  if (![4, 5].includes(source.version)) {
     throw new Error("备份版本不受支持或数据不完整。");
-  }
-
-  const allowed = new Set(skillIds);
-  const bySkill = {};
-  for (const [id, value] of Object.entries(source.bySkill)) {
-    const stats = allowed.has(id) ? skillStats(value) : null;
-    if (stats) bySkill[id] = stats;
   }
 
   const sameDay = source.date === today;
   const attempted = sameDay ? count(source.attempted) : 0;
-  return {
-    version: 4,
+  const daily = {
     date: today,
     attempted,
     correct: sameDay ? count(source.correct, attempted) : 0,
     streak: sameDay ? count(source.streak, attempted) : 0,
-    introducedSkillCount: Math.min(Math.max(count(source.introducedSkillCount), 1), maxSkills),
     rotation: count(source.rotation),
-    bySkill,
+  };
+
+  // The old flattened skills cannot be decomposed reliably. Keep only daily
+  // totals and restart the atomic assessment, as promised by the v5 migration.
+  if (source.version === 4) {
+    if (!record(source.bySkill)) throw new Error("备份版本不受支持或数据不完整。");
+    return { version: 5, ...daily, introducedKcIds: [...initialKcIds], byKc: {} };
+  }
+  if (!record(source.byKc)) throw new Error("备份版本不受支持或数据不完整。");
+
+  const allowed = new Set(kcIds);
+  const allowedGating = new Set(gatingKcIds);
+  const byKc = {};
+  for (const [id, value] of Object.entries(source.byKc)) {
+    const stats = allowed.has(id) ? skillStats(value) : null;
+    if (stats) byKc[id] = stats;
+  }
+  const introducedKcIds = [...new Set([
+    ...initialKcIds,
+    ...(Array.isArray(source.introducedKcIds) ? source.introducedKcIds : []),
+  ])].filter((id) => allowedGating.has(id));
+  return {
+    version: 5,
+    ...daily,
+    introducedKcIds,
+    byKc,
   };
 }

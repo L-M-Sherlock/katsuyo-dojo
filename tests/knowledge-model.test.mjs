@@ -1,0 +1,59 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { buildKnowledgeModel, deriveExercise, diagnoseConjugation, isRuGodanException, requiredKcIds } from "../app/lib/knowledge-model.mjs";
+
+const yomu = { surface: "読む", reading: "よむ", meaning: "阅读", class: "godan" };
+const kaku = { surface: "書く", reading: "かく", meaning: "书写", class: "godan" };
+const taberu = { surface: "食べる", reading: "たべる", meaning: "吃", class: "ichidan" };
+const shaberu = { surface: "喋る", reading: "しゃべる", meaning: "聊天", class: "godan" };
+
+test("maps a godan past item to class, sound change, voicing, and suffix KCs", () => {
+  assert.deepEqual(requiredKcIds(yomu, "past"), ["class.godan", "onbin.hatsuon", "onbin.voicing", "suffix.past"]);
+  assert.deepEqual(requiredKcIds(kaku, "te"), ["class.godan", "onbin.i", "suffix.te"]);
+});
+
+test("shares sound-change KCs between past, te, and derived constructions", () => {
+  assert.ok(requiredKcIds(yomu, "past").includes("onbin.hatsuon"));
+  assert.ok(requiredKcIds(yomu, "te").includes("onbin.hatsuon"));
+  const compound = requiredKcIds(yomu, "teshimau");
+  assert.ok(compound.includes("onbin.hatsuon"));
+  assert.ok(compound.includes("suffix.te"));
+  assert.ok(compound.includes("construction.teshimau"));
+});
+
+test("tracks ru-ending godan exceptions as a shared and per-word fact", () => {
+  assert.equal(isRuGodanException(shaberu), true);
+  const ids = requiredKcIds(shaberu, null);
+  assert.ok(ids.includes("exception.ru-godan"));
+  assert.ok(ids.includes("lexeme.ru-godan.喋る"));
+  assert.ok(requiredKcIds(taberu, null).includes("heuristic.ru-ie"));
+});
+
+test("builds a Q-matrix catalog and makes lexical facts non-gating", () => {
+  const courses = [
+    { id: "classify", lesson: "04", forms: [] },
+    { id: "past", lesson: "09", forms: ["past"] },
+  ];
+  const model = buildKnowledgeModel(courses, [yomu, shaberu, taberu], { formLabels: { past: "过去形" } });
+  assert.equal(model.exercises.length, 6);
+  assert.equal(model.components.find((kc) => kc.id === "lexeme.ru-godan.喋る").gating, false);
+  assert.ok(model.courseKcIds.past.includes("onbin.hatsuon"));
+  assert.ok(model.components.every((kc) => kc.prerequisites.every((id) => model.components.some((candidate) => candidate.id === id))));
+});
+
+test("returns structured derivation evidence", () => {
+  const derivation = deriveExercise(yomu, "past");
+  assert.equal(derivation.answer, "読んだ");
+  assert.ok(derivation.operations.every((operation) => operation.kcIds.length > 0));
+  assert.ok(derivation.operations.every((operation) => Array.isArray(operation.diagnosticAlternatives)));
+  assert.deepEqual(derivation.requiredKcIds, requiredKcIds(yomu, "past"));
+});
+
+test("diagnoses only exact, unique single-rule near misses", () => {
+  assert.equal(diagnoseConjugation(yomu, "past", "読みた")?.kcId, "onbin.hatsuon");
+  assert.equal(diagnoseConjugation(yomu, "past", "読んた")?.kcId, "onbin.voicing");
+  assert.equal(diagnoseConjugation(yomu, "teshimau", "読みてしまう")?.kcId, "onbin.hatsuon");
+  assert.equal(diagnoseConjugation(yomu, "past", "xyz"), null);
+  const kanaException = { ...shaberu, surface: shaberu.reading, lexicalSurface: shaberu.surface };
+  assert.equal(diagnoseConjugation(kanaException, "negative", "しゃべない")?.kcId, "lexeme.ru-godan.喋る");
+});

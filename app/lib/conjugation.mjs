@@ -213,7 +213,7 @@ function conjugateIrregular(word, form) {
  * Conjugate a curated Japanese verb into one of the supported forms.
  * @param {string} word
  * @param {"godan" | "ichidan" | "irregular"} verbClass
- * @param {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast"} form
+ * @param {ConjugationForm} form
  */
 export function conjugate(word, verbClass, form) {
   if (form === "passiveDesireNegativePast") {
@@ -351,7 +351,7 @@ export function conjugate(word, verbClass, form) {
  * Include common variants that should be accepted even when they are not the displayed answer.
  * @param {string} word
  * @param {"godan" | "ichidan" | "irregular"} verbClass
- * @param {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast"} form
+ * @param {ConjugationForm} form
  */
 export function acceptedConjugations(word, verbClass, form) {
   const answers = [conjugate(word, verbClass, form)];
@@ -400,7 +400,7 @@ export function acceptedConjugations(word, verbClass, form) {
  * Return a short, learner-facing account of the sound change.
  * @param {string} word
  * @param {"godan" | "ichidan" | "irregular"} verbClass
- * @param {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast"} form
+ * @param {ConjugationForm} form
  */
 export function explainConjugation(word, verbClass, form) {
   const answer = conjugate(word, verbClass, form);
@@ -712,3 +712,4 @@ export function explainClass(verb) {
   if (verb.surface.endsWith("る")) return `${verb.surface} 以 る 结尾，但 る 前的「${beforeRu?.kana ?? "前一音"}」不在い段或え段，按常用初判应归为五段；活用时词尾会在不同元音段之间移动。`;
   return `${verb.surface} 是五段动词；最后一个假名会随活用在不同元音段之间移动。`;
 }
+/** @typedef {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru"} ConjugationForm */
