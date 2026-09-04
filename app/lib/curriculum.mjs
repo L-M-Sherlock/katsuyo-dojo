@@ -18,7 +18,7 @@ const VERB_COURSE_DEFINITIONS = [
   { id: "volitional", title: "意向形", lesson: "26", url: lessonUrl("Section1/Part2", 26), forms: ["volitional"] },
   { id: "ba", title: "ば形", lesson: "27", url: lessonUrl("Section1/Part2", 27), forms: ["ba"] },
   { id: "causative", title: "使役形", lesson: "53", url: lessonUrl("Section2/Part4", 53), forms: ["causative"] },
-  { id: "causativePassive", title: "使役受身形", lesson: "53", url: lessonUrl("Section2/Part4", 53), forms: ["causativePassive"] },
+  { id: "causativePassive", title: "使役受身形", lesson: "53", url: lessonUrl("Section2/Part4", 53), forms: ["causativePassive", "causativePassiveContracted"] },
   { id: "voiceCompound", title: "态的复合活用", lesson: "复习", url: lessonUrl("Section2/Part4", 53), forms: voiceForms },
 
   // Derived forms remain available after the core boundary.

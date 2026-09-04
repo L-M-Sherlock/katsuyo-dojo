@@ -15,6 +15,13 @@ test("maps a godan past item to class, sound change, voicing, and suffix KCs", (
   assert.deepEqual(requiredKcIds(kaku, "te"), ["class.godan", "onbin.i", "suffix.te"]);
 });
 
+test("models contracted causative-passive as its own knowledge point", () => {
+  assert.deepEqual(requiredKcIds(yomu, "causativePassiveContracted"), [
+    "class.godan", "stem.godan.a", "suffix.causativePassive", "contraction.causative-passive",
+  ]);
+  assert.equal(diagnoseConjugation(yomu, "causativePassiveContracted", "読ませられる")?.kcId, "contraction.causative-passive");
+});
+
 test("shares sound-change KCs between past, te, and derived constructions", () => {
   assert.ok(requiredKcIds(yomu, "past").includes("onbin.hatsuon"));
   assert.ok(requiredKcIds(yomu, "te").includes("onbin.hatsuon"));

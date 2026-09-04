@@ -216,6 +216,13 @@ function conjugateIrregular(word, form) {
  * @param {ConjugationForm} form
  */
 export function conjugate(word, verbClass, form) {
+  if (form === "causativePassiveContracted") {
+    if (verbClass !== "godan" || word.at(-1) === "す") throw new Error(`Unsupported contracted causative-passive verb: ${word}`);
+    const ending = word.at(-1);
+    const moved = NEGATIVE_ENDINGS[ending];
+    if (!moved) throw new Error(`Unsupported godan ending: ${ending}`);
+    return replaceEnding(word, `${moved}される`);
+  }
   if (form === "passiveDesireNegativePast") {
     const passive = conjugate(word, verbClass, "passive");
     const desire = conjugate(passive, "ichidan", "tai");
@@ -404,6 +411,16 @@ export function acceptedConjugations(word, verbClass, form) {
  */
 export function explainConjugation(word, verbClass, form) {
   const answer = conjugate(word, verbClass, form);
+
+  if (form === "causativePassiveContracted") {
+    const fullForm = conjugate(word, verbClass, "causativePassive");
+    return {
+      answer,
+      parts: [answer],
+      steps: [fullForm, answer],
+      rule: "「せられる」缩约为「される」。",
+    };
+  }
 
   if (form === "passiveDesireNegativePast") {
     const passive = conjugate(word, verbClass, "passive");
@@ -712,4 +729,4 @@ export function explainClass(verb) {
   if (verb.surface.endsWith("る")) return `${verb.surface} 以 る 结尾，但 る 前的「${beforeRu?.kana ?? "前一音"}」不在い段或え段，按常用初判应归为五段；活用时词尾会在不同元音段之间移动。`;
   return `${verb.surface} 是五段动词；最后一个假名会随活用在不同元音段之间移动。`;
 }
-/** @typedef {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru"} ConjugationForm */
+/** @typedef {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "causativePassiveContracted" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru"} ConjugationForm */

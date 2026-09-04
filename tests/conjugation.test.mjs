@@ -197,6 +197,14 @@ test("uses the negative stem for godan causative forms", () => {
   }
 });
 
+test("builds the contracted causative-passive only for eligible godan verbs", () => {
+  assert.equal(conjugate("入る", "godan", "causativePassiveContracted"), "入らされる");
+  assert.equal(conjugate("読む", "godan", "causativePassiveContracted"), "読まされる");
+  assert.deepEqual(explainConjugation("入る", "godan", "causativePassiveContracted").steps, ["入らせられる", "入らされる"]);
+  assert.throws(() => conjugate("話す", "godan", "causativePassiveContracted"), /Unsupported contracted/);
+  assert.throws(() => conjugate("食べる", "ichidan", "causativePassiveContracted"), /Unsupported contracted/);
+});
+
 test("moves every godan ending to the o row for the volitional form", () => {
   const cases = [
     ["買う", "買おう"], ["書く", "書こう"], ["泳ぐ", "泳ごう"],

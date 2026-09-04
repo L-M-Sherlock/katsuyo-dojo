@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { acceptedVariantNote, matchAcceptedAnswer } from "../app/lib/answer-variants.mjs";
+import { acceptedVariantKcIds, acceptedVariantNote, matchAcceptedAnswer } from "../app/lib/answer-variants.mjs";
 
 const normalize = (value) => value.replace(/\s/g, "");
 
@@ -22,4 +22,12 @@ test("labels other accepted variants without misclassifying them", () => {
   assert.equal(acceptedVariantNote({ domain: "adjective" }, "adjectiveNaNegative", adjective), "你使用了较口语的「じゃ」形式。");
   assert.equal(acceptedVariantNote({ domain: "verb" }, "imperative", { surface: "せよ" }), "你使用了本站接受的答案变体。");
   assert.deepEqual(matchAcceptedAnswer("wrong", ["浴びられる"], ["あびられる"], normalize), { correct: false, variant: null });
+});
+
+test("recognizes contracted causative-passive answers as knowledge evidence", () => {
+  const item = { domain: "verb" };
+  assert.equal(acceptedVariantNote(item, "causativePassive", { surface: "入らされる" }), "使役受身缩约：「せられる」→「される」。");
+  assert.deepEqual(acceptedVariantKcIds(item, "causativePassive", { surface: "入らされる" }), ["contraction.causative-passive"]);
+  assert.deepEqual(acceptedVariantKcIds(item, "causativePassiveNegativePast", { surface: "入らされなかった" }), ["contraction.causative-passive"]);
+  assert.deepEqual(acceptedVariantKcIds(item, "causativePassive", { surface: "入らせられる" }), []);
 });

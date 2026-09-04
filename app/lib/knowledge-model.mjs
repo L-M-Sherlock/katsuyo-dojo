@@ -12,6 +12,7 @@ export const KC_FAMILY_LABELS = {
   onbin: "音便",
   connection: "接续形式",
   compound: "复合变化",
+  contraction: "缩约",
   exception: "例外",
 };
 
@@ -79,6 +80,7 @@ const STATIC_METADATA = {
   "compound.polite-negative-past": ["ます→ませんでした", "compound"],
   "compound.voice-stack": ["态后继续叠加活用", "compound"],
   "compound.multi-step": ["多步活用组合", "compound"],
+  "contraction.causative-passive": ["使役受身「せられる→される」", "contraction"],
 };
 
 const SUFFIX_LABELS = {
@@ -154,6 +156,9 @@ function primitiveKcIds(verb, form) {
 }
 
 function formKcIds(verb, form) {
+  if (form === "causativePassiveContracted") {
+    return [...formKcIds(verb, "causativePassive"), "contraction.causative-passive"];
+  }
   if (form === "passiveDesireNegativePast") {
     return [...formKcIds(verb, "passive"), "stem.ichidan.drop-ru", "construction.tai", "compound.negative-past", "compound.multi-step"];
   }
@@ -217,6 +222,7 @@ function prerequisitesFor(id) {
   if (id.startsWith("facet.form.")) return ["class.irregular"];
   if (id === "facet.onbin.sokuon.iku") return ["onbin.sokuon"];
   if (id === "stem.ichidan.drop-ru") return ["class.ichidan"];
+  if (id === "contraction.causative-passive") return ["suffix.causativePassive"];
   if (id.startsWith("stem.godan.") || id.startsWith("onbin.") || id === "exception.iku-onbin") return ["class.godan"];
   if (["construction.chau", "construction.toku", "construction.teru", "construction.toru", "construction.teku"].includes(id)) {
     const base = { "construction.chau": "construction.teshimau", "construction.toku": "construction.teoku", "construction.teru": "construction.teiru", "construction.toru": "construction.teoru", "construction.teku": "construction.teiku" }[id];
@@ -379,7 +385,7 @@ function diagnosticCandidates(verb, form) {
   }
 
   const detail = explainConjugation(verb.surface, verb.class, form);
-  const lastConstruction = [...ids].reverse().find((id) => id.startsWith("construction.") || id.startsWith("compound."));
+  const lastConstruction = [...ids].reverse().find((id) => id.startsWith("construction.") || id.startsWith("compound.") || id.startsWith("contraction."));
   if (lastConstruction) {
     const intermediate = detail.steps?.at(-2) ?? (detail.parts?.length > 1 ? detail.parts[0] : null);
     if (intermediate && intermediate !== canonical) result.push({ answer: intermediate, kcId: lastConstruction, message: `前面的变化已经形成，但还没有完成${metadataFor(lastConstruction, {}).label}。` });
