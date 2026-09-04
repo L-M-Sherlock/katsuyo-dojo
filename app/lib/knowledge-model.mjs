@@ -5,6 +5,7 @@ import {
   explainClass,
   explainConjugation,
 } from "./conjugation.mjs";
+import { COMPOUND_FORM_SPECS } from "./compound-forms.mjs";
 
 export const KC_FAMILY_LABELS = {
   classification: "词类判断",
@@ -156,11 +157,22 @@ function primitiveKcIds(verb, form) {
 }
 
 function formKcIds(verb, form) {
+  const compoundSpec = COMPOUND_FORM_SPECS[form];
+  if (compoundSpec) {
+    const continuationId = `composition.${compoundSpec.outputType === "iAdjective" ? "i-adjective" : "verb"}.${compoundSpec.ending}`;
+    const baseIds = formKcIds(verb, compoundSpec.form);
+    if (compoundSpec.outputType === "iAdjective" || ["aru", "iku", "kuru"].includes(compoundSpec.outputClass)) {
+      return [...baseIds, continuationId];
+    }
+    const base = conjugate(verb.surface, verb.class, compoundSpec.form);
+    const continuationVerb = { surface: base, reading: base, class: compoundSpec.outputClass };
+    return [...baseIds, ...formKcIds(continuationVerb, compoundSpec.ending), continuationId];
+  }
   if (form === "causativePassiveContracted") {
     return [...formKcIds(verb, "causativePassive"), "contraction.causative-passive"];
   }
   if (form === "passiveDesireNegativePast") {
-    return [...formKcIds(verb, "passive"), "stem.ichidan.drop-ru", "construction.tai", "compound.negative-past", "compound.multi-step"];
+    return [...formKcIds(verb, "passive"), "construction.tai", "compound.multi-step"];
   }
   if (VOICE_COMPOUNDS[form]) {
     const [voice, ending] = VOICE_COMPOUNDS[form];
@@ -200,6 +212,11 @@ function metadataFor(id, formLabels) {
     const [, , form, kind] = id.split(".");
     return { label: `${kind === "suru" ? "する类" : "来る"}在${formLabels[form] ?? form}中的覆盖`, family: "exception", gating: false };
   }
+  if (id.startsWith("composition.")) {
+    const [, output, ending] = id.split(".");
+    const endingLabels = { past: "过去形", negative: "否定形", negativePast: "否定过去形" };
+    return { label: `${output === "i-adjective" ? "い形容词型" : "动词型"}接续结果继续变为${endingLabels[ending] ?? ending}`, family: "compound", gating: true };
+  }
   if (id.startsWith("suffix.")) {
     const form = id.slice("suffix.".length);
     return { label: SUFFIX_LABELS[form] ?? `${formLabels[form] ?? form}的基本接续`, family: "connection", gating: true };
@@ -230,7 +247,8 @@ function prerequisitesFor(id) {
   }
   if (id.startsWith("compound.polite-")) return ["suffix.masu"];
   if (id === "compound.negative-past") return ["suffix.negative"];
-  if (id === "compound.multi-step") return ["suffix.passive", "construction.tai", "compound.negative-past"];
+  if (id.startsWith("composition.i-adjective.")) return ["construction.tai", "construction.tehoshii"];
+  if (id === "compound.multi-step") return ["suffix.passive", "composition.i-adjective.negativePast"];
   return [];
 }
 

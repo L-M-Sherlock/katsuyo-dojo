@@ -7,11 +7,12 @@ const server = await createServer({
 });
 
 try {
-  const [{ VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE }, { auditKnowledgeModel }, adaptive, { knowledgeModelForScope }] = await Promise.all([
+  const [{ VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE }, { auditKnowledgeModel, deriveExercise }, adaptive, { knowledgeModelForScope }, { MULTI_STEP_FORMS }] = await Promise.all([
     server.ssrLoadModule("/app/page.tsx"),
     server.ssrLoadModule("/app/lib/knowledge-model.mjs"),
     server.ssrLoadModule("/app/lib/adaptive.mjs"),
     server.ssrLoadModule("/app/lib/curriculum.mjs"),
+    server.ssrLoadModule("/app/lib/compound-forms.mjs"),
   ]);
   const issues = [];
   const models = [["verb", VERB_KNOWLEDGE], ["adjective", ADJECTIVE_KNOWLEDGE]];
@@ -28,9 +29,15 @@ try {
         issues.push({ domain, code: "desire-leaked-into-core" });
       }
       const multiStep = model.components.find((component) => component.id === "compound.multi-step");
-      const multiStepExercises = model.exercises.filter((exercise) => exercise.form === "passiveDesireNegativePast");
-      if (multiStep?.firstCourseId !== "multiStepCompound" || multiStepExercises.some((exercise) => exercise.courseId !== "multiStepCompound")) {
+      const expectedMultiStepForms = new Set(MULTI_STEP_FORMS);
+      const multiStepExercises = model.exercises.filter((exercise) => expectedMultiStepForms.has(exercise.form));
+      const actualMultiStepForms = new Set(multiStepExercises.map((exercise) => exercise.form));
+      if (multiStep?.firstCourseId !== "multiStepCompound" || multiStepExercises.some((exercise) => exercise.courseId !== "multiStepCompound") || [...expectedMultiStepForms].some((form) => !actualMultiStepForms.has(form))) {
         issues.push({ domain, code: "multi-step-not-isolated" });
+      }
+      for (const exercise of multiStepExercises) {
+        try { deriveExercise(exercise.item, exercise.form); }
+        catch (error) { issues.push({ domain, code: "invalid-multi-step-exercise", exerciseId: exercise.id, message: error.message }); }
       }
     }
     const gating = model.components.filter((component) => component.gating);

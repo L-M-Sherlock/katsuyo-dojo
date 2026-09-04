@@ -1,3 +1,5 @@
+import { MULTI_STEP_FORMS } from "./compound-forms.mjs";
+
 export const CHINESE_YOKUBI_URL = "https://l-m-sherlock.github.io/yokubi-zh-cn";
 
 const lessonUrl = (section, lesson) => `${CHINESE_YOKUBI_URL}/${section}/Lesson${lesson}.html`;
@@ -46,7 +48,7 @@ const VERB_COURSE_DEFINITIONS = [
   { id: "tatte", title: "たって", lesson: "59", url: lessonUrl("Section2/Part4", 59), forms: ["tatte"] },
   { id: "sugiru", title: "すぎる", lesson: "61", url: lessonUrl("Section2/Part4", 61), forms: ["sugiru"] },
   { id: "tagaru", title: "たがる", lesson: "63", url: lessonUrl("Section2/Part4", 63), forms: ["tagaru"] },
-  { id: "multiStepCompound", title: "多步活用组合", lesson: "复习", url: lessonUrl("Section1/Part2", 26), forms: ["passiveDesireNegativePast"] },
+  { id: "multiStepCompound", title: "多步活用组合", lesson: "复习", url: lessonUrl("Section1/Part2", 26), forms: MULTI_STEP_FORMS },
 ];
 
 export const COURSES = VERB_COURSE_DEFINITIONS.map((course) => ({ ...course, domain: "verb" }));

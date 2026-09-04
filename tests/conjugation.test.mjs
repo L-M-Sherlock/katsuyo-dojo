@@ -205,6 +205,25 @@ test("builds the contracted causative-passive only for eligible godan verbs", ()
   assert.throws(() => conjugate("食べる", "ichidan", "causativePassiveContracted"), /Unsupported contracted/);
 });
 
+test("continues conjugatable connection results by their output class", () => {
+  assert.equal(conjugate("読む", "godan", "teiruPast"), "読んでいた");
+  assert.equal(conjugate("読む", "godan", "teshimauNegativePast"), "読んでしまわなかった");
+  assert.equal(conjugate("書く", "godan", "teokuPast"), "書いておいた");
+  assert.equal(conjugate("食べる", "ichidan", "taiNegativePast"), "食べたくなかった");
+  assert.equal(conjugate("行く", "godan", "tehoshiiNegative"), "行ってほしくない");
+  assert.equal(conjugate("食べる", "ichidan", "sugiruPast"), "食べすぎた");
+  assert.equal(conjugate("帰る", "godan", "tagaruNegative"), "帰りたがらない");
+  assert.equal(conjugate("書く", "godan", "tearuNegativePast"), "書いてなかった");
+  assert.equal(conjugate("持つ", "godan", "teikuPast"), "持っていった");
+  assert.equal(conjugate("帰る", "godan", "tekuruNegative"), "帰ってこない");
+});
+
+test("carries spoken connection variants into continued conjugations", () => {
+  assert.deepEqual(acceptedConjugations("読む", "godan", "teiruPast"), ["読んでいた", "読んでた"]);
+  assert.deepEqual(acceptedConjugations("読む", "godan", "teshimauPast"), ["読んでしまった", "読んじゃった"]);
+  assert.deepEqual(acceptedConjugations("書く", "godan", "teokuPast"), ["書いておいた", "書いといた"]);
+});
+
 test("moves every godan ending to the o row for the volitional form", () => {
   const cases = [
     ["買う", "買おう"], ["書く", "書こう"], ["泳ぐ", "泳ごう"],

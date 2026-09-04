@@ -1,3 +1,5 @@
+import { COMPOUND_FORM_SPECS } from "./compound-forms.mjs";
+
 const NEGATIVE_ENDINGS = {
   "う": "わ",
   "く": "か",
@@ -154,6 +156,31 @@ function replaceEnding(word, replacement) {
   return `${word.slice(0, -1)}${replacement}`;
 }
 
+function inflectIAdjectiveTail(word, form) {
+  const stem = word.slice(0, -1);
+  if (form === "past") return `${stem}かった`;
+  if (form === "negative") return `${stem}くない`;
+  if (form === "negativePast") return `${stem}くなかった`;
+  throw new Error(`Unsupported i-adjective continuation: ${form}`);
+}
+
+function inflectFixedVerbTail(word, outputClass, form) {
+  const endings = {
+    aru: { plain: "ある", past: "あった", negative: "ない", negativePast: "なかった" },
+    iku: { plain: "いく", past: "いった", negative: "いかない", negativePast: "いかなかった" },
+    kuru: { plain: "くる", past: "きた", negative: "こない", negativePast: "こなかった" },
+  };
+  const rule = endings[outputClass];
+  if (!rule || !word.endsWith(rule.plain) || !rule[form]) throw new Error(`Unsupported ${outputClass} continuation: ${word} → ${form}`);
+  return `${word.slice(0, -rule.plain.length)}${rule[form]}`;
+}
+
+function inflectCompoundResult(word, spec) {
+  if (spec.outputType === "iAdjective") return inflectIAdjectiveTail(word, spec.ending);
+  if (["aru", "iku", "kuru"].includes(spec.outputClass)) return inflectFixedVerbTail(word, spec.outputClass, spec.ending);
+  return conjugate(word, spec.outputClass, spec.ending);
+}
+
 function conjugateIrregular(word, form) {
   if (word.endsWith("する")) {
     const base = word.slice(0, -2);
@@ -216,6 +243,8 @@ function conjugateIrregular(word, form) {
  * @param {ConjugationForm} form
  */
 export function conjugate(word, verbClass, form) {
+  const compoundSpec = COMPOUND_FORM_SPECS[form];
+  if (compoundSpec) return inflectCompoundResult(conjugate(word, verbClass, compoundSpec.form), compoundSpec);
   if (form === "causativePassiveContracted") {
     if (verbClass !== "godan" || word.at(-1) === "す") throw new Error(`Unsupported contracted causative-passive verb: ${word}`);
     const ending = word.at(-1);
@@ -362,6 +391,14 @@ export function conjugate(word, verbClass, form) {
  */
 export function acceptedConjugations(word, verbClass, form) {
   const answers = [conjugate(word, verbClass, form)];
+  const compoundSpec = COMPOUND_FORM_SPECS[form];
+  if (compoundSpec) {
+    for (const baseVariant of acceptedConjugations(word, verbClass, compoundSpec.form)) {
+      try { answers.push(inflectCompoundResult(baseVariant, compoundSpec)); }
+      catch { /* Some spoken bases do not retain enough material for another inflection. */ }
+    }
+    return [...new Set(answers)];
+  }
   const voiceCompound = VOICE_COMPOUND_FORMS[form];
 
   if (voiceCompound) {
@@ -411,6 +448,24 @@ export function acceptedConjugations(word, verbClass, form) {
  */
 export function explainConjugation(word, verbClass, form) {
   const answer = conjugate(word, verbClass, form);
+
+  const compoundSpec = COMPOUND_FORM_SPECS[form];
+  if (compoundSpec) {
+    const base = conjugate(word, verbClass, compoundSpec.form);
+    const outputLabel = compoundSpec.outputType === "iAdjective"
+      ? "い形容词"
+      : compoundSpec.outputClass === "ichidan"
+        ? "一段动词"
+        : compoundSpec.outputClass === "godan"
+          ? "五段动词"
+          : "相应动词";
+    return {
+      answer,
+      parts: [answer],
+      steps: [base, answer],
+      rule: `先构成 ${compoundSpec.label}；它的末尾按${outputLabel}继续变为${compoundSpec.endingLabel}。`,
+    };
+  }
 
   if (form === "causativePassiveContracted") {
     const fullForm = conjugate(word, verbClass, "causativePassive");
@@ -729,4 +784,5 @@ export function explainClass(verb) {
   if (verb.surface.endsWith("る")) return `${verb.surface} 以 る 结尾，但 る 前的「${beforeRu?.kana ?? "前一音"}」不在い段或え段，按常用初判应归为五段；活用时词尾会在不同元音段之间移动。`;
   return `${verb.surface} 是五段动词；最后一个假名会随活用在不同元音段之间移动。`;
 }
-/** @typedef {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "causativePassiveContracted" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru"} ConjugationForm */
+/** @typedef {`${"teageru" | "temorau" | "tekureru" | "teiru" | "tearu" | "teoru" | "tai" | "tehoshii" | "youtosuru" | "temiru" | "teshimau" | "teoku" | "teiku" | "tekuru" | "sugiru" | "tagaru"}${"Past" | "Negative" | "NegativePast"}`} CompoundContinuationForm */
+/** @typedef {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "causativePassiveContracted" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru" | CompoundContinuationForm} ConjugationForm */

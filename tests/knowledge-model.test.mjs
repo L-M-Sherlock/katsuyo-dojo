@@ -28,13 +28,19 @@ test("places multi-step conjugation behind all of its component forms", () => {
     { id: "negative", lesson: "07", forms: ["negative"] },
     { id: "passive", lesson: "24", forms: ["passive"] },
     { id: "basicCompound", lesson: "复习", forms: ["negativePast"] },
-    { id: "desire", lesson: "26", forms: ["tai"] },
-    { id: "multiStepCompound", lesson: "复习", forms: ["passiveDesireNegativePast"] },
+    { id: "desire", lesson: "26", forms: ["tai", "tehoshii"] },
+    { id: "multiStepCompound", lesson: "复习", forms: ["taiNegativePast", "passiveDesireNegativePast"] },
   ];
   const model = buildKnowledgeModel(courses, [yomu, taberu]);
   const multiStep = model.components.find((kc) => kc.id === "compound.multi-step");
   assert.equal(multiStep.firstCourseId, "multiStepCompound");
-  assert.deepEqual(multiStep.prerequisites, ["suffix.passive", "construction.tai", "compound.negative-past"]);
+  assert.deepEqual(multiStep.prerequisites, ["suffix.passive", "composition.i-adjective.negativePast"]);
+});
+
+test("maps continued connection forms to output-class composition knowledge", () => {
+  assert.ok(requiredKcIds(yomu, "teiruPast").includes("composition.verb.past"));
+  assert.ok(requiredKcIds(taberu, "taiNegative").includes("composition.i-adjective.negative"));
+  assert.ok(requiredKcIds(yomu, "teshimauNegativePast").includes("compound.negative-past"));
 });
 
 test("shares sound-change KCs between past, te, and derived constructions", () => {

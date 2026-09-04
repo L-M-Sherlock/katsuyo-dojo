@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { advanceIntroductions, selectFocus } from "../app/lib/adaptive.mjs";
+import { MULTI_STEP_FORMS } from "../app/lib/compound-forms.mjs";
 import { ADJECTIVE_COURSES, CORE_COURSE_COUNT, CORE_COURSE_IDS, COURSES, componentsForScope, coursesForScope, knowledgeModelForScope } from "../app/lib/curriculum.mjs";
 
 const expectedCore = [
@@ -21,9 +22,10 @@ test("places the complete core conjugation route before the curriculum boundary"
     title: "多步活用组合",
     lesson: "复习",
     url: "https://l-m-sherlock.github.io/yokubi-zh-cn/Section1/Part2/Lesson26.html",
-    forms: ["passiveDesireNegativePast"],
+    forms: MULTI_STEP_FORMS,
     domain: "verb",
   });
+  assert.equal(MULTI_STEP_FORMS.length, 49);
 });
 
 test("defaults the core scope to only the courses before the boundary", () => {
