@@ -17,6 +17,7 @@ test("places the complete core conjugation route before the curriculum boundary"
   assert.deepEqual(COURSES.find((course) => course.id === "causativePassive").forms, ["causativePassive", "causativePassiveContracted"]);
   assert.equal(COURSES.find((course) => course.id === "voiceCompound").forms.includes("passiveDesireNegativePast"), false);
   assert.deepEqual(COURSES.find((course) => course.id === "desire").forms, ["tai", "tehoshii"]);
+  assert.equal(COURSES.find((course) => course.id === "aspect").title, "ている・てある・ておる");
   assert.deepEqual(COURSES.at(-1), {
     id: "multiStepCompound",
     title: "多步活用组合",

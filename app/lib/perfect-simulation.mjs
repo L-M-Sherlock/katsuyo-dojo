@@ -2,6 +2,7 @@ import {
   advanceIntroductions,
   balanceComponentsForCourse,
   correctAnswersNeeded,
+  filterReadyExercises,
   isComponentMastered,
   makeRoundPlan,
   makeUniqueAssignments,
@@ -18,12 +19,11 @@ function assignmentSegment(model, focus, introduced, byKc, length, rotation, use
       const others = balanced.filter((component) => component.id !== preferred.id);
       return others.length ? [...others.slice(index % others.length), ...others.slice(0, index % others.length)] : [];
     },
-    candidatesFor: (component) => rankExercisesForFocus(
-      model.exercises.filter((exercise) => exercise.courseIndex === focus.firstCourseIndex && exercise.kcIds.includes(component.id)),
-      component.id,
-      byKc,
-      component.coverageKcIds,
-    ),
+    candidatesFor: (component) => {
+      const candidates = model.exercises.filter((exercise) => exercise.courseIndex === focus.firstCourseIndex && exercise.kcIds.includes(component.id));
+      const ready = filterReadyExercises(candidates, component.id, model.components, byKc);
+      return rankExercisesForFocus(ready, component.id, byKc, component.coverageKcIds);
+    },
     keyOf: (_component, exercise) => `${exercise.form ?? "classify"}:${exercise.item.surface}`,
     orderedCandidates: (component) => component.coverageKcIds.length > 0 || component.id === "exception.ru-godan",
     seed: rotation + 1,

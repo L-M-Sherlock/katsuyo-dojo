@@ -92,6 +92,21 @@ export function rankExercisesForFocus(exercises, focusId, byKc, coverageKcIds = 
   });
 }
 
+/** Keep a simpler candidate while an additional dependent rule is not mastered. */
+export function filterReadyExercises(exercises, focusId, components, byKc) {
+  const byId = new Map(components.map((component) => [component.id, component]));
+  const ready = exercises.filter((exercise) => exercise.kcIds.every((id) => {
+    if (id === focusId) return true;
+    const component = byId.get(id);
+    if (!component?.gating || component.prerequisites.length === 0) return true;
+    return component.prerequisites.every((prerequisiteId) => {
+      const prerequisite = byId.get(prerequisiteId);
+      return !prerequisite || isComponentMastered(prerequisite, byKc);
+    });
+  }));
+  return ready.length ? ready : exercises;
+}
+
 export function componentConfidence(component, byKc) {
   const confidence = byKc[component.id]?.confidence ?? 0;
   const coverageComplete = (component.coverageKcIds ?? []).every((id) => (byKc[id]?.correct ?? 0) >= 1);

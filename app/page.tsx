@@ -5,7 +5,7 @@ import { ADJECTIVES } from "./lib/adjective-catalog.mjs";
 import { ADJECTIVE_FORM_LABELS, adjectiveClassLabel, conjugateAdjective, diagnoseAdjective, explainAdjectiveConjugation } from "./lib/adjective-conjugation.mjs";
 import { buildAdjectiveKnowledgeModel, deriveAdjectiveExercise } from "./lib/adjective-knowledge-model.mjs";
 import { acceptedVariantKcIds, acceptedVariantNote, matchAcceptedAnswer } from "./lib/answer-variants.mjs";
-import { advanceIntroductions, balanceComponentsForCourse, componentConfidence, correctAnswersNeeded, emptySkillStats, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats } from "./lib/adaptive.mjs";
+import { advanceIntroductions, balanceComponentsForCourse, componentConfidence, correctAnswersNeeded, emptySkillStats, filterReadyExercises, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats } from "./lib/adaptive.mjs";
 import { classLabel, conjugate, explainConjugation } from "./lib/conjugation.mjs";
 import { COMPOUND_FORM_LABELS, COMPOUND_FORM_SPECS } from "./lib/compound-forms.mjs";
 import { summarizeCourseProgress } from "./lib/course-progress.mjs";
@@ -115,12 +115,11 @@ const INITIAL_KC_IDS = VERB_KCS.length ? [VERB_KCS.find((kc) => kc.gating)?.id].
 const importOptions = () => ({ today: todayKey(), kcIds: ALL_KCS.map((kc) => kc.id), gatingKcIds: GATING_KCS.map((kc) => kc.id), initialKcIds: INITIAL_KC_IDS });
 const kcsOf = (courseId: ModeId) => (KNOWLEDGE.courseKcIds[courseId] ?? []).map((id) => KC_BY_ID.get(id)).filter(Boolean) as KnowledgeComponent[];
 const exerciseKey = (exercise: Exercise) => `${exercise.item.domain}:${exercise.form ?? "classify"}:${exercise.item.surface}`;
-const exercisesFor = (kc: KnowledgeComponent, mode: PracticeMode, profile: Profile, adaptiveCourseIndex = kc.firstCourseIndex) => rankExercisesForFocus(
-  KNOWLEDGE.exercises.filter((exercise) => exercise.kcIds.includes(kc.id) && (mode === "adaptive" ? exercise.courseIndex === adaptiveCourseIndex : exercise.courseId === mode)),
-  kc.id,
-  profile.byKc,
-  kc.coverageKcIds,
-) as Exercise[];
+const exercisesFor = (kc: KnowledgeComponent, mode: PracticeMode, profile: Profile, adaptiveCourseIndex = kc.firstCourseIndex) => {
+  const candidates = KNOWLEDGE.exercises.filter((exercise) => exercise.kcIds.includes(kc.id) && (mode === "adaptive" ? exercise.courseIndex === adaptiveCourseIndex : exercise.courseId === mode));
+  const ready = filterReadyExercises(candidates, kc.id, KNOWLEDGE.components, profile.byKc);
+  return rankExercisesForFocus(ready, kc.id, profile.byKc, kc.coverageKcIds) as Exercise[];
+};
 function emptyProfile(): Profile { return { version: 5, date: todayKey(), attempted: 0, correct: 0, streak: 0, introducedKcIds: [...INITIAL_KC_IDS], rotation: 0, byKc: {} }; }
 function kcsForRoute(domain: PracticeDomain, scope: CurriculumScope) { return domain === "adjective" ? ADJECTIVE_KCS : scope === "core" ? CORE_KCS : VERB_KCS; }
 function coursesForRoute(domain: PracticeDomain, scope: CurriculumScope) { return domain === "adjective" ? ADJECTIVE_COURSES : coursesForScope(scope) as Course[]; }

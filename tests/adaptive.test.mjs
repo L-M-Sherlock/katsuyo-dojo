@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { advanceIntroductions, balanceComponentsForCourse, componentConfidence, confidenceOf, correctAnswersNeeded, emptySkillStats, evidenceValue, findNextIntroducible, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats, updateSkillStats } from "../app/lib/adaptive.mjs";
+import { advanceIntroductions, balanceComponentsForCourse, componentConfidence, confidenceOf, correctAnswersNeeded, emptySkillStats, evidenceValue, filterReadyExercises, findNextIntroducible, isComponentMastered, makeRoundPlan, makeUniqueAssignments, rankExercisesForFocus, selectFocus, updateKnowledgeStats, updateSkillStats } from "../app/lib/adaptive.mjs";
 
 const skills = [
   { id: "a", order: 0 },
@@ -141,6 +141,25 @@ test("keeps the preferred skill until its unique exercises are exhausted", () =>
   });
 
   assert.deepEqual(assignments.map(({ item }) => item.id), ["focus", "focus", "balance"]);
+});
+
+test("hides a contracted exercise until its full-form prerequisite is mastered", () => {
+  const full = { id: "construction.teoru", gating: true, prerequisites: [], coverageKcIds: [] };
+  const contracted = { id: "construction.toru", gating: true, prerequisites: [full.id], coverageKcIds: [] };
+  const exercises = [
+    { id: "full", kcIds: [full.id] },
+    { id: "contracted", kcIds: [full.id, contracted.id] },
+  ];
+
+  assert.deepEqual(filterReadyExercises(exercises, full.id, [full, contracted], { [full.id]: { confidence: 0.7 } }).map(({ id }) => id), ["full"]);
+  assert.deepEqual(filterReadyExercises(exercises, full.id, [full, contracted], { [full.id]: { confidence: 1 } }).map(({ id }) => id), ["full", "contracted"]);
+});
+
+test("keeps the only available exercise when a dependency cannot be isolated", () => {
+  const base = { id: "class.ichidan", gating: true, prerequisites: [], coverageKcIds: [] };
+  const heuristic = { id: "heuristic.ru-ie", gating: true, prerequisites: [base.id], coverageKcIds: [] };
+  const onlyExercise = { id: "classify", kcIds: [base.id, heuristic.id] };
+  assert.deepEqual(filterReadyExercises([onlyExercise], base.id, [base, heuristic], {}), [onlyExercise]);
 });
 
 test("a correct answer updates every required KC but records time only for the focus", () => {
