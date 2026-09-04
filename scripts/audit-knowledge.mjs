@@ -16,6 +16,13 @@ try {
   const models = [["verb", VERB_KNOWLEDGE], ["adjective", ADJECTIVE_KNOWLEDGE]];
   for (const [domain, model] of models) {
     issues.push(...auditKnowledgeModel(model).map((issue) => ({ domain, ...issue })));
+    if (domain === "verb") {
+      const sampledIrregulars = [...new Set(model.exercises
+        .filter((exercise) => exercise.item.class === "irregular")
+        .map((exercise) => exercise.item.surface))];
+      const redundantSuruCompounds = sampledIrregulars.filter((surface) => surface !== "する" && surface !== "来る");
+      if (redundantSuruCompounds.length) issues.push({ domain, code: "redundant-suru-compounds", surfaces: redundantSuruCompounds });
+    }
     const gating = model.components.filter((component) => component.gating);
     for (const focus of gating) {
       const balanced = adaptive.balanceComponentsForCourse(focus, gating, model.courseKcIds[focus.firstCourseId] ?? []);

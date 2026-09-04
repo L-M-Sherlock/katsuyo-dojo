@@ -252,6 +252,7 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
               firstLesson: course.lesson,
               prerequisites: prerequisitesFor(kcId),
               coverageKcIds: [],
+              coverageOnly: false,
               ...metadata,
             });
           }
@@ -263,6 +264,7 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
   const components = [...componentMap.values()];
   const irregularClass = components.find((component) => component.id === "class.irregular");
   if (irregularClass) {
+    irregularClass.coverageOnly = true;
     irregularClass.coverageKcIds.push(...components.filter((component) => component.id.startsWith("facet.class.irregular.")).map((component) => component.id));
   }
   const sokuon = components.find((component) => component.id === "onbin.sokuon");
@@ -311,8 +313,9 @@ export function auditKnowledgeModel(model, { minEvidence = 5, sessionLength = 12
   for (const component of model.components) {
     const introductoryExercises = model.exercises.filter((exercise) => exercise.courseIndex === component.firstCourseIndex && exercise.kcIds.includes(component.id));
     const uniqueCount = new Set(introductoryExercises.map(exerciseKey)).size;
-    if (component.gating && uniqueCount < minEvidence) {
-      issues.push({ code: "undersupplied-gating-kc", id: component.id, uniqueCount, minimum: minEvidence });
+    const minimumEvidence = component.coverageOnly ? component.coverageKcIds.length : minEvidence;
+    if (component.gating && uniqueCount < minimumEvidence) {
+      issues.push({ code: "undersupplied-gating-kc", id: component.id, uniqueCount, minimum: minimumEvidence });
     }
     if (component.gating && (/^exception\.(suru|kuru)\./.test(component.id) || component.id === "exception.iku-onbin")) {
       issues.push({ code: "isolated-lexical-gate", id: component.id });

@@ -224,7 +224,7 @@ test("a shared exception focus prioritizes the weakest individual exception word
 });
 
 test("an irregular-class parent requires both coverage facets", () => {
-  const component = { id: "class.irregular", coverageKcIds: ["facet.class.irregular.suru", "facet.class.irregular.kuru"] };
+  const component = { id: "class.irregular", coverageKcIds: ["facet.class.irregular.suru", "facet.class.irregular.kuru"], coverageOnly: true };
   const partial = {
     "class.irregular": { confidence: 1 },
     "facet.class.irregular.suru": { correct: 5 },
@@ -234,6 +234,16 @@ test("an irregular-class parent requires both coverage facets", () => {
   const complete = { ...partial, "facet.class.irregular.kuru": { correct: 1 } };
   assert.equal(componentConfidence(component, complete), 1);
   assert.equal(isComponentMastered(component, complete), true);
+});
+
+test("a coverage-only irregular class needs one correct answer for each irregular verb", () => {
+  const component = { id: "class.irregular", coverageKcIds: ["facet.class.irregular.suru", "facet.class.irregular.kuru"], coverageOnly: true };
+  assert.equal(correctAnswersNeeded(component, {}), 2);
+  assert.equal(correctAnswersNeeded(component, { "facet.class.irregular.suru": { correct: 1 } }), 1);
+  assert.equal(correctAnswersNeeded(component, {
+    "facet.class.irregular.suru": { correct: 1 },
+    "facet.class.irregular.kuru": { correct: 1 },
+  }), 0);
 });
 
 test("an irregular-class focus prioritizes its missing coverage facet", () => {

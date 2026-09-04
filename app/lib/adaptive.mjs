@@ -95,6 +95,7 @@ export function rankExercisesForFocus(exercises, focusId, byKc, coverageKcIds = 
 export function componentConfidence(component, byKc) {
   const confidence = byKc[component.id]?.confidence ?? 0;
   const coverageComplete = (component.coverageKcIds ?? []).every((id) => (byKc[id]?.correct ?? 0) >= 1);
+  if (component.coverageOnly && coverageComplete) return 1;
   return coverageComplete ? confidence : Math.min(confidence, 0.99);
 }
 
@@ -105,6 +106,7 @@ export function isComponentMastered(component, byKc) {
 export function correctAnswersNeeded(component, byKc, maximum = 100) {
   if (isComponentMastered(component, byKc)) return 0;
   const missingCoverage = (component.coverageKcIds ?? []).filter((id) => (byKc[id]?.correct ?? 0) < 1).length;
+  if (component.coverageOnly) return missingCoverage;
   let stats = byKc[component.id];
   let correctAnswers = 0;
   while ((stats?.confidence ?? 0) < 1 && correctAnswers < maximum) {

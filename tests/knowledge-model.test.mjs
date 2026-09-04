@@ -37,6 +37,7 @@ test("models suru and kuru as coverage facets of one irregular-class atom", () =
   assert.deepEqual(requiredKcIds(kuru, null), ["class.irregular", "facet.class.irregular.kuru"]);
   const model = buildKnowledgeModel([{ id: "classify", lesson: "04", forms: [] }], [suru, kuru]);
   const parent = model.components.find((kc) => kc.id === "class.irregular");
+  assert.equal(parent.coverageOnly, true);
   assert.deepEqual(parent.coverageKcIds, ["facet.class.irregular.suru", "facet.class.irregular.kuru"]);
   assert.equal(model.components.find((kc) => kc.id === "facet.class.irregular.kuru").gating, false);
   assert.equal(model.components.some((kc) => kc.id === "exception.kuru.class"), false);
