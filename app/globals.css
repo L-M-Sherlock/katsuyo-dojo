@@ -62,11 +62,11 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   width: min(1280px, calc(100% - 48px));
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 380px 1fr;
   min-height: calc(100vh - 89px);
 }
 
-.lesson-rail { position: relative; padding: 66px 46px 40px 0; border-right: 1px solid var(--line); }
+.lesson-rail { position: relative; padding: 66px 36px 40px 0; border-right: 1px solid var(--line); }
 .eyebrow { margin: 0; color: var(--red); font-size: 13px; font-weight: 750; letter-spacing: .16em; }
 .lesson-rail h1 {
   margin: 20px 0 18px;
@@ -104,13 +104,13 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .mode-list { margin-top: 24px; display: grid; gap: 5px; }
 .mode-list button {
   width: 100%; border: 0; background: transparent; padding: 13px 12px; border-radius: 8px;
-  display: grid; grid-template-columns: 48px 1fr auto; text-align: left; cursor: pointer;
+  display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; text-align: left; cursor: pointer;
   font-size: 16px; align-items: center; transition: background .18s, color .18s, transform .18s;
 }
 .mode-list button:hover:not(.active) { background: rgba(255, 255, 255, .45); transform: translateX(2px); }
 .mode-list button span { color: #979a93; font-size: 12px; font-variant-numeric: tabular-nums; }
-.mode-list button .course-name { color: inherit; font-size: 15px; }
-.mode-list button i { font-style: normal; color: #999d96; font-size: 12px; }
+.mode-list button .course-name { min-width: 0; overflow: hidden; color: inherit; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
+.mode-list button i { font-style: normal; color: #999d96; font-size: 12px; white-space: nowrap; }
 .mode-list button.active { background: var(--ink); color: #fbf8f0; box-shadow: 0 6px 15px rgba(23,33,28,.1); }
 .mode-list button.active span, .mode-list button.active i { color: #d8d6cf; }
 .curriculum-boundary { width: 100%; margin-top: 16px; padding: 14px 15px; border: 1px dashed #bdb8ab; border-radius: 8px; background: rgba(255,255,255,.38); cursor: pointer; text-align: left; }
