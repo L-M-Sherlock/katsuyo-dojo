@@ -222,6 +222,11 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .grouped-forms > div.asked-form { border-color: rgba(201,75,61,.25); background: rgba(255,255,255,.38); }
 .grouped-forms small { color: var(--muted); font-size: 11px; }
 .grouped-forms strong { overflow-wrap: anywhere; font-family: "Yu Mincho", "Noto Serif JP", serif; font-size: 19px; font-weight: 600; }
+.accepted-variant-note { margin: 12px 0 0; padding: 11px 13px; border-radius: 5px; background: rgba(255,255,255,.48); color: var(--muted); font-size: 12px; line-height: 1.65; }
+.accepted-variant-note > span { display: block; }
+.accepted-variant-note > span + span { margin-top: 3px; }
+.accepted-variant-note ruby { color: var(--ink); font-family: "Yu Mincho", "Noto Serif JP", serif; font-size: 15px; ruby-align: center; }
+.accepted-variant-note rt { color: var(--muted); font-family: var(--font-geist-sans), sans-serif; font-size: 8px; }
 .your-answer { margin: 13px 0 0; color: #858780; font-size: 12px; }
 .feedback-meta { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(23,33,28,.1); display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 11px; }
 .feedback-meta a { color: var(--red-dark); text-underline-offset: 3px; }
