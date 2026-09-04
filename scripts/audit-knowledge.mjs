@@ -27,6 +27,11 @@ try {
       if (coreModel.components.some((component) => component.id === "construction.tai") || coreModel.exercises.some((exercise) => exercise.form === "passiveDesireNegativePast")) {
         issues.push({ domain, code: "desire-leaked-into-core" });
       }
+      const multiStep = model.components.find((component) => component.id === "compound.multi-step");
+      const multiStepExercises = model.exercises.filter((exercise) => exercise.form === "passiveDesireNegativePast");
+      if (multiStep?.firstCourseId !== "multiStepCompound" || multiStepExercises.some((exercise) => exercise.courseId !== "multiStepCompound")) {
+        issues.push({ domain, code: "multi-step-not-isolated" });
+      }
     }
     const gating = model.components.filter((component) => component.gating);
     for (const focus of gating) {

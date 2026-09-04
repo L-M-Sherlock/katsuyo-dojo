@@ -230,6 +230,7 @@ function prerequisitesFor(id) {
   }
   if (id.startsWith("compound.polite-")) return ["suffix.masu"];
   if (id === "compound.negative-past") return ["suffix.negative"];
+  if (id === "compound.multi-step") return ["suffix.passive", "construction.tai", "compound.negative-past"];
   return [];
 }
 

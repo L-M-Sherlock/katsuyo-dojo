@@ -429,7 +429,7 @@ export function explainConjugation(word, verbClass, form) {
       answer,
       parts: [desire.slice(0, -1), "くなかった"],
       steps: [passive, desire, answer],
-      rule: "先构成受身形，再接 たい；たい 按い形容词方式变为否定过去，正是 Yokubi Lesson 4 展示的层叠活用。",
+      rule: "先构成受身形，再接 たい；最后把 たい 按い形容词方式变为否定过去。",
     };
   }
 

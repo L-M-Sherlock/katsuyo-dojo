@@ -32,7 +32,7 @@ const VERB_COURSE_DEFINITIONS = [
   { id: "giving", title: "て形授受补助", lesson: "11", url: lessonUrl("Section1/Part1", 11), forms: ["teageru", "temorau", "tekureru"] },
   { id: "request", title: "てください・ないでください", lesson: "12", url: lessonUrl("Section1/Part1", 12), forms: ["tekudasai", "naideKudasai"] },
   { id: "aspect", title: "ている・てある", lesson: "22", url: lessonUrl("Section1/Part2", 22), forms: ["teiru", "teru", "tearu", "teoru", "toru"] },
-  { id: "desire", title: "たい・てほしい", lesson: "26", url: lessonUrl("Section1/Part2", 26), forms: ["tai", "tehoshii", "passiveDesireNegativePast"] },
+  { id: "desire", title: "たい・てほしい", lesson: "26", url: lessonUrl("Section1/Part2", 26), forms: ["tai", "tehoshii"] },
   { id: "temo", title: "ても・でも", lesson: "37", url: lessonUrl("Section2/Part3", 37), forms: ["temo"] },
   { id: "concurrent", title: "ながら・つつ", lesson: "38", url: lessonUrl("Section2/Part3", 38), forms: ["nagara", "tsutsu"] },
   { id: "obligation", title: "必须表达", lesson: "44", url: lessonUrl("Section2/Part3", 44), forms: ["nakerebaNaranai", "nakutewaIkenai", "naitoIkenai"] },
@@ -46,6 +46,7 @@ const VERB_COURSE_DEFINITIONS = [
   { id: "tatte", title: "たって", lesson: "59", url: lessonUrl("Section2/Part4", 59), forms: ["tatte"] },
   { id: "sugiru", title: "すぎる", lesson: "61", url: lessonUrl("Section2/Part4", 61), forms: ["sugiru"] },
   { id: "tagaru", title: "たがる", lesson: "63", url: lessonUrl("Section2/Part4", 63), forms: ["tagaru"] },
+  { id: "multiStepCompound", title: "多步活用组合", lesson: "复习", url: lessonUrl("Section1/Part2", 26), forms: ["passiveDesireNegativePast"] },
 ];
 
 export const COURSES = VERB_COURSE_DEFINITIONS.map((course) => ({ ...course, domain: "verb" }));
