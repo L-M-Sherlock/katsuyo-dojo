@@ -163,6 +163,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .question-kicker span { padding: 6px 10px; background: #ebe7dd; color: #666c65; border-radius: 4px; font-size: 12px; font-weight: 650; letter-spacing: .04em; }
 .instruction { margin: 27px 0 7px; color: var(--muted); font-size: 16px; font-weight: 500; letter-spacing: .01em; }
 .instruction strong { color: var(--ink); font-weight: 850; }
+.semantic-brief { margin: 2px 0 0; display: flex; align-items: baseline; gap: 9px; color: #606760; font-size: 13px; line-height: 1.55; }
+.semantic-brief > span:first-child { flex: 0 0 auto; color: var(--red-dark); font-size: 11px; font-weight: 750; letter-spacing: .06em; }
 .word-display { display: flex; align-items: baseline; gap: 20px; min-height: 120px; font-family: "Yu Mincho", "Noto Serif JP", serif; font-size: clamp(64px, 8vw, 88px); line-height: 1.45; }
 .word-display ruby { ruby-align: center; }
 .word-display rt { color: var(--muted); font-size: 14px; font-family: var(--font-geist-sans), sans-serif; letter-spacing: .12em; }
@@ -229,6 +231,11 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .accepted-variant-note ruby { color: var(--ink); font-family: "Yu Mincho", "Noto Serif JP", serif; font-size: 15px; ruby-align: center; }
 .accepted-variant-note rt { color: var(--muted); font-family: var(--font-geist-sans), sans-serif; font-size: 8px; }
 .your-answer { margin: 13px 0 0; color: #858780; font-size: 12px; }
+.semantic-details { margin: 13px 0 0; padding-top: 11px; border-top: 1px solid rgba(23,33,28,.1); display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px 20px; }
+.semantic-details > div { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: baseline; gap: 8px; }
+.semantic-details > .semantic-core { grid-column: 1 / -1; }
+.semantic-details dt { color: var(--red-dark); font-size: 11px; font-weight: 750; white-space: nowrap; }
+.semantic-details dd { margin: 0; color: #4f5851; font-size: 12px; line-height: 1.55; }
 .feedback-meta { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(23,33,28,.1); display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 11px; }
 .feedback-meta a { color: var(--red-dark); text-underline-offset: 3px; }
 .next-button { width: 100%; margin-top: 18px; padding: 14px 17px; border: 0; border-radius: 5px; background: var(--ink); color: white; display: flex; justify-content: space-between; cursor: pointer; font-size: 14px; transition: background .18s; }
@@ -373,6 +380,8 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
   .transfer-actions button { flex: 1; }
   .skill-progress-row { grid-template-columns: 1fr; gap: 9px; }
   .skill-progress-value { grid-template-columns: 1fr 34px; }
+  .semantic-details { grid-template-columns: 1fr; }
+  .semantic-details > .semantic-core { grid-column: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
