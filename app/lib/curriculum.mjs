@@ -1,7 +1,7 @@
 export const CHINESE_YOKUBI_URL = "https://l-m-sherlock.github.io/yokubi-zh-cn";
 
 const lessonUrl = (section, lesson) => `${CHINESE_YOKUBI_URL}/${section}/Lesson${lesson}.html`;
-const voiceForms = ["passivePast", "passiveNegative", "passiveNegativePast", "potentialPast", "potentialNegative", "potentialNegativePast", "causativePast", "causativeNegative", "causativeNegativePast", "causativePassivePast", "causativePassiveNegative", "causativePassiveNegativePast", "passiveDesireNegativePast"];
+const voiceForms = ["passivePast", "passiveNegative", "passiveNegativePast", "potentialPast", "potentialNegative", "potentialNegativePast", "causativePast", "causativeNegative", "causativeNegativePast", "causativePassivePast", "causativePassiveNegative", "causativePassiveNegativePast"];
 
 // Course order is also the adaptive unlock order. Keep the core conjugation
 // route contiguous so it can be practised independently from later patterns.
@@ -32,7 +32,7 @@ const VERB_COURSE_DEFINITIONS = [
   { id: "giving", title: "て形授受补助", lesson: "11", url: lessonUrl("Section1/Part1", 11), forms: ["teageru", "temorau", "tekureru"] },
   { id: "request", title: "てください・ないでください", lesson: "12", url: lessonUrl("Section1/Part1", 12), forms: ["tekudasai", "naideKudasai"] },
   { id: "aspect", title: "ている・てある", lesson: "22", url: lessonUrl("Section1/Part2", 22), forms: ["teiru", "teru", "tearu", "teoru", "toru"] },
-  { id: "desire", title: "たい・てほしい", lesson: "26", url: lessonUrl("Section1/Part2", 26), forms: ["tai", "tehoshii"] },
+  { id: "desire", title: "たい・てほしい", lesson: "26", url: lessonUrl("Section1/Part2", 26), forms: ["tai", "tehoshii", "passiveDesireNegativePast"] },
   { id: "temo", title: "ても・でも", lesson: "37", url: lessonUrl("Section2/Part3", 37), forms: ["temo"] },
   { id: "concurrent", title: "ながら・つつ", lesson: "38", url: lessonUrl("Section2/Part3", 38), forms: ["nagara", "tsutsu"] },
   { id: "obligation", title: "必须表达", lesson: "44", url: lessonUrl("Section2/Part3", 44), forms: ["nakerebaNaranai", "nakutewaIkenai", "naitoIkenai"] },

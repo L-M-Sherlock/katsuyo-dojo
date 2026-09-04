@@ -7,10 +7,11 @@ const server = await createServer({
 });
 
 try {
-  const [{ VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE }, { auditKnowledgeModel }, adaptive] = await Promise.all([
+  const [{ VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE }, { auditKnowledgeModel }, adaptive, { knowledgeModelForScope }] = await Promise.all([
     server.ssrLoadModule("/app/page.tsx"),
     server.ssrLoadModule("/app/lib/knowledge-model.mjs"),
     server.ssrLoadModule("/app/lib/adaptive.mjs"),
+    server.ssrLoadModule("/app/lib/curriculum.mjs"),
   ]);
   const issues = [];
   const models = [["verb", VERB_KNOWLEDGE], ["adjective", ADJECTIVE_KNOWLEDGE]];
@@ -22,6 +23,10 @@ try {
         .map((exercise) => exercise.item.surface))];
       const redundantSuruCompounds = sampledIrregulars.filter((surface) => surface !== "する" && surface !== "来る");
       if (redundantSuruCompounds.length) issues.push({ domain, code: "redundant-suru-compounds", surfaces: redundantSuruCompounds });
+      const coreModel = knowledgeModelForScope(model, "core");
+      if (coreModel.components.some((component) => component.id === "construction.tai") || coreModel.exercises.some((exercise) => exercise.form === "passiveDesireNegativePast")) {
+        issues.push({ domain, code: "desire-leaked-into-core" });
+      }
     }
     const gating = model.components.filter((component) => component.gating);
     for (const focus of gating) {

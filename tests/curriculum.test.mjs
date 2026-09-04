@@ -14,6 +14,8 @@ test("places the complete core conjugation route before the curriculum boundary"
   assert.deepEqual(COURSES.slice(CORE_COURSE_COUNT, CORE_COURSE_COUNT + 5).map((course) => course.id), ["tara", "nasai", "prohibitive", "nakuteNaide", "zuZuni"]);
   assert.equal(COURSES.length, 36);
   assert.deepEqual(COURSES.find((course) => course.id === "causativePassive").forms, ["causativePassive", "causativePassiveContracted"]);
+  assert.equal(COURSES.find((course) => course.id === "voiceCompound").forms.includes("passiveDesireNegativePast"), false);
+  assert.deepEqual(COURSES.find((course) => course.id === "desire").forms, ["tai", "tehoshii", "passiveDesireNegativePast"]);
 });
 
 test("defaults the core scope to only the courses before the boundary", () => {
