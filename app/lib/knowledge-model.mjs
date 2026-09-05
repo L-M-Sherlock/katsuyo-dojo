@@ -376,10 +376,57 @@ function soundBaseForm(form) {
   return base ? soundBaseForm(base) : null;
 }
 
+const ENDING_LABELS = { past: "过去形", negative: "否定形", negativePast: "否定过去形" };
+
+// Only compare members of the same construction. An exact full alternative
+// proves the shared base; a matching substring or an unrelated form does not.
+function continuationFamily(form) {
+  const spec = COMPOUND_FORM_SPECS[form];
+  if (spec) return {
+    baseForm: spec.form,
+    kcId: `composition.${spec.outputType === "iAdjective" ? "i-adjective" : "verb"}.${spec.ending}`,
+    targetLabel: spec.endingLabel,
+    alternatives: Object.entries(COMPOUND_FORM_SPECS)
+      .filter(([id, other]) => id !== form && other.form === spec.form)
+      .map(([id, other]) => ({ form: id, label: other.endingLabel })),
+  };
+  const voice = VOICE_COMPOUNDS[form];
+  if (voice) return {
+    baseForm: voice[0], kcId: "compound.voice-stack", targetLabel: ENDING_LABELS[voice[1]],
+    alternatives: Object.entries(VOICE_COMPOUNDS)
+      .filter(([id, other]) => id !== form && other[0] === voice[0])
+      .map(([id, other]) => ({ form: id, label: ENDING_LABELS[other[1]] })),
+  };
+  if (POLITE_COMPOUNDS.has(form)) {
+    const labels = { masuPast: "礼貌过去形", masuNegative: "礼貌否定形", masuNegativePast: "礼貌否定过去形" };
+    return {
+      baseForm: "masu", kcId: `compound.polite-${form === "masuPast" ? "past" : form === "masuNegative" ? "negative" : "negative-past"}`,
+      targetLabel: labels[form],
+      alternatives: [...POLITE_COMPOUNDS].filter((id) => id !== form).map((id) => ({ form: id, label: labels[id] })),
+    };
+  }
+  if (form === "negativePast") return { baseForm: "negative", kcId: "compound.negative-past", targetLabel: "否定过去形", alternatives: [] };
+  return null;
+}
+
+function continuationCandidates(verb, form, family) {
+  const required = new Set(requiredKcIds(verb, form));
+  const confirmedKcIds = requiredKcIds(verb, family.baseForm).filter((id) => required.has(id) && id !== family.kcId);
+  const base = conjugate(verb.surface, verb.class, family.baseForm);
+  return [{ form: family.baseForm, label: null }, ...family.alternatives].flatMap((alternative) =>
+    acceptedConjugations(verb.surface, verb.class, alternative.form).map((answer) => ({
+      answer, kcId: family.kcId, confirmedKcIds,
+      message: alternative.label
+        ? `前面的「${base}」已经构成；末尾写成了${alternative.label}，本题要求${family.targetLabel}。`
+        : `前面的「${base}」已经构成，但还没有继续变为${family.targetLabel}。`,
+    })));
+}
+
 function diagnosticCandidates(verb, form) {
   if (!form) return [];
   const canonical = conjugate(verb.surface, verb.class, form);
-  const result = [];
+  const family = continuationFamily(form);
+  const result = family ? continuationCandidates(verb, form, family) : [];
   for (const alternativeClass of ["godan", "ichidan", "irregular"]) {
     if (alternativeClass === verb.class) continue;
     try {
@@ -405,7 +452,7 @@ function diagnosticCandidates(verb, form) {
 
   const detail = explainConjugation(verb.surface, verb.class, form);
   const lastConstruction = [...ids].reverse().find((id) => id.startsWith("construction.") || id.startsWith("compound.") || id.startsWith("contraction."));
-  if (lastConstruction) {
+  if (lastConstruction && !family) {
     const intermediate = detail.steps?.at(-2) ?? (detail.parts?.length > 1 ? detail.parts[0] : null);
     if (intermediate && intermediate !== canonical) result.push({ answer: intermediate, kcId: lastConstruction, message: `前面的变化已经形成，但还没有完成${metadataFor(lastConstruction, {}).label}。` });
   }
@@ -435,8 +482,13 @@ export function deriveExercise(verb, form) {
 }
 
 export function diagnoseConjugation(verb, form, answer, normalize = (value) => value) {
-  if (!form) return null;
+  if (!form || acceptedConjugations(verb.surface, verb.class, form).some((accepted) => normalize(accepted) === normalize(answer))) return null;
   const matches = diagnosticCandidates(verb, form).filter((candidate) => normalize(candidate.answer) === normalize(answer));
   const uniqueKcs = unique(matches.map((match) => match.kcId));
-  return uniqueKcs.length === 1 ? matches[0] : null;
+  if (uniqueKcs.length !== 1) return null;
+  // If multiple explanations lead to the same failure, credit only the facts
+  // supported by every explanation, never their union.
+  const confirmedKcIds = (matches[0].confirmedKcIds ?? []).filter((id) =>
+    id !== uniqueKcs[0] && matches.every((match) => (match.confirmedKcIds ?? []).includes(id)));
+  return { ...matches[0], confirmedKcIds };
 }

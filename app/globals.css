@@ -209,6 +209,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .knowledge-tags { margin: 0 0 15px; display: flex; flex-wrap: wrap; gap: 6px; }
 .knowledge-tags span { padding: 4px 8px; border: 1px solid rgba(45,106,81,.2); border-radius: 999px; background: rgba(255,255,255,.45); color: var(--muted); font-size: 10px; }
 .knowledge-tags span.target { border-color: currentColor; color: var(--green); font-weight: 700; }
+.knowledge-tags span.confirmed { color: var(--green); border-color: var(--green); background: rgba(45,106,81,.08); }
+.partial-evidence-note { color: var(--muted); font-size: 12px; margin: 0 0 15px; }
 .feedback.incorrect .knowledge-tags span.target, .feedback.revealed .knowledge-tags span.target { color: var(--red-dark); }
 .rule-line { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: "Yu Mincho", "Noto Serif JP", serif; font-size: 23px; line-height: 1.75; }
 .rule-line > b { color: var(--red); font-family: var(--font-geist-sans), sans-serif; font-size: 11px; }

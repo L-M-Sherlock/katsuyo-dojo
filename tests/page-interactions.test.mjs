@@ -2,6 +2,10 @@ import assert from 'node:assert/strict';
 import { after, afterEach, beforeEach, test } from 'node:test';
 import { readFile } from 'node:fs/promises';
 import ts from 'typescript';
+import { conjugate } from '../app/lib/conjugation.mjs';
+import { COMPOUND_FORM_LABELS, COMPOUND_FORM_SPECS } from '../app/lib/compound-forms.mjs';
+import { requiredKcIds } from '../app/lib/knowledge-model.mjs';
+import { emptySkillStats } from '../app/lib/adaptive.mjs';
 
 // Compile the actual page without starting Vite's development server in tests.
 const pageUrl = new URL('../app/page.tsx', import.meta.url);
@@ -175,4 +179,57 @@ test('corrupt progress is preserved and recovery controls stay usable', async ()
   assert.equal(storage.getItem(KEY), '{broken');
   assert.equal(view.getByRole('button', { name: '导出原始记录' }).disabled, false);
   assert.equal(view.getByRole('button', { name: '清除损坏记录并重新开始' }).disabled, false);
+});
+
+async function mountCompoundPast() {
+  const initial = masteredProfile();
+  initial.byKc['composition.verb.past'] = emptySkillStats();
+  storage.setItem(KEY, JSON.stringify(initial));
+  storage.setItem(SCOPE, 'full');
+  const view = await mount();
+  const label = view.container.querySelector('.question-kicker span:nth-child(2)').textContent;
+  const form = Object.keys(COMPOUND_FORM_LABELS).find((id) => COMPOUND_FORM_LABELS[id] === label);
+  assert.equal(COMPOUND_FORM_SPECS[form]?.ending, 'past');
+  const surface = view.container.querySelector('.word-display ruby').firstChild.textContent;
+  const item = VERB_KNOWLEDGE.exercises.find((exercise) => exercise.form === form && exercise.item.surface === surface).item;
+  return { initial, view, form, item };
+}
+
+test('compound form confusion shows partial credit while keeping the question incorrect', async () => {
+  const { initial, view, form, item } = await mountCompoundPast();
+  fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  fireEvent.click(view.getByRole('button', { name: '收起提示' }));
+  const wrongForm = form.replace(/Past$/, 'Negative');
+  const answer = conjugate(item.reading, item.class, wrongForm);
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: answer } });
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  await waitFor(() => assert.ok(view.getByText(/末尾写成了否定形，本题要求过去形/)));
+  const saved = JSON.parse(storage.getItem(KEY));
+  const confirmed = requiredKcIds(item, COMPOUND_FORM_SPECS[form].form);
+  for (const id of confirmed) {
+    assert.equal(saved.byKc[id].attempts, initial.byKc[id].attempts + 1, id);
+    assert.equal(saved.byKc[id].correct, initial.byKc[id].correct + 1, id);
+    assert.equal(saved.byKc[id].filteredAccuracy, .94, id);
+  }
+  assert.equal(saved.byKc['composition.verb.past'].correct, 0);
+  assert.equal(saved.byKc['composition.verb.past'].attempts, 1);
+  assert.deepEqual(saved.byKc['suffix.past'], initial.byKc['suffix.past']);
+  assert.equal(saved.correct, 0);
+  assert.equal(saved.attempted, 1);
+  assert.equal(view.container.querySelectorAll('.knowledge-tags .confirmed').length, confirmed.length);
+  assert.ok(view.getByText(/整题仍计为错误/));
+  fireEvent.click(view.container.querySelector('.next-button'));
+  await waitFor(() => assert.equal(Boolean(view.queryByText(/整题仍计为错误/)), false));
+  assert.equal(view.container.querySelectorAll('.knowledge-tags .confirmed').length, 0);
+});
+
+test('an unrecognized compound answer gives no partial credit', async () => {
+  const { initial, view } = await mountCompoundPast();
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: 'わからないxyz' } });
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  await waitFor(() => assert.ok(view.getByText('差一点')));
+  const saved = JSON.parse(storage.getItem(KEY));
+  const changed = Object.keys(saved.byKc).filter((id) => JSON.stringify(saved.byKc[id]) !== JSON.stringify(initial.byKc[id]));
+  assert.deepEqual(changed, ['composition.verb.past']);
+  assert.equal(view.container.querySelectorAll('.knowledge-tags .confirmed').length, 0);
 });

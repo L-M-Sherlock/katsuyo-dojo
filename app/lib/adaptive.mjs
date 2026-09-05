@@ -174,8 +174,8 @@ export function selectFocus(components, byKc) {
   })[0] ?? null;
 }
 
-/** @param {StatsMap} byKc @param {Evidence & {kcIds: string[], focusId: string, failedKcId?: string | null}} result */
-export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @type {string | null} */ (null), ...result }) {
+/** @param {StatsMap} byKc @param {Evidence & {kcIds: string[], focusId: string, failedKcId?: string | null, confirmedKcIds?: string[]}} result */
+export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @type {string | null} */ (null), confirmedKcIds = [], ...result }) {
   const next = { ...byKc };
   const affected = result.correct ? [...new Set(kcIds)] : [failedKcId ?? focusId].filter(Boolean);
   for (const kcId of affected) {
@@ -183,6 +183,13 @@ export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @t
       ...result,
       responseMs: kcId === focusId ? result.responseMs : undefined,
     });
+  }
+  if (!result.correct && !result.revealed && failedKcId) {
+    const required = new Set(kcIds);
+    for (const kcId of new Set(confirmedKcIds)) {
+      if (kcId === failedKcId || !required.has(kcId)) continue;
+      next[kcId] = updateSkillStats(next[kcId], { ...result, correct: true, responseMs: undefined });
+    }
   }
   return next;
 }
