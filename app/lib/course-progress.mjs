@@ -10,7 +10,7 @@ export function summarizeCourseProgress(course, required, introducedKcIds, byKc)
     ? Math.round(Math.min(...owned.map((component) => introduced.has(component.id) ? componentConfidence(component, byKc) : 0)) * 100)
     : 0;
   const needsRecovery = owned.some((component) => introduced.has(component.id) &&
-    (byKc[component.id]?.bestConfidence ?? 0) >= 1 && componentConfidence(component, byKc) < 1);
+    ((byKc[component.id]?.bestConfidence ?? 0) >= 1 || (component.coverageOnly && component.coverageKcIds.every((id) => (byKc[id]?.correct ?? 0) > 0))) && componentConfidence(component, byKc) < 1);
   const needsCoverage = owned.some((component) => introduced.has(component.id) &&
     component.coverageKcIds.some((id) => (byKc[id]?.correct ?? 0) < 1));
   const status = !courseIntroduced

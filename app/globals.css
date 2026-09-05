@@ -387,3 +387,8 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+.practice-controls { border: 0; padding: 0; margin: 0; min-width: 0; }
+.storage-notice { padding: 1rem; margin-bottom: 1rem; border: 1px solid #a66026; border-radius: 12px; background: #fff6e6; color: #593612; }
+.storage-notice p { margin: 0 0 .75rem; }
+.storage-notice button { margin-right: .75rem; padding: .5rem .75rem; cursor: pointer; }

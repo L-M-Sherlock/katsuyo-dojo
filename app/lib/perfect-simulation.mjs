@@ -1,19 +1,17 @@
+import { canContinueRound, planPractice, shouldReplan } from "./practice-session.mjs";
 import {
   advanceIntroductions,
   balanceComponentsForCourse,
-  correctAnswersNeeded,
   filterReadyExercises,
   isComponentMastered,
-  makeRoundPlan,
   makeUniqueAssignments,
   rankExercisesForFocus,
-  selectFocus,
   updateKnowledgeStats,
 } from "./adaptive.mjs";
 
 function assignmentSegment(model, focus, introduced, byKc, length, rotation, usedKeys) {
   const balanced = balanceComponentsForCourse(focus, introduced, model.courseKcIds[focus.firstCourseId] ?? []);
-  const plan = makeRoundPlan(focus, balanced, length, rotation);
+  const { plan } = planPractice(introduced, byKc, model.courseKcIds, { length, rotation });
   const assignments = makeUniqueAssignments(plan, {
     alternativesFor: (preferred, index) => {
       const others = balanced.filter((component) => component.id !== preferred.id);
@@ -32,7 +30,11 @@ function assignmentSegment(model, focus, introduced, byKc, length, rotation, use
   return { assignments, plan };
 }
 
-export function simulatePerfectLearning(model, { maxRounds = 1000, sessionLength = 12 } = {}) {
+export function simulatePerfectLearning(model, options = {}) {
+  return simulateLearning(model, options);
+}
+
+export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, answerFor = () => ({ correct: true }) } = {}) {
   const gating = model.components.filter((component) => component.gating);
   const byId = new Map(model.components.map((component) => [component.id, component]));
   let introducedKcIds = gating.length ? [gating[0].id] : [];
@@ -53,20 +55,21 @@ export function simulatePerfectLearning(model, { maxRounds = 1000, sessionLength
     const roundFocusIds = new Set();
     const usedKeys = new Set();
     let roundCourseId = null;
+    let previousFocus = null;
     let answered = 0;
     let coverageQuestions = 0;
     let roundRedundantFocusQuestions = 0;
 
     while (answered < sessionLength) {
       introduced = introducedKcIds.map((id) => byId.get(id)).filter(Boolean);
-      const focus = selectFocus(introduced, byKc);
+      const next = planPractice(introduced, byKc, model.courseKcIds, { length: sessionLength - answered, rotation });
+      const { focus } = next;
       if (!focus || isComponentMastered(focus, byKc)) break;
       if (roundCourseId == null) roundCourseId = focus.firstCourseId;
       if (focus.firstCourseId !== roundCourseId) break;
       const remaining = sessionLength - answered;
       const segment = assignmentSegment(model, focus, introduced, byKc, remaining, rotation, [...usedKeys]);
-      const focusOpportunities = segment.plan.filter((component) => component.id === focus.id).length;
-      if (correctAnswersNeeded(focus, byKc) > focusOpportunities) break;
+      if (previousFocus && !canContinueRound(previousFocus, next, byKc, true)) break;
       roundFocusIds.add(focus.id);
       const { assignments } = segment;
       if (!assignments.length || assignments.some(({ candidate }) => !candidate)) {
@@ -84,16 +87,17 @@ export function simulatePerfectLearning(model, { maxRounds = 1000, sessionLength
           redundantByFocus.set(focus.id, (redundantByFocus.get(focus.id) ?? 0) + 1);
         }
         if (focus.coverageKcIds.some((id) => candidate.kcIds.includes(id))) coverageQuestions += 1;
-        byKc = updateKnowledgeStats(byKc, { kcIds: candidate.kcIds, focusId: item.id, correct: true, responseMs: 1200, answerLength: 4 });
+        byKc = updateKnowledgeStats(byKc, { kcIds: candidate.kcIds, focusId: item.id, responseMs: 1200, answerLength: 4, ...answerFor({ questionCount, focus: item, exercise: candidate, byKc }) });
         answered += 1;
         questionCount += 1;
-        if (isComponentMastered(focus, byKc)) {
+        if (shouldReplan(focus, byKc, next.review)) {
           mastered = true;
           break;
         }
         if (answered >= sessionLength) break;
       }
       if (!mastered) break;
+      previousFocus = focus;
 
       const advanced = advanceIntroductions(model.components, introducedKcIds, byKc);
       for (const component of advanced.added) {

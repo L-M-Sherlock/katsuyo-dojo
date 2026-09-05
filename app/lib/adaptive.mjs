@@ -1,7 +1,14 @@
+// @ts-check
+/** @typedef {{attempts: number, correct: number, filteredAccuracy: number | null, confidence: number, bestConfidence: number, cleanTimeTotal: number, cleanTimeCount: number}} SkillStats */
+/** @typedef {Record<string, SkillStats>} StatsMap */
+/** @typedef {{id: string, order: number, gating: boolean, firstCourseId: string, firstCourseIndex: number, prerequisites: string[], coverageKcIds: string[], coverageOnly?: boolean}} Component */
+/** @typedef {{correct: boolean, hintUsed?: boolean, revealed?: boolean, responseMs?: number, answerLength?: number}} Evidence */
+
 const ACCURACY_TARGET = 0.85;
 const EMA_ALPHA = 0.2;
 const MIN_ATTEMPTS = 5;
 
+/** @returns {SkillStats} */
 export function emptySkillStats() {
   return {
     attempts: 0,
@@ -14,17 +21,20 @@ export function emptySkillStats() {
   };
 }
 
+/** @param {Evidence} result */
 export function evidenceValue({ correct, hintUsed = false, revealed = false }) {
   if (!correct || revealed) return 0;
   return hintUsed ? 0.7 : 1;
 }
 
+/** @param {number | null} filteredAccuracy @param {number} attempts */
 export function confidenceOf(filteredAccuracy, attempts) {
   if (filteredAccuracy == null || attempts === 0) return 0;
   const evidence = Math.min(attempts / MIN_ATTEMPTS, 1);
   return Math.min((filteredAccuracy / ACCURACY_TARGET) * evidence, 1);
 }
 
+/** @param {SkillStats | undefined} current @param {Evidence} result */
 export function updateSkillStats(current, result) {
   const stats = current ?? emptySkillStats();
   const evidence = evidenceValue(result);
@@ -34,7 +44,7 @@ export function updateSkillStats(current, result) {
   const attempts = stats.attempts + 1;
   const confidence = confidenceOf(filteredAccuracy, attempts);
   const cleanTime = result.correct && !result.hintUsed && !result.revealed &&
-    Number.isFinite(result.responseMs) && result.responseMs >= 300 && result.responseMs <= 60000
+    typeof result.responseMs === "number" && Number.isFinite(result.responseMs) && result.responseMs >= 300 && result.responseMs <= 60000
     ? result.responseMs / Math.max(result.answerLength ?? 1, 1)
     : null;
 
@@ -49,11 +59,14 @@ export function updateSkillStats(current, result) {
   };
 }
 
+/** @template {{id: string, kcIds: string[]}} E @param {E[]} exercises @param {string} focusId @param {StatsMap} byKc @param {string[]} coverageKcIds */
 export function rankExercisesForFocus(exercises, focusId, byKc, coverageKcIds = []) {
+  /** @param {E} exercise */
   const lexicalConfidence = (exercise) => {
     const lexicalId = exercise.kcIds.find((id) => id.startsWith("lexeme."));
     return lexicalId ? byKc[lexicalId]?.confidence ?? 0 : 1;
   };
+  /** @param {E} exercise */
   const burden = (exercise) => exercise.kcIds.reduce((sum, id) => sum + (id === focusId ? 0 : 1 - (byKc[id]?.confidence ?? 0)), 0);
   if (coverageKcIds.length) {
     const groups = new Map();
@@ -93,6 +106,7 @@ export function rankExercisesForFocus(exercises, focusId, byKc, coverageKcIds = 
 }
 
 /** Keep a simpler candidate while an additional dependent rule is not mastered. */
+/** @template {{kcIds: string[]}} E @param {E[]} exercises @param {string} focusId @param {Component[]} components @param {StatsMap} byKc */
 export function filterReadyExercises(exercises, focusId, components, byKc) {
   const byId = new Map(components.map((component) => [component.id, component]));
   const ready = exercises.filter((exercise) => exercise.kcIds.every((id) => {
@@ -107,21 +121,39 @@ export function filterReadyExercises(exercises, focusId, components, byKc) {
   return ready.length ? ready : exercises;
 }
 
+/** @param {Component} component @param {StatsMap} byKc */
 export function componentConfidence(component, byKc) {
   const confidence = byKc[component.id]?.confidence ?? 0;
   const coverageComplete = (component.coverageKcIds ?? []).every((id) => (byKc[id]?.correct ?? 0) >= 1);
-  if (component.coverageOnly && coverageComplete) return 1;
+  // Coverage is historical; recent independent performance still determines
+  // whether a previously covered atom needs recovery. Legacy facet-only data
+  // has no parent accuracy and retains its existing coverage interpretation.
+  if (component.coverageOnly && coverageComplete) {
+    const accuracy = byKc[component.id]?.filteredAccuracy;
+    return accuracy == null ? 1 : Math.min(accuracy / ACCURACY_TARGET, 1);
+  }
   return coverageComplete ? confidence : Math.min(confidence, 0.99);
 }
 
+/** @param {Component} component @param {StatsMap} byKc */
 export function isComponentMastered(component, byKc) {
   return componentConfidence(component, byKc) >= 1;
 }
 
+/** @param {Component} component @param {StatsMap} byKc @param {number} maximum */
 export function correctAnswersNeeded(component, byKc, maximum = 100) {
   if (isComponentMastered(component, byKc)) return 0;
   const missingCoverage = (component.coverageKcIds ?? []).filter((id) => (byKc[id]?.correct ?? 0) < 1).length;
-  if (component.coverageOnly) return missingCoverage;
+  if (component.coverageOnly) {
+    let stats = byKc[component.id];
+    let needed = 0;
+    while (needed < maximum && (needed < missingCoverage ||
+      (stats?.filteredAccuracy != null && stats.filteredAccuracy < ACCURACY_TARGET))) {
+      stats = updateSkillStats(stats, { correct: true });
+      needed += 1;
+    }
+    return needed;
+  }
   let stats = byKc[component.id];
   let correctAnswers = 0;
   while ((stats?.confidence ?? 0) < 1 && correctAnswers < maximum) {
@@ -131,6 +163,7 @@ export function correctAnswersNeeded(component, byKc, maximum = 100) {
   return Math.max(correctAnswers, missingCoverage);
 }
 
+/** @template {Component} C @param {C[]} components @param {StatsMap} byKc @returns {C | null} */
 export function selectFocus(components, byKc) {
   return [...components].sort((a, b) => {
     const aMastered = isComponentMastered(a, byKc);
@@ -141,6 +174,7 @@ export function selectFocus(components, byKc) {
   })[0] ?? null;
 }
 
+/** @param {StatsMap} byKc @param {Evidence & {kcIds: string[], focusId: string, failedKcId?: string | null}} result */
 export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @type {string | null} */ (null), ...result }) {
   const next = { ...byKc };
   const affected = result.correct ? [...new Set(kcIds)] : [failedKcId ?? focusId].filter(Boolean);
@@ -153,6 +187,7 @@ export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @t
   return next;
 }
 
+/** @template {Component} C @param {C[]} components @param {string[]} introducedKcIds @param {StatsMap} byKc @returns {C | null} */
 export function findNextIntroducible(components, introducedKcIds, byKc) {
   const introduced = new Set(introducedKcIds);
   const active = components.filter((component) => component.gating && introduced.has(component.id));
@@ -171,6 +206,7 @@ export function findNextIntroducible(components, introducedKcIds, byKc) {
   }) ?? null;
 }
 
+/** @template {Component} C @param {C[]} components @param {string[]} introducedKcIds @param {StatsMap} byKc */
 export function advanceIntroductions(components, introducedKcIds, byKc) {
   const introduced = [...introducedKcIds];
   const added = [];
@@ -187,6 +223,7 @@ export function advanceIntroductions(components, introducedKcIds, byKc) {
 }
 
 /** Build the same 3:1 focus/balance rhythm used by kanabr's Japanese generator. */
+/** @template {{id: string}} C @param {C | null} focus @param {C[]} includedSkills @param {number} length @param {number} rotationStart @returns {C[]} */
 export function makeRoundPlan(focus, includedSkills, length = 12, rotationStart = 0) {
   if (!focus || includedSkills.length === 0) return [];
   const others = includedSkills.filter((skill) => skill.id !== focus.id);
@@ -203,6 +240,7 @@ export function makeRoundPlan(focus, includedSkills, length = 12, rotationStart 
   return plan;
 }
 
+/** @template {{id: string}} C @param {C | null} focus @param {C[]} introducedComponents @param {string[]} courseKcIds @returns {C[]} */
 export function balanceComponentsForCourse(focus, introducedComponents, courseKcIds) {
   if (!focus) return [];
   const allowed = new Set(courseKcIds);
@@ -210,6 +248,12 @@ export function balanceComponentsForCourse(focus, introducedComponents, courseKc
 }
 
 /** Assign a candidate to every planned item without repeating the caller's exercise key. */
+/**
+ * @template {{order?: number}} C
+ * @template E
+ * @param {C[]} preferredItems
+ * @param {{alternativesFor: (item: C, index: number) => C[], candidatesFor: (item: C) => E[], keyOf: (item: C, candidate: E) => string, orderedCandidates?: boolean | ((item: C) => boolean), seed?: number, usedKeys?: string[]}} options
+ */
 export function makeUniqueAssignments(preferredItems, options) {
   const { alternativesFor, candidatesFor, keyOf, orderedCandidates = false, seed = 0, usedKeys = [] } = options;
   const used = new Set(usedKeys);

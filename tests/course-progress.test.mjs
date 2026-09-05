@@ -41,3 +41,13 @@ test("course unlock counts include only knowledge introduced by that course", ()
   assert.equal(summary.status, "知识点 1/2");
   assert.equal(summary.percent, 0);
 });
+
+test("a previously covered irregular class is marked for recovery after an error", () => {
+  const kc = { id: "class.irregular", firstCourseId: "classify", coverageOnly: true, coverageKcIds: ["suru", "kuru"] };
+  const summary = summarizeCourseProgress({ id: "classify", forms: [] }, [kc], [kc.id], {
+    [kc.id]: { attempts: 3, correct: 2, filteredAccuracy: .8, confidence: .56, bestConfidence: .56 },
+    suru: { correct: 1 }, kuru: { correct: 1 },
+  });
+  assert.equal(summary.status, "需加强");
+  assert.ok(summary.percent < 100);
+});
