@@ -52,6 +52,10 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .brand strong { display: block; font-size: 19px; letter-spacing: .12em; }
 .brand small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; letter-spacing: .2em; }
 
+.topbar-actions { display: flex; align-items: center; gap: 28px; }
+.github-link { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--paper-light); font-size: 13px; font-weight: 650; text-decoration: none; white-space: nowrap; }
+.github-link:hover { border-color: var(--ink); background: var(--ink); color: var(--paper-light); }
+
 .daily-summary { display: flex; align-items: center; gap: 30px; }
 .daily-summary div { display: flex; align-items: baseline; gap: 10px; }
 .daily-summary div + div { padding-left: 30px; border-left: 1px solid var(--line); }
@@ -363,6 +367,11 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 }
 
 @media (max-width: 500px) {
+  .topbar { height: auto; min-height: 74px; padding: 12px 16px; gap: 10px; flex-wrap: wrap; }
+  .brand { gap: 9px; }
+  .brand strong { font-size: 17px; }
+  .topbar-actions { gap: 12px; }
+  .github-link { padding-inline: 10px; }
   .brand small { display: none; }
   .daily-summary div + div { display: none; }
   .migration-notice { align-items: flex-start; }
