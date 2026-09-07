@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import ts from 'typescript';
 import { conjugate } from '../app/lib/conjugation.mjs';
 import { COMPOUND_FORM_LABELS, COMPOUND_FORM_SPECS } from '../app/lib/compound-forms.mjs';
-import { requiredKcIds } from '../app/lib/knowledge-model.mjs';
+import { buildDiagnosticSteps, requiredKcIds } from '../app/lib/knowledge-model.mjs';
 import { emptySkillStats } from '../app/lib/adaptive.mjs';
 
 // Compile the actual page without starting Vite's development server in tests.
@@ -181,9 +181,9 @@ test('corrupt progress is preserved and recovery controls stay usable', async ()
   assert.equal(view.getByRole('button', { name: '清除损坏记录并重新开始' }).disabled, false);
 });
 
-async function mountCompoundPast(ending = 'past') {
+async function mountCompoundPast(ending = 'past', family = 'verb') {
   const initial = masteredProfile();
-  initial.byKc[`composition.verb.${ending}`] = emptySkillStats();
+  initial.byKc[`composition.${family}.${ending}`] = emptySkillStats();
   storage.setItem(KEY, JSON.stringify(initial));
   storage.setItem(SCOPE, 'full');
   const view = await mount();
@@ -230,7 +230,10 @@ test('an unrecognized compound answer gives no partial credit', async () => {
   await waitFor(() => assert.ok(view.getByText('差一点')));
   const saved = JSON.parse(storage.getItem(KEY));
   const changed = Object.keys(saved.byKc).filter((id) => JSON.stringify(saved.byKc[id]) !== JSON.stringify(initial.byKc[id]));
-  assert.deepEqual(changed, ['composition.verb.past']);
+  assert.deepEqual(changed, []);
+  assert.ok(view.getByText(/暂时无法确定出错步骤/));
+  assert.equal(view.container.querySelectorAll('.knowledge-tags .target').length, 0);
+  assert.ok(view.getByRole('region', { name: '拆步练习' }));
   assert.equal(view.container.querySelectorAll('.knowledge-tags .confirmed').length, 0);
 });
 
@@ -295,4 +298,115 @@ test('revealing after a typo grades normally and clears the retry notice', async
   assert.equal(Boolean(view.queryByText(/可能是输入笔误/)), false);
   assert.equal(JSON.parse(storage.getItem(KEY)).attempted, 1);
   assert.equal(JSON.parse(storage.getItem(KEY)).correct, 0);
+});
+
+async function startDiagnosticPractice(withHint = false) {
+  const context = await mountCompoundPast('past', 'i-adjective');
+  const { view, item, form } = context;
+  if (withHint) {
+    fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+    fireEvent.click(view.getByRole('button', { name: '收起提示' }));
+  }
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: 'たのんだいた' } });
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  await waitFor(() => assert.ok(view.getByRole('region', { name: '拆步练习' })));
+  return { ...context, steps: buildDiagnosticSteps(item, form) };
+}
+
+test('unlocalized compound errors are followed by two independent steps without revealing the full answer', async () => {
+  const { view, initial, steps } = await startDiagnosticPractice();
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc, initial.byKc);
+  assert.equal(JSON.parse(storage.getItem(KEY)).attempted, 1);
+  assert.equal(JSON.parse(storage.getItem(KEY)).correct, 0);
+  assert.equal(view.container.querySelector('.rule-line').parentElement.hidden, true);
+  assert.equal(view.container.querySelector('.next-button').disabled, true);
+  const question = view.container.querySelector('.stage-meta').textContent;
+  fireEvent.keyDown(document.body, { key: 'Enter' });
+  assert.equal(view.container.querySelector('.stage-meta').textContent, question);
+  for (const [index, step] of steps.entries()) {
+    const before = JSON.parse(storage.getItem(KEY));
+    fireEvent.change(view.getByLabelText('本步答案'), { target: { value: step.readings[0] } });
+    // Repeated submissions must not race into duplicate evidence.
+    fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+    fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+    await waitFor(() => assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+    const saved = JSON.parse(storage.getItem(KEY));
+    const changed = Object.keys(saved.byKc).filter((id) => JSON.stringify(saved.byKc[id]) !== JSON.stringify(before.byKc[id]));
+    assert.deepEqual(changed.sort(), [...step.kcIds].sort());
+    for (const id of step.kcIds) assert.equal(saved.byKc[id].attempts, before.byKc[id].attempts + 1);
+    assert.equal(saved.attempted, 1);
+    assert.equal(saved.correct, 0);
+    assert.equal(saved.streak, 0);
+    fireEvent.click(view.getByRole('button', { name: index === 0 ? '练习下一步' : '完成拆步' }));
+  }
+  assert.equal(view.container.querySelector('.rule-line').parentElement.hidden, false);
+  assert.equal(view.container.querySelector('.next-button').disabled, false);
+  fireEvent.click(view.container.querySelector('.next-button'));
+  await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
+});
+
+test('an unknown first step remains ungraded and the second step diagnoses only its continuation', async () => {
+  const { view, initial, steps } = await startDiagnosticPractice();
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: 'xyz' } });
+  fireEvent.click(view.getByRole('button', { name: '检查本步' }));
+  await waitFor(() => assert.ok(view.getByText(/本步答案有误，仍无法定位/)));
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc, initial.byKc);
+  fireEvent.click(view.getByRole('button', { name: '练习下一步' }));
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: steps[1].reading } });
+  fireEvent.click(view.getByRole('button', { name: '检查本步' }));
+  await waitFor(() => assert.ok(view.getByText(/还没有继续变为过去形/)));
+  const saved = JSON.parse(storage.getItem(KEY));
+  assert.equal(saved.byKc[steps[1].focusId].attempts, 1);
+  assert.equal(saved.byKc[steps[1].focusId].correct, 0);
+  for (const id of steps[0].kcIds) assert.deepEqual(saved.byKc[id], initial.byKc[id]);
+});
+
+test('skipping diagnostic steps adds no evidence or counts', async () => {
+  const { view } = await startDiagnosticPractice();
+  const before = storage.getItem(KEY);
+  fireEvent.click(view.getByRole('button', { name: '跳过剩余拆步，查看解析' }));
+  assert.equal(storage.getItem(KEY), before);
+  assert.equal(view.container.querySelector('.rule-line').parentElement.hidden, false);
+  assert.equal(Boolean(view.queryByLabelText('本步答案')), false);
+});
+
+test('diagnostic steps preserve prior hint usage and do not record whole-answer speed', async () => {
+  const { view, initial, steps } = await startDiagnosticPractice(true);
+  for (const [index, step] of steps.entries()) {
+    fireEvent.change(view.getByLabelText('本步答案'), { target: { value: step.readings[0] } });
+    fireEvent.click(view.getByRole('button', { name: '检查本步' }));
+    await waitFor(() => assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+    const saved = JSON.parse(storage.getItem(KEY));
+    for (const id of step.kcIds) {
+      assert.equal(saved.byKc[id].filteredAccuracy, initial.byKc[id].attempts ? .94 : .7);
+      assert.equal(saved.byKc[id].cleanTimeCount, initial.byKc[id].cleanTimeCount);
+    }
+    fireEvent.click(view.getByRole('button', { name: index === 0 ? '练习下一步' : '完成拆步' }));
+  }
+});
+
+test('diagnostic evidence uses the same cross-tab write protection as ordinary grading', async () => {
+  const { view, steps } = await startDiagnosticPractice();
+  const latest = { ...JSON.parse(storage.getItem(KEY)), attempted: 20, correct: 18 };
+  storage.setItem(KEY, JSON.stringify(latest));
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: steps[0].readings[0] } });
+  fireEvent.click(view.getByRole('button', { name: '检查本步' }));
+  await waitFor(() => assert.match(view.getByRole('alert').textContent, /本次操作未保存/));
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)), latest);
+  assert.equal(Boolean(view.queryByText('本步正确，已更新本步知识点。')), false);
+  assert.equal(view.container.querySelector('.practice-controls').disabled, true);
+});
+
+test('diagnostic lexical typo retries preserve the current step and all evidence', async () => {
+  const { view, steps, item } = await startDiagnosticPractice();
+  assert.notEqual(item.class, 'irregular');
+  const before = storage.getItem(KEY);
+  const correct = steps[0].readings[0];
+  const typo = (correct[0] === 'な' ? 'た' : 'な') + correct.slice(1);
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: typo } });
+  fireEvent.click(view.getByRole('button', { name: '检查本步' }));
+  await waitFor(() => assert.ok(view.getByText(/本步尚未计分/)));
+  assert.equal(storage.getItem(KEY), before);
+  assert.equal(view.getByLabelText('本步答案').disabled, false);
+  assert.equal(Boolean(view.queryByRole('button', { name: '练习下一步' })), false);
 });

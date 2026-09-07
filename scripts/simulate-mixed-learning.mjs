@@ -11,9 +11,9 @@ try {
     const report = simulateLearning(model, { answerFor: ({ focus }) => {
       const count = attempts.get(focus.id) ?? 0;
       attempts.set(focus.id, count + 1);
-      if (count === 0) return { correct: false };
+      if (count === 0) return { failedKcId: focus.id, correct: false };
       if (count === 1) return { correct: true, hintUsed: true };
-      if (count === 2) return { correct: false, revealed: true };
+      if (count === 2) return { failedKcId: focus.id, correct: false, revealed: true };
       return { correct: true };
     } });
     assert.equal(report.completed, true, `${route}: ${report.reason}`);

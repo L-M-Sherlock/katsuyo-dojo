@@ -186,13 +186,13 @@ test("an incorrect answer changes only the uniquely diagnosed KC", () => {
   assert.deepEqual(Object.keys(byKc), ["onbin.hatsuon"]);
 });
 
-test("an ambiguous error falls back to the focused KC", () => {
+test("an ambiguous error leaves all KCs unchanged", () => {
   const byKc = updateKnowledgeStats({}, {
     kcIds: ["class.godan", "onbin.hatsuon", "suffix.past"],
     focusId: "suffix.past",
     correct: false,
   });
-  assert.deepEqual(Object.keys(byKc), ["suffix.past"]);
+  assert.deepEqual(byKc, {});
 });
 
 test("introduces one prerequisite-ready gating KC at a time", () => {

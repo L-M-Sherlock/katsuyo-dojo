@@ -38,7 +38,7 @@ test('coverage survives mistakes but current mastery drops and can recover', () 
   let byKc = {};
   for (const facet of kc.coverageKcIds) byKc = updateKnowledgeStats(byKc, { kcIds: ['parent', facet], focusId: 'parent', correct: true });
   assert.equal(componentConfidence(kc, byKc), 1);
-  byKc = updateKnowledgeStats(byKc, { kcIds: ['parent', 'suru'], focusId: 'parent', correct: false });
+  byKc = updateKnowledgeStats(byKc, { kcIds: ['parent', 'suru'], focusId: 'parent', failedKcId: 'parent', correct: false });
   assert.ok(componentConfidence(kc, byKc) < 1);
   assert.equal(byKc.suru.correct, 1);
   const needed = correctAnswersNeeded(kc, byKc);

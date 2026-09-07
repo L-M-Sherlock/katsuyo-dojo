@@ -177,7 +177,9 @@ export function selectFocus(components, byKc) {
 /** @param {StatsMap} byKc @param {Evidence & {kcIds: string[], focusId: string, failedKcId?: string | null, confirmedKcIds?: string[]}} result */
 export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @type {string | null} */ (null), confirmedKcIds = [], ...result }) {
   const next = { ...byKc };
-  const affected = result.correct ? [...new Set(kcIds)] : [failedKcId ?? focusId].filter(Boolean);
+  // An incorrect whole answer is not evidence against the exercise's focus.
+  // Callers must identify the failed component explicitly.
+  const affected = result.correct ? [...new Set(kcIds)] : [failedKcId].filter((id) => id !== null);
   for (const kcId of affected) {
     next[kcId] = updateSkillStats(next[kcId], {
       ...result,

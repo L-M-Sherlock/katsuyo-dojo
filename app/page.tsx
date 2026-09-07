@@ -12,7 +12,7 @@ import { summarizeCourseProgress } from "./lib/course-progress.mjs";
 import { ADJECTIVE_COURSES as ADJECTIVE_CURRICULUM, CHINESE_YOKUBI_URL, CORE_COURSE_COUNT, COURSES as VERB_CURRICULUM, componentsForScope, coursesForScope } from "./lib/curriculum.mjs";
 import { furiganaFor } from "./lib/furigana.mjs";
 import { semanticsForForm } from "./lib/form-semantics.mjs";
-import { buildKnowledgeModel, deriveExercise, diagnoseConjugation, KC_FAMILY_LABELS } from "./lib/knowledge-model.mjs";
+import { buildKnowledgeModel, buildDiagnosticSteps, deriveExercise, diagnoseConjugation, diagnoseStep, KC_FAMILY_LABELS } from "./lib/knowledge-model.mjs";
 import { hasLexicalTypo } from "./lib/lexical-typo.mjs";
 import { createProfileStore, readPreference, writePreference } from "./lib/profile-store.mjs";
 import { canContinueRound, emptyHintState, planPractice, shouldReplan, toggleHint } from "./lib/practice-session.mjs";
@@ -45,6 +45,58 @@ type FormSemantics = { concise: string; coreMeaning: string; register?: string; 
 function FuriganaText({ surface, reading }: { surface: string; reading: string }) {
   const furigana = furiganaFor(surface, reading);
   return furigana ? <ruby>{surface}<rt>{furigana}</rt></ruby> : <>{surface}</>;
+}
+
+type DiagnosticStep = { surface: string; reading: string; form: VerbForm; answers: string[]; readings: string[]; kcIds: string[]; focusId: string; continuation: boolean };
+
+function DiagnosticPractice({ item, steps, onEvidence, onDone }: {
+  item: Verb; steps: DiagnosticStep[];
+  onEvidence: (step: DiagnosticStep, correct: boolean, failedKcId: string | null, confirmed: string[]) => Promise<boolean>;
+  onDone: () => void;
+}) {
+  const [index, setIndex] = useState(0);
+  const [answer, setAnswer] = useState("");
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const pending = useRef(false);
+  const input = useRef<HTMLInputElement>(null);
+  const step = steps[index];
+  useEffect(() => { input.current?.focus(); }, []);
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (!answer.trim() || feedback || pending.current) return;
+    const correct = matchAcceptedAnswer(answer, step.answers, step.readings, normalize).correct;
+    const diagnosis = correct ? null : diagnoseStep(item, step, answer, normalize);
+    if (!correct && !diagnosis && hasLexicalTypo(item, answer, step.answers, step.readings, normalize)) {
+      setNotice("原词可能有输入笔误，请对照原词修改后重交；本步尚未计分。");
+      input.current?.focus();
+      return;
+    }
+    pending.current = true;
+    setBusy(true);
+    try {
+      if (!await onEvidence(step, correct, diagnosis?.kcId ?? null, diagnosis?.confirmedKcIds ?? [])) return;
+      setNotice(null);
+      setFeedback(correct ? "本步正确，已更新本步知识点。" : diagnosis ? `${diagnosis.message} 已更新能确认的本步知识点。` : "本步答案有误，仍无法定位具体知识点，本步不更新掌握度。");
+    } finally { pending.current = false; setBusy(false); }
+  }
+  function next() {
+    if (!feedback || pending.current) return;
+    if (index === steps.length - 1) return onDone();
+    setIndex(index + 1); setAnswer(""); setFeedback(null); setNotice(null);
+    requestAnimationFrame(() => input.current?.focus());
+  }
+  return <section className="diagnostic-practice" aria-label="拆步练习">
+    <h3>拆步练习 · 第 {index + 1} / {steps.length} 步</h3>
+    <p>拆步作答只评估当前步骤，原题仍计为错误，不额外增加今日题数或连对。</p>
+    <p>{step.continuation ? "已提供正确的中间形式，请继续变为" : "请先变为"}<strong>{step.continuation ? FORM_LABELS[step.form].split("・").at(-1) : FORM_LABELS[step.form]}</strong></p>
+    <p className="diagnostic-word"><FuriganaText surface={step.surface} reading={step.reading} /></p>
+    <form onSubmit={submit}><label htmlFor="diagnostic-answer">本步答案</label><div className="answer-row"><input ref={input} id="diagnostic-answer" lang="ja" autoComplete="off" value={answer} disabled={Boolean(feedback) || busy} onChange={(event) => { setAnswer(event.target.value); setNotice(null); }} onKeyDown={(event) => { if (event.key === "Enter" && (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229)) event.preventDefault(); }} /><button type="submit" disabled={!answer.trim() || Boolean(feedback) || busy}>检查本步</button></div></form>
+    {notice && <p role="status">{notice}</p>}
+    {feedback && <div role="status"><p>{feedback}</p><p>本步正确形式：<FuriganaText surface={step.answers[0]} reading={step.readings[0]} /></p><button type="button" className="text-button" onClick={next}>{index === steps.length - 1 ? "完成拆步" : "练习下一步"}</button></div>}
+    <button type="button" className="text-button" disabled={busy} onClick={onDone}>跳过剩余拆步，查看解析</button>
+  </section>;
 }
 
 function SemanticDetails({ semantics }: { semantics: FormSemantics | null }) {
@@ -217,6 +269,7 @@ export default function Home() {
   const [finished, setFinished] = useState(false);
   const [unlocked, setUnlocked] = useState<string | null>(null);
   const [typoNotice, setTypoNotice] = useState(false);
+  const [probesDone, setProbesDone] = useState(false);
   const [diagnosticMessage, setDiagnosticMessage] = useState<string | null>(null);
   const [confirmedKcIds, setConfirmedKcIds] = useState<string[]>([]);
   const [diagnosticKcId, setDiagnosticKcId] = useState<string | null>(null);
@@ -268,6 +321,9 @@ export default function Home() {
   const form = exercise.form;
   const formSemantics = (form ? semanticsForForm(form) : null) as FormSemantics | null;
   const derivation = deriveFor(item, form);
+  const unattributed = result === "incorrect" && diagnosticKcId === null && Boolean(form);
+  const diagnosticSteps = useMemo(() => unattributed && item.domain === "verb" && form ? buildDiagnosticSteps(item, form) as DiagnosticStep[] : [], [unattributed, item, form]);
+  const probing = diagnosticSteps.length > 0 && !probesDone;
   const detail = derivation.detail;
   const detailSteps = detail && "steps" in detail && Array.isArray(detail.steps) ? detail.steps : null;
   const readingItem = { ...item, surface: item.reading, ...(item.domain === "verb" ? { lexicalSurface: item.surface } : {}) } as PracticeItem;
@@ -318,12 +374,13 @@ export default function Home() {
       return true;
     } finally { savingRef.current = false; setSaving(false); }
   }, [store]);
-  const resetQuestion = useCallback(() => { gradedRef.current = false; setAnswer(""); setTypoNotice(false); setSelectedClass(null); setResult(null); setHint(emptyHintState()); setDiagnosticMessage(null); setDiagnosticKcId(null); setConfirmedKcIds([]); setAcceptedVariant(null); startedAt.current = clockNow(); requestAnimationFrame(() => inputRef.current?.focus()); }, [setAnswer, setAcceptedVariant, setDiagnosticKcId, setDiagnosticMessage, setHint, setResult, setSelectedClass]);
+  const resetQuestion = useCallback(() => { gradedRef.current = false; setAnswer(""); setProbesDone(false); setTypoNotice(false); setSelectedClass(null); setResult(null); setHint(emptyHintState()); setDiagnosticMessage(null); setDiagnosticKcId(null); setConfirmedKcIds([]); setAcceptedVariant(null); startedAt.current = clockNow(); requestAnimationFrame(() => inputRef.current?.focus()); }, [setAnswer, setAcceptedVariant, setDiagnosticKcId, setDiagnosticMessage, setHint, setResult, setSelectedClass]);
 
   async function grade(correct: boolean, revealed = false, failedKcId: string | null = null, message: string | null = null, extraKcIds: string[] = [], confirmed: string[] = []) {
     if (result || gradedRef.current || blockedRef.current || savingRef.current) return;
     gradedRef.current = true;
     setTypoNotice(false);
+    if (!correct && (revealed || !form)) failedKcId ??= targetKc.id;
     const old = profileRef.current.date === todayKey() ? profileRef.current : { ...profileRef.current, date: todayKey(), attempted: 0, correct: 0, streak: 0 };
     const byKc = updateKnowledgeStats(old.byKc, { kcIds: [...new Set([...derivation.requiredKcIds, ...extraKcIds])], focusId: targetKc.id, failedKcId, confirmedKcIds: confirmed, correct, revealed, hintUsed: hint.used, responseMs: clockNow() - startedAt.current, answerLength: form ? conjugateFor(readingItem, form).length : item.reading.length });
     if (!await save({ ...old, attempted: old.attempted + 1, correct: old.correct + (correct ? 1 : 0), streak: correct ? old.streak + 1 : 0, byKc })) { gradedRef.current = false; return; }
@@ -352,6 +409,11 @@ export default function Home() {
     }
     grade(false, false, diagnosed?.kcId ?? null, diagnosed?.message?.replace(item.reading, item.surface) ?? null, [], diagnosed?.confirmedKcIds ?? []);
   }
+  async function saveStepEvidence(step: DiagnosticStep, correct: boolean, failedKcId: string | null, confirmed: string[]) {
+    const current = profileRef.current;
+    const byKc = updateKnowledgeStats(current.byKc, { kcIds: step.kcIds, focusId: step.focusId, failedKcId, confirmedKcIds: confirmed, correct, hintUsed: hint.used });
+    return save({ ...current, byKc });
+  }
   function chooseClass(choice: PracticeClass) { if (!result) { setSelectedClass(choice); grade(choice === item.class); } }
 
   const finishRound = useCallback(async () => {
@@ -360,7 +422,7 @@ export default function Home() {
     setFinished(true);
   }, [curriculumScope, mode, practiceDomain, save]);
   const nextQuestion = useCallback(async () => {
-    if (!gradedRef.current || blockedRef.current || savingRef.current) return;
+    if (!gradedRef.current || blockedRef.current || savingRef.current || probing) return;
     const answeredCount = roundOffset + questionIndex + 1;
     if (answeredCount >= SESSION_LENGTH) return finishRound();
     const current = profileRef.current;
@@ -386,7 +448,7 @@ export default function Home() {
     }
     setQuestionIndex((value) => value + 1);
     resetQuestion();
-  }, [curriculumScope, finishRound, focusKc, mode, practiceDomain, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, save, usedQuestionKeys]);
+  }, [curriculumScope, finishRound, focusKc, mode, practiceDomain, probing, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, save, usedQuestionKeys]);
   const classChoices = useMemo(() => practiceDomain === "verb" ? ["ichidan", "godan", "irregular"] as PracticeClass[] : ["i", "na"] as PracticeClass[], [practiceDomain]);
   useEffect(() => { if (progressOpen || blocked || loading || saving) return; const handler = (event: KeyboardEvent) => { if (event.isComposing || event.repeat || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return; const target = event.target as HTMLElement | null; if (target?.closest("input,textarea,select,[contenteditable='true']")) return; if (finished) { if (event.key !== "Enter" || target?.closest("a,button")) return; event.preventDefault(); document.querySelector<HTMLButtonElement>(".restart-button")?.click(); return; } if (!result && !form && classChoices.map((_, index) => String(index + 1)).includes(event.key)) { event.preventDefault(); document.querySelector<HTMLButtonElement>(`[data-class-shortcut="${event.key}"]`)?.click(); return; } if (!result || event.key !== "Enter" || target?.closest("a,button")) return; event.preventDefault(); nextQuestion(); }; addEventListener("keydown", handler); return () => removeEventListener("keydown", handler); }, [blocked, classChoices, finished, form, loading, nextQuestion, progressOpen, result, saving]);
   function applyRound(nextMode: PracticeMode, current: Profile, scope: CurriculumScope, domain: PracticeDomain) {
@@ -459,7 +521,7 @@ export default function Home() {
   }
 
   const focusPercent = Math.round((focusKc ? componentConfidence(focusKc, profile.byKc) : focusStats.confidence) * 100);
-  const evidenceKcId = diagnosticKcId ?? targetKc.id;
+  const evidenceKcId = unattributed ? "" : diagnosticKcId ?? targetKc.id;
   const evidenceKc = KC_BY_ID.get(evidenceKcId);
   const currentPercent = Math.round((evidenceKc ? componentConfidence(evidenceKc, profile.byKc) : profile.byKc[evidenceKcId]?.confidence ?? 0) * 100);
   const introducedSet = new Set(profile.introducedKcIds);
@@ -526,7 +588,7 @@ export default function Home() {
       <article className="exercise-card" key={`${exercise.id}-${questionIndex}-${seed}`}><div className="question-kicker"><span>Yokubi · L{course.lesson}</span><span>{form ? FORM_LABELS[form] : course.title}</span>{result && <span>{KC_FAMILY_LABELS[targetKc.family]} · {targetKc.label}</span>}</div><p className="instruction">{form ? <>请把下面的{practiceDomain === "verb" ? "动词" : "形容词"}变为<strong>{FORM_LABELS[form]}</strong></> : `请选择这个${practiceDomain === "verb" ? "动词" : "形容词"}所属的类别`}</p>{formSemantics && <p className="semantic-brief"><span>表达作用</span><span>{formSemantics.concise}</span></p>}<div className="word-display"><ruby>{item.surface}<rt>{item.reading}</rt></ruby><span>{item.meaning}</span></div>
       {!form ? <div className={`class-options ${classChoices.length === 2 ? "two-options" : ""}`}>{classChoices.map((choice, index) => <button type="button" key={choice} disabled={Boolean(result)} data-class-shortcut={String(index + 1)} aria-keyshortcuts={String(index + 1)} className={`${selectedClass === choice ? "selected" : ""} ${result && choice === item.class ? "choice-correct" : ""} ${selectedClass === choice && result === "incorrect" ? "choice-wrong" : ""}`} onClick={() => chooseClass(choice)}><small>{choice === "ichidan" ? "る脱落" : choice === "godan" ? "词尾移动" : choice === "irregular" ? "固定变化" : choice === "i" ? "词尾い变化" : "な／だ接续"}</small><strong>{classLabelFor(choice)}</strong><kbd aria-hidden="true">{index + 1}</kbd></button>)}</div> : <form onSubmit={submit}><label htmlFor="answer">你的答案</label><div className={`answer-row ${result ?? ""}`}><input ref={inputRef} id="answer" lang="ja" onKeyDown={(event) => { if (event.key === "Enter" && (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229)) event.preventDefault(); }} autoComplete="off" disabled={Boolean(result)} value={answer} aria-describedby={typoNotice ? "typo-notice" : undefined} onChange={(e) => { setAnswer(e.target.value); setTypoNotice(false); }} placeholder="输入日语……" /><button type="submit" disabled={!answer.trim() || Boolean(result)}>检查答案</button></div><p className="answer-note">汉字或全假名答案均可</p>{typoNotice && <p id="typo-notice" className="hint-box" role="status">原词中不需要变化的部分有一处字符不同，可能是输入笔误。请对照原词修改后重新提交；本次未计入作答或知识点统计。</p>}</form>}
       {!result && <div className="assist-row"><button type="button" className="text-button" onClick={() => setHint(toggleHint)}>{hintShown ? "收起提示" : "看一条提示"}</button><button type="button" className="text-button" onClick={() => grade(false, true)}>不知道</button></div>}{hintShown && !result && <p className="hint-box">{hintFor(item, form)}</p>}
-      {result && <div className={`feedback ${result}`} role="status"><div className="feedback-copy"><strong>{feedbackTitle}</strong><p>{diagnosticMessage ?? detail.rule}</p></div><div className="knowledge-tags" aria-label="本题涉及的知识点">{derivation.requiredKcIds.map((id: string) => KC_BY_ID.get(id)).filter((kc: KnowledgeComponent | undefined): kc is KnowledgeComponent => Boolean(kc)).map((kc: KnowledgeComponent) => <span className={kc.id === evidenceKcId ? "target" : confirmedKcIds.includes(kc.id) ? "confirmed" : ""} key={kc.id}>{confirmedKcIds.includes(kc.id) && "✓ 已确认 · "}{KC_FAMILY_LABELS[kc.family]} · {kc.label}</span>)}</div>{confirmedKcIds.length > 0 && <p className="partial-evidence-note">已确认的步骤计入正确记录；红色知识点记错，其余不更新。整题仍计为错误。</p>}<div className="rule-line"><span><FuriganaText surface={item.surface} reading={item.reading} /></span><b>→</b>{!form ? <span className="answer-emphasis">{classLabelFor(item.class)}</span> : acceptedVariant ? <span className="answer-emphasis"><FuriganaText surface={acceptedVariant.surface} reading={acceptedVariant.reading} /></span> : detailSteps ? detailSteps.map((step: string, i: number) => <Fragment key={`${step}-${i}`}><span className={i === detailSteps.length - 1 ? "answer-emphasis" : ""}><FuriganaText surface={step} reading={readingSteps?.[i] ?? step} /></span>{i < detailSteps.length - 1 && <b>→</b>}</Fragment>) : detail.parts.map((part: string, i: number) => <span className={i === detail.parts.length - 1 ? "answer-emphasis" : ""} key={`${part}-${i}`}><FuriganaText surface={part} reading={readingParts[i] ?? part} />{i < detail.parts.length - 1 && <b className="joiner">＋</b>}</span>)}</div>{acceptedVariant && form && <p className="accepted-variant-note">{acceptedVariant.note && <span>{acceptedVariant.note}</span>}<span>{form === "causativePassive" || form.startsWith("causativePassive") ? "完整形式：" : "本站默认展示："}<FuriganaText surface={detail.answer} reading={readingDetail?.answer ?? detail.answer} /></span></p>}{result === "incorrect" && form && <p className="your-answer">你的答案：{answer || "—"}</p>}<SemanticDetails semantics={formSemantics} /><div className="feedback-meta"><span>本题重点 {currentPercent}%</span><a href={course.url} target="_blank" rel="noreferrer">查看 Yokubi 中文版{course.lesson === "复习" ? "相关课程" : `第 ${Number(course.lesson)} 课`} ↗</a></div><button type="button" className="next-button" onClick={nextQuestion}>{questionNumber === SESSION_LENGTH ? "查看本轮结果" : focusComplete ? "继续" : "下一题"}<span><kbd>Enter</kbd> →</span></button></div>}{!result && <p className="keyboard-hint">{!form ? <>{classChoices.map((_, index) => <Fragment key={index}><kbd>{index + 1}</kbd>{" "}</Fragment>)}选择答案</> : <><kbd>Enter</kbd> 检查答案</>}</p>}</article></> :
+      {result && <div className={`feedback ${result}`} role="status"><div className="feedback-copy"><strong>{feedbackTitle}</strong><p>{unattributed ? "本题已记错，但暂时无法确定出错步骤，知识点掌握度未更新。" : diagnosticMessage ?? detail.rule}</p></div><div className="knowledge-tags" aria-label="本题涉及的知识点">{derivation.requiredKcIds.map((id: string) => KC_BY_ID.get(id)).filter((kc: KnowledgeComponent | undefined): kc is KnowledgeComponent => Boolean(kc)).map((kc: KnowledgeComponent) => <span className={kc.id === evidenceKcId ? "target" : confirmedKcIds.includes(kc.id) ? "confirmed" : ""} key={kc.id}>{confirmedKcIds.includes(kc.id) && "✓ 已确认 · "}{KC_FAMILY_LABELS[kc.family]} · {kc.label}</span>)}</div>{confirmedKcIds.length > 0 && <p className="partial-evidence-note">已确认的步骤计入正确记录；红色知识点记错，其余不更新。整题仍计为错误。</p>}{probing && item.domain === "verb" && <DiagnosticPractice key={`${exercise.id}-${questionIndex}-${seed}`} item={item} steps={diagnosticSteps} onEvidence={saveStepEvidence} onDone={() => setProbesDone(true)} />}<div hidden={probing}><div className="rule-line"><span><FuriganaText surface={item.surface} reading={item.reading} /></span><b>→</b>{!form ? <span className="answer-emphasis">{classLabelFor(item.class)}</span> : acceptedVariant ? <span className="answer-emphasis"><FuriganaText surface={acceptedVariant.surface} reading={acceptedVariant.reading} /></span> : detailSteps ? detailSteps.map((step: string, i: number) => <Fragment key={`${step}-${i}`}><span className={i === detailSteps.length - 1 ? "answer-emphasis" : ""}><FuriganaText surface={step} reading={readingSteps?.[i] ?? step} /></span>{i < detailSteps.length - 1 && <b>→</b>}</Fragment>) : detail.parts.map((part: string, i: number) => <span className={i === detail.parts.length - 1 ? "answer-emphasis" : ""} key={`${part}-${i}`}><FuriganaText surface={part} reading={readingParts[i] ?? part} />{i < detail.parts.length - 1 && <b className="joiner">＋</b>}</span>)}</div>{acceptedVariant && form && <p className="accepted-variant-note">{acceptedVariant.note && <span>{acceptedVariant.note}</span>}<span>{form === "causativePassive" || form.startsWith("causativePassive") ? "完整形式：" : "本站默认展示："}<FuriganaText surface={detail.answer} reading={readingDetail?.answer ?? detail.answer} /></span></p>}{result === "incorrect" && form && <p className="your-answer">你的答案：{answer || "—"}</p>}<SemanticDetails semantics={formSemantics} /></div><div className="feedback-meta"><span>{unattributed ? (diagnosticSteps.length ? "原题未归因 · 拆步作答单独评估" : "本题未归因，知识点掌握度未更新") : `本题重点 ${currentPercent}%`}</span><a href={course.url} target="_blank" rel="noreferrer">查看 Yokubi 中文版{course.lesson === "复习" ? "相关课程" : `第 ${Number(course.lesson)} 课`} ↗</a></div><button type="button" className="next-button" disabled={probing} onClick={nextQuestion}>{questionNumber === SESSION_LENGTH ? "查看本轮结果" : focusComplete ? "继续" : "下一题"}<span><kbd>Enter</kbd> →</span></button></div>}{!result && <p className="keyboard-hint">{!form ? <>{classChoices.map((_, index) => <Fragment key={index}><kbd>{index + 1}</kbd>{" "}</Fragment>)}选择答案</> : <><kbd>Enter</kbd> 检查答案</>}</p>}</article></> :
       <article className="completion-card"><p className="completion-jp">おつかれさま</p><span className="completion-label">本轮完成</span><div className="score"><strong>{sessionCorrect}</strong><span>/ {answeredInRound}</span></div><p>{unlocked ? `新知识点已解锁：${unlocked}` : mode === "adaptive" && activeRouteComplete ? practiceDomain === "adjective" ? "形容词核心活用已经全部达标，可以继续巩固。" : curriculumScope === "core" ? "核心活用已经全部达标，可以继续巩固或解锁接续表达。" : "完整路线已经全部达标，可以继续巩固。" : mode === "adaptive" ? "下一轮会继续聚焦当前置信度最低的知识点。" : "专项模式只练当前课程，不会推进自适应路线的解锁。"}</p><div className="completion-focus"><span>{mode === "adaptive" ? "当前薄弱点" : "本专项薄弱点"}</span><strong>{weakestKc?.label ?? "全部已达标"}</strong>{weakestMissingCoverage.length > 0 && <small>待覆盖：{weakestMissingCoverage.join("、")}</small>}</div><button type="button" className="restart-button" onClick={() => start(mode)}>{mode === "adaptive" ? "继续下一轮" : "继续本专项"}<span><kbd>Enter</kbd> →</span></button>{mode === "adaptive" && practiceDomain === "verb" && curriculumScope === "core" && coreComplete && <button type="button" className="unlock-curriculum" onClick={() => changeCurriculumScope("full")}>继续学习接续表达 <span>解锁 {VERB_COURSES.length - CORE_COURSE_COUNT} 门课程 →</span></button>}{mode !== "adaptive" && <button type="button" className="back-adaptive" onClick={() => start("adaptive")}>返回自适应训练</button>}</article>}
       <footer className="source-note">课程编排参考 <a href={CHINESE_YOKUBI_URL} target="_blank" rel="noreferrer">Yokubi 中文版</a>，自适应学习思路参考 kanabr · 本地学习记录 · CC BY 4.0</footer></section></section>
     {progressOpen && <div className="progress-overlay"><button type="button" className="progress-backdrop" onClick={() => setProgressOpen(false)} aria-label="关闭知识进度" /><section className="progress-drawer" role="dialog" aria-modal="true" aria-labelledby="progress-title"><header><div><p>LEARNING PROFILE · {practiceDomain === "adjective" ? "ADJECTIVE" : curriculumScope === "core" ? "VERB CORE" : "VERB FULL"}</p><h2 id="progress-title">知识进度</h2></div><button ref={progressCloseRef} type="button" onClick={() => setProgressOpen(false)} aria-label="关闭知识进度">关闭 <kbd>Esc</kbd></button></header><div className="progress-summary"><div><span>已掌握知识点</span><strong>{masteredKcCount}</strong></div><div><span>已解锁知识点</span><strong>{introducedKcs.length}</strong></div><p>当前统计只包含{practiceDomain === "adjective" ? "形容词活用" : curriculumScope === "core" ? "动词核心活用" : "动词完整路线"}；另一条路线的成绩仍保留。置信度不随时间自动变化。</p></div><section className="profile-transfer" aria-labelledby="profile-transfer-title"><div><h3 id="profile-transfer-title">更换设备</h3><p>导出一个 JSON 备份，在其他浏览器中导入即可恢复全部知识点进度。</p></div><div className="transfer-actions"><button type="button" onClick={exportProgress}>导出数据</button><button type="button" onClick={() => importInputRef.current?.click()}>导入数据</button><input ref={importInputRef} type="file" accept="application/json,.json" hidden onChange={importProgress} /></div>{transferNotice && <p className={`transfer-notice ${transferNotice.kind}`} role="status">{transferNotice.text}</p>}</section><div className="progress-view-tabs" role="tablist" aria-label="进度查看方式"><button type="button" role="tab" aria-selected={progressView === "course"} className={progressView === "course" ? "active" : ""} onClick={() => setProgressView("course")}>按课程</button><button type="button" role="tab" aria-selected={progressView === "atomic"} className={progressView === "atomic" ? "active" : ""} onClick={() => setProgressView("atomic")}>按知识点</button></div>

@@ -204,6 +204,10 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .text-button { border: 0; padding: 4px 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; }
 .text-button:hover { color: var(--ink); text-decoration-color: #aaa9a2; }
 .hint-box { margin: 15px 0 0; padding: 14px 16px; border-radius: 5px; background: #eeebe2; color: #606760; font-size: 14px; line-height: 1.7; animation: fade-in .18s ease-out both; }
+.diagnostic-practice { margin-top: 20px; padding: 18px; border: 1px solid #cbd8d1; border-radius: 8px; background: #faf9f5; }
+.diagnostic-practice p { line-height: 1.7; }
+.diagnostic-practice .diagnostic-word { font-size: 28px; color: #18251e; }
+.diagnostic-practice .text-button { display: block; margin-top: 14px; }
 
 .feedback { margin-top: 20px; padding: 19px 20px 20px; border-left: 3px solid; background: #eeece4; animation: fade-in .2s ease-out both; }
 .feedback.correct { border-color: var(--green); background: var(--green-soft); }

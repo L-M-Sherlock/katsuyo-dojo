@@ -492,3 +492,33 @@ export function diagnoseConjugation(verb, form, answer, normalize = (value) => v
     id !== uniqueKcs[0] && matches.every((match) => (match.confirmedKcIds ?? []).includes(id)));
   return { ...matches[0], confirmedKcIds };
 }
+
+// Each follow-up measures only the operations the learner must perform.
+// The continuation is given its correct base even if the first step was wrong.
+export function buildDiagnosticSteps(verb, form) {
+  const family = continuationFamily(form);
+  if (!family) return [];
+  const reading = { ...verb, surface: verb.reading, lexicalSurface: verb.surface };
+  const base = deriveExercise(verb, family.baseForm);
+  const baseReading = deriveExercise(reading, family.baseForm);
+  const target = deriveExercise(verb, form);
+  const targetReading = deriveExercise(reading, form);
+  const remaining = target.requiredKcIds.filter((id) => !base.requiredKcIds.includes(id));
+  return [
+    { surface: verb.surface, reading: verb.reading, form: family.baseForm,
+      answers: base.acceptedVariants, readings: baseReading.acceptedVariants,
+      kcIds: base.requiredKcIds, focusId: base.requiredKcIds.at(-1), continuation: false },
+    { surface: base.answer, reading: baseReading.answer, form,
+      // Keep accepted variants, but never award their supplied base again.
+      answers: target.acceptedVariants, readings: targetReading.acceptedVariants,
+      kcIds: remaining, focusId: family.kcId, continuation: true },
+  ];
+}
+
+export function diagnoseStep(verb, step, answer, normalize = (value) => value) {
+  const reading = { ...verb, surface: verb.reading, lexicalSurface: verb.surface };
+  const diagnosis = diagnoseConjugation(verb, step.form, answer, normalize)
+    ?? diagnoseConjugation(reading, step.form, answer, normalize);
+  if (!diagnosis || !step.kcIds.includes(diagnosis.kcId)) return null;
+  return { ...diagnosis, confirmedKcIds: diagnosis.confirmedKcIds.filter((id) => step.kcIds.includes(id)) };
+}
