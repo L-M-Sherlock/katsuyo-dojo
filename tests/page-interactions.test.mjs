@@ -410,3 +410,63 @@ test('diagnostic lexical typo retries preserve the current step and all evidence
   assert.equal(view.getByLabelText('本步答案').disabled, false);
   assert.equal(Boolean(view.queryByRole('button', { name: '练习下一步' })), false);
 });
+
+test('Enter advances diagnostic feedback, completes diagnostics, then goes to the next question', async () => {
+  const { view, steps } = await startDiagnosticPractice();
+  const question = view.container.querySelector('.stage-meta').textContent;
+  assert.equal(view.container.querySelector('.next-button').textContent, '请完成或跳过拆步');
+  assert.equal(Boolean(view.container.querySelector('.next-button kbd')), false);
+  for (const [index, step] of steps.entries()) {
+    fireEvent.change(view.getByLabelText('本步答案'), { target: { value: step.readings[0] } });
+    fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+    await waitFor(() => assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+    const advance = view.container.querySelector('[data-diagnostic-next]');
+    assert.equal(document.activeElement === advance, true);
+    assert.equal(advance.getAttribute('aria-keyshortcuts'), 'Enter');
+    for (const extra of [{ isComposing: true }, { keyCode: 229 }, { repeat: true }, { ctrlKey: true }]) {
+      assert.equal(fireEvent.keyDown(advance, { key: 'Enter', ...extra }), false);
+      assert.equal(Boolean(view.queryByText('本步正确，已更新本步知识点。')), true);
+    }
+    fireEvent.keyDown(document.activeElement, { key: 'Enter' });
+    assert.equal(view.container.querySelector('.stage-meta').textContent, question);
+    if (index === 0) {
+      await waitFor(() => assert.equal(document.activeElement === view.getByLabelText('本步答案'), true));
+      assert.equal(view.getByLabelText('本步答案').value, '');
+    }
+  }
+  const nextButton = view.container.querySelector('.next-button');
+  await waitFor(() => assert.equal(document.activeElement === nextButton, true));
+  assert.equal(nextButton.disabled, false);
+  fireEvent.keyDown(document.activeElement, { key: 'Enter' });
+  await waitFor(() => assert.notEqual(view.container.querySelector('.stage-meta').textContent, question));
+  assert.equal(JSON.parse(storage.getItem(KEY)).attempted, 1);
+});
+
+test('Enter from a retained disabled answer or the page body also advances a diagnostic step', async () => {
+  const { view } = await startDiagnosticPractice();
+  for (let index = 0; index < 2; index++) {
+    const answer = view.getByLabelText('本步答案');
+    fireEvent.change(answer, { target: { value: 'xyz' } });
+    fireEvent.submit(answer.closest('form'));
+    await waitFor(() => assert.ok(view.getByText(/本步答案有误，仍无法定位/)));
+    assert.equal(answer.disabled, true);
+    fireEvent.keyDown(index === 0 ? answer : document.body, { key: 'Enter' });
+  }
+  assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false);
+  assert.equal(view.container.querySelector('.next-button').disabled, false);
+});
+
+test('Enter cannot bypass unanswered steps or run behind the progress drawer', async () => {
+  const { view, steps } = await startDiagnosticPractice();
+  const before = storage.getItem(KEY);
+  fireEvent.keyDown(document.body, { key: 'Enter' });
+  assert.equal(storage.getItem(KEY), before);
+  assert.ok(view.getByText('拆步练习 · 第 1 / 2 步'));
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: steps[0].readings[0] } });
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+  fireEvent.click(view.getByRole('button', { name: /知识进度 完整课程/ }));
+  assert.ok(view.getByRole('dialog'));
+  fireEvent.keyDown(document.body, { key: 'Enter' });
+  assert.ok(view.getByText('拆步练习 · 第 1 / 2 步'));
+});

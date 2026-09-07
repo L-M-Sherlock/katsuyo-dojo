@@ -249,7 +249,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .feedback-meta { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(23,33,28,.1); display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 11px; }
 .feedback-meta a { color: var(--red-dark); text-underline-offset: 3px; }
 .next-button { width: 100%; margin-top: 18px; padding: 14px 17px; border: 0; border-radius: 5px; background: var(--ink); color: white; display: flex; justify-content: space-between; cursor: pointer; font-size: 14px; transition: background .18s; }
-.next-button:hover { background: #2c3932; }
+.next-button:hover:not(:disabled) { background: #2c3932; }
+.next-button:disabled { opacity: .45; cursor: not-allowed; }
 .next-button span { display: flex; align-items: center; gap: 9px; color: #b8bdb9; }
 .next-button kbd { border-color: #59625d; border-bottom-width: 1px; background: #303b35; color: #dfe2df; }
 .keyboard-hint { margin: 18px 0 0; text-align: center; color: #858780; font-size: 12px; }
