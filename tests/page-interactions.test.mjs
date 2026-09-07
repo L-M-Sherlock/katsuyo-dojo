@@ -181,15 +181,15 @@ test('corrupt progress is preserved and recovery controls stay usable', async ()
   assert.equal(view.getByRole('button', { name: '清除损坏记录并重新开始' }).disabled, false);
 });
 
-async function mountCompoundPast() {
+async function mountCompoundPast(ending = 'past') {
   const initial = masteredProfile();
-  initial.byKc['composition.verb.past'] = emptySkillStats();
+  initial.byKc[`composition.verb.${ending}`] = emptySkillStats();
   storage.setItem(KEY, JSON.stringify(initial));
   storage.setItem(SCOPE, 'full');
   const view = await mount();
   const label = view.container.querySelector('.question-kicker span:nth-child(2)').textContent;
   const form = Object.keys(COMPOUND_FORM_LABELS).find((id) => COMPOUND_FORM_LABELS[id] === label);
-  assert.equal(COMPOUND_FORM_SPECS[form]?.ending, 'past');
+  assert.equal(COMPOUND_FORM_SPECS[form]?.ending, ending);
   const surface = view.container.querySelector('.word-display ruby').firstChild.textContent;
   const item = VERB_KNOWLEDGE.exercises.find((exercise) => exercise.form === form && exercise.item.surface === surface).item;
   return { initial, view, form, item };
@@ -232,4 +232,67 @@ test('an unrecognized compound answer gives no partial credit', async () => {
   const changed = Object.keys(saved.byKc).filter((id) => JSON.stringify(saved.byKc[id]) !== JSON.stringify(initial.byKc[id]));
   assert.deepEqual(changed, ['composition.verb.past']);
   assert.equal(view.container.querySelectorAll('.knowledge-tags .confirmed').length, 0);
+});
+
+async function submitLexicalTypo(view, item, form) {
+  assert.notEqual(item.class, 'irregular');
+  const correct = conjugate(item.reading, item.class, form);
+  assert.equal(correct[0], item.reading[0]);
+  const answer = (correct[0] === 'な' ? 'た' : 'な') + correct.slice(1);
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: answer } });
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  await waitFor(() => assert.ok(view.getByText(/可能是输入笔误/)));
+  return correct;
+}
+
+test('lexical typo retries leave all statistics untouched and a correction is graded once', async () => {
+  const { view, item, form } = await mountCompoundPast('negativePast');
+  const before = storage.getItem(KEY);
+  const correct = await submitLexicalTypo(view, item, form);
+  assert.equal(storage.getItem(KEY), before);
+  assert.equal(view.getByLabelText('你的答案').disabled, false);
+  assert.equal(Boolean(view.queryByText('差一点')), false);
+  assert.equal(Boolean(view.container.querySelector('.next-button')), false);
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  assert.equal(storage.getItem(KEY), before);
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: correct } });
+  assert.equal(Boolean(view.queryByText(/可能是输入笔误/)), false);
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  await waitFor(() => assert.ok(view.getByText('正解！')));
+  const saved = JSON.parse(storage.getItem(KEY));
+  assert.equal(saved.attempted, JSON.parse(before).attempted + 1);
+  assert.equal(saved.correct, JSON.parse(before).correct + 1);
+  assert.equal(saved.byKc['composition.verb.negativePast'].attempts, 1);
+  assert.equal(saved.byKc['composition.verb.negativePast'].correct, 1);
+  await next(view);
+  assert.equal(Boolean(view.queryByText(/可能是输入笔误/)), false);
+});
+
+test('a typo retry retains hint usage and a wrong continuation still receives partial attribution', async () => {
+  const { view, item, form } = await mountCompoundPast();
+  fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  fireEvent.click(view.getByRole('button', { name: '收起提示' }));
+  await submitLexicalTypo(view, item, form);
+  const wrong = conjugate(item.reading, item.class, form.replace(/Past$/, 'Negative'));
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: wrong } });
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  await waitFor(() => assert.ok(view.getByText(/末尾写成了否定形，本题要求过去形/)));
+  const saved = JSON.parse(storage.getItem(KEY));
+  assert.equal(saved.attempted, 1);
+  assert.equal(saved.correct, 0);
+  assert.equal(saved.byKc['composition.verb.past'].attempts, 1);
+  for (const id of requiredKcIds(item, COMPOUND_FORM_SPECS[form].form)) {
+    assert.equal(saved.byKc[id].filteredAccuracy, .94, id);
+  }
+  assert.equal(Boolean(view.queryByText(/可能是输入笔误/)), false);
+});
+
+test('revealing after a typo grades normally and clears the retry notice', async () => {
+  const { view, item, form } = await mountCompoundPast();
+  await submitLexicalTypo(view, item, form);
+  fireEvent.click(view.getByRole('button', { name: '不知道' }));
+  await waitFor(() => assert.ok(view.getByText('记住这个变化')));
+  assert.equal(Boolean(view.queryByText(/可能是输入笔误/)), false);
+  assert.equal(JSON.parse(storage.getItem(KEY)).attempted, 1);
+  assert.equal(JSON.parse(storage.getItem(KEY)).correct, 0);
 });
