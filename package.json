@@ -14,7 +14,11 @@
     "simulate:perfect": "node scripts/simulate-perfect-learning.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "simulate:mixed": "node scripts/simulate-mixed-learning.mjs"
+    "simulate:mixed": "node scripts/simulate-mixed-learning.mjs",
+    "audit:diagnosis": "node scripts/audit-diagnosis.mjs",
+    "audit:diagnosis:parallel": "node scripts/audit-diagnosis-parallel.mjs",
+    "audit:paths": "node scripts/audit-diagnostic-paths.mjs",
+    "audit:paths:parallel": "node scripts/audit-diagnostic-paths-parallel.mjs"
   },
   "dependencies": {
     "react": "19.2.6",

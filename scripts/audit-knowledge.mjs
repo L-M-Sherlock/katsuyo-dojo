@@ -1,4 +1,5 @@
 import { createServer } from "vite";
+import { assignPracticeExercises, exerciseKey } from "../app/lib/exercise-selection.mjs";
 
 const server = await createServer({
   appType: "custom",
@@ -7,7 +8,7 @@ const server = await createServer({
 });
 
 try {
-  const [{ VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE }, { auditKnowledgeModel, deriveExercise }, adaptive, { knowledgeModelForScope }, { MULTI_STEP_FORMS }] = await Promise.all([
+  const [{ VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE, KNOWLEDGE }, { auditKnowledgeModel, deriveExercise }, adaptive, { knowledgeModelForScope }, { MULTI_STEP_FORMS }] = await Promise.all([
     server.ssrLoadModule("/app/page.tsx"),
     server.ssrLoadModule("/app/lib/knowledge-model.mjs"),
     server.ssrLoadModule("/app/lib/adaptive.mjs"),
@@ -15,7 +16,7 @@ try {
     server.ssrLoadModule("/app/lib/compound-forms.mjs"),
   ]);
   const issues = [];
-  const models = [["verb", VERB_KNOWLEDGE], ["adjective", ADJECTIVE_KNOWLEDGE]];
+  const models = [["verb", VERB_KNOWLEDGE], ["adjective", ADJECTIVE_KNOWLEDGE], ["unified", KNOWLEDGE]];
   for (const [domain, model] of models) {
     issues.push(...auditKnowledgeModel(model).map((issue) => ({ domain, ...issue })));
     if (domain === "verb") {
@@ -42,26 +43,26 @@ try {
     }
     const gating = model.components.filter((component) => component.gating);
     for (const focus of gating) {
+      const prior = domain === "unified" ? Object.fromEntries(model.components.map(k => [k.id, { attempts: 5, correct: 5, filteredAccuracy: 1, confidence: 1 }])) : {};
+      if (domain === "unified") for (const id of [focus.id, ...focus.coverageKcIds]) prior[id] = { attempts: 0, correct: 0, filteredAccuracy: null, confidence: 0 };
       const balanced = adaptive.balanceComponentsForCourse(focus, gating, model.courseKcIds[focus.firstCourseId] ?? []);
       const plan = adaptive.makeRoundPlan(focus, balanced, 12, 0);
-      const assignments = adaptive.makeUniqueAssignments(plan, {
+      const assignments = assignPracticeExercises(plan, {
+        byKc: prior,
         alternativesFor: (preferred, index) => {
           const others = balanced.filter((component) => component.id !== preferred.id);
           return others.length ? [...others.slice(index % others.length), ...others.slice(0, index % others.length)] : [];
         },
         candidatesFor: (component) => {
           const candidates = model.exercises.filter((exercise) => exercise.courseIndex === focus.firstCourseIndex && exercise.kcIds.includes(component.id));
-          const ready = adaptive.filterReadyExercises(candidates, component.id, model.components, {});
-          return adaptive.rankExercisesForFocus(ready, component.id, {}, component.coverageKcIds);
+          return adaptive.filterReadyExercises(candidates, component.id, model.components, prior);
         },
-        keyOf: (_component, exercise) => `${exercise.form ?? "classify"}:${exercise.item.surface}`,
-        orderedCandidates: (component) => component.coverageKcIds.length > 0 || component.id === "exception.ru-godan",
         seed: 17,
       });
       const assigned = assignments.map(({ candidate }) => candidate).filter(Boolean);
       if (assigned.length !== 12) issues.push({ domain, code: "incomplete-round", id: focus.id, assigned: assigned.length });
       if (assigned.some((exercise) => exercise.courseIndex !== focus.firstCourseIndex)) issues.push({ domain, code: "cross-course-round", id: focus.id });
-      if (new Set(assigned.map((exercise) => `${exercise.form ?? "classify"}:${exercise.item.surface}`)).size !== assigned.length) issues.push({ domain, code: "duplicate-round-exercise", id: focus.id });
+      if (new Set(assigned.map(exerciseKey)).size !== assigned.length) issues.push({ domain, code: "duplicate-round-exercise", id: focus.id });
       for (const facetId of focus.coverageKcIds) {
         if (!assigned.some((exercise) => exercise.kcIds.includes(facetId))) issues.push({ domain, code: "missing-round-coverage", id: focus.id, facetId });
       }

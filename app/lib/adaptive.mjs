@@ -1,7 +1,7 @@
 // @ts-check
 /** @typedef {{attempts: number, correct: number, filteredAccuracy: number | null, confidence: number, bestConfidence: number, cleanTimeTotal: number, cleanTimeCount: number}} SkillStats */
 /** @typedef {Record<string, SkillStats>} StatsMap */
-/** @typedef {{id: string, order: number, gating: boolean, firstCourseId: string, firstCourseIndex: number, prerequisites: string[], coverageKcIds: string[], coverageOnly?: boolean}} Component */
+/** @typedef {{id: string, order: number, gating: boolean, firstCourseId: string, firstCourseIndex: number, prerequisites: string[], coverageKcIds: string[], coverageOnly?: boolean, unlockByPrerequisites?: boolean, masteryPrerequisites?: Component[]}} Component */
 /** @typedef {{correct: boolean, hintUsed?: boolean, revealed?: boolean, responseMs?: number, answerLength?: number}} Evidence */
 
 const ACCURACY_TARGET = 0.85;
@@ -106,9 +106,12 @@ export function rankExercisesForFocus(exercises, focusId, byKc, coverageKcIds = 
 }
 
 /** Keep a simpler candidate while an additional dependent rule is not mastered. */
-/** @template {{kcIds: string[]}} E @param {E[]} exercises @param {string} focusId @param {Component[]} components @param {StatsMap} byKc */
+/** @template {{kcIds: string[], prerequisites?: string[]}} E @param {E[]} exercises @param {string} focusId @param {Component[]} components @param {StatsMap} byKc */
 export function filterReadyExercises(exercises, focusId, components, byKc) {
   const byId = new Map(components.map((component) => [component.id, component]));
+  if (components.some(component => component.unlockByPrerequisites)) {
+    return exercises.filter(exercise => (exercise.prerequisites ?? []).every(id => { const prerequisite = byId.get(id); return id === focusId || Boolean(prerequisite && isComponentMastered(prerequisite, byKc)); }));
+  }
   const ready = exercises.filter((exercise) => exercise.kcIds.every((id) => {
     if (id === focusId) return true;
     const component = byId.get(id);
@@ -123,6 +126,7 @@ export function filterReadyExercises(exercises, focusId, components, byKc) {
 
 /** @param {Component} component @param {StatsMap} byKc */
 export function componentConfidence(component, byKc) {
+  if (component.masteryPrerequisites?.some(prerequisite => !isComponentMastered(prerequisite, byKc))) return Math.min(byKc[component.id]?.confidence ?? 0, .99);
   const confidence = byKc[component.id]?.confidence ?? 0;
   const coverageComplete = (component.coverageKcIds ?? []).every((id) => (byKc[id]?.correct ?? 0) >= 1);
   // Coverage is historical; recent independent performance still determines
@@ -186,7 +190,9 @@ export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @t
       responseMs: kcId === focusId ? result.responseMs : undefined,
     });
   }
-  if (!result.correct && !result.revealed && failedKcId) {
+  // Explicitly demonstrated steps remain evidence even when the remaining
+  // failure cannot yet be assigned to a single component.
+  if (!result.correct && !result.revealed) {
     const required = new Set(kcIds);
     for (const kcId of new Set(confirmedKcIds)) {
       if (kcId === failedKcId || !required.has(kcId)) continue;
@@ -200,7 +206,8 @@ export function updateKnowledgeStats(byKc, { kcIds, focusId, failedKcId = /** @t
 export function findNextIntroducible(components, introducedKcIds, byKc) {
   const introduced = new Set(introducedKcIds);
   const active = components.filter((component) => component.gating && introduced.has(component.id));
-  if (active.some((component) => !isComponentMastered(component, byKc))) return null;
+  const unified = components.some(component => component.unlockByPrerequisites);
+  if (!unified && active.some((component) => !isComponentMastered(component, byKc))) return null;
 
   return components.find((component) => {
     if (!component.gating || introduced.has(component.id)) return false;
@@ -211,7 +218,7 @@ export function findNextIntroducible(components, introducedKcIds, byKc) {
     const earlierCoursesReady = components
       .filter((other) => other.gating && other.firstCourseIndex < component.firstCourseIndex)
       .every((other) => introduced.has(other.id) && isComponentMastered(other, byKc));
-    return prerequisitesReady && earlierCoursesReady;
+    return prerequisitesReady && (unified || earlierCoursesReady);
   }) ?? null;
 }
 

@@ -4,26 +4,25 @@ import {
   balanceComponentsForCourse,
   filterReadyExercises,
   isComponentMastered,
-  makeUniqueAssignments,
-  rankExercisesForFocus,
   updateKnowledgeStats,
 } from "./adaptive.mjs";
+import { assignPracticeExercises, exerciseKey, recordRecentWord, wordKey } from "./exercise-selection.mjs";
 
-function assignmentSegment(model, focus, introduced, byKc, length, rotation, usedKeys) {
+function assignmentSegment(model, focus, introduced, byKc, length, rotation, usedKeys, usedWordKeys, recentWordKeys) {
   const balanced = balanceComponentsForCourse(focus, introduced, model.courseKcIds[focus.firstCourseId] ?? []);
   const { plan } = planPractice(introduced, byKc, model.courseKcIds, { length, rotation });
-  const assignments = makeUniqueAssignments(plan, {
+  const assignments = assignPracticeExercises(plan, {
+    byKc,
+    usedWordKeys,
+    recentWordKeys,
     alternativesFor: (preferred, index) => {
       const others = balanced.filter((component) => component.id !== preferred.id);
       return others.length ? [...others.slice(index % others.length), ...others.slice(0, index % others.length)] : [];
     },
     candidatesFor: (component) => {
       const candidates = model.exercises.filter((exercise) => exercise.courseIndex === focus.firstCourseIndex && exercise.kcIds.includes(component.id));
-      const ready = filterReadyExercises(candidates, component.id, model.components, byKc);
-      return rankExercisesForFocus(ready, component.id, byKc, component.coverageKcIds);
+      return filterReadyExercises(candidates, component.id, model.components, byKc);
     },
-    keyOf: (_component, exercise) => `${exercise.form ?? "classify"}:${exercise.item.surface}`,
-    orderedCandidates: (component) => component.coverageKcIds.length > 0 || component.id === "exception.ru-godan",
     seed: rotation + 1,
     usedKeys,
   });
@@ -39,6 +38,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
   const byId = new Map(model.components.map((component) => [component.id, component]));
   let introducedKcIds = gating.length ? [gating[0].id] : [];
   let byKc = {};
+  let recentWordKeys = [];
   let rotation = 0;
   let questionCount = 0;
   let redundantFocusQuestions = 0;
@@ -54,6 +54,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     if (introduced.length === gating.length && introduced.every((component) => isComponentMastered(component, byKc))) break;
     const roundFocusIds = new Set();
     const usedKeys = new Set();
+    const usedWordKeys = [];
     let roundCourseId = null;
     let previousFocus = null;
     let answered = 0;
@@ -68,7 +69,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
       if (roundCourseId == null) roundCourseId = focus.firstCourseId;
       if (focus.firstCourseId !== roundCourseId) break;
       const remaining = sessionLength - answered;
-      const segment = assignmentSegment(model, focus, introduced, byKc, remaining, rotation, [...usedKeys]);
+      const segment = assignmentSegment(model, focus, introduced, byKc, remaining, rotation, [...usedKeys], usedWordKeys, recentWordKeys);
       if (previousFocus && !canContinueRound(previousFocus, next, byKc, true)) break;
       roundFocusIds.add(focus.id);
       const { assignments } = segment;
@@ -78,9 +79,11 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
 
       let mastered = false;
       for (const { item, candidate } of assignments) {
-        const key = `${candidate.form ?? "classify"}:${candidate.item.surface}`;
+        const key = exerciseKey(candidate);
         if (usedKeys.has(key)) return { completed: false, reason: "duplicate-round-exercise", focusId: focus.id, rounds, byKc, introducedKcIds };
         usedKeys.add(key);
+        usedWordKeys.push(wordKey(candidate));
+        recentWordKeys = recordRecentWord(recentWordKeys, candidate);
         if (item.id === focus.id && isComponentMastered(focus, byKc)) {
           redundantFocusQuestions += 1;
           roundRedundantFocusQuestions += 1;
@@ -110,7 +113,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     if (answered === 0) return { completed: false, reason: "no-progress", rounds, byKc, introducedKcIds };
     for (const id of roundFocusIds) focusRounds.set(id, (focusRounds.get(id) ?? 0) + 1);
     courseRounds.set(roundCourseId, (courseRounds.get(roundCourseId) ?? 0) + 1);
-    rounds.push({ index: rounds.length + 1, courseId: roundCourseId, questionCount: answered, focusIds: [...roundFocusIds], coverageQuestions, redundantFocusQuestions: roundRedundantFocusQuestions });
+    rounds.push({ index: rounds.length + 1, courseId: roundCourseId, questionCount: answered, focusIds: [...roundFocusIds], coverageQuestions, redundantFocusQuestions: roundRedundantFocusQuestions, wordKeys: usedWordKeys });
     rotation += 1;
   }
 

@@ -20,6 +20,17 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run audit
+      - run: npm run audit:diagnosis:parallel
+      - run: npm run audit:paths:parallel
+      - name: Upload diagnosis audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnosis-audit
+          path: |
+            outputs/diagnosis-audit/
+            outputs/diagnostic-paths/
+          retention-days: 14
       - run: npm run simulate:perfect
       - run: npm run simulate:mixed
       - run: npm run typecheck

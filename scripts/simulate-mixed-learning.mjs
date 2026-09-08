@@ -5,8 +5,8 @@ import { knowledgeModelForScope } from '../app/lib/curriculum.mjs';
 
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
 try {
-  const { VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE } = await server.ssrLoadModule('/app/page.tsx');
-  for (const [route, model] of [['verbCore', knowledgeModelForScope(VERB_KNOWLEDGE, 'core')], ['verbFull', VERB_KNOWLEDGE], ['adjective', ADJECTIVE_KNOWLEDGE]]) {
+  const { VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE, KNOWLEDGE } = await server.ssrLoadModule('/app/page.tsx');
+  for (const [route, model] of [['unified', KNOWLEDGE], ['verbCore', knowledgeModelForScope(VERB_KNOWLEDGE, 'core')], ['verbFull', VERB_KNOWLEDGE], ['adjective', ADJECTIVE_KNOWLEDGE]]) {
     const attempts = new Map();
     const report = simulateLearning(model, { answerFor: ({ focus }) => {
       const count = attempts.get(focus.id) ?? 0;
@@ -14,6 +14,7 @@ try {
       if (count === 0) return { failedKcId: focus.id, correct: false };
       if (count === 1) return { correct: true, hintUsed: true };
       if (count === 2) return { failedKcId: focus.id, correct: false, revealed: true };
+      if (route === 'unified' && count === 3) return { correct: false };
       return { correct: true };
     } });
     assert.equal(report.completed, true, `${route}: ${report.reason}`);

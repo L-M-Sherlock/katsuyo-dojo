@@ -62,7 +62,8 @@ test('the same exact-family diagnosis supports voice and polite continuations', 
   ]) {
     const diagnosis = diagnoseConjugation(hajimeru, target, conjugate(hajimeru.surface, hajimeru.class, other));
     assert.equal(diagnosis?.kcId, failure);
-    assert.deepEqual(diagnosis.confirmedKcIds, requiredKcIds(hajimeru, base));
+    assert.deepEqual(diagnosis.confirmedKcIds, target.startsWith('masu')
+      ? ['stem.ichidan.drop-ru','suffix.masu'] : requiredKcIds(hajimeru, base));
   }
 });
 
@@ -85,8 +86,9 @@ test('partial evidence respects hints, excludes unrelated facts and does not rec
   assert.equal(stats.tail.attempts, 1);
   const revealed = updateKnowledgeStats({}, { ...result, revealed: true });
   assert.equal(revealed.base, undefined);
-  const fallback = updateKnowledgeStats({}, { ...result, focusId: 'tail', failedKcId: null });
-  assert.equal(fallback.base, undefined);
+  const unresolved = updateKnowledgeStats({}, { ...result, focusId: 'tail', failedKcId: null, confirmedKcIds: ['base'] });
+  assert.equal(unresolved.base.correct, 1);
+  assert.equal(unresolved.tail, undefined);
 });
 
 test('unconfirmed target facts retain their exact previous statistics', () => {
@@ -94,4 +96,14 @@ test('unconfirmed target facts retain their exact previous statistics', () => {
   const diagnosis = diagnoseConjugation(hajimeru, 'teageruPast', '始めてあげない');
   const next = updateKnowledgeStats(previous, { correct: false, kcIds: requiredKcIds(hajimeru, 'teageruPast'), focusId: 'construction.teageru', failedKcId: diagnosis.kcId, confirmedKcIds: diagnosis.confirmedKcIds });
   assert.strictEqual(next['suffix.past'], previous['suffix.past']);
+});
+
+test('explicit correct evidence is independent of an unresolved failure and is bounded to required atoms', () => {
+  const result={kcIds:['base','tail'],focusId:'tail',failedKcId:null,confirmedKcIds:['base','base','unrelated'],correct:false,hintUsed:true};
+  const next=updateKnowledgeStats({},result);
+  assert.deepEqual(Object.keys(next),['base']);
+  assert.equal(next.base.attempts,1);
+  assert.equal(next.base.filteredAccuracy,.7);
+  assert.deepEqual(updateKnowledgeStats({}, {...result, revealed:true}),{});
+  assert.deepEqual(updateKnowledgeStats({}, {...result, confirmedKcIds:[]}),{});
 });

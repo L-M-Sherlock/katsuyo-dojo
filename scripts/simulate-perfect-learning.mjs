@@ -7,7 +7,7 @@ const server = await createServer({
 });
 
 try {
-  const [{ VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE }, { simulatePerfectLearning }, { knowledgeModelForScope }] = await Promise.all([
+  const [{ VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE, KNOWLEDGE }, { simulatePerfectLearning }, { knowledgeModelForScope }] = await Promise.all([
     server.ssrLoadModule("/app/page.tsx"),
     server.ssrLoadModule("/app/lib/perfect-simulation.mjs"),
     server.ssrLoadModule("/app/lib/curriculum.mjs"),
@@ -40,13 +40,15 @@ try {
   const coreReport = simulatePerfectLearning(coreModel);
   const fullReport = simulatePerfectLearning(VERB_KNOWLEDGE);
   const adjectiveReport = simulatePerfectLearning(ADJECTIVE_KNOWLEDGE);
+  const unifiedReport = simulatePerfectLearning(KNOWLEDGE);
   const summary = {
+    unified: summarize(KNOWLEDGE, unifiedReport),
     verbCore: summarize(coreModel, coreReport),
     verbFull: summarize(VERB_KNOWLEDGE, fullReport),
     adjectiveCore: summarize(ADJECTIVE_KNOWLEDGE, adjectiveReport),
   };
   process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
-  if ([coreReport, fullReport, adjectiveReport].some((report) => !report.completed || report.completedFacetCount !== report.facetCount || report.repeatedFocusKcs.length > 0)) process.exitCode = 1;
+  if ([coreReport, fullReport, adjectiveReport, unifiedReport].some((report) => !report.completed || report.completedFacetCount !== report.facetCount || report.repeatedFocusKcs.length > 0)) process.exitCode = 1;
 } finally {
   await server.close();
 }

@@ -28,7 +28,10 @@ function scriptOf(char) {
 }
 
 /**
- * Detect a single substituted character in the original word's fixed prefix.
+ * Detect a single substitution, omission, insertion or adjacent transposition
+ * in the fixed lexical prefix, while keeping the entire inflection intact.
+ * An omission needs at least two surviving lexical characters and must not
+ * also be explainable as deleting part of an accepted inflection.
  * This is a request to re-enter the word, not a correct-answer judgment.
  * @param {{ domain: string, surface: string, reading: string, class: string, iiFamily?: boolean }} item
  * @param {string} answer
@@ -41,6 +44,7 @@ export function hasLexicalTypo(item, answer, surfaceAnswers, readingAnswers, nor
   if ([...surfaceAnswers, ...readingAnswers].some((candidate) => normalize(candidate) === normalized)) return false;
   const actual = Array.from(normalized);
   const corrections = new Set();
+  let ambiguousBoundary = false;
   for (const [word, candidates] of /** @type {[string, string[]][]} */ ([
     [item.surface, surfaceAnswers], [item.reading, readingAnswers],
   ])) {
@@ -51,8 +55,55 @@ export function hasLexicalTypo(item, answer, surfaceAnswers, readingAnswers, nor
       const expected = normalize(candidate);
       if (!expected.startsWith(prefix)) continue;
       const chars = Array.from(expected);
+      if (chars.length === actual.length + 1) {
+        const deletions = chars.flatMap((_, index) =>
+          chars.slice(0, index).concat(chars.slice(index + 1)).join("") === normalized ? [index] : []);
+        if (!deletions.length) continue;
+        // Repeated letters can make an apparently lexical omission equally
+        // compatible with an omitted suffix. Keep such answers for diagnosis.
+        if (deletions.some((index) => index >= prefixLength)) {
+          ambiguousBoundary = true;
+          continue;
+        }
+        // A lone surviving character is too little evidence for a lexical
+        // retry; in particular, never forgive deleting the entire word stem.
+        if (prefixLength < 3) continue;
+        if (deletions.every((index) => scriptOf(chars[index]) || chars[index] === "ー")) corrections.add(expected);
+        continue;
+      }
+      if (actual.length === chars.length + 1) {
+        const insertions = actual.flatMap((_, index) =>
+          actual.slice(0, index).concat(actual.slice(index + 1)).join("") === expected ? [index] : []);
+        if (!insertions.length) continue;
+        // At the stem/ending boundary an extra letter may be a grammar error.
+        // Every equivalent edit must therefore be strictly inside the prefix.
+        if (insertions.some((index) => index >= prefixLength)) {
+          ambiguousBoundary = true;
+          continue;
+        }
+        if (prefixLength < 2) continue;
+        if (insertions.every((index) => {
+          const neighbors = [chars[index - 1], chars[index]].filter(Boolean);
+          const script = scriptOf(actual[index]);
+          return script ? neighbors.some((char) => scriptOf(char) === script)
+            : actual[index] === "ー" && neighbors.some((char) => ["hiragana", "katakana"].includes(scriptOf(char) ?? ""));
+        })) corrections.add(expected);
+        continue;
+      }
       if (chars.length !== actual.length) continue;
       const differences = chars.flatMap((char, index) => char === actual[index] ? [] : [index]);
+      if (differences.length === 2) {
+        const [first, second] = differences;
+        if (second === first + 1 && chars[first] === actual[second] && chars[second] === actual[first]) {
+          if (second >= prefixLength) {
+            ambiguousBoundary = true;
+            continue;
+          }
+          const script = scriptOf(chars[first]);
+          if (prefixLength >= 2 && script && script === scriptOf(chars[second])) corrections.add(expected);
+        }
+        continue;
+      }
       if (differences.length !== 1 || differences[0] >= prefixLength) continue;
       const index = differences[0];
       // Do not mistake a missing kana for a kanji-to-kana substitution, or
@@ -62,5 +113,5 @@ export function hasLexicalTypo(item, answer, surfaceAnswers, readingAnswers, nor
     }
   }
   // Ambiguous alternatives cannot establish that the entire ending was correct.
-  return corrections.size === 1;
+  return !ambiguousBoundary && corrections.size === 1;
 }

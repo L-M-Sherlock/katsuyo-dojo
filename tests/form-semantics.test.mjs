@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { COMPOUND_FORM_SPECS } from "../app/lib/compound-forms.mjs";
-import { ADJECTIVE_COURSES, COURSES } from "../app/lib/curriculum.mjs";
 import { FORM_SEMANTICS, semanticsForForm } from "../app/lib/form-semantics.mjs";
+import { UNIFIED_COURSES } from "../app/lib/unified-curriculum.mjs";
 
 const curriculumForms = [...new Set(
-  [...COURSES, ...ADJECTIVE_COURSES].flatMap((course) => course.forms),
+  UNIFIED_COURSES.flatMap((course) => course.forms),
 )];
 
 test("provides non-empty semantic help for every curriculum form", () => {
@@ -15,6 +15,7 @@ test("provides non-empty semantic help for every curriculum form", () => {
     assert.equal(typeof entry.concise, "string", `${form} concise must be text`);
     assert.equal(typeof entry.coreMeaning, "string", `${form} coreMeaning must be text`);
     assert.ok(entry.concise.trim(), `${form} concise must not be empty`);
+    assert.doesNotMatch(entry.concise, /[（）()\u3040-\u30ff]|否定|缩约|书面|普通体|礼貌体/, `${form} must explain its meaning in natural Chinese without form or register labels`);
     assert.ok(entry.coreMeaning.trim(), `${form} coreMeaning must not be empty`);
     assert.equal(entry.core, entry.coreMeaning, `${form} must expose the compact UI core alias`);
     if (entry.usageNote) assert.equal(entry.usage, entry.usageNote, `${form} must expose the compact UI usage alias`);
@@ -40,20 +41,35 @@ test("distinguishes easily confused aspect, voice, and negative connectives", ()
   assert.match(FORM_SEMANTICS.naide.contrast, /なくて/);
 });
 
-test("derives multi-step semantics from the base expression", () => {
+test("describes each complete compound meaning while preserving usage and form metadata", () => {
   for (const [form, spec] of Object.entries(COMPOUND_FORM_SPECS)) {
     const compound = semanticsForForm(form);
     const base = semanticsForForm(spec.form);
     assert.ok(compound, `missing compound semantics for ${form}`);
     assert.equal(compound.baseForm, spec.form);
     assert.equal(compound.continuation, spec.ending);
-    assert.match(compound.coreMeaning, new RegExp(base.coreMeaning.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/。$/, "")));
+    assert.equal(compound.form, form);
+    for (const field of ["register", "usageNote", "contrast"]) {
+      assert.equal(compound[field], base[field], `${form} must retain its base ${field}`);
+    }
+    assert.doesNotMatch(compound.coreMeaning, /整体.*变为/, `${form} must explain the resulting meaning rather than describe another conjugation`);
   }
 
+  assert.match(semanticsForForm("taiPast").concise, /过去想做/);
+  assert.match(semanticsForForm("taiNegative").concise, /不想做/);
+  assert.match(semanticsForForm("taiNegativePast").concise, /过去不想做/);
+  assert.match(semanticsForForm("teageruNegativePast").concise, /过去没有为别人做/);
+  assert.match(semanticsForForm("tehoshiiNegative").concise, /不希望别人做/);
+  assert.doesNotMatch(semanticsForForm("tehoshiiNegative").concise, /希望别人不做/);
+  assert.match(semanticsForForm("tagaruNegative").concise, /没有表现出.*意愿/);
+  assert.match(semanticsForForm("tearuNegative").coreMeaning, /结果状态/);
+  for (const form of ["teshimauNegative", "teshimauNegativePast"]) {
+    assert.match(semanticsForForm(form).concise, /全部做完/);
+    assert.doesNotMatch(semanticsForForm(form).concise, /不小心|意外/);
+  }
   assert.match(semanticsForForm("teiruPast").coreMeaning, /ている|动作|状态/);
   assert.match(semanticsForForm("teiruPast").coreMeaning, /过去/);
-  assert.match(semanticsForForm("taiNegativePast").coreMeaning, /希望自己/);
-  assert.match(semanticsForForm("taiNegativePast").coreMeaning, /否定过去/);
+  assert.match(semanticsForForm("taiNegativePast").coreMeaning, /过去不希望自己/);
 });
 
 test("returns null for classification and unknown forms", () => {

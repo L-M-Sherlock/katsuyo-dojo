@@ -80,7 +80,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .lesson-rail h1 br { display: none; }
 .intro { display: none; }
 
-.domain-switch { margin-top: 18px; padding: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; border-radius: 8px; background: #e5e1d7; }
+.domain-switch { margin-top: 18px; padding: 4px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; border-radius: 8px; background: #e5e1d7; }
 .domain-switch button { padding: 9px 8px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; }
 .domain-switch button.active { background: var(--paper-light); color: var(--ink); box-shadow: 0 2px 7px rgba(23,33,28,.08); }
 
@@ -308,7 +308,14 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 .transfer-notice { grid-column: 1 / -1; margin: 0; padding-top: 11px; border-top: 1px solid var(--line); font-size: 12px; }
 .transfer-notice.success { color: var(--green); }
 .transfer-notice.error { color: var(--red-dark); }
-.progress-view-tabs { margin: 0 0 12px; padding: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; border-radius: 8px; background: #e8e4da; }
+.curriculum-guide { margin: 0 0 18px; padding: 17px 18px; border: 1px solid var(--line); border-radius: 8px; }
+.curriculum-guide summary { cursor: pointer; font-size: 15px; font-weight: 700; }
+.curriculum-guide p, .curriculum-guide li span { color: var(--muted); font-size: 13px; line-height: 1.7; }
+.curriculum-guide p { margin: 14px 0 0; }
+.curriculum-guide ol { display: grid; gap: 12px; margin: 16px 0; padding-left: 24px; }
+.curriculum-guide li strong, .curriculum-guide li span { display: block; }
+.course-objective { margin: 0; padding: 0 16px 14px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.progress-view-tabs { margin: 0 0 12px; padding: 4px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; border-radius: 8px; background: #e8e4da; }
 .progress-view-tabs button { padding: 8px 12px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; }
 .progress-view-tabs button.active { background: var(--paper-light); color: var(--ink); box-shadow: 0 1px 4px rgba(23,33,28,.08); }
 .course-progress-list { display: grid; gap: 8px; }
@@ -408,3 +415,6 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 .storage-notice { padding: 1rem; margin-bottom: 1rem; border: 1px solid #a66026; border-radius: 12px; background: #fff6e6; color: #593612; }
 .storage-notice p { margin: 0 0 .75rem; }
 .storage-notice button { margin-right: .75rem; padding: .5rem .75rem; cursor: pointer; }
+
+.course-name small { display: block; font-size: 10px; color: var(--muted); }
+.mode-list button:disabled { opacity: .5; cursor: not-allowed; }

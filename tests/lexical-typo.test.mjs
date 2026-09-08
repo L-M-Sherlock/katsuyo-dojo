@@ -14,13 +14,15 @@ test('the reported lexical typo is recognized in kana and surface answers', () =
   assert.equal(check(tanoshimu, 'teageruNegativePast', 'なのしんであげなかった'), true);
   assert.equal(check(tanoshimu, 'teageruNegativePast', '苦しんであげなかった'), true);
   assert.equal(check(tanoshimu, 'teageruNegativePast', ' なのしんであげなかった。 '), true);
+  assert.equal(check(tanoshimu, 'teageruNegativePast', 'のしんであげなかった'), true);
   assert.equal(check(tanoshimu, 'teageruNegativePast', 'たのしんであげなかった'), false);
+  assert.equal(check(tanoshimu, 'teageruNegativePast', 'たたのしんであげなかった'), true);
 });
 
 test('inflection, onbin, voicing and multiple errors are not lexical typos', () => {
   for (const answer of ['たのしんであげない', 'たのしんであげた', 'たのしてあげなかった',
     'たのしんてあげなかった', 'たのしんであげなかた', 'なのしんであげない',
-    'ななしんであげなかった', 'のしんであげなかった', 'たたのしんであげなかった', 'xyz']) {
+    'ななしんであげなかった', 'xyz']) {
     assert.equal(check(tanoshimu, 'teageruNegativePast', answer), false, answer);
   }
 });

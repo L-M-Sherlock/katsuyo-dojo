@@ -6,6 +6,7 @@ import {
   explainConjugation,
 } from "./conjugation.mjs";
 import { COMPOUND_FORM_SPECS } from "./compound-forms.mjs";
+import { diagnoseCommonVerbError } from "./verb-common-errors.mjs";
 
 export const KC_FAMILY_LABELS = {
   classification: "词类判断",
@@ -90,6 +91,16 @@ const SUFFIX_LABELS = {
   imperative: "命令形接续", volitional: "意向形接续", ba: "ば形接续",
   nasai: "なさい命令接续", prohibitive: "禁止形「辞书形＋な」",
   causative: "使役形接续", causativePassive: "使役受身形接续",
+};
+
+// A complete alternative inflection establishes a form-selection error. It
+// does not establish the target stem, source classification, or an unrequested
+// form's mastery. Keep this separate from compound continuations, where the
+// shared rule and its application still need a supplied-base probe.
+const SIMPLE_FORM_LABELS = {
+  negative: "否定形", past: "过去形", te: "て形", masu: "ます形",
+  potential: "可能形", passive: "受身形", volitional: "意向形",
+  ba: "ば形", imperative: "命令形",
 };
 
 function unique(values) {
@@ -411,7 +422,10 @@ function continuationFamily(form) {
 
 function continuationCandidates(verb, form, family) {
   const required = new Set(requiredKcIds(verb, form));
-  const confirmedKcIds = requiredKcIds(verb, family.baseForm).filter((id) => required.has(id) && id !== family.kcId);
+  // A complete polite alternative establishes its observable stem/ます base,
+  // not a fresh successful classification or coverage-facet assessment.
+  const confirmedKcIds = requiredKcIds(verb, family.baseForm).filter((id) => required.has(id) && id !== family.kcId
+    && (!POLITE_COMPOUNDS.has(form) || id.startsWith('stem.') || id === 'suffix.masu'));
   const base = conjugate(verb.surface, verb.class, family.baseForm);
   return [{ form: family.baseForm, label: null }, ...family.alternatives].flatMap((alternative) =>
     acceptedConjugations(verb.surface, verb.class, alternative.form).map((answer) => ({
@@ -425,13 +439,26 @@ function continuationCandidates(verb, form, family) {
 function diagnosticCandidates(verb, form) {
   if (!form) return [];
   const canonical = conjugate(verb.surface, verb.class, form);
+  const accepted = new Set(acceptedConjugations(verb.surface, verb.class, form));
   const family = continuationFamily(form);
   const result = family ? continuationCandidates(verb, form, family) : [];
+  if (SIMPLE_FORM_LABELS[form]) {
+    for (const [otherForm, label] of Object.entries(SIMPLE_FORM_LABELS)) {
+      if (otherForm === form) continue;
+      for (const answer of acceptedConjugations(verb.surface, verb.class, otherForm)) {
+        if (!accepted.has(answer)) result.push({
+          answer, kcId: `suffix.${form}`, confirmedKcIds: [],
+          message: `你写成了${label}，本题要求${SIMPLE_FORM_LABELS[form]}。`,
+        });
+      }
+    }
+  }
   for (const alternativeClass of ["godan", "ichidan", "irregular"]) {
     if (alternativeClass === verb.class) continue;
     try {
-      const alternative = conjugate(verb.surface, alternativeClass, form);
-      if (alternative !== canonical) result.push({ answer: alternative, kcId: primaryClassKc(verb), message: `目标形式已识别，但这里套用了${classLabel(alternativeClass)}的变化；${lexicalSurface(verb)}应按${classLabel(verb.class)}处理。` });
+      for (const alternative of acceptedConjugations(verb.surface, alternativeClass, form)) {
+        if (!accepted.has(alternative)) result.push({ answer: alternative, kcId: primaryClassKc(verb), confirmedKcIds: [], message: `目标形式已识别，但这里套用了${classLabel(alternativeClass)}的变化；${lexicalSurface(verb)}应按${classLabel(verb.class)}处理。` });
+      }
     } catch { /* Not every word can be conjugated under every class. */ }
   }
 
@@ -491,6 +518,45 @@ export function diagnoseConjugation(verb, form, answer, normalize = (value) => v
   const confirmedKcIds = (matches[0].confirmedKcIds ?? []).filter((id) =>
     id !== uniqueKcs[0] && matches.every((match) => (match.confirmedKcIds ?? []).includes(id)));
   return { ...matches[0], confirmedKcIds };
+}
+
+// Called only after the unified layer's established evidence/omission paths.
+// Existing alternative-form and class collisions keep their conservative
+// result; new structural edits cannot select a convenient competing cause.
+export function diagnoseCommonConjugationError(verb, form, answer, normalize = value => value, allowedKcIds = requiredKcIds(verb, form), options = {}) {
+  if (!form) return null;
+  let prefix = '';
+  if (options.providedBase) {
+    if (options.outputClass === 'aru' && ['negative', 'negativePast'].includes(form)) return null;
+    const endings = { kuru:['来る','くる'], iku:['行く','いく'], aru:['ある'], irregular:['する'] }[options.outputClass] ?? [];
+    const ending = endings.find(ending => verb.surface.endsWith(ending));
+    if (endings.length && !ending) return null;
+    if (ending) {
+      prefix = verb.surface.slice(0,-ending.length);
+      const actual = normalize(answer), fixed = normalize(prefix);
+      if (!actual.startsWith(fixed)) return null;
+      answer = actual.slice(fixed.length);
+      verb = { ...verb, surface:ending, reading:ending === '来る' ? 'くる' : ending === '行く' ? 'いく' : ending,
+        class: ['kuru','irregular'].includes(options.outputClass) ? 'irregular' : 'godan' };
+    }
+  }
+  if (acceptedConjugations(verb.surface,verb.class,form).some(correct => normalize(correct) === normalize(answer))) return null;
+  const matches = diagnosticCandidates(verb, form).filter(candidate => normalize(candidate.answer) === normalize(answer));
+  if (!options.providedBase && matches.length) return null;
+  if (options.providedBase) {
+    // Scoring scope does not eliminate a competing grammatical explanation.
+    // In particular, a supplied base can still be inflected as the wrong
+    // class; do not relabel that answer as a suffix mistake merely because
+    // source classification is not assessed in this continuation step.
+    if (matches.length) {
+      if (new Set(matches.map(candidate => candidate.kcId)).size !== 1 || !allowedKcIds.includes(matches[0].kcId)) return null;
+      const confirmedKcIds = (matches[0].confirmedKcIds ?? []).filter(id => allowedKcIds.includes(id)
+        && id !== matches[0].kcId && matches.every(candidate => (candidate.confirmedKcIds ?? []).includes(id)));
+      return { ...matches[0], answer:prefix+matches[0].answer, confirmedKcIds };
+    }
+  }
+  const diagnosis = diagnoseCommonVerbError(verb, form, answer, normalize, allowedKcIds);
+  return diagnosis ? { ...diagnosis, answer:prefix+diagnosis.answer } : null;
 }
 
 // Each follow-up measures only the operations the learner must perform.
