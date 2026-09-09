@@ -29,7 +29,7 @@ export function planRetestQuestion(profile, mode, { exercises, components, cours
   // exclude both. An explicitly unqualified rehearsal of A makes A the most
   // recent practice again; only after two OTHER original questions may B be
   // a transfer check. This never calls a multiword target a singleton or
-  // changes its scoring/clearing rules. Singletons retain their 24-hour delay.
+  // changes its scoring/clearing rules. Singletons also use question-count spacing, never elapsed time.
   const catalogWords = new Map();
   for (const exercise of exercises) {
     const target = assessmentTarget(exercise);

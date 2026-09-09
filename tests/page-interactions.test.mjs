@@ -1,3 +1,4 @@
+import { exerciseKey } from '../app/lib/exercise-selection.mjs';
 import { createAnswerAnalyzer } from '../app/lib/answer-analysis.mjs';
 import assert from 'node:assert/strict';
 import { after, afterEach, beforeEach, test } from 'node:test';
@@ -230,7 +231,9 @@ test('storage events close an open drawer and keep recovery actions available', 
 });
 
 test('a completed route plays twelve questions and rotates to another course', async () => {
-  storage.setItem(KEY, JSON.stringify(masteredProfile()));
+  const complete = masteredProfile();
+  complete.coursePractice.voiceCompound = KNOWLEDGE.exercises.filter(e=>e.courseId==='voiceCompound').slice(0,12).map(exerciseKey);
+  storage.setItem(KEY, JSON.stringify(complete));
   const view = await mount();
   const initialCourse = view.container.querySelector('.focus-panel strong').textContent;
   assert.ok(view.getByText('巩固训练'));

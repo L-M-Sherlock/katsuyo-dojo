@@ -7,12 +7,14 @@ const unique = values => [...new Set(values)];
 const pastBodies = ['', 'っ', 'つ', 'ん', 'い', 'し', 'り', 'る'];
 
 function conflictContext(item, step, family) {
+  // `aru` selects its exceptional negative conjugation, not a separate word
+  // class. In a past-form probe it is an ordinary godan る-ending auxiliary.
+  const cls = family?.outputClass === 'aru' ? 'godan' : family?.outputClass;
   if (item.domain !== 'verb' || !step.continuation || step.kind || step.providedClass
-    || family?.ending !== 'past' || !['godan', 'ichidan'].includes(family.outputClass)) return null;
-  const cls = family.outputClass;
+    || family?.ending !== 'past' || !['godan', 'ichidan'].includes(cls)) return null;
   const application = `apply.${family.form}.continuation`;
   const rule = cls === 'godan' ? 'onbin.sokuon' : 'suffix.past';
-  if (![application, rule].every(id => step.kcIds.includes(id))) return null;
+  if (!step.kcIds.includes(application) || !step.kcIds.some(id => id === rule || id === 'suffix.past')) return null;
   const bases = unique(step.providedAnswers ?? [step.surface, step.reading]);
   // Only る endings have the actual godan/ichidan ambiguity addressed here.
   // The generic conjugator can mechanically "drop" other endings as ichidan,
@@ -33,7 +35,7 @@ export function diagnoseContinuationClassConflict(item, step, family, answer, no
     kcId: null,
     confirmedKcIds: [],
     message: `已定位到「${family.label}」的过去变化，但还不能区分词类判断与变化规则。先确认词类，再按给定词类检查变化；本次尚未更新知识点。`,
-    stage: { form: 'past', label: `${family.label}的过去变化`, candidateKcIds: [application, rule] },
+    stage: { form: 'past', label: `${family.label}的过去变化`, candidateKcIds: [application, rule].filter(id => step.kcIds.includes(id)) },
   };
 }
 
@@ -60,13 +62,13 @@ export function buildContinuationClassProbes(item, step, family) {
       ],
       expectedClass: cls, answers: [cls], readings: [cls], kcIds: [], focusId: null,
       continuation: true, targetLabel: '动词类别',
-      note: '这里只确认中间形式的类别，不计入知识点统计。',
-      classificationExplanation: `「${family.label}」构成的中间形式继续按${classLabels[cls]}变化。`,
+      note: family.form === 'tearu' ? '本步判断中间形式末尾「ある」的类别，不判断原词，也不计入独立掌握度。' : '这里只确认中间形式的类别，不计入知识点统计。',
+      classificationExplanation: family.form === 'tearu' ? '末尾的「ある」是五段动词；它的否定变化虽然特殊，过去形仍按五段动词变化。' : `「${family.label}」构成的中间形式继续按${classLabels[cls]}变化。`,
     },
     {
       kind: 'conjugation', providedClass: cls, analysisItem: provided,
       surface: provided.surface, reading: provided.reading, form: 'past',
-      providedAnswers: bases, answers, readings, kcIds, focusId: rule,
+      providedAnswers: bases, answers, readings, kcIds, focusId: kcIds.includes(rule) ? rule : kcIds[0] ?? null,
       continuation: true, targetLabel: '过去形',
       note: `已知这个中间形式是${classLabels[cls]}，本步只检查过去变化。`,
       reviewContext: {
@@ -134,7 +136,7 @@ export function diagnoseMixedContinuationPast(item, step, family, answer, normal
     step = { ...step, kind: undefined, providedClass: undefined, kcIds: saved.kcIds };
   }
   const context = conflictContext(item, step, family);
-  if (!context) return null;
+  if (!context || !step.kcIds.includes(context.rule)) return null;
   const actual = normalize(answer);
   if ([...step.answers, ...step.readings].some(correct => normalize(correct) === actual)) return null;
   const correctTail = context.cls === 'godan' ? 'った' : 'た';

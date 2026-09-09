@@ -103,7 +103,7 @@ test('supplied bases keep wrong-class ambiguity and never mutate completed ku or
 test('ordinary derived past/class conflicts require a stage, then a supplied-class rule judgment',()=>{
   // This table is independent of both the generator and production candidates.
   const targets=[
-    ['tagaruPast','tagaru','godan','たがる'],['teoruPast','teoru','godan','ておる'],
+    ['tagaruPast','tagaru','godan','たがる'],['teoruPast','teoru','godan','ておる'],['tearuPast','tearu','godan','てある'],
     ['teageruPast','teageru','ichidan','てあげる'],['tekureruPast','tekureru','ichidan','てくれる'],
     ['teiruPast','teiru','ichidan','ている'],['temiruPast','temiru','ichidan','てみる'],['sugiruPast','sugiru','ichidan','すぎる'],
     ['passivePast','passive','ichidan','受身形'],['potentialPast','potential','ichidan','可能形'],
@@ -152,7 +152,7 @@ test('ordinary derived past/class conflicts require a stage, then a supplied-cla
     assert.ok(stages.length,`${item.class} source still requires the derived output class`);
     for(const c of stages)assert.equal(evaluateGeneratedCase(c,createAnswerAnalyzer(item,form,{step:c.step})(c.input)).status,'pass');
   }
-  for(const form of ['tearuPast','teikuPast','tekuruPast','youtosuruPast','teokuPast','temorauPast','teshimauPast']) {
+  for(const form of ['teikuPast','tekuruPast','youtosuruPast','teokuPast','temorauPast','teshimauPast']) {
     const item=verb('包む','つつむ'),cases=generateErrorCases({item,form}).cases;
     assert.ok(!cases.some(c=>c.expected.stage?.form==='past'),form);
     assert.ok(!cases.some(c=>c.pattern==='continuation-classification'),`${form} must not invent a class choice for non-ru/special outputs`);
@@ -167,10 +167,11 @@ test('ordinary derived past/class conflicts require a stage, then a supplied-cla
   assert.ok(!step.kcIds.includes('onbin.sokuon'),'the original te base already evaluated this shared rule');
   const input=step.reading.slice(0,-1)+'た';
   const c=find(casesFor(reused,form,{step}),input);
-  assert.equal(c.expected.stage??null,null,'the oracle cannot introduce an out-of-step candidate');
+  assert.deepEqual(c.expected.stage.candidateKcIds,['apply.teoru.continuation'],'the oracle cannot introduce an out-of-step candidate');
   const actual=createAnswerAnalyzer(reused,form,{step})(input);
-  assert.equal(actual.diagnosis?.stage??null,null);
-  assertGenericOrTerminal(actual,step.kcIds);
+  assert.deepEqual(actual.diagnosis.stage.candidateKcIds,['apply.teoru.continuation']);
+  assert.equal(actual.steps[0].kind,'classification');
+  assert.ok(actual.steps.every(probe=>!probe.kcIds.includes('onbin.sokuon')));
 });
 
 test('mixed past observations require independent review without scoring the original answer or revealing its ending',()=>{

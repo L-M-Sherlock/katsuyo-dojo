@@ -358,6 +358,22 @@ export function unifiedDiagnosticSteps(item, form, options = {}) {
         providedAnswers: [op.input, kanaOp.input], kcIds, focusId: kcIds.filter(transformationRule).at(-1), continuation: true };
     }).filter(step => step.kcIds.length);
   }
+  if (form === 'nakute' && item.domain === 'verb') {
+    const base = deriveUnified(item, 'negative'), kana = deriveUnified(asReading(item), 'negative');
+    const provided = { domain: 'adjective', class: 'i', surface: base.answer, reading: kana.answer, iiFamily: false };
+    const ending = deriveUnified(provided, 'adjectiveTe'), endingKana = deriveUnified(asReading(provided), 'adjectiveTe');
+    const steps = [
+      { kind: 'conjugation', surface: item.surface, reading: item.reading, form: 'negative',
+        answers: base.acceptedVariants, readings: kana.acceptedVariants, kcIds: base.requiredKcIds,
+        focusId: 'suffix.negative', targetLabel: '否定形', continuation: false,
+        probeSelection: { label: '否定变化', message: '先检查否定形，再检查后续变化；需要时再细分步骤。本次尚未更新知识点。' } },
+      { kind: 'conjugation', surface: base.answer, reading: kana.answer, form: 'adjectiveTe', analysisItem: provided,
+        answers: ending.acceptedVariants, readings: endingKana.acceptedVariants,
+        kcIds: ending.requiredKcIds.filter(id => !id.startsWith('adj.class.') && !base.requiredKcIds.includes(id)),
+        focusId: 'adj.suffix.i-te', targetLabel: 'なくて形', continuation: true },
+    ];
+    return [...base.acceptedVariants, ...kana.acceptedVariants].some(value => normalize(value) === normalize(answer ?? '')) ? steps.slice(1) : steps;
+  }
   const stage = diagnosePassiveStageError(item, form, answer, normalize);
   if (form === 'passiveDesireNegativePast') {
     const steps = passiveDesireProbes(item, Boolean(stage));

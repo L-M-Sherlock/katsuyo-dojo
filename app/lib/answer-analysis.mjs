@@ -28,6 +28,11 @@ export function createAnswerAnalyzer(item, form, options = {}) {
     }
     const match = matchAcceptedAnswer(answer, surface.acceptedVariants, reading.acceptedVariants, normalize);
     if (match.correct) return { kind: 'correct', match, diagnosis: null, steps: [] };
+    if (step?.kind === 'atomic' && step.laterOutputs?.some(value => normalize(value) === normalize(answer))) {
+      return { kind: 'invalid', match, diagnosis: null, steps: [],
+        feedback: { resolution: 'step-ahead', observations: [], terminal: false,
+          message: '你已写出后续步骤的正确形式。本步只需填写当前要求的中间形式，请调整后重交；不记知识点错误。' } };
+    }
     if (step?.kind === 'classification') return { kind: 'incorrect', match, diagnosis: null, steps: [] };
     if(!form) {
       const kcId=surface.requiredKcIds.find(id=>/^(class\.|adj\.class\.)/.test(id));

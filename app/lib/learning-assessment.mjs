@@ -16,7 +16,6 @@ import { isRuGodanException } from './knowledge-model.mjs';
  */
 
 export const RETEST_MIN_INTERVENING_QUESTIONS = 2;
-export const SINGLE_WORD_RETEST_DELAY_MS = 24 * 60 * 60 * 1000;
 const unique = values => [...new Set(values)];
 const ruleOnly = id => !/^(class\.|adj\.class\.|heuristic\.|facet\.class\.|facet\.adj\.class\.|lexeme\.)/.test(id);
 const sameText = value => value.normalize('NFKC').replace(/[\u30a1-\u30f6]/g, character => String.fromCharCode(character.charCodeAt(0) - 0x60)).replace(/\s/g, '');
@@ -120,7 +119,7 @@ export function compatibleRetest(pending, exercise) {
  * @param {{originalCount: number, at?: string | number, singleWord?: boolean}} options
  * @returns {RetestStatus}
  */
-export function retestStatus(pending, exercise, { originalCount, at, singleWord = false }) {
+export function retestStatus(pending, exercise, { originalCount, singleWord = false }) {
   const target = assessmentTarget(exercise);
   // A too-early correct rehearsal also exposed this recipe. Waiting only from
   // the original failure would allow the very next copy of that rehearsal to
@@ -128,13 +127,12 @@ export function retestStatus(pending, exercise, { originalCount, at, singleWord 
   const spacingOrdinal = Math.max(pending.lastFailureOrdinal ?? pending.createdOrdinal, pending.lastPresentedOrdinal);
   const remainingQuestions = Math.max(0, RETEST_MIN_INTERVENING_QUESTIONS - (originalCount - spacingOrdinal));
   const sameWord = target.wordKey === pending.lastWordKey || target.wordKey === (pending.lastPresentedWordKey ?? pending.lastWordKey);
-  const policy = sameWord && singleWord ? 'single-word-delayed' : 'different-word-spaced';
-  const availableAt = policy === 'single-word-delayed' ? new Date(Date.parse(pending.lastPresentedAt) + SINGLE_WORD_RETEST_DELAY_MS).toISOString() : null;
+  const policy = sameWord && singleWord ? 'single-word-spaced' : 'different-word-spaced';
+  const availableAt = null;
   const base = { remainingQuestions, availableAt, policy };
   if (target.key !== pending.key || target.ruleSignature !== pending.target.ruleSignature) return { ...base, eligible: false, reason: 'different-rule-path' };
   if (sameWord && !singleWord) return { ...base, eligible: false, reason: 'same-word' };
   if (remainingQuestions) return { ...base, eligible: false, reason: 'needs-spacing' };
-  if (availableAt && Date.parse(timestamp(at)) < Date.parse(availableAt)) return { ...base, eligible: false, reason: 'needs-delay' };
   return { ...base, eligible: true, reason: 'eligible' };
 }
 

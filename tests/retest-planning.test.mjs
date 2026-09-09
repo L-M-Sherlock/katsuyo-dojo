@@ -140,21 +140,21 @@ test('filtered specialist pools never manufacture singleton exceptions despite a
   assert.equal(adaptive.status.policy, 'different-word-spaced');
 });
 
-test('a true singleton remains waiting for 24 hours while other due targets can still run', () => {
+test('a true singleton becomes eligible after other questions without waiting', () => {
   const iku = get('行く', 'past'), noru = get('乗る', 'teiruNegative');
   let profile = record(record(fresh(), iku, 'iku-failure'), noru, 'noru-failure');
   profile = gap(profile);
   const next = plan(profile, 'adaptive', { at: '2026-09-09T03:00:00Z' });
   assert.equal(next.kind, 'retest');
-  assert.equal(next.pending.key, assessmentTarget(noru).key, 'not-yet-due singleton must not block a later eligible target');
+  assert.equal(next.pending.key, assessmentTarget(iku).key, 'oldest eligible singleton needs no time delay');
   const isolated = gap(record(fresh(), iku, 'only-iku'));
   const early = plan(isolated, 'past', { at: '2026-09-10T01:59:59Z' });
-  assert.equal(early.kind, 'spacing');
+  assert.equal(early.kind, 'retest');
   const due = plan(isolated, 'past', { at: '2026-09-10T02:00:00Z' });
   assert.equal(due.kind, 'retest');
   assert.equal(due.exercise.item.surface, '行く');
-  assert.equal(due.status.policy, 'single-word-delayed');
-  assert.equal(due.status.availableAt, '2026-09-10T02:00:00.000Z');
+  assert.equal(due.status.policy, 'single-word-spaced');
+  assert.equal(due.status.availableAt, null);
 });
 
 test('a two-word rule recovers through explicitly unqualified rehearsal, two fillers, then transfer', () => {

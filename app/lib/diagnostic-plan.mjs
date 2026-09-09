@@ -211,6 +211,10 @@ export function atomicSteps(plan, form, scope, confirmed=[], inputAnswer='', nor
     const fixed=Object.fromEntries(['surface','reading'].map(w=>[w,outputs.reduce((prefix,v)=>{let i=0;while(prefix[i]&&prefix[i]===v[w][i])i++;return prefix.slice(0,i);},n.input[w])]));
     result.push({kind:'atomic',nodeId:n.id,atomic:{...n,fixed},form,surface:n.input.surface,reading:n.input.reading,
       answers:unique(outputs.map(v=>v.surface)),readings:unique(outputs.map(v=>v.reading)),kcIds,focusId:kcIds[0],continuation:true,analysisItem:n.item,
+      laterOutputs: unique(plan.paths.flatMap(path => {
+        const at = path.nodes.findIndex(other => other.id === n.id && other.input.reading === n.input.reading);
+        return at < 0 ? [] : path.nodes.slice(at + 1).flatMap(other => (other.acceptedOutputs ?? [other.output]).flatMap(output => [output.surface, output.reading])).filter(value => [n.output.surface, n.output.reading].some(current => value.length > current.length && value.startsWith(current)));
+      })),
       targetLabel:n.label,note:`已提供正确输入和词类（${className(n.item.class)}），本步只检查${n.label}。`});
   }
   return result;

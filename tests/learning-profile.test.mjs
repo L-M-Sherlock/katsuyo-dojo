@@ -228,20 +228,20 @@ test('step typo and invalid retry operations restart assistance delay without be
   }
 });
 
-test('singleton eligibility uses the complete catalog and the latest recorded assistance time', () => {
+test('singleton eligibility uses the complete catalog and question gap after assistance', () => {
   const iku = make('行く', 'いく', 'godan', 'past', 'past');
   const full = assessmentCatalog([iku, ...fillers]);
   let profile = gap(observe(fresh(), iku, 'i1', 'incorrect', {}, full).profile);
   profile = observe(profile, iku, 'i1', 'completed', { type: 'diagnostic-end', eventId: 'i1:end', at: '2026-09-09T18:00:00Z' }, full).profile;
   profile = gap(profile);
   const tooSoon = observe(profile, iku, 'i2', 'correct', { at: '2026-09-10T02:00:00Z' }, full);
-  assert.equal(tooSoon.support.source, 'rehearsal');
-  assert.ok(pending(tooSoon.profile, iku));
-  assert.equal(tooSoon.retest.availableAt, '2026-09-10T18:00:00.000Z');
-  assert.equal(target(tooSoon.profile, iku).independentCorrect, 0);
-  const ready = gap(tooSoon.profile);
+  assert.equal(tooSoon.support.source, 'independent');
+  assert.equal(pending(tooSoon.profile, iku), undefined);
+  assert.equal(tooSoon.retest.availableAt, null);
+  assert.equal(target(tooSoon.profile, iku).independentCorrect, 1);
+  const ready = profile;
   const eligible = observe(ready, iku, 'i3', 'correct', { at: '2026-09-11T02:00:00Z' }, full);
-  assert.equal(eligible.retest.policy, 'single-word-delayed');
+  assert.equal(eligible.retest.policy, 'single-word-spaced');
   assert.equal(eligible.support.independent, true);
   assert.equal(pending(eligible.profile, iku), undefined);
   const ordinary = gap(observe(fresh(), noru, 'n1', 'incorrect').profile);

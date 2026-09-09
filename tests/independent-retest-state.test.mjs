@@ -159,20 +159,20 @@ test('independent filters never manufacture singleton status or substitute an un
   assert.deepEqual(state, snapshot);
 });
 
-test('independent reviewed singleton policy is explicit and cannot succeed before spacing plus 24 hours', () => {
+test('independent singleton policy requires explicit catalog permission and question spacing only', () => {
   // The frozen seed rejected silent same-word substitution. The implementation
   // decision explicitly admits delayed same-word exception retests; verify both
   // boundary conditions and policy labeling instead of editing that seed.
   const iku = make('行く', 'いく', 'godan', 'past', 'past'), failure = attempt(emptyAssessment(), iku, false);
   const state = spaced(failure), pending = pendingFor(state, iku), catalog = [iku, ...fillers];
   assert.equal(retestStatus(pending, iku, { originalCount: 3, at: tomorrow }).eligible, false, 'no implicit singleton permission');
-  assert.equal(selectRetest(state, catalog, { at: '2026-09-10T09:59:59.999Z', catalogExercises: catalog }), null);
+  assert.ok(selectRetest(state, catalog, { at: instant, catalogExercises: catalog }));
   assert.equal(selectRetest(failure, catalog, { at: tomorrow, catalogExercises: catalog }), null);
   const selected = selectRetest(state, catalog, { at: tomorrow, catalogExercises: catalog });
-  assert.equal(selected.status.policy, 'single-word-delayed');
+  assert.equal(selected.status.policy, 'single-word-spaced');
   const cleared = attempt(state, iku, true, 'next-day-original', { at: tomorrow, singleWord: true });
   assert.equal(pendingFor(cleared, iku), undefined);
-  assert.equal(cleared.byTarget[assessmentTarget(iku).key].lastRetestPolicy, 'single-word-delayed');
+  assert.equal(cleared.byTarget[assessmentTarget(iku).key].lastRetestPolicy, 'single-word-spaced');
 });
 
 test('independent snapshots retain spacing, failed-word identity and idempotency across a day boundary', () => {
@@ -226,18 +226,18 @@ test('independent explicit feedback exposure adds no evidence but restarts pendi
   assert.equal(retestStatus(pendingFor(ready, noru), toru, { originalCount: ready.originalCount, at: event.at }).eligible, true);
 });
 
-test('independent singleton delay restarts at recent assistance instead of the earlier failure', () => {
+test('independent singleton spacing restarts at assistance and ignores elapsed time', () => {
   const iku = make('行く', 'いく', 'godan', 'past', 'past');
   const failed = spaced(attempt(emptyAssessment(), iku, false));
   const exposureAt = '2026-09-09T23:00:00.000Z';
   const exposed = recordAssessmentExposure(failed, { exercise: iku, questionId: 'q1', eventId: 'late-step', at: exposureAt });
   const state = fillers.reduce((current, exercise, i) => attempt(current, exercise, true, `after-feedback-${i}`, { at: '2026-09-09T23:05:00Z' }), exposed);
   const catalog = [iku, ...fillers];
-  assert.equal(selectRetest(state, catalog, { at: tomorrow, catalogExercises: catalog }), null, '24 hours since failure is still only 11 hours since feedback');
+  assert.ok(selectRetest(state, catalog, { at: exposureAt, catalogExercises: catalog }));
   const status = retestStatus(pendingFor(state, iku), iku, { originalCount: state.originalCount, at: tomorrow, singleWord: true });
-  assert.equal(status.availableAt, '2026-09-10T23:00:00.000Z');
-  assert.equal(selectRetest(state, catalog, { at: '2026-09-10T22:59:59.999Z', catalogExercises: catalog }), null);
-  assert.equal(selectRetest(state, catalog, { at: status.availableAt, catalogExercises: catalog }).status.policy, 'single-word-delayed');
+  assert.equal(status.availableAt, null);
+  assert.ok(selectRetest(state, catalog, { at: exposureAt, catalogExercises: catalog }));
+  assert.equal(selectRetest(state, catalog, { at: exposureAt, catalogExercises: catalog }).status.policy, 'single-word-spaced');
 });
 
 test('independent stale or unrelated exposures cannot roll back an anchor or invent a pending task', () => {

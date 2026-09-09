@@ -122,10 +122,16 @@ test('a sound rule already evaluated in the original base is not silently reintr
     const parent = unifiedDiagnosticSteps(wait, form).at(-1);
     assert.equal(parent.kcIds.includes('onbin.sokuon'), false);
     const result = analyze(wait, form, input, parent);
-    assert.equal(result.diagnosis, null, input);
-    assertGenericOrTerminal(result,parent.kcIds);
+    if (form === 'teoruPast') {
+      assert.equal(result.diagnosis.kcId, null);
+      assert.equal(result.steps[0].kind, 'classification');
+      assert.deepEqual(result.steps[1].kcIds, ['suffix.past']);
+    } else {
+      assert.equal(result.diagnosis, null, input);
+      assertGenericOrTerminal(result,parent.kcIds);
+      assert.deepEqual(unifiedStepDiagnosticSteps(wait, parent, { answer: input }), []);
+    }
     assert.ok(result.steps.every(probe=>!probe.kcIds.includes('onbin.sokuon')));
-    assert.deepEqual(unifiedStepDiagnosticSteps(wait, parent, { answer: input }), []);
   }
 });
 
@@ -172,7 +178,7 @@ test('mixed reviews stay separate from strict class collisions and retain unsupp
     ['tagaruPast', 'かきたがだ'], ['tagaruPast', 'かきたがたた'],
     ['tagaruNegative', 'かきたがない'], ['tagaruNegativePast', 'かきたがなかった'],
     ['teageruPast', 'さいてあげった'], ['teageruPast', 'かいてあげっだ'],
-    ['teikuPast', 'かいていた'], ['tearuPast', 'かいてあた'],
+    ['teikuPast', 'かいていた'],
     ['tekuruPast', 'かいてくた'], ['youtosuruPast', 'かこうとした'],
     ['temorauPast', 'かいてもらた'], ['teshimauPast', 'かいてしまた'],
   ]) {

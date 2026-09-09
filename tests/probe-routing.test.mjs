@@ -69,7 +69,6 @@ test('another complete expression, lexical damage, and unsupported tails do not 
     [late, 'tagaruPast', 'おくれたがたた', 'tagaru'],
     [late, 'tagaruNegative', 'おくれたがない', 'tagaru'],
     [late, 'tagaruNegativePast', 'おくれたがなかった', 'tagaru'],
-    [write, 'tearuPast', 'かいてあた', 'tearu'],
   ]) {
     const result = analyze(item, form, input);
     assert.notEqual(result.feedback.resolution, 'stage-priority', input);

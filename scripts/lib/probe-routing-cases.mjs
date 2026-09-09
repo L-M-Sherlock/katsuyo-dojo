@@ -4,7 +4,7 @@ import { COURSES } from '../../app/lib/curriculum.mjs';
 // Independent routing contract. Only the correct-form engine and course
 // inventory are shared; no production routing or diagnosis function is used.
 const families = {
-  tagaruPast: ['tagaru', 'godan'], teoruPast: ['teoru', 'godan'],
+  tagaruPast: ['tagaru', 'godan'], teoruPast: ['teoru', 'godan'], tearuPast: ['tearu', 'godan'],
   teageruPast: ['teageru', 'ichidan'], tekureruPast: ['tekureru', 'ichidan'],
   teiruPast: ['teiru', 'ichidan'], temiruPast: ['temiru', 'ichidan'], sugiruPast: ['sugiru', 'ichidan'],
   passivePast: ['passive', 'ichidan'], potentialPast: ['potential', 'ichidan'],

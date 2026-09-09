@@ -275,7 +275,7 @@ test('explicit full-catalog singleton uses delayed original retrieval and still 
   old = oldEvent(old, iku, { at: '2026-09-09T02:00:00Z' });
   const result = restoreLearningAssessment(old, options);
   assert.equal(result.assessment.pending[assessmentTarget(iku).key], undefined);
-  assert.equal(result.assessment.byTarget[assessmentTarget(iku).key].lastRetestPolicy, 'single-word-delayed');
+  assert.equal(result.assessment.byTarget[assessmentTarget(iku).key].lastRetestPolicy, 'single-word-spaced');
 });
 
 test('a cross-day assisted operation postpones singleton retrieval from its latest recorded exposure', () => {

@@ -99,7 +99,7 @@ function readEligibility(value) {
   const source = object(value);
   const result = { eligible: bool(source.eligible), reason: string(source.reason, 64, true), remainingQuestions: integer(source.remainingQuestions),
     availableAt: nullableString(source.availableAt), policy: string(source.policy, 64, true) };
-  if (!['single-word-delayed', 'different-word-spaced'].includes(result.policy)
+  if (!['single-word-spaced', 'single-word-delayed', 'different-word-spaced'].includes(result.policy)
     || !['eligible', 'different-rule-path', 'same-word', 'needs-spacing', 'needs-delay'].includes(result.reason)
     || result.eligible !== (result.reason === 'eligible') || (result.eligible && result.remainingQuestions)
     || (result.reason === 'needs-spacing' && !result.remainingQuestions)

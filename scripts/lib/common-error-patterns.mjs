@@ -28,9 +28,9 @@ const normalize = value => value.normalize('NFKC').replace(/[ァ-ヶヽヾ]/g,ch
 const exact = failed => ({kind:'incorrect',failed,confirmed:[],steps:0});
 const unknown = {kind:'incorrect',failed:null,confirmed:[]};
 // Independent semantic scope: these derived outputs are ordinary verbs. The
-// exception outputs ある／いく／くる are deliberately outside this contract.
+// ある uses the same godan past rule; いく／くる remain outside this contract.
 const continuationPastClasses={
-  tagaruPast:['tagaru','godan','たがる'],teoruPast:['teoru','godan','ておる'],
+  tagaruPast:['tagaru','godan','たがる'],teoruPast:['teoru','godan','ておる'],tearuPast:['tearu','godan','てある'],
   teageruPast:['teageru','ichidan','てあげる'],tekureruPast:['tekureru','ichidan','てくれる'],
   teiruPast:['teiru','ichidan','ている'],temiruPast:['temiru','ichidan','てみる'],sugiruPast:['sugiru','ichidan','すぎる'],
   passivePast:['passive','ichidan','受身形'],potentialPast:['potential','ichidan','可能形'],
@@ -41,12 +41,12 @@ export function continuationClassStageExpectation(step,input) {
   if(!spec||!step.continuation||step.providedClass)return null;
   const [baseForm,cls,label]=spec,failed=cls==='godan'?'onbin.sokuon':'suffix.past';
   const candidateKcIds=[`apply.${baseForm}.continuation`,failed];
-  if(!candidateKcIds.every(id=>step.kcIds.includes(id)))return null;
+  if(!step.kcIds.includes(candidateKcIds[0])||!step.kcIds.some(id=>id===failed||id==='suffix.past'))return null;
   const matches=(step.providedAnswers??[step.surface,step.reading]).some(base=>
     base.endsWith('る')
     &&normalize(base.slice(0,-1)+(cls==='godan'?'た':'った'))===normalize(input));
   if(!matches)return null;
-  return {...unknown,stage:{form:'past',label:`${label}的过去变化`,candidateKcIds},steps:2,
+  return {...unknown,stage:{form:'past',label:`${label}的过去变化`,candidateKcIds:candidateKcIds.filter(id=>step.kcIds.includes(id))},steps:2,
     probes:[{kind:'classification',diagnosticOnly:true,expectedClass:cls},{kind:'conjugation',providedClass:cls,form:'past'}]};
 }
 function mixedPastContext(item,step) {

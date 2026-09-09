@@ -4,7 +4,7 @@ import { createServer } from 'vite';
 import {
   emptyAssessment, assessmentTarget, recordIndependentAttempt, recordAssistedAttempt, recordAssessmentExposure,
   compatibleRetest, retestStatus, selectRetest, pendingForCourse, pendingForKc,
-  RETEST_MIN_INTERVENING_QUESTIONS, SINGLE_WORD_RETEST_DELAY_MS,
+  RETEST_MIN_INTERVENING_QUESTIONS,
 } from '../app/lib/learning-assessment.mjs';
 
 const time = '2026-09-09T02:00:00.000Z';
@@ -220,34 +220,33 @@ test('renewed independent failure replaces the last failed word, time and ordina
   assert.equal(pending.failures, 2);
 });
 
-test('singleton lexical exception needs explicit catalog policy, 24 hours and the same spacing', () => {
+test('singleton lexical exception needs explicit catalog policy and question spacing only', () => {
   const iku = verb('行く', 'いく', 'godan', 'past');
   let state = original(emptyAssessment(), iku, 'q1', false);
-  const pending = onlyPending(state), nextDay = new Date(Date.parse(time) + SINGLE_WORD_RETEST_DELAY_MS).toISOString();
-  assert.equal(SINGLE_WORD_RETEST_DELAY_MS, 86_400_000);
+  const pending = onlyPending(state), nextDay = '2026-09-10T02:00:00.000Z';
   assert.equal(retestStatus(pending, iku, { originalCount: 3, at: nextDay }).reason, 'same-word');
   assert.equal(retestStatus(pending, iku, { originalCount: 1, at: nextDay, singleWord: true }).reason, 'needs-spacing');
-  assert.equal(retestStatus(pending, iku, { originalCount: 3, at: time, singleWord: true }).reason, 'needs-delay');
+  assert.equal(retestStatus(pending, iku, { originalCount: 3, at: time, singleWord: true }).reason, 'eligible');
   const status = retestStatus(pending, iku, { originalCount: 3, at: nextDay, singleWord: true });
-  assert.deepEqual(status, { eligible: true, reason: 'eligible', remainingQuestions: 0, availableAt: nextDay, policy: 'single-word-delayed' });
+  assert.deepEqual(status, { eligible: true, reason: 'eligible', remainingQuestions: 0, availableAt: null, policy: 'single-word-spaced' });
   state = intervening(state);
   state = original(state, iku, 'q4', true, { at: nextDay, singleWord: true });
   assert.equal(Object.keys(state.pending).length, 0);
-  assert.equal(state.byTarget[assessmentTarget(iku).key].lastRetestPolicy, 'single-word-delayed');
+  assert.equal(state.byTarget[assessmentTarget(iku).key].lastRetestPolicy, 'single-word-spaced');
 });
 
-test('singleton delay starts at the latest recorded original rehearsal, retaining the original failure timestamp', () => {
+test('singleton question spacing starts at the latest rehearsal without a time delay', () => {
   const iku = verb('行く', 'いく', 'godan', 'past');
   let state = intervening(original(emptyAssessment(), iku, 'q1', false));
-  state = original(state, iku, 'q4', true, { at: '2026-09-09T14:00:00Z', singleWord: true });
+  state = original(state, iku, 'q4', true, { at: '2026-09-09T14:00:00Z', singleWord: false });
   const pending = onlyPending(state);
   assert.equal(pending.lastFailureAt, time);
   assert.equal(pending.lastPresentedAt, '2026-09-09T14:00:00.000Z');
   state = intervening(state);
   const tooSoon = retestStatus(onlyPending(state), iku, { originalCount: state.originalCount, at: '2026-09-10T02:00:00Z', singleWord: true });
-  assert.equal(tooSoon.eligible, false);
-  assert.equal(tooSoon.reason, 'needs-delay');
-  assert.equal(tooSoon.availableAt, '2026-09-10T14:00:00.000Z');
+  assert.equal(tooSoon.eligible, true);
+  assert.equal(tooSoon.reason, 'eligible');
+  assert.equal(tooSoon.availableAt, null);
   state = original(state, iku, 'q7', true, { at: '2026-09-10T14:00:00Z', singleWord: true });
   assert.equal(Object.keys(state.pending).length, 0);
 });
@@ -268,7 +267,7 @@ test('explicit assisted operations reset pending time and spacing without adding
   assert.equal(pending.lastPresentedAt, '2026-09-09T18:00:00.000Z');
   assert.equal(pending.failures, 1);
   assert.equal(retestStatus(pending, iku, { originalCount: 3, at: '2026-09-10T18:00:00Z', singleWord: true }).remainingQuestions, 2);
-  assert.equal(retestStatus(pending, iku, { originalCount: 5, at: '2026-09-10T02:00:00Z', singleWord: true }).reason, 'needs-delay');
+  assert.equal(retestStatus(pending, iku, { originalCount: 5, at: '2026-09-10T02:00:00Z', singleWord: true }).reason, 'eligible');
   assert.equal(retestStatus(pending, iku, { originalCount: 5, at: '2026-09-10T18:00:00Z', singleWord: true }).eligible, true);
   assert.equal(recordAssessmentExposure(state, event), state);
   const older = recordAssessmentExposure(state, { ...event, eventId: 'q1:older-arrival', at: '2026-09-09T16:00:00Z' });
@@ -295,7 +294,7 @@ test('scheduler leaves waiting work intact, selects eligible work fairly and nev
   assert.equal(second.pending.key, assessmentTarget(yomu).key);
   assert.equal(selectRetest(state, [noru], { at: '2026-09-12T00:00:00Z', catalogExercises: full }), null, 'one filtered word is not a singleton target');
   const singleton = selectRetest(state, [iku], { at: '2026-09-10T02:00:00Z', catalogExercises: full });
-  assert.equal(singleton.status.policy, 'single-word-delayed');
+  assert.equal(singleton.status.policy, 'single-word-spaced');
   assert.equal(selectRetest(state, full, { at: time, catalogExercises: full, excludeTargetKeys: Object.keys(state.pending) }), null);
   assert.equal(selectRetest(state, [second.exercise], { at: time, catalogExercises: full, excludeWordKeys: [assessmentTarget(second.exercise).wordKey] }), null);
 });
@@ -334,11 +333,23 @@ test('every actual catalog rule path has a reachable retest policy without using
       assert.equal(choice.pending.key, key);
       assert.equal(compatibleRetest(onlyPending(failed), choice.exercise), true);
       const differentWords = new Set(exercises.map(exercise => assessmentTarget(exercise).wordKey));
-      assert.equal(choice.status.policy, differentWords.size === 1 ? 'single-word-delayed' : 'different-word-spaced');
-      const cleared = original(spaced, choice.exercise, 'retest', true, { at: '2026-09-10T02:00:00Z', singleWord: choice.status.policy === 'single-word-delayed' });
+      assert.equal(choice.status.policy, differentWords.size === 1 ? 'single-word-spaced' : 'different-word-spaced');
+      const cleared = original(spaced, choice.exercise, 'retest', true, { at: '2026-09-10T02:00:00Z', singleWord: choice.status.policy === 'single-word-spaced' });
       assert.equal(cleared.pending[key], undefined, example.id);
       assert.equal(cleared.byTarget[key].eligibleRetestCorrect, 1, example.id);
     }
     assert.ok(groups.size > 500, 'coverage includes the whole model, not one representative family');
   } finally { await server.close(); }
+});
+
+test('retest eligibility is identical across clock times for singleton and different-word targets', () => {
+  const iku = verb('行く', 'いく', 'godan', 'past');
+  const pending = onlyPending(original(emptyAssessment(), iku, 'clock-independent', false));
+  for (const originalCount of [1,2,3,50]) {
+    const results = ['1970-01-01T00:00:00Z', time, '2099-12-31T23:59:59Z'].map(at =>
+      retestStatus(pending,iku,{originalCount,at,singleWord:true}));
+    assert.deepEqual(results[0],results[1]);assert.deepEqual(results[1],results[2]);
+    assert.equal(results[0].availableAt,null);
+    assert.equal(results[0].eligible,originalCount>=3);
+  }
 });

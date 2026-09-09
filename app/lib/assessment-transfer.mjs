@@ -118,7 +118,7 @@ function restoreVersioned(source, allowed) {
       || entry.assistedOriginalCorrect > entry.assistedOriginalAttempts || entry.assistedStepCorrect > entry.assistedStepAttempts
       || entry.eligibleRetestCorrect > entry.independentCorrect || entry.lastOrdinal > assessment.originalCount) invalid();
     text(entry.lastAt); text(entry.lastQuestionId); text(entry.lastWordKey); text(entry.lastOutcome);
-    if (![null, 'single-word-delayed', 'different-word-spaced'].includes(entry.lastRetestPolicy)) invalid();
+    if (![null, 'single-word-spaced', 'single-word-delayed', 'different-word-spaced'].includes(entry.lastRetestPolicy)) invalid();
     if (entry.attempts) {
       timestamp(entry.lastAt);
       if (!assessment.seenQuestionIds.includes(entry.lastQuestionId) || !entry.lastOrdinal || !entry.lastWordKey) invalid();

@@ -1,3 +1,4 @@
+import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import assert from 'node:assert/strict';
 import { after, afterEach, beforeEach, test } from 'node:test';
 import { readFile } from 'node:fs/promises';
@@ -6,7 +7,7 @@ import { assessmentTarget, emptyAssessment, recordIndependentAttempt, recordHint
 import { emptyPracticeLog } from '../app/lib/practice-log.mjs';
 import { UNIFIED_COURSES, CURRICULUM_VERSION } from '../app/lib/unified-curriculum.mjs';
 import { createUnifiedExport } from '../app/lib/unified-profile.mjs';
-import { wordKey } from '../app/lib/exercise-selection.mjs';
+import { exerciseKey, wordKey } from '../app/lib/exercise-selection.mjs';
 import { createAnswerAnalyzer } from '../app/lib/answer-analysis.mjs';
 import { conjugate } from '../app/lib/conjugation.mjs';
 import { conjugateAdjective } from '../app/lib/adjective-conjugation.mjs';
@@ -377,7 +378,7 @@ test('independent page saves an unsubmitted first hint as pending exposure witho
 });
 
 test('independent page keeps a last-question failure visible and scheduled after the round ends', async () => {
-  storage.setItem(KEY, JSON.stringify(profile()));
+  storage.setItem(KEY, JSON.stringify(profile({coursePractice:{voiceCompound: KNOWLEDGE.exercises.filter(e=>e.courseId==='voiceCompound').slice(0,12).map(exerciseKey)}})));
   const view = await mount();
   for (let i = 0; i < 11; i++) { await answerCorrect(view); await next(view); }
   assert.match(view.container.querySelector('.stage-meta').textContent, /12.*12/);
@@ -402,21 +403,21 @@ test('independent page keeps a last-question failure visible and scheduled after
   assert.notEqual(assessmentTarget(currentExercise(view)).wordKey, assessmentTarget(failed).wordKey);
 });
 
-test('independent page shows singleton waiting explicitly, leaves unrelated courses open, and logs the delayed same-word policy', async () => {
+test('independent page shows count-only singleton retests and keeps unrelated courses open', async () => {
   const iku = catalog('行く', 'past'), key = assessmentTarget(iku).key;
   let assessment = original(emptyAssessment(), iku, false, new Date().toISOString());
   for (const filler of fillerExamples) assessment = original(assessment, filler, true);
   storage.setItem(KEY, JSON.stringify(profile({ assessment })));
   let view = await mount();
-  assert.notEqual(assessmentTarget(currentExercise(view)).key, key, 'same-word exception cannot be repeated immediately as a retest');
+  assert.equal(assessmentTarget(currentExercise(view)).key, key, 'two other questions suffice without elapsed time');
   const classifyCourse = UNIFIED_COURSES.find(course => course.id === 'classify');
   const classifyButton = [...view.container.querySelectorAll('.mode-list button')].find(node => node.querySelector('.course-name')?.textContent.includes(classifyCourse.title));
   assert.equal(classifyButton.disabled, false);
   assert.doesNotMatch(classifyButton.querySelector('i').textContent, /待复测/);
   fireEvent.click(view.container.querySelector('.progress-trigger'));
   fireEvent.click(view.getByRole('tab', { name: '待复测 1', exact: true }));
-  assert.match(view.container.querySelector('.pending-retests').textContent, /24 小时/);
-  assert.match(view.container.querySelector('.pending-retests').textContent, /最早时间/);
+  assert.match(view.container.querySelector('.pending-retests').textContent, /无需等待/);
+  assert.doesNotMatch(view.container.querySelector('.pending-retests').textContent, /最早时间|24 小时/);
   fireEvent.click(view.container.querySelector('.progress-drawer header button[aria-label="关闭知识进度"]'));
   fireEvent.click(view.getByRole('button', { name: '结束本轮', exact: true }));
   await waitFor(() => assert.ok(view.container.querySelector('.completion-card')));
@@ -432,11 +433,11 @@ test('independent page shows singleton waiting explicitly, leaves unrelated cour
   assert.match(view.container.querySelector('.focus-panel').textContent, /独立复测/);
   await answerCorrect(view);
   assert.equal(saved().assessment.pending[key], undefined);
-  assert.equal(saved().practiceLog.events.at(-1).assessment.eligibility.policy, 'single-word-delayed');
+  assert.equal(saved().practiceLog.events.at(-1).assessment.eligibility.policy, 'single-word-spaced');
 });
 
 test('independent page reads legacy storage once and never lets an old tab overwrite its new assessment snapshot', async () => {
-  const legacy = profile(); legacy.version = 6; delete legacy.assessment;
+  const legacy = profile({coursePractice:{voiceCompound: KNOWLEDGE.exercises.filter(e=>e.courseId==='voiceCompound').slice(0,12).map(exerciseKey)}}); legacy.version = 6; delete legacy.assessment;
   const legacyKey = 'katsuyo-practice-profile-v6', raw = JSON.stringify(legacy);
   storage.setItem(legacyKey, raw);
   const view = await mount();
@@ -643,4 +644,131 @@ test('the conditional question specifies ba and a nara answer never penalizes cl
   assert.equal(event.diagnosis.kcId, null); assert.equal(event.diagnosis.resolution, 'target-form');
   assert.match(view.container.querySelector('.feedback-copy').textContent, /い形容词も|い形容词也/);
   assert.doesNotMatch(view.container.querySelector('.feedback-copy').textContent, /套用了な形容词/);
+});
+
+for (const choice of ['godan', 'ichidan']) test(`借りる diagnostic asks ある class (${choice}) before the past rule and preserves source mastery`, async () => {
+  const kariru = catalog('借りる', 'tearuPast'), source = catalog('見る', 'tearuPast');
+  const key = assessmentTarget(kariru).key;
+  let assessment = original(emptyAssessment(), source, false);
+  for (const filler of fillerExamples) assessment = original(assessment, filler, true);
+  const earlier = KNOWLEDGE.exercises.filter(e => assessmentTarget(e).key === key && assessmentTarget(e).wordKey < assessmentTarget(kariru).wordKey).map(wordKey);
+  storage.setItem(KEY, JSON.stringify(profile({ assessment, recentWordKeys: [...new Set(earlier)] })));
+  const view = await mount();
+  assert.equal(currentExercise(view).id, kariru.id);
+  const before = saved();
+  submitText(view, 'ありてあた');
+  await waitFor(() => assert.equal(saved().attempted, 1));
+  const submitStep = async (text, outcome) => {
+    const total = saved().practiceLog.totalEvents;
+    const input = view.getByLabelText('本步答案');
+    fireEvent.change(input, { target: { value: text } }); fireEvent.submit(input.closest('form'));
+    await waitFor(() => assert.equal(saved().practiceLog.totalEvents, total + 1));
+    assert.equal(saved().practiceLog.events.at(-1).outcome, outcome);
+  };
+  const advanceStep = async () => {
+    fireEvent.click(view.container.querySelector('[data-diagnostic-next]'));
+    await waitFor(() => assert.equal(view.container.querySelector('[data-diagnostic-next]'), null));
+  };
+  await submitStep('ありてある', 'typo');
+  assert.deepEqual(saved().byKc, before.byKc);
+  await submitStep('かりてある', 'correct'); await advanceStep();
+  await submitStep('かりてあた', 'incorrect'); await advanceStep();
+  const region = view.getByRole('region', { name: '拆步练习' });
+  assert.match(region.textContent, /末尾「ある」/);
+  assert.equal(view.queryByLabelText('本步答案'), null);
+  const prompts = [...region.querySelectorAll(':scope > p')].map(p => p.textContent).join('');
+  assert.doesNotMatch(prompts, /五段|一段/, 'do not reveal the class before the choice');
+  const previous = saved();
+  fireEvent.click(region.querySelectorAll('.class-options button')[choice === 'godan' ? 0 : 1]);
+  await waitFor(() => assert.equal(saved().practiceLog.totalEvents, previous.practiceLog.totalEvents + 1));
+  const classEvent = saved().practiceLog.events.at(-1);
+  assert.equal(classEvent.target.kind, 'classification');
+  assert.equal(classEvent.outcome, choice === 'godan' ? 'correct' : 'incorrect');
+  assert.deepEqual(classEvent.target.kcIds, []);
+  assert.deepEqual(classEvent.changes, []); assert.deepEqual(classEvent.assistedChanges, []);
+  assert.deepEqual(saved().byKc, before.byKc);
+  await advanceStep();
+  assert.match(region.textContent, /已提供词类：五段动词/);
+  await submitStep('かりてあた', 'incorrect');
+  const pastEvent = saved().practiceLog.events.at(-1);
+  assert.equal(pastEvent.diagnosis.kcId, 'onbin.sokuon');
+  assert.deepEqual(pastEvent.assistedChanges.map(c => c.kcId), ['onbin.sokuon']);
+  assert.deepEqual(saved().byKc, before.byKc);
+  assert.ok(saved().assessment.pending[key]);
+  assert.equal(saved().attempted, 1); assert.equal(saved().correct, 0);
+});
+
+test('nakute grouped probes and ahead-of-step retries preserve scoring and allow resubmission', async () => {
+  const target = catalog('渡る','nakute');
+  let assessment = original(emptyAssessment(), target, false);
+  for (const filler of fillerExamples) assessment = original(assessment, filler, true);
+  const key = assessmentTarget(target).key;
+  const initial = profile({assessment});
+  storage.setItem(KEY,JSON.stringify(initial));
+  const view = await mount(), exercise = currentExercise(view);
+  assert.equal(exercise.form,'nakute');
+  // Use the selected same-rule word; the diagnostic behavior must generalize.
+  const negative = deriveUnified(exercise.item,'negative').answer;
+  const negativeKana = deriveUnified({...exercise.item,surface:exercise.item.reading},'negative').answer;
+  const root = negativeKana.slice(0,-3);
+  assert.ok(negative);
+  submitText(view,root+'りなくて');
+  await waitFor(()=>assert.equal(saved().attempted,1));
+  const submitStep = async answer => {
+    const count = saved().practiceLog.totalEvents;
+    const input = view.getByLabelText('本步答案');
+    fireEvent.change(input,{target:{value:answer}});fireEvent.submit(input.closest('form'));
+    await waitFor(()=>assert.equal(saved().practiceLog.totalEvents,count+1));
+  };
+  const advance = async () => {
+    fireEvent.click(view.container.querySelector('[data-diagnostic-next]'));
+    await waitFor(()=>assert.equal(view.container.querySelector('[data-diagnostic-next]'),null));
+  };
+  assert.match(view.getByRole('region',{name:'拆步练习'}).textContent,/否定形/);
+  await submitStep(negativeKana);await advance();
+  await submitStep('xyz');await advance();
+  const before = saved();
+  await submitStep(negativeKana.slice(0,-1)+'くて');
+  const event = saved().practiceLog.events.at(-1);
+  assert.equal(event.diagnosis.resolution,'step-ahead');
+  assert.deepEqual(event.changes,[]);assert.deepEqual(event.assistedChanges,[]);
+  assert.deepEqual(saved().assessment.assistedByKc,before.assessment.assistedByKc);
+  assert.deepEqual(saved().assessment.independentByKc,before.assessment.independentByKc);
+  assert.equal(saved().assessment.byTarget[key].assistedStepAttempts,before.assessment.byTarget[key].assistedStepAttempts);
+  assert.deepEqual(saved().byKc,before.byKc);
+  assert.match(view.getByRole('region',{name:'拆步练习'}).textContent,/后续步骤的正确形式/);
+  await submitStep(negativeKana.slice(0,-1)+'く');
+  assert.equal(saved().practiceLog.events.at(-1).outcome,'correct');
+  assert.ok(saved().assessment.pending[key]);
+});
+
+test('unfinished comprehensive review is selected before mastered-course rotation and never starts empty', async () => {
+  const initial = profile({rotation:0, coursePractice: Object.fromEntries(UNIFIED_COURSES.filter(c=>c.id!=='voiceCompound').map(c=>[c.id, [...new Set(KNOWLEDGE.exercises.filter(e=>e.courseId===c.id).map(exerciseKey))].slice(0,12)]))});
+  storage.setItem(KEY,JSON.stringify(initial));
+  const view = await mount();
+  assert.equal(view.container.querySelector('.focus-panel strong').textContent,'态的复合活用');
+  assert.equal(view.container.querySelector('.completion-card'),null);
+  const firstId = currentExercise(view).id;
+  await answerCorrect(view);
+  assert.equal(saved().coursePractice.voiceCompound.length,1);
+  fireEvent.click(view.getByRole('button',{name:'结束本轮',exact:true}));
+  await waitFor(()=>assert.ok(view.container.querySelector('.completion-card')));
+  fireEvent.click(view.container.querySelector('.restart-button'));
+  await waitFor(()=>assert.ok(view.container.querySelector('.word-display')));
+  assert.equal(view.container.querySelector('.focus-panel strong').textContent,'态的复合活用');
+  assert.notEqual(currentExercise(view).id,firstId);
+  for (let i=1;i<12;i++) {
+    await answerCorrect(view);
+    if(i<11)await next(view);
+  }
+  assert.equal(saved().coursePractice.voiceCompound.length,12);
+  fireEvent.click(view.getByRole('button',{name:'结束本轮',exact:true}));
+  await waitFor(()=>assert.ok(view.container.querySelector('.completion-card')));
+  fireEvent.click(view.container.querySelector('.restart-button'));
+  await waitFor(()=>assert.ok(view.container.querySelector('.word-display')));
+  assert.notEqual(view.container.querySelector('.focus-panel strong').textContent,'态的复合活用');
+  fireEvent.click(view.getByRole('button',{name:'结束本轮',exact:true}));
+  await waitFor(()=>assert.ok(view.container.querySelector('.completion-card')));
+  assert.equal(view.container.querySelector('.completion-card .score'),null);
+
 });

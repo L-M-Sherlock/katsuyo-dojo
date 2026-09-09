@@ -40,7 +40,9 @@ export function createPracticePlanner(model) {
   /** @param {ReturnType<typeof plan>} planned @param {any} profile @param {{seed?: number, usedKeys?: string[], usedWordKeys?: string[]}} options */
   function assign(planned, profile, { seed = 0, usedKeys = [], usedWordKeys = [] } = {}) {
     return assignPracticeExercises(planned.plan, { seed: seed + profile.rotation, byKc: profile.byKc,
-      recentWordKeys: profile.recentWordKeys, usedKeys, usedWordKeys,
+      recentWordKeys: profile.recentWordKeys,
+      usedKeys: planned.review ? [...new Set([...usedKeys, ...(profile.coursePractice?.[planned.goalCourseId] ?? [])])] : usedKeys,
+      usedWordKeys,
       alternativesFor: (preferred, index) => {
         const others = planned.available.filter(kc => kc.id !== preferred.id);
         return others.length ? [...others.slice(index % others.length), ...others.slice(0, index % others.length)] : [];
