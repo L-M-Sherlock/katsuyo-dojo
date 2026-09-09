@@ -1,0 +1,1849 @@
+{
+  "description": "2026-09-09 giving 18/25 regression: seven gaps after earlier prerequisites lost mastery. Original operation history excluded; test only restores the scheduling inputs.",
+  "profile": {
+    "version": 7,
+    "curriculumVersion": 3,
+    "date": "2026-09-09",
+    "attempted": 110,
+    "correct": 96,
+    "streak": 21,
+    "rotation": 300,
+    "introducedKcIds": [
+      "class.godan",
+      "heuristic.ru-other",
+      "class.ichidan",
+      "heuristic.ru-ie",
+      "exception.ru-godan",
+      "class.irregular",
+      "stem.godan.a",
+      "suffix.negative",
+      "stem.godan.u-wa",
+      "stem.ichidan.drop-ru",
+      "onbin.i",
+      "suffix.past",
+      "stem.godan.shi-connective",
+      "onbin.sokuon",
+      "onbin.hatsuon",
+      "onbin.voicing",
+      "suffix.te",
+      "stem.godan.i",
+      "suffix.masu",
+      "compound.negative-past",
+      "compound.polite-past",
+      "compound.polite-negative",
+      "compound.polite-negative-past",
+      "stem.godan.e",
+      "suffix.imperative",
+      "suffix.passive",
+      "adj.class.i",
+      "adj.class.na",
+      "adj.stem.i-ku",
+      "suffix.potential",
+      "stem.godan.o",
+      "suffix.volitional",
+      "suffix.ba",
+      "suffix.causative",
+      "suffix.causativePassive",
+      "contraction.causative-passive",
+      "construction.tai",
+      "construction.tara",
+      "suffix.nasai",
+      "suffix.prohibitive",
+      "construction.nakute",
+      "construction.naide",
+      "construction.zu",
+      "construction.zuni",
+      "construction.teageru",
+      "construction.temorau",
+      "construction.tekureru",
+      "construction.tekudasai",
+      "construction.naideKudasai",
+      "construction.teiru",
+      "construction.teru",
+      "construction.tearu",
+      "construction.teoru",
+      "construction.toru",
+      "construction.tehoshii",
+      "construction.temo",
+      "construction.nagara",
+      "construction.tsutsu",
+      "construction.nakerebaNaranai",
+      "construction.nakutewaIkenai",
+      "construction.naitoIkenai",
+      "construction.tari",
+      "construction.tewa",
+      "construction.temoIi",
+      "construction.nakutemoIi",
+      "construction.masenka",
+      "construction.youtosuru",
+      "construction.temiru",
+      "construction.teshimau",
+      "construction.chau",
+      "construction.teoku",
+      "construction.toku",
+      "construction.teiku",
+      "construction.teku",
+      "construction.tekuru",
+      "construction.tatte",
+      "construction.sugiru",
+      "construction.tagaru",
+      "adj.suffix.i-past",
+      "adj.suffix.i-te",
+      "adj.suffix.i-ba",
+      "stem.irregular.connective",
+      "adj.suffix.i-negative",
+      "adj.exception.ii-yo",
+      "adj.suffix.na-attributive",
+      "adj.suffix.na-predicative",
+      "adj.suffix.na-negative",
+      "adj.suffix.na-past",
+      "adj.suffix.na-te",
+      "exception.aru-negative",
+      "adj.suffix.na-conditional",
+      "adj.suffix.i-adverb",
+      "adj.suffix.na-adverb",
+      "adj.compound.i-negative-past",
+      "apply.tai.continuation",
+      "compound.multi-step",
+      "adj.compound.na-negative-past",
+      "apply.potential.continuation",
+      "apply.passive.continuation",
+      "apply.causative.continuation",
+      "apply.causativePassive.continuation",
+      "apply.tagaru.continuation",
+      "apply.youtosuru.continuation",
+      "apply.sugiru.continuation",
+      "apply.tehoshii.continuation",
+      "apply.tearu.continuation",
+      "apply.teiru.continuation",
+      "apply.teoru.continuation",
+      "apply.teageru.continuation",
+      "apply.tekureru.continuation",
+      "apply.temorau.continuation",
+      "apply.temiru.continuation",
+      "apply.teshimau.continuation",
+      "apply.teoku.continuation"
+    ],
+    "byKc": {
+      "class.godan": {
+        "attempts": 511,
+        "correct": 505,
+        "filteredAccuracy": 0.9999955398506596,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 53528.042857142864,
+        "cleanTimeCount": 62
+      },
+      "heuristic.ru-other": {
+        "attempts": 117,
+        "correct": 112,
+        "filteredAccuracy": 0.9180384204340659,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 70580.63333333333,
+        "cleanTimeCount": 46
+      },
+      "class.ichidan": {
+        "attempts": 272,
+        "correct": 262,
+        "filteredAccuracy": 0.7999999999739249,
+        "confidence": 0.9411764705575587,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 82716.71428571428,
+        "cleanTimeCount": 55
+      },
+      "heuristic.ru-ie": {
+        "attempts": 326,
+        "correct": 322,
+        "filteredAccuracy": 0.9999996935008919,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 46895.718253968254,
+        "cleanTimeCount": 36
+      },
+      "exception.ru-godan": {
+        "attempts": 61,
+        "correct": 60,
+        "filteredAccuracy": 0.9999988307986902,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 39712.992857142846,
+        "cleanTimeCount": 31
+      },
+      "lexeme.ru-godan.走る": {
+        "attempts": 12,
+        "correct": 12,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "lexeme.ru-godan.要る": {
+        "attempts": 8,
+        "correct": 7,
+        "filteredAccuracy": 0.8400000000000001,
+        "confidence": 0.9882352941176472,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "lexeme.ru-godan.切る": {
+        "attempts": 12,
+        "correct": 11,
+        "filteredAccuracy": 0.8,
+        "confidence": 0.9411764705882354,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "lexeme.ru-godan.知る": {
+        "attempts": 9,
+        "correct": 9,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "lexeme.ru-godan.入る": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "lexeme.ru-godan.帰る": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "class.irregular": {
+        "attempts": 115,
+        "correct": 114,
+        "filteredAccuracy": 0.9992444213627409,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 14123.107142857141,
+        "cleanTimeCount": 27
+      },
+      "facet.class.irregular.suru": {
+        "attempts": 85,
+        "correct": 85,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 1012.4857142857142,
+        "cleanTimeCount": 6
+      },
+      "facet.class.irregular.kuru": {
+        "attempts": 30,
+        "correct": 29,
+        "filteredAccuracy": 0.9943705004657869,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 20309.5,
+        "cleanTimeCount": 4
+      },
+      "lexeme.ru-godan.喋る": {
+        "attempts": 10,
+        "correct": 10,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "stem.godan.a": {
+        "attempts": 128,
+        "correct": 125,
+        "filteredAccuracy": 0.9985717560939038,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 26513.82936507936,
+        "cleanTimeCount": 20
+      },
+      "suffix.negative": {
+        "attempts": 207,
+        "correct": 204,
+        "filteredAccuracy": 0.9999999670730984,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4317.766666666666,
+        "cleanTimeCount": 3
+      },
+      "stem.godan.u-wa": {
+        "attempts": 43,
+        "correct": 41,
+        "filteredAccuracy": 0.9970657732698975,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 27026.427525252526,
+        "cleanTimeCount": 17
+      },
+      "stem.ichidan.drop-ru": {
+        "attempts": 269,
+        "correct": 268,
+        "filteredAccuracy": 0.9999999999999998,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 19428.991269841266,
+        "cleanTimeCount": 21
+      },
+      "facet.form.negative.suru": {
+        "attempts": 20,
+        "correct": 20,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 8489.809523809523,
+        "cleanTimeCount": 11
+      },
+      "facet.form.negative.kuru": {
+        "attempts": 3,
+        "correct": 3,
+        "filteredAccuracy": 1,
+        "confidence": 0.7058823529411765,
+        "bestConfidence": 0.7058823529411765,
+        "cleanTimeTotal": 1599,
+        "cleanTimeCount": 1
+      },
+      "onbin.i": {
+        "attempts": 55,
+        "correct": 55,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 42004.140476190485,
+        "cleanTimeCount": 32
+      },
+      "suffix.past": {
+        "attempts": 177,
+        "correct": 175,
+        "filteredAccuracy": 0.9985242604741018,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 55464.3523809524,
+        "cleanTimeCount": 34
+      },
+      "onbin.sokuon": {
+        "attempts": 115,
+        "correct": 113,
+        "filteredAccuracy": 0.999998830793222,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 9609.5,
+        "cleanTimeCount": 7
+      },
+      "onbin.voicing": {
+        "attempts": 76,
+        "correct": 69,
+        "filteredAccuracy": 0.796003391255622,
+        "confidence": 0.9364745779477907,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 26702.000000000004,
+        "cleanTimeCount": 12
+      },
+      "stem.godan.shi-connective": {
+        "attempts": 35,
+        "correct": 35,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 12857.750000000002,
+        "cleanTimeCount": 12
+      },
+      "facet.form.past.kuru": {
+        "attempts": 4,
+        "correct": 4,
+        "filteredAccuracy": 1,
+        "confidence": 0.9411764705882354,
+        "bestConfidence": 0.9411764705882354,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.form.past.suru": {
+        "attempts": 8,
+        "correct": 8,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "onbin.hatsuon": {
+        "attempts": 58,
+        "correct": 53,
+        "filteredAccuracy": 0.8398731023832345,
+        "confidence": 0.9880860028038053,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 31945.899999999998,
+        "cleanTimeCount": 19
+      },
+      "facet.onbin.sokuon.iku": {
+        "attempts": 4,
+        "correct": 4,
+        "filteredAccuracy": 1,
+        "confidence": 0.9411764705882354,
+        "bestConfidence": 0.9411764705882354,
+        "cleanTimeTotal": 2379.6666666666665,
+        "cleanTimeCount": 1
+      },
+      "suffix.te": {
+        "attempts": 232,
+        "correct": 232,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 13734.7,
+        "cleanTimeCount": 7
+      },
+      "facet.form.te.kuru": {
+        "attempts": 7,
+        "correct": 7,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.form.te.suru": {
+        "attempts": 8,
+        "correct": 8,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "stem.godan.i": {
+        "attempts": 53,
+        "correct": 52,
+        "filteredAccuracy": 0.9475712,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 12184.2,
+        "cleanTimeCount": 8
+      },
+      "compound.negative-past": {
+        "attempts": 57,
+        "correct": 50,
+        "filteredAccuracy": 0.9997654686531672,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 30305.57301587302,
+        "cleanTimeCount": 24
+      },
+      "compound.polite-negative-past": {
+        "attempts": 8,
+        "correct": 7,
+        "filteredAccuracy": 0.9475712,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 7703.555555555556,
+        "cleanTimeCount": 5
+      },
+      "compound.polite-past": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 11161.469047619046,
+        "cleanTimeCount": 6
+      },
+      "compound.polite-negative": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5172.063095238095,
+        "cleanTimeCount": 4
+      },
+      "stem.godan.e": {
+        "attempts": 31,
+        "correct": 30,
+        "filteredAccuracy": 0.9954964003726295,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6259.166666666667,
+        "cleanTimeCount": 4
+      },
+      "suffix.imperative": {
+        "attempts": 25,
+        "correct": 24,
+        "filteredAccuracy": 0.98900488372224,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 23041.67619047619,
+        "cleanTimeCount": 14
+      },
+      "facet.form.imperative.suru": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.form.imperative.kuru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "suffix.passive": {
+        "attempts": 20,
+        "correct": 19,
+        "filteredAccuracy": 0.9855884811924144,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 18883.055952380953,
+        "cleanTimeCount": 7
+      },
+      "facet.form.passive.kuru": {
+        "attempts": 2,
+        "correct": 2,
+        "filteredAccuracy": 1,
+        "confidence": 0.4705882352941177,
+        "bestConfidence": 0.4705882352941177,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "adj.class.i": {
+        "attempts": 43,
+        "correct": 40,
+        "filteredAccuracy": 0.7579920562892684,
+        "confidence": 0.8917553603403158,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6210.883333333333,
+        "cleanTimeCount": 11
+      },
+      "adj.class.na": {
+        "attempts": 58,
+        "correct": 55,
+        "filteredAccuracy": 0.9988154798628814,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6974.833333333334,
+        "cleanTimeCount": 10
+      },
+      "facet.adj.class.na.regular": {
+        "attempts": 49,
+        "correct": 49,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.adj.class.na.i-ending": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.form.passive.suru": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "suffix.potential": {
+        "attempts": 23,
+        "correct": 20,
+        "filteredAccuracy": 0.9731355901773024,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 18555.486904761903,
+        "cleanTimeCount": 12
+      },
+      "facet.form.potential.suru": {
+        "attempts": 8,
+        "correct": 8,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.form.potential.kuru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "stem.godan.o": {
+        "attempts": 18,
+        "correct": 16,
+        "filteredAccuracy": 0.9704451274453811,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 20868.95,
+        "cleanTimeCount": 9
+      },
+      "suffix.volitional": {
+        "attempts": 27,
+        "correct": 27,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 3253.666666666667,
+        "cleanTimeCount": 3
+      },
+      "facet.form.volitional.kuru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.form.volitional.suru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "suffix.ba": {
+        "attempts": 14,
+        "correct": 13,
+        "filteredAccuracy": 0.9450244186112,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 15411.25,
+        "cleanTimeCount": 9
+      },
+      "facet.form.ba.suru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.form.ba.kuru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "suffix.causative": {
+        "attempts": 27,
+        "correct": 24,
+        "filteredAccuracy": 0.9937273691451758,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5080.933333333333,
+        "cleanTimeCount": 6
+      },
+      "facet.form.causative.suru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.form.causative.kuru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "suffix.causativePassive": {
+        "attempts": 33,
+        "correct": 28,
+        "filteredAccuracy": 0.8680498244479792,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 13247.4,
+        "cleanTimeCount": 9
+      },
+      "facet.form.causativePassive.suru": {
+        "attempts": 3,
+        "correct": 3,
+        "filteredAccuracy": 1,
+        "confidence": 0.7058823529411765,
+        "bestConfidence": 0.7058823529411765,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "contraction.causative-passive": {
+        "attempts": 6,
+        "correct": 5,
+        "filteredAccuracy": 0.91808,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5702.352380952381,
+        "cleanTimeCount": 3
+      },
+      "facet.form.causativePassive.kuru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "construction.tai": {
+        "attempts": 34,
+        "correct": 32,
+        "filteredAccuracy": 0.9991681042936003,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 10410.65,
+        "cleanTimeCount": 7
+      },
+      "construction.tara": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 15464.949999999999,
+        "cleanTimeCount": 5
+      },
+      "suffix.nasai": {
+        "attempts": 6,
+        "correct": 5,
+        "filteredAccuracy": 0.8976000000000001,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4930.75,
+        "cleanTimeCount": 4
+      },
+      "suffix.prohibitive": {
+        "attempts": 12,
+        "correct": 10,
+        "filteredAccuracy": 0.87215761408,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5340.416666666667,
+        "cleanTimeCount": 7
+      },
+      "construction.nakute": {
+        "attempts": 19,
+        "correct": 17,
+        "filteredAccuracy": 0.964805732306518,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 19594.600000000002,
+        "cleanTimeCount": 10
+      },
+      "construction.naide": {
+        "attempts": 9,
+        "correct": 9,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6964.109523809523,
+        "cleanTimeCount": 5
+      },
+      "construction.zu": {
+        "attempts": 7,
+        "correct": 7,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 10068.166666666668,
+        "cleanTimeCount": 6
+      },
+      "construction.zuni": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5945.299999999999,
+        "cleanTimeCount": 5
+      },
+      "construction.teageru": {
+        "attempts": 58,
+        "correct": 58,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 8499.390476190476,
+        "cleanTimeCount": 7
+      },
+      "construction.temorau": {
+        "attempts": 40,
+        "correct": 39,
+        "filteredAccuracy": 0.9999584616251317,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6956.085714285714,
+        "cleanTimeCount": 6
+      },
+      "construction.tekureru": {
+        "attempts": 7,
+        "correct": 6,
+        "filteredAccuracy": 0.8400000000000001,
+        "confidence": 0.9882352941176472,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 7111.857142857142,
+        "cleanTimeCount": 6
+      },
+      "construction.tekudasai": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 3495.4464285714284,
+        "cleanTimeCount": 4
+      },
+      "construction.naideKudasai": {
+        "attempts": 5,
+        "correct": 4,
+        "filteredAccuracy": 0.8976000000000001,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4284.611111111111,
+        "cleanTimeCount": 4
+      },
+      "construction.teiru": {
+        "attempts": 11,
+        "correct": 11,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 7051.775,
+        "cleanTimeCount": 6
+      },
+      "construction.teru": {
+        "attempts": 7,
+        "correct": 6,
+        "filteredAccuracy": 0.934464,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6619.25,
+        "cleanTimeCount": 3
+      },
+      "construction.tearu": {
+        "attempts": 11,
+        "correct": 10,
+        "filteredAccuracy": 0.9664455679999999,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4656.466666666667,
+        "cleanTimeCount": 4
+      },
+      "construction.teoru": {
+        "attempts": 14,
+        "correct": 12,
+        "filteredAccuracy": 0.931280523264,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 11902.85,
+        "cleanTimeCount": 8
+      },
+      "construction.toru": {
+        "attempts": 7,
+        "correct": 6,
+        "filteredAccuracy": 0.8720000000000001,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 1948.95,
+        "cleanTimeCount": 2
+      },
+      "construction.tehoshii": {
+        "attempts": 13,
+        "correct": 10,
+        "filteredAccuracy": 0.919402254336,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 8121.642857142857,
+        "cleanTimeCount": 7
+      },
+      "construction.temo": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4449.8,
+        "cleanTimeCount": 4
+      },
+      "construction.nagara": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5448.733333333334,
+        "cleanTimeCount": 5
+      },
+      "construction.tsutsu": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5034.1,
+        "cleanTimeCount": 4
+      },
+      "construction.nakerebaNaranai": {
+        "attempts": 14,
+        "correct": 12,
+        "filteredAccuracy": 0.8794884186112,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 11760.002020202022,
+        "cleanTimeCount": 11
+      },
+      "construction.naitoIkenai": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 1915.3,
+        "cleanTimeCount": 2
+      },
+      "construction.nakutewaIkenai": {
+        "attempts": 6,
+        "correct": 5,
+        "filteredAccuracy": 0.8720000000000001,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 2382.3545454545456,
+        "cleanTimeCount": 3
+      },
+      "construction.tari": {
+        "attempts": 8,
+        "correct": 6,
+        "filteredAccuracy": 0.8820352,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5345.6,
+        "cleanTimeCount": 4
+      },
+      "construction.tewa": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 8311.95,
+        "cleanTimeCount": 5
+      },
+      "construction.temoIi": {
+        "attempts": 9,
+        "correct": 7,
+        "filteredAccuracy": 0.8820352,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 10833.3,
+        "cleanTimeCount": 5
+      },
+      "construction.masenka": {
+        "attempts": 6,
+        "correct": 5,
+        "filteredAccuracy": 0.91808,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5726.5952380952385,
+        "cleanTimeCount": 3
+      },
+      "construction.nakutemoIi": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 7013.006746031746,
+        "cleanTimeCount": 5
+      },
+      "construction.youtosuru": {
+        "attempts": 17,
+        "correct": 15,
+        "filteredAccuracy": 0.9608573860511744,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 10783.33766233766,
+        "cleanTimeCount": 8
+      },
+      "construction.temiru": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 18061.766666666666,
+        "cleanTimeCount": 4
+      },
+      "construction.teshimau": {
+        "attempts": 14,
+        "correct": 13,
+        "filteredAccuracy": 0.9731564544,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4442.761904761905,
+        "cleanTimeCount": 5
+      },
+      "construction.chau": {
+        "attempts": 7,
+        "correct": 5,
+        "filteredAccuracy": 0.852544,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5199.633333333333,
+        "cleanTimeCount": 4
+      },
+      "construction.teoku": {
+        "attempts": 14,
+        "correct": 14,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4929.5952380952385,
+        "cleanTimeCount": 5
+      },
+      "construction.toku": {
+        "attempts": 7,
+        "correct": 7,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 10903.733333333334,
+        "cleanTimeCount": 7
+      },
+      "construction.teiku": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4809.4,
+        "cleanTimeCount": 5
+      },
+      "construction.tekuru": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4329.966666666667,
+        "cleanTimeCount": 3
+      },
+      "construction.teku": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 7872.933333333334,
+        "cleanTimeCount": 6
+      },
+      "construction.tatte": {
+        "attempts": 10,
+        "correct": 9,
+        "filteredAccuracy": 0.865782272,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 10323.385714285714,
+        "cleanTimeCount": 7
+      },
+      "construction.sugiru": {
+        "attempts": 19,
+        "correct": 19,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6854.119047619048,
+        "cleanTimeCount": 5
+      },
+      "construction.tagaru": {
+        "attempts": 14,
+        "correct": 13,
+        "filteredAccuracy": 0.9862561046528,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 3548.7,
+        "cleanTimeCount": 3
+      },
+      "stem.irregular.connective": {
+        "attempts": 2,
+        "correct": 2,
+        "filteredAccuracy": 1,
+        "confidence": 0.4705882352941177,
+        "bestConfidence": 0.4705882352941177,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.stem.connective.kuru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "suffix.masu": {
+        "attempts": 9,
+        "correct": 9,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4962.983333333334,
+        "cleanTimeCount": 4
+      },
+      "facet.form.masu.kuru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.stem.connective.suru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.form.masu.suru": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "adj.stem.i-ku": {
+        "attempts": 36,
+        "correct": 34,
+        "filteredAccuracy": 0.9988575651004642,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4472,
+        "cleanTimeCount": 4
+      },
+      "adj.suffix.i-negative": {
+        "attempts": 23,
+        "correct": 23,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 871.2,
+        "cleanTimeCount": 1
+      },
+      "adj.exception.ii-yo": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 11500.888888888889,
+        "cleanTimeCount": 4
+      },
+      "adj.suffix.i-past": {
+        "attempts": 38,
+        "correct": 38,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 10089.760714285714,
+        "cleanTimeCount": 6
+      },
+      "adj.compound.i-negative-past": {
+        "attempts": 16,
+        "correct": 16,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "adj.suffix.na-attributive": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 9740.949999999999,
+        "cleanTimeCount": 5
+      },
+      "adj.suffix.na-predicative": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 4891.6,
+        "cleanTimeCount": 5
+      },
+      "adj.suffix.na-negative": {
+        "attempts": 13,
+        "correct": 12,
+        "filteredAccuracy": 0.931280523264,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 9208.956746031747,
+        "cleanTimeCount": 9
+      },
+      "adj.suffix.na-past": {
+        "attempts": 5,
+        "correct": 4,
+        "filteredAccuracy": 0.8976000000000001,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 8942.342857142858,
+        "cleanTimeCount": 4
+      },
+      "adj.suffix.na-te": {
+        "attempts": 11,
+        "correct": 9,
+        "filteredAccuracy": 0.865782272,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 18568.36666666667,
+        "cleanTimeCount": 9
+      },
+      "adj.suffix.i-te": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5602.95,
+        "cleanTimeCount": 4
+      },
+      "exception.aru-negative": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6461.800000000001,
+        "cleanTimeCount": 5
+      },
+      "apply.tearu.continuation": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.tearu.negative": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "adj.suffix.i-ba": {
+        "attempts": 11,
+        "correct": 9,
+        "filteredAccuracy": 0.8401970176,
+        "confidence": 0.9884670795294118,
+        "bestConfidence": 0.9884670795294118,
+        "cleanTimeTotal": 9907.666666666668,
+        "cleanTimeCount": 8
+      },
+      "adj.suffix.na-conditional": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 13498.75,
+        "cleanTimeCount": 5
+      },
+      "adj.suffix.i-adverb": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 7279.500000000001,
+        "cleanTimeCount": 4
+      },
+      "adj.suffix.na-adverb": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5806.95,
+        "cleanTimeCount": 5
+      },
+      "apply.tai.continuation": {
+        "attempts": 11,
+        "correct": 11,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 9700.68253968254,
+        "cleanTimeCount": 5
+      },
+      "facet.apply.tai.negative": {
+        "attempts": 2,
+        "correct": 2,
+        "filteredAccuracy": 1,
+        "confidence": 0.4705882352941177,
+        "bestConfidence": 0.4705882352941177,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.tai.negativePast": {
+        "attempts": 8,
+        "correct": 8,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.tai.past": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.tehoshii.continuation": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.tehoshii.negativePast": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "compound.multi-step": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6956.872727272728,
+        "cleanTimeCount": 5
+      },
+      "adj.compound.na-negative-past": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 2134.2,
+        "cleanTimeCount": 3
+      },
+      "apply.potential.continuation": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 12019.933333333334,
+        "cleanTimeCount": 4
+      },
+      "facet.apply.potential.negative": {
+        "attempts": 3,
+        "correct": 3,
+        "filteredAccuracy": 1,
+        "confidence": 0.7058823529411765,
+        "bestConfidence": 0.7058823529411765,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.potential.negativePast": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.potential.past": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.passive.continuation": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 3882.525,
+        "cleanTimeCount": 3
+      },
+      "facet.apply.passive.negative": {
+        "attempts": 2,
+        "correct": 2,
+        "filteredAccuracy": 1,
+        "confidence": 0.4705882352941177,
+        "bestConfidence": 0.4705882352941177,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.passive.negativePast": {
+        "attempts": 2,
+        "correct": 2,
+        "filteredAccuracy": 1,
+        "confidence": 0.4705882352941177,
+        "bestConfidence": 0.4705882352941177,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.passive.past": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.causative.continuation": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5936.246428571429,
+        "cleanTimeCount": 3
+      },
+      "facet.apply.causative.negative": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.causative.negativePast": {
+        "attempts": 2,
+        "correct": 2,
+        "filteredAccuracy": 1,
+        "confidence": 0.4705882352941177,
+        "bestConfidence": 0.4705882352941177,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.causative.past": {
+        "attempts": 2,
+        "correct": 2,
+        "filteredAccuracy": 1,
+        "confidence": 0.4705882352941177,
+        "bestConfidence": 0.4705882352941177,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.causativePassive.continuation": {
+        "attempts": 9,
+        "correct": 9,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 11036.18492063492,
+        "cleanTimeCount": 8
+      },
+      "facet.apply.causativePassive.negative": {
+        "attempts": 4,
+        "correct": 4,
+        "filteredAccuracy": 1,
+        "confidence": 0.9411764705882354,
+        "bestConfidence": 0.9411764705882354,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.tagaru.continuation": {
+        "attempts": 6,
+        "correct": 6,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 8736.509523809524,
+        "cleanTimeCount": 5
+      },
+      "facet.apply.tagaru.past": {
+        "attempts": 4,
+        "correct": 4,
+        "filteredAccuracy": 1,
+        "confidence": 0.9411764705882354,
+        "bestConfidence": 0.9411764705882354,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.youtosuru.continuation": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 9837.5,
+        "cleanTimeCount": 4
+      },
+      "facet.apply.youtosuru.negative": {
+        "attempts": 3,
+        "correct": 3,
+        "filteredAccuracy": 1,
+        "confidence": 0.7058823529411765,
+        "bestConfidence": 0.7058823529411765,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.youtosuru.past": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.youtosuru.negativePast": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.sugiru.continuation": {
+        "attempts": 12,
+        "correct": 12,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 14323.319047619048,
+        "cleanTimeCount": 9
+      },
+      "facet.apply.sugiru.negative": {
+        "attempts": 9,
+        "correct": 9,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.sugiru.negativePast": {
+        "attempts": 2,
+        "correct": 2,
+        "filteredAccuracy": 1,
+        "confidence": 0.4705882352941177,
+        "bestConfidence": 0.4705882352941177,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.sugiru.past": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.causativePassive.negativePast": {
+        "attempts": 2,
+        "correct": 2,
+        "filteredAccuracy": 1,
+        "confidence": 0.4705882352941177,
+        "bestConfidence": 0.4705882352941177,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.causativePassive.past": {
+        "attempts": 3,
+        "correct": 3,
+        "filteredAccuracy": 1,
+        "confidence": 0.7058823529411765,
+        "bestConfidence": 0.7058823529411765,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.tagaru.negativePast": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.tagaru.negative": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.teiru.continuation": {
+        "attempts": 3,
+        "correct": 3,
+        "filteredAccuracy": 1,
+        "confidence": 0.7058823529411765,
+        "bestConfidence": 0.7058823529411765,
+        "cleanTimeTotal": 3564.6666666666665,
+        "cleanTimeCount": 3
+      },
+      "facet.apply.teiru.negativePast": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.teiru.past": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.teiru.negative": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.teoru.continuation": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 1030.2857142857142,
+        "cleanTimeCount": 1
+      },
+      "facet.apply.teoru.past": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.teageru.continuation": {
+        "attempts": 5,
+        "correct": 5,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 6736.45,
+        "cleanTimeCount": 3
+      },
+      "facet.apply.teageru.negative": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.teageru.past": {
+        "attempts": 3,
+        "correct": 3,
+        "filteredAccuracy": 1,
+        "confidence": 0.7058823529411765,
+        "bestConfidence": 0.7058823529411765,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "facet.apply.teageru.negativePast": {
+        "attempts": 1,
+        "correct": 1,
+        "filteredAccuracy": 1,
+        "confidence": 0.23529411764705885,
+        "bestConfidence": 0.23529411764705885,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      },
+      "apply.temorau.continuation": {
+        "attempts": 12,
+        "correct": 12,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 5849.125,
+        "cleanTimeCount": 2
+      },
+      "facet.apply.temorau.negative": {
+        "attempts": 12,
+        "correct": 12,
+        "filteredAccuracy": 1,
+        "confidence": 1,
+        "bestConfidence": 1,
+        "cleanTimeTotal": 0,
+        "cleanTimeCount": 0
+      }
+    },
+    "accessibleCourseIds": [
+      "classify",
+      "negative",
+      "past",
+      "te",
+      "masu",
+      "basicCompound",
+      "imperative",
+      "passive",
+      "potential",
+      "volitional",
+      "ba",
+      "causative",
+      "causativePassive",
+      "voiceCompound",
+      "tara",
+      "nasai",
+      "prohibitive",
+      "nakuteNaide",
+      "zuZuni",
+      "giving",
+      "request",
+      "aspect",
+      "desire",
+      "temo",
+      "concurrent",
+      "obligation",
+      "listing",
+      "permission",
+      "youtosuru",
+      "temiru",
+      "teshimauChau",
+      "teokuToku",
+      "direction",
+      "tatte",
+      "sugiru",
+      "tagaru",
+      "multiStepCompound",
+      "adjectiveClassify",
+      "adjectiveIBase"
+    ],
+    "recentWordKeys": [
+      "verb:送る",
+      "verb:戻る",
+      "verb:止める",
+      "verb:稼ぐ",
+      "verb:打つ",
+      "verb:渡る",
+      "verb:急ぐ",
+      "verb:始まる",
+      "verb:眠る",
+      "verb:集める",
+      "verb:切る",
+      "verb:返す",
+      "verb:開ける",
+      "verb:会う",
+      "verb:帰る",
+      "verb:言う",
+      "verb:聞く",
+      "verb:洗う",
+      "verb:乗る",
+      "verb:残る",
+      "verb:捨てる",
+      "verb:歩く",
+      "verb:切る",
+      "verb:する",
+      "verb:押す",
+      "verb:取る",
+      "verb:食べる",
+      "verb:勝つ",
+      "verb:切る",
+      "verb:来る",
+      "verb:動く",
+      "verb:貸す",
+      "verb:話す",
+      "verb:見る",
+      "verb:咲く",
+      "verb:行く"
+    ],
+    "assessment": {
+      "version": 1,
+      "originalCount": 0,
+      "byTarget": {},
+      "pending": {},
+      "independentByKc": {},
+      "assistedByKc": {},
+      "seenQuestionIds": [],
+      "seenAssistedIds": [],
+      "seenExposureIds": []
+    },
+    "coursePractice": {},
+    "practiceLog": {
+      "version": 2,
+      "totalEvents": 0,
+      "droppedEntries": 0,
+      "events": []
+    },
+    "legacy": null,
+    "migration": null
+  }
+}

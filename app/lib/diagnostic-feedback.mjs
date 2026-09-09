@@ -2,7 +2,7 @@
 // Correct outputs remain hidden until the corresponding probe is answered.
 export function diagnosticFeedback({item,answer,diagnosis,steps,plan,step,normalize=value=>value}) {
   const actual=normalize(answer),observations=[];
-  if(diagnosis?.message)return {resolution:diagnosis.kcId?'rule':diagnosis.stage?'stage':diagnosis.review?'mixed':'partial',
+  if(diagnosis?.message)return {resolution:diagnosis.targetMismatch?'target-form':diagnosis.kcId?'rule':diagnosis.stage?'stage':diagnosis.review?'mixed':'partial',
     message:diagnosis.message,observations,terminal:steps.length===0};
   const selection = steps[0]?.probeSelection;
   if (selection) return { resolution: 'stage-priority', message: selection.message,

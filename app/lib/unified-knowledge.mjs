@@ -266,6 +266,7 @@ export function diagnoseUnified(item, form, answer, normalize = value => value) 
   // Exhaust explicit candidates in both writings before a truncation fallback
   // can interpret the same kana input as an incompletely appended suffix.
   const diagnostic = diagnose(item, form, answer, normalize) ?? diagnose(asReading(item), form, answer, normalize);
+  if (diagnostic?.targetMismatch) return diagnostic;
   const nested = nestedAppendDiagnosis(item, form, answer, normalize);
   if (nested && diagnostic?.kcId === nested.kcId) return nested;
   if (!diagnostic) return unfinishedAppendDiagnosis(item, form, answer, normalize)
@@ -484,6 +485,7 @@ export function diagnoseUnifiedStep(item, step, answer, normalize = value => val
     }
   }
   const diagnosis = diagnoseUnified(item, step.form, answer, normalize) ?? diagnoseUnified(asReading(item), step.form, answer, normalize);
+  if (diagnosis?.targetMismatch) return diagnosis;
   if (diagnosis?.stage && !step.continuation) return diagnosis;
   if (diagnosis && step.kcIds.includes(diagnosis.kcId)) {
     return { ...diagnosis, confirmedKcIds: diagnosis.confirmedKcIds.filter(id => step.kcIds.includes(id)) };

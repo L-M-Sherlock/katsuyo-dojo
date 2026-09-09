@@ -1,45 +1,27 @@
-import { canContinueRound, planPractice, shouldReplan } from "./practice-session.mjs";
+import { canContinueRound, shouldReplan } from "./practice-session.mjs";
 import {
   advanceIntroductions,
-  balanceComponentsForCourse,
-  filterReadyExercises,
   isComponentMastered,
 } from "./adaptive.mjs";
-import { assignPracticeExercises, exerciseKey, recordRecentWord, wordKey } from "./exercise-selection.mjs";
+import { exerciseKey, recordRecentWord, wordKey } from "./exercise-selection.mjs";
 import { evidenceCondition, scoreLearningEvidence } from "./learning-evidence.mjs";
-
-function assignmentSegment(model, focus, introduced, byKc, length, rotation, usedKeys, usedWordKeys, recentWordKeys) {
-  const balanced = balanceComponentsForCourse(focus, introduced, model.courseKcIds[focus.firstCourseId] ?? []);
-  const { plan } = planPractice(introduced, byKc, model.courseKcIds, { length, rotation });
-  const assignments = assignPracticeExercises(plan, {
-    byKc,
-    usedWordKeys,
-    recentWordKeys,
-    alternativesFor: (preferred, index) => {
-      const others = balanced.filter((component) => component.id !== preferred.id);
-      return others.length ? [...others.slice(index % others.length), ...others.slice(0, index % others.length)] : [];
-    },
-    candidatesFor: (component) => {
-      const candidates = model.exercises.filter((exercise) => exercise.courseIndex === focus.firstCourseIndex && exercise.kcIds.includes(component.id));
-      return filterReadyExercises(candidates, component.id, model.components, byKc);
-    },
-    seed: rotation + 1,
-    usedKeys,
-  });
-  return { assignments, plan };
-}
+import { createPracticePlanner } from "./practice-planning.mjs";
 
 export function simulatePerfectLearning(model, options = {}) {
   return simulateLearning(model, options);
 }
 
-export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, answerFor = () => ({ correct: true }) } = {}) {
+export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, answerFor = () => ({ correct: true }), initialProfile = null, mode = "adaptive", goalCourseId = null, stopWhen = null } = {}) {
   const gating = model.components.filter((component) => component.gating);
   const byId = new Map(model.components.map((component) => [component.id, component]));
-  let introducedKcIds = gating.length ? [gating[0].id] : [];
-  let byKc = {};
-  let recentWordKeys = [];
-  let rotation = 0;
+  const planner = createPracticePlanner(model);
+  let introducedKcIds = initialProfile?.introducedKcIds ? [...initialProfile.introducedKcIds] : gating.length ? [gating[0].id] : [];
+  let byKc = structuredClone(initialProfile?.byKc ?? {});
+  let recentWordKeys = [...initialProfile?.recentWordKeys ?? []];
+  let rotation = initialProfile?.rotation ?? 0;
+  let heldCourseId = goalCourseId;
+  const state = () => ({ ...initialProfile, introducedKcIds, byKc, recentWordKeys, rotation });
+  const targetReached = () => Boolean(stopWhen?.(state()));
   let questionCount = 0;
   let redundantFocusQuestions = 0;
   let preMasteredIntroductions = 0;
@@ -51,7 +33,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
 
   while (rounds.length < maxRounds) {
     let introduced = introducedKcIds.map((id) => byId.get(id)).filter(Boolean);
-    if (introduced.length === gating.length && introduced.every((component) => isComponentMastered(component, byKc))) break;
+    if (targetReached() || (introduced.length === gating.length && introduced.every((component) => isComponentMastered(component, byKc)))) break;
     const roundFocusIds = new Set();
     const usedKeys = new Set();
     const usedWordKeys = [];
@@ -63,16 +45,15 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
 
     while (answered < sessionLength) {
       introduced = introducedKcIds.map((id) => byId.get(id)).filter(Boolean);
-      const next = planPractice(introduced, byKc, model.courseKcIds, { length: sessionLength - answered, rotation });
+      const next = planner.plan(mode, state(), sessionLength - answered, heldCourseId);
+      heldCourseId = next.goalCourseId;
       const { focus } = next;
       if (!focus || isComponentMastered(focus, byKc)) break;
-      if (roundCourseId == null) roundCourseId = focus.firstCourseId;
-      if (focus.firstCourseId !== roundCourseId) break;
-      const remaining = sessionLength - answered;
-      const segment = assignmentSegment(model, focus, introduced, byKc, remaining, rotation, [...usedKeys], usedWordKeys, recentWordKeys);
-      if (previousFocus && !canContinueRound(previousFocus, next, byKc, true)) break;
+      if (roundCourseId == null) roundCourseId = next.goalCourseId;
+      if (next.goalCourseId !== roundCourseId) break;
+      if (previousFocus && !canContinueRound(previousFocus, next, byKc, false)) break;
       roundFocusIds.add(focus.id);
-      const { assignments } = segment;
+      const assignments = planner.assign(next, state(), { seed: rounds.length + 1, usedKeys: [...usedKeys], usedWordKeys });
       if (!assignments.length || assignments.some(({ candidate }) => !candidate)) {
         return { completed: false, reason: "incomplete-round", focusId: focus.id, rounds, byKc, introducedKcIds };
       }
@@ -95,13 +76,13 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
           responseMs: 1200, answerLength: 4, ...answer, support: evidenceCondition(answer) }).byKc;
         answered += 1;
         questionCount += 1;
-        if (shouldReplan(focus, byKc, next.review)) {
+        if (targetReached() || shouldReplan(focus, byKc, next.review)) {
           mastered = true;
           break;
         }
         if (answered >= sessionLength) break;
       }
-      if (!mastered) break;
+      if (!mastered || targetReached()) break;
       previousFocus = focus;
 
       const advanced = advanceIntroductions(model.components, introducedKcIds, byKc);
@@ -119,7 +100,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     rotation += 1;
   }
 
-  const completed = introducedKcIds.length === gating.length && gating.every((component) => introducedKcIds.includes(component.id) && isComponentMastered(component, byKc));
+  const completed = targetReached() || introducedKcIds.length === gating.length && gating.every((component) => introducedKcIds.includes(component.id) && isComponentMastered(component, byKc));
   const attempts = gating.map((component) => byKc[component.id]?.attempts ?? 0);
   const repeatedFocusKcs = [...focusRounds].filter(([, count]) => count > 1).map(([id, count]) => ({ id, rounds: count }));
   const longestFocusRun = repeatedFocusKcs.sort((a, b) => b.rounds - a.rounds)[0] ?? { id: [...focusRounds.keys()][0] ?? null, rounds: focusRounds.size ? 1 : 0 };

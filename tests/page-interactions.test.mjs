@@ -17,11 +17,11 @@ import { wordKey } from '../app/lib/exercise-selection.mjs';
 const pageUrl = new URL('../app/page.tsx', import.meta.url);
 // Exposing the display-label table only lets the UI driver identify the
 // question shown on screen; expected scores remain independently asserted.
-const compiled = ts.transpileModule((await readFile(pageUrl, 'utf8')) + '\nexport { FORM_LABELS };', {
+const compiled = ts.transpileModule(await readFile(pageUrl, 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
 }).outputText.replace(/from ["']([^"']+)["']/g, (_match, specifier) =>
   `from ${JSON.stringify(specifier.startsWith('.') ? new URL(specifier, pageUrl).href : import.meta.resolve(specifier))}`);
-const { default: Page, VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE, KNOWLEDGE, ALL_KCS, FORM_LABELS } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
+const { default: Page, VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE, KNOWLEDGE, ALL_KCS } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
 
 const { JSDOM } = await import('jsdom');
 const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost/katsuyo-dojo/', pretendToBeVisual: true });
@@ -128,8 +128,7 @@ async function next(view) {
 function displayedExercise(view) {
   const surface = view.container.querySelector('.word-display ruby').firstChild.textContent;
   const label = view.container.querySelector('.question-kicker span:nth-child(2)').textContent;
-  const form = view.queryByLabelText('你的答案') ? Object.keys(FORM_LABELS).find(form => FORM_LABELS[form] === label
-    && KNOWLEDGE.exercises.some(exercise => exercise.item.surface === surface && exercise.form === form)) : null;
+  const form = view.container.querySelector('.exercise-card').getAttribute('data-form') || null;
   const exercise = KNOWLEDGE.exercises.find(exercise => exercise.item.surface === surface && exercise.form === form);
   assert.ok(exercise, `${surface}: ${label}`);
   return exercise;
@@ -1092,7 +1091,7 @@ test('course filters preserve the active question and cannot unlock a new course
   assert.equal(view.container.querySelectorAll('.class-options button').length, 3);
 });
 
-test('historically accessible compound courses remain usable when new shared prerequisites need confirmation', async () => {
+test('historically accessible compound courses recover new shared prerequisites before returning to the selected course', async () => {
   const saved = masteredProfile();
   saved.accessibleCourseIds = ['multiStepCompound'];
   saved.byKc['adj.suffix.i-past'] = emptySkillStats();
@@ -1101,8 +1100,21 @@ test('historically accessible compound courses remain usable when new shared pre
   const button = [...view.container.querySelectorAll('.mode-list button')].find(b => b.textContent.includes('多步活用组合'));
   assert.equal(button.disabled, false);
   fireEvent.click(button);
-  await waitFor(() => assert.match(view.container.querySelector('.instruction').textContent, /受身・愿望・否定过去/));
+  await waitFor(() => assert.match(view.container.querySelector('.focus-panel').textContent, /补基础/));
+  assert.match(view.container.querySelector('.focus-panel strong').textContent, /多步活用组合/);
   assert.ok(view.container.querySelector('#answer'));
+  for (let i = 0; i < 8 && displayedExercise(view).form !== 'passiveDesireNegativePast'; i++) {
+    if (i === 0) assert.ok(displayedExercise(view).kcIds.includes('adj.suffix.i-past'));
+    assert.match(view.container.querySelector('.focus-panel strong').textContent, /多步活用组合/);
+    await answerDisplayedCorrectly(view);
+    await next(view);
+    if (view.container.querySelector('.completion-card')) {
+      fireEvent.click(view.container.querySelector('.restart-button'));
+      await waitFor(() => assert.ok(view.container.querySelector('.exercise-card')));
+    }
+  }
+  assert.equal(JSON.parse(storage.getItem(KEY)).byKc['adj.suffix.i-past'].confidence, 1);
+  assert.equal(displayedExercise(view).form, 'passiveDesireNegativePast');
   assert.equal(Boolean(view.container.querySelector('[data-class-shortcut]')), false);
 });
 
@@ -1128,7 +1140,8 @@ test('old-version storage writes cannot overwrite the migrated profile', async (
 for (const hintUsed of [false, true]) test(`adjective ku omission persists precise evidence (hint=${hintUsed})`, async () => {
   const initial = masteredProfile();
   initial.byKc['adj.suffix.i-negative'] = emptySkillStats();
-  initial.byKc['adj.suffix.i-past'] = { ...initial.byKc['adj.suffix.i-past'], filteredAccuracy: .5, confidence: .5 };
+  // Keep this as an unfinished lesson, not a mastered-then-regressed priority.
+  initial.byKc['adj.suffix.i-past'] = { ...initial.byKc['adj.suffix.i-past'], filteredAccuracy: .5, confidence: .5, bestConfidence: .5 };
   storage.setItem(KEY, JSON.stringify(initial));
   const view = await mount();
   assert.equal(view.container.querySelector('.question-kicker span:nth-child(2)').textContent, '否定形');
@@ -1194,9 +1207,9 @@ for(const ending of ['た','かった'])test(`dictionary-form attachment ${endin
 for(const [tail,correct] of [['ない',false],['でない',true]])test(`na negative distinguishes incomplete ${tail} from a valid variant`,async()=>{
   const initial=masteredProfile();
   initial.byKc['adj.suffix.na-negative']=emptySkillStats();
-  // Isolate the negative suffix: negative-past is also in this KC's pool once
-  // its prerequisites are mastered, and selection now varies among eligible forms.
-  initial.byKc['adj.suffix.i-past']=emptySkillStats();
+  // Keep past unfinished so negative-past stays unavailable, while negative
+  // remains the weaker learning target under prerequisite-aware selection.
+  initial.byKc['adj.suffix.i-past']={...emptySkillStats(), attempts:1, correct:1, filteredAccuracy:1, confidence:1/5/0.85, bestConfidence:1/5/0.85};
   storage.setItem(KEY,JSON.stringify(initial));
   const view=await mount();
   fireEvent.click([...view.container.querySelectorAll('.mode-list button')].find(button => button.textContent.includes('な形容词基础活用')));

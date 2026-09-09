@@ -2,11 +2,11 @@
 
 import { FormEvent, Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ADJECTIVES } from "./lib/adjective-catalog.mjs";
-import { ADJECTIVE_FORM_LABELS, adjectiveClassLabel, conjugateAdjective, explainAdjectiveConjugation } from "./lib/adjective-conjugation.mjs";
+import { ADJECTIVE_FORM_LABELS, adjectiveTargetLabel, adjectiveClassLabel, conjugateAdjective, explainAdjectiveConjugation } from "./lib/adjective-conjugation.mjs";
 import { buildAdjectiveKnowledgeModel } from "./lib/adjective-knowledge-model.mjs";
 import { acceptedVariantKcIds, acceptedVariantNote } from "./lib/answer-variants.mjs";
-import { advanceIntroductions, balanceComponentsForCourse, componentConfidence, emptySkillStats, filterReadyExercises, isComponentMastered, selectFocus } from "./lib/adaptive.mjs";
-import { assignPracticeExercises, exerciseKey, recordRecentWord, wordKey } from "./lib/exercise-selection.mjs";
+import { advanceIntroductions, componentConfidence, emptySkillStats, isComponentMastered, selectFocus } from "./lib/adaptive.mjs";
+import { exerciseKey, recordRecentWord, wordKey } from "./lib/exercise-selection.mjs";
 import { classLabel, conjugate, explainConjugation } from "./lib/conjugation.mjs";
 import { COMPOUND_FORM_LABELS, COMPOUND_FORM_SPECS } from "./lib/compound-forms.mjs";
 import { summarizeUnifiedCourse } from "./lib/unified-progress.mjs";
@@ -22,6 +22,7 @@ import { emptyAssessment, assessmentTarget, retestStatus } from "./lib/learning-
 import type { LearningAssessment } from "./lib/learning-assessment.mjs";
 import { assessmentCatalog, applyLearningObservation } from "./lib/learning-profile.mjs";
 import { planRetestQuestion } from "./lib/retest-planning.mjs";
+import { createPracticePlanner } from "./lib/practice-planning.mjs";
 import { createProfileStore, readPreference, writePreference } from "./lib/profile-store.mjs";
 import { canContinueRound, emptyHintState, planPractice, shouldReplan, toggleHint } from "./lib/practice-session.mjs";
 import { createUnifiedExport as createProfileExport, parseUnifiedImport as parseProfileImport, UNIFIED_STORAGE_KEY, LEGACY_STORAGE_KEY, LEGACY_V5_STORAGE_KEY } from "./lib/unified-profile.mjs";
@@ -47,7 +48,7 @@ type KnowledgeComponent = { id: string; order: number; label: string; family: ke
 type Exercise = { id: string; courseId: ModeId; courseIndex: number; form: Form | null; item: PracticeItem; kcIds: string[]; sourceUrl?: string; prerequisites?: string[] };
 type SkillStats = ReturnType<typeof emptySkillStats>;
 type AssessmentState = LearningAssessment & { migration?: { at: string; changes: { kcId: string; before: SkillStats | null; after: SkillStats | null }[]; unverifiedKcIds: string[]; baselineByKc: Record<string, SkillStats> } };
-type Profile = { version: 7; curriculumVersion: number; date: string; attempted: number; correct: number; streak: number; introducedKcIds: string[]; rotation: number; byKc: Record<string, SkillStats>; assessment: AssessmentState; accessibleCourseIds: string[]; coursePractice: Record<string, string[]>; recentWordKeys: string[]; practiceLog: PracticeLog; legacy: object | null; migration: { message?: string; preserved?: number; archived?: number } | null };
+type Profile = { practiceGoalCourseId?: ModeId; version: 7; curriculumVersion: number; date: string; attempted: number; correct: number; streak: number; introducedKcIds: string[]; rotation: number; byKc: Record<string, SkillStats>; assessment: AssessmentState; accessibleCourseIds: string[]; coursePractice: Record<string, string[]>; recentWordKeys: string[]; practiceLog: PracticeLog; legacy: object | null; migration: { message?: string; preserved?: number; archived?: number } | null };
 type VerbForm = Parameters<typeof conjugate>[2];
 type AnswerVariant = { surface: string; reading: string; note: string };
 type FormSemantics = { concise: string; coreMeaning: string; register?: string; usageNote?: string; contrast?: string };
@@ -258,19 +259,14 @@ const INITIAL_KC_IDS = [GATING_KCS[0].id];
 const ASSESSMENT_CATALOG = assessmentCatalog(KNOWLEDGE.exercises);
 const importOptions = () => ({ today: todayKey(), components: ALL_KCS, legacyComponents: [...VERB_KNOWLEDGE.components, ...ADJECTIVE_KNOWLEDGE.components], exercises: KNOWLEDGE.exercises });
 const kcsOf = (courseId: ModeId) => (KNOWLEDGE.courseKcIds[courseId] ?? []).map(id => KC_BY_ID.get(id)).filter((kc): kc is KnowledgeComponent => Boolean(kc));
-const exercisesFor = (kc: KnowledgeComponent, mode: PracticeMode, profile: Profile, adaptiveCourseIndex = kc.firstCourseIndex) => {
-  const candidates = KNOWLEDGE.exercises.filter(exercise => exercise.kcIds.includes(kc.id) && (mode === "adaptive" ? exercise.courseIndex === adaptiveCourseIndex : exercise.courseId === mode));
-  const ready = mode !== "adaptive" && profile.accessibleCourseIds.includes(mode) ? candidates : filterReadyExercises(candidates, kc.id, KNOWLEDGE.components, profile.byKc);
-  return ready as Exercise[];
-};
+const PRACTICE_PLANNER = createPracticePlanner(KNOWLEDGE);
 function emptyProfile(): Profile { return { version: 7, curriculumVersion: CURRICULUM_VERSION, date: todayKey(), attempted: 0, correct: 0, streak: 0, introducedKcIds: [...INITIAL_KC_IDS], rotation: 0, byKc: {}, assessment: emptyAssessment(), accessibleCourseIds: [], coursePractice: {}, recentWordKeys: [], practiceLog: emptyPracticeLog(), legacy: null, migration: null }; }
 function activateReadyKcs(profile: Profile) {
   const advanced = advanceIntroductions(ALL_KCS, profile.introducedKcIds, profile.byKc);
   return { ...profile, introducedKcIds: advanced.introducedKcIds };
 }
-function makePlan(mode: PracticeMode, profile: Profile, length = SESSION_LENGTH) {
-  const candidates = mode === "adaptive" ? profile.introducedKcIds.map(id => KC_BY_ID.get(id)).filter((kc): kc is KnowledgeComponent => Boolean(kc)) : kcsOf(mode).filter(kc => kc.gating && exercisesFor(kc, mode, profile).length > 0);
-  const planned = planPractice(candidates, profile.byKc, KNOWLEDGE.courseKcIds, { adaptive: mode === "adaptive", length, rotation: profile.rotation });
+function makePlan(mode: PracticeMode, profile: Profile, length = SESSION_LENGTH, goalCourseId: string | null = null) {
+  const planned = PRACTICE_PLANNER.plan(mode, profile, length, goalCourseId);
   if (mode === "adaptive" && planned.review) {
     const reviewCourses = COURSES.filter(course => {
       const summary = summarizeUnifiedCourse(course, kcsOf(course.id), profile.introducedKcIds, profile);
@@ -278,8 +274,8 @@ function makePlan(mode: PracticeMode, profile: Profile, length = SESSION_LENGTH)
     });
     const reviewCourse = reviewCourses[profile.rotation % reviewCourses.length];
     if (reviewCourse) {
-      const reviewKcs = kcsOf(reviewCourse.id).filter(kc => kc.gating).map(kc => ({ ...kc, firstCourseId: reviewCourse.id, firstCourseIndex: COURSES.indexOf(reviewCourse) }));
-      return planPractice(reviewKcs, profile.byKc, KNOWLEDGE.courseKcIds, { length, rotation: Math.floor(profile.rotation / reviewCourses.length) });
+      const reviewKcs = kcsOf(reviewCourse.id).filter(kc => kc.gating && PRACTICE_PLANNER.candidatesFor(kc, profile, reviewCourse.id).length).map(kc => ({ ...kc, firstCourseId: reviewCourse.id, firstCourseIndex: COURSES.indexOf(reviewCourse) }));
+      return planPractice(reviewKcs, profile.byKc, KNOWLEDGE.courseKcIds, { length, rotation: Math.floor(profile.rotation / reviewCourses.length), components: ALL_KCS, candidatesFor: (kc, courseId) => PRACTICE_PLANNER.candidatesFor(kc, profile, courseId) });
     }
   }
   return planned;
@@ -289,14 +285,20 @@ function verificationFor(mode: PracticeMode, profile: Profile, seed = 0) {
 }
 
 const browserStorage = () => window.localStorage;
-function loadProfile(raw: string | null): { profile: Profile; migrated: boolean; invalid: boolean; original?: string | null } {
+function loadProfile(raw: string | null): { profile: Profile; migrated: boolean; invalid: boolean; original?: string | null; correctionNotice?: string } {
   const fresh = activateReadyKcs(emptyProfile());
   let original = raw;
   try {
     const legacyV4 = raw ? null : readPreference(browserStorage, LEGACY_STORAGE_KEY) ?? readPreference(browserStorage, LEGACY_V5_STORAGE_KEY) ?? readPreference(browserStorage, LEGACY_PROFILE_KEY_V4);
     const saved = raw ?? legacyV4;
     original = saved;
-    if (saved) return { profile: activateReadyKcs(parseProfileImport(JSON.parse(saved), importOptions()) as Profile), migrated: Boolean(legacyV4), invalid: false };
+    if (saved) {
+      const originalValue = JSON.parse(saved);
+      const restored = activateReadyKcs(parseProfileImport(originalValue, importOptions()) as Profile);
+      const correction = restored.practiceLog.events.at(-1);
+      const newCorrection = correction?.diagnosis.resolution === "score-correction" && restored.practiceLog.totalEvents > ((originalValue.profile ?? originalValue).practiceLog?.totalEvents ?? 0);
+      return { profile: restored, migrated: Boolean(legacyV4), invalid: false, correctionNotice: newCorrection ? correction.diagnosis.message : undefined };
+    }
     for (const key of [LEGACY_PROFILE_KEY_V3, LEGACY_PROFILE_KEY_V2, "katsuyo-practice-stats-v1"]) {
       const value = readPreference(browserStorage, key);
       if (!value) continue;
@@ -331,10 +333,8 @@ export default function Home() {
   const [planningProfile, setPlanningProfile] = useState<Profile>(() => emptyProfile());
   const [verification, setVerification] = useState<ReturnType<typeof verificationFor>>(null);
   const profileRef = useRef(profile);
-  const firstPlan = makePlan("adaptive", profile, SESSION_LENGTH);
-  const [roundPlan, setRoundPlan] = useState<KnowledgeComponent[]>(firstPlan.plan);
-  const [reviewRound, setReviewRound] = useState(firstPlan.review);
-  const [focusKc, setFocusKc] = useState<KnowledgeComponent | null>(firstPlan.focus);
+  const [roundState, setRoundState] = useState(() => makePlan("adaptive", profile, SESSION_LENGTH));
+  const { focus: focusKc, review: reviewRound, goalCourseId } = roundState;
   const [questionIndex, setQuestionIndex] = useState(0);
   const [roundOffset, setRoundOffset] = useState(0);
   const [usedQuestionKeys, setUsedQuestionKeys] = useState<string[]>([]);
@@ -359,6 +359,7 @@ export default function Home() {
   const [acceptedVariant, setAcceptedVariant] = useState<AnswerVariant | null>(null);
   const [independentResult, setIndependentResult] = useState(true);
   const [migrationNotice, setMigrationNotice] = useState(false);
+  const [correctionNotice, setCorrectionNotice] = useState<string | null>(null);
   const [progressOpen, setProgressOpen] = useState(false);
   const [progressView, setProgressView] = useState<"course" | "atomic" | "pending" | "log">("course");
   const [transferNotice, setTransferNotice] = useState<{ kind: "success" | "error"; text: string } | null>(null);
@@ -383,38 +384,23 @@ export default function Home() {
   const savingRef = useRef(false);
   const gradedRef = useRef(false);
   const roundQuestions = useMemo(() => {
-    const roundFocus = roundPlan[0] ?? focusKc;
-    const allowedIds = new Set(ALL_KCS.map((kc) => kc.id));
-    const available = mode === "adaptive"
-      ? balanceComponentsForCourse(roundFocus, planningProfile.introducedKcIds.map((id) => KC_BY_ID.get(id)).filter((kc): kc is KnowledgeComponent => Boolean(kc && allowedIds.has(kc.id))), roundFocus ? KNOWLEDGE.courseKcIds[roundFocus.firstCourseId] ?? [] : []) as KnowledgeComponent[]
-      : kcsOf(mode).filter((kc) => kc.gating);
-    const assigned = assignPracticeExercises(roundPlan, {
-      seed: seed + planningProfile.rotation,
-      byKc: planningProfile.byKc,
-      recentWordKeys: planningProfile.recentWordKeys,
-      alternativesFor: (preferred: KnowledgeComponent, index: number) => {
-        const others = available.filter((item) => item.id !== preferred.id);
-        return others.length ? [...others.slice(index % others.length), ...others.slice(0, index % others.length)] : [];
-      },
-      candidatesFor: (item: KnowledgeComponent) => exercisesFor(item, mode, planningProfile, roundFocus?.firstCourseIndex),
-      usedKeys: usedQuestionKeys,
-      usedWordKeys,
-    }) as { item: KnowledgeComponent; candidate: Exercise }[];
+    const assigned = PRACTICE_PLANNER.assign(roundState, planningProfile, { seed, usedKeys: usedQuestionKeys, usedWordKeys }) as { item: KnowledgeComponent; candidate: Exercise }[];
     if (verification?.exercise && assigned.length) {
       const candidate = verification.exercise as Exercise;
       const focusId = [...candidate.kcIds].reverse().find(id => KC_BY_ID.get(id)?.gating) ?? candidate.kcIds[0];
       assigned[0] = { item: KC_BY_ID.get(focusId) ?? assigned[0].item, candidate };
     }
     return assigned;
-  }, [focusKc, mode, planningProfile, roundPlan, seed, usedQuestionKeys, usedWordKeys, verification]);
+  }, [planningProfile, roundState, seed, usedQuestionKeys, usedWordKeys, verification]);
   const currentQuestion = roundQuestions[questionIndex];
   const targetKc = currentQuestion?.item ?? focusKc ?? ALL_KCS.find((kc) => kc.gating) ?? GATING_KCS[0];
-  const exercise = currentQuestion?.candidate ?? exercisesFor(targetKc, mode, profile)[0] ?? KNOWLEDGE.exercises[0];
+  const exercise = currentQuestion?.candidate ?? PRACTICE_PLANNER.candidatesFor(targetKc, planningProfile, goalCourseId ?? targetKc.firstCourseId)[0] ?? KNOWLEDGE.exercises[0];
   const course = COURSES[exercise.courseIndex];
   const item = exercise.item;
   const activeVerification = verification?.exercise?.id === exercise.id ? verification : null;
   const practiceDomain = item.domain;
   const form = exercise.form;
+  const targetLabel = form && item.domain === "adjective" ? adjectiveTargetLabel(item, form) : form ? FORM_LABELS[form] : course.title;
   const sourceCourse = sourceForForm(item.domain, form);
   const formSemantics = (form ? semanticsForForm(form) : null) as FormSemantics | null;
   const derivation = deriveFor(item, form);
@@ -437,7 +423,7 @@ export default function Home() {
     const next = makePlan("adaptive", loaded.profile, SESSION_LENGTH);
     const frame = requestAnimationFrame(() => {
       setProfile(loaded.profile); setPlanningProfile(loaded.profile); setVerification(verificationFor("adaptive", loaded.profile));
-      setRoundPlan(next.plan); setFocusKc(next.focus); setReviewRound(next.review); setMigrationNotice(loaded.migrated); setLoading(false);
+      setRoundState(next); setMigrationNotice(loaded.migrated); setCorrectionNotice(loaded.correctionNotice ?? null); setLoading(false);
       if (snapshot.error) setStorageNotice("无法读取浏览器存储。练习记录将暂存在本页，请在关闭前导出备份。");
       if (loaded.invalid) {
         blockedRef.current = true; setBlocked(true); setInvalidRaw(loaded.original ?? null);
@@ -474,14 +460,15 @@ export default function Home() {
 
   function logTarget(step?: DiagnosticStep, attempt?: DiagnosticAttempt): LogTarget {
     return { surface: step?.surface ?? item.surface, reading: step?.reading ?? item.reading, form: step?.form ?? form,
-      label: step?.kind === "classification" ? "动词类别" : step?.targetLabel ?? ((step?.form ?? form) ? FORM_LABELS[(step?.form ?? form)!] : "词类判断"),
+      label: step?.kind === "classification" ? "动词类别" : step?.targetLabel ?? (step ? FORM_LABELS[step.form] : form ? targetLabel : "词类判断"),
       kind: step?.kind ?? (step ? "conjugation" : "question"), kcIds: step?.kcIds ?? derivation.requiredKcIds,
       answers: step?.answers ?? derivation.acceptedVariants, readings: step?.readings ?? deriveFor(readingItem, form).acceptedVariants,
       stepIndex: attempt?.index ?? null, totalSteps: attempt?.total ?? 0, nextTotalSteps: attempt?.nextTotal ?? 0 };
   }
   function withPracticeEvent(before: Profile, after: Profile, event: Omit<Parameters<typeof appendPracticeEvent>[2], "questionId" | "exercise" | "hintUsed">): Profile {
     loggedQuestionId.current ??= practiceEventId();
-    return appendPracticeEvent(before, after, { ...event, questionId: loggedQuestionId.current, hintUsed: event.type === "hint" || hint.used,
+    const progress = ["typo", "invalid"].includes(event.outcome) ? after : { ...after, practiceGoalCourseId: goalCourseId ?? course.id };
+    return appendPracticeEvent(before, progress, { ...event, questionId: loggedQuestionId.current, hintUsed: event.type === "hint" || hint.used,
       exercise: { id: exercise.id, courseId: course.id, form, surface: item.surface, reading: item.reading, wordClass: item.class, domain: item.domain } },
     id => KC_BY_ID.get(id)?.label ?? id) as Profile;
   }
@@ -596,10 +583,10 @@ export default function Home() {
     const current = profileRef.current;
     const pendingHere = Object.values(current.assessment.pending).some(pending => mode === "adaptive" || pending.courseId === mode);
     if (pendingHere || verification?.exercise) {
-      const next = makePlan(mode, current, SESSION_LENGTH - answeredCount);
+      const next = makePlan(mode, current, SESSION_LENGTH - answeredCount, goalCourseId);
       const consumed = [...new Set([...usedQuestionKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => exerciseKey(candidate))])];
       setUsedWordKeys([...usedWordKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => wordKey(candidate))]);
-      setPlanningProfile(current); setRoundPlan(next.plan); setFocusKc(next.focus); setReviewRound(next.review);
+      setPlanningProfile(current); setRoundState(next);
       setRoundOffset(answeredCount); setUsedQuestionKeys(consumed); setQuestionIndex(0);
       setVerification(verificationFor(mode, current, seed + 1)); setSeed(value => value + 1); resetQuestion();
       return;
@@ -615,11 +602,11 @@ export default function Home() {
         setUnlocked(`${COURSES[introduced.firstCourseIndex].title} · ${introduced.label}`);
       }
       const remaining = SESSION_LENGTH - answeredCount;
-      const next = makePlan(mode, nextProfile, remaining);
-      if (canContinueRound(focusKc, next, nextProfile.byKc, mode === "adaptive")) {
+      const next = makePlan(mode, nextProfile, remaining, goalCourseId);
+      if ((mode !== "adaptive" || next.goalCourseId === goalCourseId) && canContinueRound(focusKc, next, nextProfile.byKc, false)) {
         const consumed = [...new Set([...usedQuestionKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => exerciseKey(candidate))])];
         setUsedWordKeys([...usedWordKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => wordKey(candidate))]);
-        setPlanningProfile(nextProfile); setRoundPlan(next.plan); setFocusKc(next.focus); setReviewRound(next.review); setRoundOffset(answeredCount); setUsedQuestionKeys(consumed); setQuestionIndex(0); setVerification(verificationFor(mode, nextProfile, seed + 1)); setSeed((value) => value + 1); resetQuestion();
+        setPlanningProfile(nextProfile); setRoundState(next); setRoundOffset(answeredCount); setUsedQuestionKeys(consumed); setQuestionIndex(0); setVerification(verificationFor(mode, nextProfile, seed + 1)); setSeed((value) => value + 1); resetQuestion();
         return;
       }
       finishRound();
@@ -628,7 +615,7 @@ export default function Home() {
     setQuestionIndex((value) => value + 1);
     setVerification(null);
     resetQuestion();
-  }, [finishRound, focusKc, mode, probing, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, save, usedQuestionKeys, usedWordKeys, verification, seed]);
+  }, [finishRound, focusKc, goalCourseId, mode, probing, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, save, usedQuestionKeys, usedWordKeys, verification, seed]);
   const classChoices = useMemo(() => practiceDomain === "verb" ? ["ichidan", "godan", "irregular"] as PracticeClass[] : ["i", "na"] as PracticeClass[], [practiceDomain]);
   useLayoutEffect(() => {
     // Commit the new question/feedback state before it can receive input. The
@@ -684,9 +671,9 @@ export default function Home() {
     return true;
   }
 
-  function applyRound(nextMode: PracticeMode, current: Profile) {
-    const next = makePlan(nextMode, current, SESSION_LENGTH);
-    setPlanningProfile(current); setMode(nextMode); setRoundPlan(next.plan); setFocusKc(next.focus); setReviewRound(next.review);
+  function applyRound(nextMode: PracticeMode, current: Profile, preferredCourseId: string | null = null) {
+    const next = makePlan(nextMode, current, SESSION_LENGTH, preferredCourseId);
+    setPlanningProfile(current); setMode(nextMode); setRoundState(next);
     setVerification(verificationFor(nextMode, current, seed + 1));
     setQuestionIndex(0); setRoundOffset(0); setUsedQuestionKeys([]); setUsedWordKeys([]); setSessionCorrect(0); setFinished(false); setUnlocked(null);
     setSeed((value) => value + 1); resetQuestion();
@@ -694,7 +681,7 @@ export default function Home() {
   async function start(nextMode: PracticeMode) {
     if (nextMode !== "adaptive" && !summarizeUnifiedCourse(COURSES.find(c => c.id === nextMode)!, kcsOf(nextMode), profileRef.current.introducedKcIds, profileRef.current).unlocked) return;
     const current = activateReadyKcs({ ...profileRef.current, rotation: profileRef.current.rotation + 1 });
-    if (await save(current)) applyRound(nextMode, current);
+    if (await save(current)) applyRound(nextMode, current, nextMode === mode ? goalCourseId : null);
   }
   function changeCourseFilter(value: "all" | PracticeDomain) {
     setCourseFilter(value); writePreference(browserStorage, PRACTICE_DOMAIN_KEY, value);
@@ -759,7 +746,10 @@ export default function Home() {
   const masteredKcCount = introducedKcs.filter((item) => isComponentMastered(item, profile.byKc)).length;
   const activeRouteComplete = pendingRetests.length === 0 && activeKcs.filter((kc) => kc.gating).every((kc) => isComponentMastered(kc, profile.byKc));
   const visibleCourses = COURSES.filter(c => courseFilter === "all" || c.domain === courseFilter);
-  const focusDisplayLabel = activeVerification ? course.title : mode === "adaptive" && focusKc ? COURSES[focusKc.firstCourseIndex].title : course.title;
+  const goalCourse = COURSES.find(value => value.id === goalCourseId) ?? course;
+  const recovery = !activeVerification && !reviewRound && focusKc && focusKc.firstCourseId !== goalCourse.id;
+  const displayedCourse = activeVerification ? course : goalCourse;
+  const focusDisplayLabel = displayedCourse.title;
   const selectedWeakestKc = selectFocus(mode === "adaptive" ? introducedKcs : kcsOf(mode).filter((kc) => kc.gating), profile.byKc) as KnowledgeComponent | null;
   const weakestKc = (mode === "adaptive" && activeRouteComplete) || (selectedWeakestKc && isComponentMastered(selectedWeakestKc, profile.byKc)) ? null : selectedWeakestKc;
   const weakestMissingCoverage = weakestKc?.coverageKcIds.filter((id) => (profile.byKc[id]?.correct ?? 0) < 1).map((id) => KC_BY_ID.get(id)?.label).filter(Boolean) ?? [];
@@ -823,9 +813,9 @@ export default function Home() {
       <nav className="mode-list" aria-label="专项课程">{visibleCourses.map((item) => { const summary = courseSummary(item); return <button type="button" className={mode === item.id ? "active" : ""} disabled={!summary.unlocked} onClick={() => start(item.id)} key={item.id}><span>{item.order !== undefined ? item.order + 1 : item.lesson}</span><span className="course-name"><small>{item.stageLabel}</small>{item.title}</span><i>{summary.status}</i></button>; })}</nav>
 
       <button type="button" className="reset-progress" onClick={resetProgress}>清除本地进度</button>
-    </aside><section className="exercise-stage">{migrationNotice && <div className="migration-notice" role="status"><p><strong>独立评估已启用</strong><span>辅助练习与独立掌握分开记录。{profile.assessment.migration ? ` 已依据可核验日志修正 ${profile.assessment.migration.changes.length} 个知识点，并恢复 ${pendingRetests.length} 项待复测。无法核验来源的历史记录保留，不当作新增独立成绩。` : "学习进度已保留，未确认的整题表现将安排独立复测。"}</span></p><button type="button" onClick={() => setMigrationNotice(false)} aria-label="关闭迁移说明">知道了</button></div>}{!finished ? <><div className="stage-meta"><span>第 {questionNumber} 题 / {SESSION_LENGTH}</span><div className="progress-track"><span style={{ width: `${questionNumber / SESSION_LENGTH * 100}%` }} /></div><button type="button" className="quiet-button" onClick={finishRound}>结束本轮</button></div>
-      <div className="focus-panel"><div><span>{activeVerification?.kind === "retest" ? "独立复测" : activeVerification?.kind === "rehearsal" ? "巩固练习" : activeVerification?.kind === "spacing" ? "间隔练习" : reviewRound ? "巩固训练" : mode === "adaptive" ? "本轮重点" : "专项课程"}</span><strong>{focusDisplayLabel}</strong><small>本课达标 {courseSummary(course).mastered} / {courseSummary(course).total}{courseSummary(course).pendingCount > 0 && ` · 待复测 ${courseSummary(course).pendingCount} 项`}</small>{activeVerification?.kind === "retest" && <small>请独立完成整题；使用提示会继续保留待复测。</small>}{activeVerification?.kind === "spacing" && <small>先练其他目标，再检查此前未独立完成的变化。</small>}{activeVerification?.kind === "rehearsal" && <small>同规则可用词较少，先巩固，再换词复测；本题不计独立掌握。</small>}</div><div className="confidence-meter"><span style={{ width: `${focusPercent}%` }} /></div><b>{focusPercent}%</b></div>
-      <article className="exercise-card" key={`${exercise.id}-${questionIndex}-${seed}`}><div className="question-kicker"><span>Yokubi · L{sourceCourse?.lesson ?? course.lesson}</span><span>{form ? FORM_LABELS[form] : course.title}</span>{result && <span>{KC_FAMILY_LABELS[targetKc.family]} · {targetKc.label}</span>}</div><p className="instruction">{form ? <>请把下面的{practiceDomain === "verb" ? "动词" : "形容词"}变为<strong>{FORM_LABELS[form]}</strong></> : `请选择这个${practiceDomain === "verb" ? "动词" : "形容词"}所属的类别`}</p>{formSemantics && <p className="semantic-brief"><span>表达作用</span><span>{formSemantics.concise}</span></p>}<div className="word-display"><ruby>{item.surface}<rt>{item.reading}</rt></ruby><span>{item.meaning}</span></div>
+    </aside><section className="exercise-stage">{correctionNotice && <div className="migration-notice" role="status"><p><strong>旧归因记录已校正</strong><span>{correctionNotice}</span></p><button type="button" onClick={() => setCorrectionNotice(null)} aria-label="关闭校正说明">知道了</button></div>}{migrationNotice && <div className="migration-notice" role="status"><p><strong>独立评估已启用</strong><span>辅助练习与独立掌握分开记录。{profile.assessment.migration ? ` 已依据可核验日志修正 ${profile.assessment.migration.changes.length} 个知识点，并恢复 ${pendingRetests.length} 项待复测。无法核验来源的历史记录保留，不当作新增独立成绩。` : "学习进度已保留，未确认的整题表现将安排独立复测。"}</span></p><button type="button" onClick={() => setMigrationNotice(false)} aria-label="关闭迁移说明">知道了</button></div>}{!finished ? <><div className="stage-meta"><span>第 {questionNumber} 题 / {SESSION_LENGTH}</span><div className="progress-track"><span style={{ width: `${questionNumber / SESSION_LENGTH * 100}%` }} /></div><button type="button" className="quiet-button" onClick={finishRound}>结束本轮</button></div>
+      <div className="focus-panel"><div><span>{activeVerification?.kind === "retest" ? "独立复测" : activeVerification?.kind === "rehearsal" ? "巩固练习" : activeVerification?.kind === "spacing" ? "间隔练习" : recovery ? "补基础" : reviewRound ? "巩固训练" : mode === "adaptive" ? "本轮重点" : "专项课程"}</span><strong>{focusDisplayLabel}</strong><small>本课达标 {courseSummary(displayedCourse).mastered} / {courseSummary(displayedCourse).total}{courseSummary(displayedCourse).pendingCount > 0 && ` · 待复测 ${courseSummary(displayedCourse).pendingCount} 项`}</small>{recovery && <small>{roundState.globalRecovery ? "先恢复之前退步的知识点，再继续本课。" : "先复习本课需要的基础规则，再继续后续变化。"}{course.id !== goalCourse.id && ` 本题来自${course.title}。`}</small>}{activeVerification?.kind === "retest" && <small>请独立完成整题；使用提示会继续保留待复测。</small>}{activeVerification?.kind === "spacing" && <small>先练其他目标，再检查此前未独立完成的变化。</small>}{activeVerification?.kind === "rehearsal" && <small>同规则可用词较少，先巩固，再换词复测；本题不计独立掌握。</small>}</div><div className="confidence-meter"><span style={{ width: `${focusPercent}%` }} /></div><b>{focusPercent}%</b></div>
+      <article className="exercise-card" data-form={form ?? ""} key={`${exercise.id}-${questionIndex}-${seed}`}><div className="question-kicker"><span>Yokubi · L{sourceCourse?.lesson ?? course.lesson}</span><span>{targetLabel}</span>{result && <span>{KC_FAMILY_LABELS[targetKc.family]} · {targetKc.label}</span>}</div><p className="instruction">{form ? <>请把下面的{practiceDomain === "verb" ? "动词" : "形容词"}变为<strong>{targetLabel}</strong></> : `请选择这个${practiceDomain === "verb" ? "动词" : "形容词"}所属的类别`}</p>{formSemantics && <p className="semantic-brief"><span>表达作用</span><span>{formSemantics.concise}</span></p>}<div className="word-display"><ruby>{item.surface}<rt>{item.reading}</rt></ruby><span>{item.meaning}</span></div>
       {!form ? <div className={`class-options ${classChoices.length === 2 ? "two-options" : ""}`}>{classChoices.map((choice, index) => <button type="button" key={choice} disabled={Boolean(result)} data-class-shortcut={String(index + 1)} aria-keyshortcuts={String(index + 1)} className={`${selectedClass === choice ? "selected" : ""} ${result && choice === item.class ? "choice-correct" : ""} ${selectedClass === choice && result === "incorrect" ? "choice-wrong" : ""}`} onClick={() => chooseClass(choice)}><small>{choice === "ichidan" ? "る脱落" : choice === "godan" ? "词尾移动" : choice === "irregular" ? "固定变化" : choice === "i" ? "词尾い变化" : "な／だ接续"}</small><strong>{classLabelFor(choice)}</strong><kbd aria-hidden="true">{index + 1}</kbd></button>)}</div> : <form onSubmit={submit}><label htmlFor="answer">你的答案</label><div className={`answer-row ${result ?? ""}`}><input ref={inputRef} id="answer" lang="ja" onKeyDown={(event) => { if (event.key === "Enter" && (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229)) event.preventDefault(); }} autoComplete="off" disabled={Boolean(result)} value={answer} aria-describedby={typoNotice ? "typo-notice" : undefined} onChange={(e) => { setAnswer(e.target.value); setTypoNotice(false); setInputNotice(null); }} placeholder="输入日语……" /><button type="submit" disabled={!answer.trim() || Boolean(result)}>检查答案</button></div><p className="answer-note">汉字或全假名答案均可</p>{inputNotice && <p className="hint-box" role="status">{inputNotice}</p>}{typoNotice && <p id="typo-notice" className="hint-box" role="status">不需要变化的部分与原词不一致，可能是输入笔误。请对照原词修改后重新提交；本次未计入作答或知识点统计。</p>}</form>}
       {!result && <div className="assist-row"><button type="button" className="text-button" onClick={showHint}>{hintShown ? "收起提示" : "看一条提示"}</button><button type="button" className="text-button" onClick={() => grade(false, true)}>不知道</button></div>}{hintShown && !result && <p className="hint-box">{hintFor(item, form)}</p>}
       {result && <div className={`feedback ${result}`} role="status"><div className="feedback-copy"><strong>{feedbackTitle}</strong><p>{feedbackMessage}</p></div><div className="knowledge-tags" aria-label="本题涉及的知识点">{derivation.requiredKcIds.map((id: string) => KC_BY_ID.get(id)).filter((kc: KnowledgeComponent | undefined): kc is KnowledgeComponent => Boolean(kc)).map((kc: KnowledgeComponent) => <span className={kc.id === evidenceKcId ? "target" : confirmedKcIds.includes(kc.id) ? "confirmed" : ""} key={kc.id}>{confirmedKcIds.includes(kc.id) && "✓ 已确认 · "}{KC_FAMILY_LABELS[kc.family]} · {kc.label}</span>)}</div>{confirmedKcIds.length > 0 && <p className="partial-evidence-note">{independentResult ? "原题中可确认的局部规则单独记录；未确认的知识点不扣分。整题仍计为错误，保留待复测。" : "本次有帮助或未满足复测条件，可确认的局部规则只记录为辅助练习。独立掌握度保持不变。"}</p>}{probing && <DiagnosticPractice key={`${exercise.id}-${questionIndex}-${seed}`} item={item} steps={diagnosticSteps} onEvidence={saveStepEvidence} onDone={finishDiagnosticPractice} />}<div hidden={probing}><div className="rule-line"><span><FuriganaText surface={item.surface} reading={item.reading} /></span><b>→</b>{!form ? <span className="answer-emphasis">{classLabelFor(item.class)}</span> : acceptedVariant ? <span className="answer-emphasis"><FuriganaText surface={acceptedVariant.surface} reading={acceptedVariant.reading} /></span> : detailSteps ? detailSteps.map((step: string, i: number) => <Fragment key={`${step}-${i}`}><span className={i === detailSteps.length - 1 ? "answer-emphasis" : ""}><FuriganaText surface={step} reading={readingSteps?.[i] ?? step} /></span>{i < detailSteps.length - 1 && <b>→</b>}</Fragment>) : detail.parts.map((part: string, i: number) => <span className={i === detail.parts.length - 1 ? "answer-emphasis" : ""} key={`${part}-${i}`}><FuriganaText surface={part} reading={readingParts[i] ?? part} />{i < detail.parts.length - 1 && <b className="joiner">＋</b>}</span>)}</div>{acceptedVariant && form && <p className="accepted-variant-note">{acceptedVariant.note && <span>{acceptedVariant.note}</span>}<span>{form === "causativePassive" || form.startsWith("causativePassive") ? "完整形式：" : "本站默认展示："}<FuriganaText surface={detail.answer} reading={readingDetail?.answer ?? detail.answer} /></span></p>}{result === "incorrect" && form && <p className="your-answer">你的答案：{answer || "—"}</p>}<SemanticDetails semantics={formSemantics} /></div><div className="feedback-meta"><span>{feedbackMeta}</span><a href={exercise.sourceUrl ?? course.url} target="_blank" rel="noreferrer">查看本题参考课程 ↗</a></div><button type="button" className="next-button" disabled={probing} onClick={nextQuestion}>{probing ? "请完成或跳过拆步" : questionNumber === SESSION_LENGTH ? "查看本轮结果" : focusComplete ? "继续" : "下一题"}{!probing && <span><kbd>Enter</kbd> →</span>}</button></div>}{!result && <p className="keyboard-hint">{!form ? <>{classChoices.map((_, index) => <Fragment key={index}><kbd>{index + 1}</kbd>{" "}</Fragment>)}选择答案</> : <><kbd>Enter</kbd> 检查答案</>}</p>}</article></> :

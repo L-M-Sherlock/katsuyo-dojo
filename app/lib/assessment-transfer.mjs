@@ -2,6 +2,7 @@ import { emptySkillStats } from './adaptive.mjs';
 import { parsePracticeLog } from './practice-log.mjs';
 import { assessmentTarget, emptyAssessment, recordAssessmentExposure, recordAssistedAttempt, recordHintExposure, recordIndependentAttempt, retestStatus } from './learning-assessment.mjs';
 import { evidenceCondition, isLocalPracticeRule, scoreLearningEvidence } from './learning-evidence.mjs';
+import { isFalseNaraClassification } from './score-corrections.mjs';
 
 const STAT_KEYS = ['attempts', 'correct', 'filteredAccuracy', 'confidence', 'bestConfidence', 'cleanTimeTotal', 'cleanTimeCount'];
 const realOutcomes = new Set(['correct', 'incorrect', 'revealed']);
@@ -300,7 +301,7 @@ export function restoreLearningAssessment(sourceProfile, { components, exercises
         }
         assessment = recordIndependentAttempt(assessment, { exercise, questionId: event.questionId, at: event.at,
           correct: event.outcome === 'correct', independent: physical.independent, reason: event.outcome === 'revealed' ? 'revealed' : physical.independent ? event.outcome : physical.source,
-          failedKcIds: event.outcome === 'incorrect' && reliable.has(event.diagnosis.kcId)
+          failedKcIds: event.outcome === 'incorrect' && !isFalseNaraClassification(event) && reliable.has(event.diagnosis.kcId)
             && event.changes.some(change => change.kcId === event.diagnosis.kcId && change.after.correct === (change.before?.correct ?? 0)) ? [event.diagnosis.kcId] : [], singleWord });
         if (support.independent) knownIndependentEvents++; else knownAssistedEvents++;
       }
@@ -310,7 +311,7 @@ export function restoreLearningAssessment(sourceProfile, { components, exercises
       assessment = recordAssessmentExposure(assessment, { exercise, questionId: event.questionId, eventId: event.id, at: event.at });
       knownAssistedEvents++;
     } else unknownEvents++;
-    const actualScope = exercise ? event.changes.map(change => change.kcId).filter(id => reliable.has(id)) : [];
+    const actualScope = exercise ? event.changes.map(change => change.kcId).filter(id => reliable.has(id) && !(id === 'adj.class.i' && isFalseNaraClassification(event))) : [];
     const previous = { byKc, independentByKc: assessment.independentByKc, assistedByKc: assessment.assistedByKc };
     const scored = scoreLearningEvidence(previous, { kcIds: actualScope, form: event.type === 'question' ? event.exercise.form : event.target.form,
       correct: event.outcome === 'correct', failedKcId: actualScope.includes(event.diagnosis.kcId) ? event.diagnosis.kcId : null,

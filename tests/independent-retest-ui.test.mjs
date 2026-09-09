@@ -11,14 +11,13 @@ import { createAnswerAnalyzer } from '../app/lib/answer-analysis.mjs';
 import { conjugate } from '../app/lib/conjugation.mjs';
 import { conjugateAdjective } from '../app/lib/adjective-conjugation.mjs';
 
-// Use the actual page. The extra export exposes only labels for identifying a
-// rendered form; it changes no state, scoring, planning, or event behavior.
+// Use the actual page and its rendered data-form to identify questions.
 const pageUrl = new URL('../app/page.tsx', import.meta.url);
-const compiled = ts.transpileModule(`${await readFile(pageUrl, 'utf8')}\nexport { FORM_LABELS as TEST_FORM_LABELS };`, {
+const compiled = ts.transpileModule(await readFile(pageUrl, 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
 }).outputText.replace(/from ["']([^"']+)["']/g, (_match, specifier) =>
   `from ${JSON.stringify(specifier.startsWith('.') ? new URL(specifier, pageUrl).href : import.meta.resolve(specifier))}`);
-const { default: Page, KNOWLEDGE, ALL_KCS, TEST_FORM_LABELS } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
+const { default: Page, KNOWLEDGE, ALL_KCS } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
 
 const { JSDOM } = await import('jsdom');
 const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost/katsuyo-dojo/', pretendToBeVisual: true });
@@ -98,8 +97,9 @@ function currentExercise(view) {
   const surface = ruby.firstChild.textContent;
   const label = view.container.querySelector('.question-kicker')?.children[1]?.textContent;
   const isClassQuestion = !view.container.querySelector('#answer');
+  const formId = view.container.querySelector('.exercise-card').getAttribute('data-form');
   const exercise = KNOWLEDGE.exercises.find(candidate => candidate.item.surface === surface &&
-    (isClassQuestion ? candidate.form === null : TEST_FORM_LABELS[candidate.form] === label));
+    (isClassQuestion ? candidate.form === null : candidate.form === formId));
   assert.ok(exercise, `${surface}/${label} identifies a current catalog original`);
   return exercise;
 }
@@ -529,4 +529,118 @@ test('independent page clears pending only through the explicit all-progress res
   view = await mount();
   assert.deepEqual(saved().assessment.pending, {});
   assert.ok(view.container.querySelector('.word-display'));
+});
+
+for (const mode of ['adaptive', 'giving']) test(`giving recovery in ${mode} uses real classification and completes the retained course`, async () => {
+  const fixture = JSON.parse(await readFile(new URL('./fixtures/giving-recovery-profile.json', import.meta.url), 'utf8')).profile;
+  storage.setItem(KEY, JSON.stringify({ ...fixture, date: dateKey() }));
+  let view = await mount();
+  if (mode === 'giving') {
+    fireEvent.click([...view.container.querySelectorAll('.mode-list button')].find(button => button.textContent.includes('て形授受补助')));
+    await waitFor(() => assert.ok(view.container.querySelector('.mode-list button.active')?.textContent.includes('て形授受补助')));
+  }
+  const { summarizeUnifiedCourse } = await import('../app/lib/unified-progress.mjs');
+  const giving = UNIFIED_COURSES.find(c => c.id === 'giving');
+  const byId = new Map(ALL_KCS.map(kc => [kc.id, kc]));
+  const components = KNOWLEDGE.courseKcIds.giving.map(id => byId.get(id));
+  const status = () => summarizeUnifiedCourse(giving, components, saved().introducedKcIds, saved());
+  const baselineAttempts = saved().attempted;
+  const seen = [];
+  let resumed = false;
+  assert.equal(status().mastered, 18);
+  for (let i = 0; i < 24 && !status().complete; i++) {
+    assert.match(view.container.querySelector('.focus-panel strong').textContent, /て形授受补助/);
+    const exercise = currentExercise(view);
+    seen.push(exercise);
+    if (exercise.form === null) {
+      assert.match(view.container.querySelector('.focus-panel').textContent, /补基础/);
+      assert.doesNotMatch(view.container.querySelector('.focus-panel').textContent, /一段动词|五段动词|不规则动词/, 'the independent classification answer must not be disclosed');
+      assert.ok(['ichidan','i'].includes(exercise.item.class));
+    }
+    await answerCorrect(view);
+    if (status().complete) break;
+    if (mode === 'adaptive' && !resumed && saved().byKc['apply.tekureru.continuation']?.confidence === 1) {
+      assert.equal(saved().practiceGoalCourseId, 'giving');
+      cleanup(); view = await mount(); resumed = true;
+      assert.match(view.container.querySelector('.focus-panel strong').textContent, /て形授受补助/);
+      continue;
+    }
+    fireEvent.click(view.container.querySelector('.next-button'));
+    await waitFor(() => assert.ok(view.container.querySelector('.completion-card') || !view.container.querySelector('.feedback')));
+    if (view.container.querySelector('.completion-card')) {
+      fireEvent.click(view.container.querySelector('.restart-button'));
+      await waitFor(() => assert.ok(view.container.querySelector('.exercise-card')));
+    }
+  }
+  if (mode === 'adaptive') assert.equal(resumed, true);
+  assert.equal(status().complete, true, `stalled after ${seen.length} questions`);
+  assert.equal(status().mastered, 25);
+  assert.equal(saved().attempted, baselineAttempts + seen.length);
+  assert.equal(seen.filter(exercise => exercise.form === null && exercise.item.domain === 'verb').length, 2);
+  assert.equal(seen.filter(exercise => exercise.form === null && exercise.item.domain === 'adjective').length, mode === 'adaptive' ? 3 : 0);
+  for (const form of ['temorauPast', 'temorauNegativePast', 'tekureruPast', 'tekureruNegative', 'tekureruNegativePast']) assert.ok(seen.some(e => e.form === form), form);
+  assert.ok(saved().byKc['class.ichidan'].confidence === 1);
+  assert.ok(saved().practiceLog.events.every(e => e.type === 'question' && e.support.independent));
+  assert.deepEqual(saved().assessment.pending, {});
+  console.log(`giving recovery ${mode}: ${seen.length} independent correct originals`);
+});
+
+test('a genuine cross-course classification regression is scheduled before the retained new course without revealing the answer', async () => {
+  const initial = profile({ practiceGoalCourseId: 'direction' });
+  initial.byKc['adj.class.i'] = { ...stats, attempts: 6, filteredAccuracy: .8, confidence: .8 / .85, bestConfidence: 1 };
+  for (const id of ['apply.teiku.continuation', 'apply.tekuru.continuation']) {
+    initial.byKc[id] = { ...stats, attempts: 0, correct: 0, filteredAccuracy: null, confidence: 0, bestConfidence: 0 };
+    for (const facet of ALL_KCS.find(kc => kc.id === id).coverageKcIds) initial.byKc[facet] = { ...initial.byKc[id] };
+  }
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  for (let i = 0; i < 2; i++) {
+    const e = currentExercise(view);
+    assert.equal(e.courseId, 'adjectiveClassify'); assert.equal(e.form, null);
+    assert.match(view.container.querySelector('.focus-panel').textContent, /之前退步/);
+    assert.doesNotMatch(view.container.querySelector('.focus-panel').textContent, /い形容词|な形容词/);
+    await answerCorrect(view); await next(view);
+  }
+  assert.equal(saved().byKc['adj.class.i'].confidence, 1);
+  assert.equal(saved().practiceGoalCourseId, 'direction');
+  assert.equal(currentExercise(view).courseId, 'direction');
+});
+
+test('the actual page corrects an old nara classification penalty and exports an idempotent 6/6 profile', async () => {
+  const { oldVersionedNaraProfile } = await import('./helpers/nara-profile.mjs');
+  const old = oldVersionedNaraProfile(KNOWLEDGE);
+  const initial = profile({ ...old, date: dateKey(), byKc: { ...profile().byKc, ...old.byKc } });
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  assert.ok(view.getByText('旧归因记录已校正'));
+  const exported = (await exportThroughUI(view)).profile;
+  assert.equal(exported.byKc['adj.class.i'].confidence, 1);
+  assert.equal(exported.assessment.independentByKc['adj.class.i'], undefined);
+  assert.equal(exported.practiceLog.events.at(-1).diagnosis.resolution, 'score-correction');
+  assert.deepEqual(exported.practiceLog.events.slice(0, initial.practiceLog.events.length), initial.practiceLog.events);
+  const { summarizeUnifiedCourse } = await import('../app/lib/unified-progress.mjs');
+  const kcs = KNOWLEDGE.courseKcIds.adjectiveIBase.map(id => ALL_KCS.find(kc => kc.id === id));
+  assert.equal(summarizeUnifiedCourse(UNIFIED_COURSES.find(c => c.id === 'adjectiveIBase'), kcs, exported.introducedKcIds, exported).mastered, 6);
+  cleanup(); storage.setItem(KEY, JSON.stringify(exported));
+  const reloaded = await mount();
+  assert.equal(reloaded.queryByText('旧归因记录已校正'), null);
+  const repeated = (await exportThroughUI(reloaded)).profile;
+  assert.deepEqual(repeated, exported);
+});
+
+test('the conditional question specifies ba and a nara answer never penalizes classification or conditional rules', async () => {
+  const initial = profile({ practiceGoalCourseId: 'adjectiveConditional' });
+  initial.byKc['adj.suffix.i-ba'] = { ...stats, attempts: 0, correct: 0, filteredAccuracy: null, confidence: 0, bestConfidence: 0 };
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount(), exercise = currentExercise(view);
+  assert.equal(exercise.form, 'adjectiveBa'); assert.equal(exercise.item.class, 'i');
+  assert.match(view.container.querySelector('.instruction').textContent, /ば条件形/);
+  submitText(view, exercise.item.reading + 'なら');
+  await waitFor(() => assert.equal(saved().attempted, 1));
+  assert.deepEqual(saved().byKc, initial.byKc);
+  const event = saved().practiceLog.events.at(-1);
+  assert.equal(event.target.label, 'ば条件形');
+  assert.equal(event.diagnosis.kcId, null); assert.equal(event.diagnosis.resolution, 'target-form');
+  assert.match(view.container.querySelector('.feedback-copy').textContent, /い形容词も|い形容词也/);
+  assert.doesNotMatch(view.container.querySelector('.feedback-copy').textContent, /套用了な形容词/);
 });

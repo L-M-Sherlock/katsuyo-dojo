@@ -94,7 +94,12 @@ test('valid variants and existing class or form diagnoses retain their precedenc
     [quiet, 'adjectiveAttributive', 'しずかな'], [quiet, 'adjectiveBa', 'しずかなら'],
     [quiet, 'adjectiveBa', '静かならば'], [quiet, 'adjectiveBa', 'しずかであれば'],
   ]) assert.equal(createAnswerAnalyzer(item, form)(input).kind, 'correct', input);
-  expectConnection(high, 'adjectiveBa', '高いなら', 'adj.class.i');
+  // Reviewed against Japan Foundation's なら grammar: it also attaches to
+  // i-adjectives. Preserve the old input, correct the mistaken class oracle.
+  const nara = createAnswerAnalyzer(high, 'adjectiveBa')('高いなら');
+  assert.equal(nara.diagnosis.kcId, null);
+  assert.equal(nara.diagnosis.targetMismatch, true);
+  assert.deepEqual(nara.diagnosis.confirmedKcIds, []);
   expectConnection(quiet, 'adjectiveNaNegative', '静かくない', 'adj.class.na');
   expectConnection(adjective('いい'), 'adjectiveBa', 'いければ', 'adj.exception.ii-yo');
   expectConnection(quiet, 'adjectiveNaTe', '静かだ', 'adj.suffix.na-te');

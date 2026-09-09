@@ -21,6 +21,21 @@ export function isIiFamily(adjective) {
   return adjective.class === "i" && adjective.iiFamily === true;
 }
 
+// なら also attaches to the plain form of an い-adjective. Choosing it
+// instead of ば is not evidence that the learner classified the word as な.
+export function isIAdjectiveNaraAlternative(adjective, form, answer, normalize = value => value) {
+  if (adjective.class !== 'i' || form !== 'adjectiveBa') return false;
+  const bases = [adjective.surface, adjective.reading].filter(Boolean);
+  if (isIiFamily(adjective)) bases.push(...bases.map(base => `${base.slice(0, -2)}よい`));
+  return bases.some(base => ['なら', 'ならば'].some(tail => normalize(answer) === normalize(base + tail)));
+}
+
+export function adjectiveTargetLabel(adjective, form) {
+  return form === 'adjectiveBa' && adjective.class === 'i' ? 'ば条件形' : ADJECTIVE_FORM_LABELS[form];
+}
+
+const NARA_TARGET_MESSAGE = '你写的是「なら」条件表达，い形容词也可以这样接续。本题要求ば条件形；这里不能据此判断词类或某条变化规则有误。';
+
 function iStem(word, iiFamily = false) {
   return iiFamily ? `${word.slice(0, -2)}よ` : word.slice(0, -1);
 }
@@ -375,7 +390,9 @@ export function adjectiveDiagnosticCandidates(adjective, form) {
         surface: adjective.class === "na" && !adjective.surface.endsWith("い") ? `${adjective.surface}い` : adjective.surface };
       const accepted = new Set(acceptedAdjectiveConjugations(adjective, form));
       for (const wrongAnswer of acceptedAdjectiveConjugations(wrongItem, analogous)) {
-        if (!accepted.has(wrongAnswer)) candidates.push({ answer: wrongAnswer, kcId: `adj.class.${adjective.class}`, confirmedKcIds: [], message: `目标形式已识别，但这里套用了${adjectiveClassLabel(wrongClass)}的变化；${adjective.surface}应按${adjectiveClassLabel(adjective.class)}处理。` });
+        if (!accepted.has(wrongAnswer)) candidates.push(isIAdjectiveNaraAlternative(adjective,form,wrongAnswer)
+          ? {answer:wrongAnswer,kcId:null,confirmedKcIds:[],targetMismatch:true,message:NARA_TARGET_MESSAGE}
+          : { answer: wrongAnswer, kcId: `adj.class.${adjective.class}`, confirmedKcIds: [], message: `目标形式已识别，但这里套用了${adjectiveClassLabel(wrongClass)}的变化；${adjective.surface}应按${adjectiveClassLabel(adjective.class)}处理。` });
       }
     } catch { /* Some forms exist only for one adjective class. */ }
   }
@@ -388,6 +405,8 @@ export function adjectiveDiagnosticCandidates(adjective, form) {
 
 export function diagnoseAdjective(adjective, form, answer, normalize = (value) => value) {
   if (acceptedAdjectiveConjugations(adjective, form).some((accepted) => normalize(accepted) === normalize(answer))) return null;
+  if (isIAdjectiveNaraAlternative(adjective, form, answer, normalize)) return { answer, kcId: null, confirmedKcIds: [], targetMismatch: true,
+    message: NARA_TARGET_MESSAGE };
   const matches = adjectiveDiagnosticCandidates(adjective, form).filter((candidate) => normalize(candidate.answer) === normalize(answer));
   if (!matches.length) return diagnoseNaSuffixOmission(adjective, form, answer, normalize);
   const ids = [...new Set(matches.map((candidate) => candidate.kcId))];

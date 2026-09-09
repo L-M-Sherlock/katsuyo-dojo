@@ -17,6 +17,7 @@ export const PATTERNS = [
   ['multiple-errors', '词汇和词尾同时损坏', 'contract'],
   ['ku-omission', 'く形后漏接ない／て', 'contract'],
   ['adjective-form-switch', 'い形容词基础形式混淆', 'contract'],
+  ['i-nara-alternative', 'い形容词なら条件不得误判词类', 'contract'],
   ['i-ending-retained', '保留原形い直接添加完整接续', 'contract'],
   ['i-bare-ending', 'い形容词直接添加简化词尾', 'contract'],
   ['i-affix-guard', '词根、例外与多阶段词尾混用保护', 'contract'],
@@ -431,6 +432,7 @@ export function generateErrorCases(exercise) {
       }
     }
     if(item.domain==='adjective'&&item.class==='i') {
+      if(form==='adjectiveBa') for(const tail of ['なら','ならば']) emit('i-nara-alternative',word.surface+tail,unknown,writing);
       for(const c of generatedIAffixErrors(word.surface,form,{iiFamily:item.iiFamily}))emit(c.pattern,c.input,c.expected,writing);
       if(['adjectiveNegative','adjectiveTe'].includes(form)) {
         const stem=answersFor(word,'adjectiveAdverb')[0];

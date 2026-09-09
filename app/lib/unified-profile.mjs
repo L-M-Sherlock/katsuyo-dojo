@@ -3,6 +3,7 @@ import { confidenceOf } from './adaptive.mjs';
 import { normalizeRecentWordKeys } from './exercise-selection.mjs';
 import { emptyPracticeLog, parsePracticeLog, appendPracticeEvent } from './practice-log.mjs';
 import { restoreLearningAssessment } from './assessment-transfer.mjs';
+import { correctNaraClassification } from './score-corrections.mjs';
 import { CURRICULUM_VERSION, SOURCE_COURSES, UNIFIED_COURSES } from './unified-curriculum.mjs';
 
 export const UNIFIED_STORAGE_KEY = 'katsuyo-practice-profile-v7';
@@ -32,6 +33,7 @@ export function parseUnifiedImport(value, { today, components, legacyComponents,
   const restored = restoreLearningAssessment({ ...source, byKc: source.assessment === undefined ? rawByKc : source.byKc }, { components, exercises, at });
   const byKc = restored.byKc;
   const validCourses = new Set(UNIFIED_COURSES.map(c => c.id));
+  if (source.practiceGoalCourseId !== undefined && !validCourses.has(source.practiceGoalCourseId)) throw new Error('备份中的练习课程无效。');
   const legacyAccess = current ? strings(source.accessibleCourseIds) : SOURCE_COURSES.filter(course => legacyComponents.some(k => k.firstCourseId === course.id && (parsed.introducedKcIds.includes(k.id) || parsed.byKc[k.id]?.attempts > 0))).map(c => c.id);
   // Preserve access granted by the e-row stem's owner in the saved revision:
   // imperative in revision 1, ba in revision 2, potential in revision 3.
@@ -51,6 +53,7 @@ export function parseUnifiedImport(value, { today, components, legacyComponents,
   let result = { version: 7, curriculumVersion: CURRICULUM_VERSION, date: parsed.date, attempted: parsed.attempted, correct: parsed.correct, streak: parsed.streak, rotation: parsed.rotation,
     byKc, introducedKcIds: [...introduced].filter(id => byId.get(id)?.gating),
     assessment: restored.assessment,
+    ...(source.practiceGoalCourseId === undefined ? {} : { practiceGoalCourseId: source.practiceGoalCourseId }),
     accessibleCourseIds: [...new Set(legacyAccess)].filter(id => validCourses.has(id)),
     coursePractice: current ? Object.fromEntries(Object.entries(object(source.coursePractice) ?? {}).filter(([id, keys]) => validCourses.has(id) && Array.isArray(keys)).map(([id,keys])=>[id,[...new Set(strings(keys))].slice(-12)])) : {},
     recentWordKeys: current ? normalizeRecentWordKeys(source.recentWordKeys) : [],
@@ -69,5 +72,5 @@ export function parseUnifiedImport(value, { today, components, legacyComponents,
       diagnosis: { message: `已校正 ${report.changes.length} 个知识点的可核对统计，恢复 ${Object.keys(restored.assessment.pending).length} 项待复测；辅助结果另存。没有可靠日志的历史成绩保留为历史证据。` },
     }, id => byId.get(id)?.label ?? id);
   }
-  return result;
+  return correctNaraClassification(result, {at,ledger:source.scoreCorrections,labelFor:id=>byId.get(id)?.label??id});
 }
