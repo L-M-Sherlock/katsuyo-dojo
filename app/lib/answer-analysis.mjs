@@ -4,7 +4,11 @@ import { deriveUnified, diagnoseUnified, diagnoseUnifiedStep, unifiedDiagnosticS
 import { planForContext, atomicSteps, diagnoseAtomicStep } from './diagnostic-plan.mjs';
 import { diagnosticFeedback } from './diagnostic-feedback.mjs';
 
-export function normalizeAnswer(value) { return value.normalize('NFKC').replace(/[\s。．.！!？?]/g, ''); }
+export function normalizeAnswer(value) {
+  return value.normalize('NFKC')
+    .replace(/[\u30A1-\u30F6\u30FD-\u30FE]/g, kana => String.fromCharCode(kana.charCodeAt(0) - 0x60))
+    .replace(/[\s。．.！!？?]/g, '');
+}
 
 // The page and generated audit use exactly the same precedence: accepted
 // variant, explicit diagnosis, lexical retry, then conservative diagnosis steps.

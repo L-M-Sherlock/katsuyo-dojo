@@ -115,7 +115,7 @@ test('valid variants, wrong-class rules, lexical damage and multiple operations 
   expectFailure(serious, 'adjectiveNaTe', '真面目くて', 'adj.class.na');
   expectFailure(white, 'adjectivePast', '白いだった', 'adj.class.i');
   for (const [item, form, input] of [
-    [serious, 'adjectiveNaTe', 'ましめて'], [serious, 'adjectiveNaTe', '真面目だて'],
+    [serious, 'adjectiveNaTe', 'ましめて'], [serious, 'adjectiveNaTe', '真目だて'],
     [serious, 'adjectiveNaNegative', '真面目ないない'], [serious, 'adjectiveNaNegativePast', '真面目じゃなかた'],
     [white, 'adjectivePast', 'しるかた'], [white, 'adjectivePast', '白いかた'],
     [white, 'adjectiveNegative', 'しるない'], [white, 'adjectiveNegative', '白ぐなぃ'],

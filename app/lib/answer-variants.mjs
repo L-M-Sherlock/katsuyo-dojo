@@ -9,12 +9,18 @@ export function matchAcceptedAnswer(answer, surfaceAnswers, readingAnswers, norm
     correct: true,
     variant: {
       surface: surfaceAnswers[index] ?? answer,
-      reading: readingAnswers[index] ?? answer,
+      // Spelling alternatives are present in both derivations, including
+      // when the original word itself is kana (する). Preserve their indices
+      // while rendering the reading of 出来る and its continuations in kana.
+      reading: (readingAnswers[index] ?? answer).replaceAll("出来", "でき"),
     },
   };
 }
 
 export function acceptedVariantNote(item, form, variant) {
+  if (item.domain === "verb" && form.startsWith("potential") && (item.surface ?? item.reading ?? "").endsWith("する") && variant.surface.includes("出来")) {
+    return "你使用了「できる」及其变化形式的汉字写法。";
+  }
   if (item.domain === "verb" && (form === "potential" || form.startsWith("potential")) && !variant.surface.includes("ら")) {
     return "你使用了省略「ら」的常见口语可能形。";
   }

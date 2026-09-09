@@ -16,7 +16,7 @@ let page;
 try { page = await server.ssrLoadModule('/app/page.tsx'); } finally { await server.close(); }
 const model = page.KNOWLEDGE;
 const byId = new Map(model.components.map(k => [k.id,k]));
-const options = { today: '2026-09-07', components: model.components, legacyComponents: [...page.VERB_KNOWLEDGE.components,...page.ADJECTIVE_KNOWLEDGE.components] };
+const options = { today: '2026-09-07', at: '2026-09-07T12:00:00.000Z', components: model.components, exercises: model.exercises, legacyComponents: [...page.VERB_KNOWLEDGE.components,...page.ADJECTIVE_KNOWLEDGE.components] };
 const verb = { domain: 'verb', surface: '読む', reading: 'よむ', class: 'godan' };
 const adjective = { domain: 'adjective', surface: '高い', reading: 'たかい', class: 'i' };
 const mastered = { ...emptySkillStats(), attempts: 5, correct: 5, filteredAccuracy: 1, confidence: 1, bestConfidence: 1 };
@@ -210,7 +210,7 @@ test('diagnostic steps credit only newly performed work and do not guess whole-a
 test('v5 migration preserves equal semantics, archives compound and contaminated polite statistics without duplicating evidence', () => {
   const old=profile({byKc:{'class.godan':mastered,'suffix.masu':mastered,'composition.i-adjective.past':mastered,'adj.suffix.i-past':mastered}});
   const migrated=parseUnifiedImport(old,options);
-  assert.equal(migrated.version,6);
+  assert.equal(migrated.version,7);
   assert.deepEqual(migrated.byKc['class.godan'],mastered);
   assert.deepEqual(migrated.byKc['adj.suffix.i-past'],mastered);
   assert.equal(migrated.byKc['suffix.masu'],undefined);
@@ -219,7 +219,10 @@ test('v5 migration preserves equal semantics, archives compound and contaminated
   assert.equal(migrated.migration.archived,2);
   assert.equal(migrated.attempted,4);
   assert.deepEqual(parseUnifiedImport(createUnifiedExport(migrated),options),migrated);
-  assert.deepEqual(parseUnifiedImport(old,options),migrated);
+  const repeated = parseUnifiedImport(old,options);
+  assert.deepEqual(repeated.byKc,migrated.byKc);
+  assert.deepEqual(repeated.assessment,migrated.assessment);
+  assert.deepEqual(repeated.practiceLog.events.map(event=>({...event,id:'operation-id'})), migrated.practiceLog.events.map(event=>({...event,id:'operation-id'})));
 });
 
 test('a verb-only legacy profile cannot manufacture native adjective or application mastery', () => {
@@ -229,12 +232,14 @@ test('a verb-only legacy profile cannot manufacture native adjective or applicat
   assert.ok(migrated.accessibleCourseIds.includes('multiStepCompound'));
 });
 
-test('v6 restores safe bounded course evidence and rejects unsupported formats', () => {
+test('v7 restores safe bounded course evidence and rejects unsupported formats or missing assessment', () => {
   const migrated=parseUnifiedImport(profile({}),options);
   const restored=parseUnifiedImport({...migrated,coursePractice:{voiceCompound:['a','a','b'],bogus:['x']}},options);
   assert.deepEqual(restored.coursePractice,{voiceCompound:['a','b']});
   assert.throws(()=>parseUnifiedImport({format:'x',formatVersion:3,profile:migrated},options));
-  assert.throws(()=>parseUnifiedImport({...migrated,version:7},options));
+  assert.throws(()=>parseUnifiedImport({...migrated,version:8},options));
+  const incomplete = {...migrated}; delete incomplete.assessment;
+  assert.throws(()=>parseUnifiedImport(incomplete,options));
 });
 
 test('v6 course reordering preserves mastered e-row and adverb evidence together with existing course access', () => {

@@ -10,6 +10,7 @@
     "build": "vite build",
     "start": "vite preview",
     "test": "node --test tests/*.test.mjs",
+    "test:independent": "node --test tests/independent-*.test.mjs",
     "audit": "node scripts/audit-knowledge.mjs",
     "simulate:perfect": "node scripts/simulate-perfect-learning.mjs",
     "typecheck": "tsc --noEmit",

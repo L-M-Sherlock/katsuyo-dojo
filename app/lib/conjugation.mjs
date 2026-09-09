@@ -417,6 +417,12 @@ export function acceptedConjugations(word, verbClass, form) {
   if (form === "potential" && verbClass === "irregular" && (word === "来る" || word === "くる")) {
     answers.push(word === "来る" ? "来れる" : "これる");
   }
+  if (form === "potential" && verbClass === "irregular" && word.endsWith("する")) {
+    answers.push(`${word.slice(0, -2)}出来る`);
+  }
+  if (form === "imperative" && verbClass === "ichidan") {
+    answers.push(`${word.slice(0, -1)}よ`);
+  }
   if (form === "imperative" && verbClass === "irregular" && word.endsWith("する")) {
     answers.push(`${word.slice(0, -2)}せよ`);
   }

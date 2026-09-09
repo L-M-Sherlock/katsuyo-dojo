@@ -1,9 +1,12 @@
 import { auditGuidance } from './diagnostic-contracts.mjs';
 import { referenceNodeOutputs, referenceLabelMatches, correctSpellings } from './diagnostic-oracle.mjs';
 import { updateKnowledgeStats, emptySkillStats } from '../../app/lib/adaptive.mjs';
+import { applyLearningObservation } from '../../app/lib/learning-profile.mjs';
+import { emptyAssessment } from '../../app/lib/learning-assessment.mjs';
+import { auditLearningCase, auditLearningFlowWrite } from './learning-evidence-contracts.mjs';
 
 const norm=s=>s.normalize('NFKC').replace(/[\s。．.！!？?]/g,'');
-export function auditUniversalCase(c,analyze) {
+export function auditUniversalCase(c,analyze,options = {}) {
   let result;
   try {result=analyze(c.input);}catch(error){return {result:null,problems:[{code:'analyzer-exception',detail:error.message}]};}
   const problems=auditGuidance(c,result),problem=(code,detail)=>problems.push({code,detail});
@@ -37,16 +40,26 @@ export function auditUniversalCase(c,analyze) {
       for(const answer of target.filter(a=>a.length>=4&&!result.steps.some(s=>[s.surface,s.reading].some(given=>given.includes(a)))))if(visible.includes(answer))problem('answer-leak','未作答步骤的完整目标提前出现在提示中');
     }
   }
-  return {result,problems};
+  const learning = auditLearningCase(c,result,options);
+  problems.push(...learning.problems);
+  return {result,problems,learningChecks:learning.checks};
 }
 
-export function auditFlow({exercise,initial,analyzerForStep,transition,answerForStep,bound}) {
+export function auditFlow({exercise,initial,analyzerForStep,transition,answerForStep,bound,observe = applyLearningObservation}) {
   const problems=[],writes=new Set(),nodes=new Set();let queue=initial.steps,index=0,evaluated=initial.diagnosis?.confirmedKcIds??[],examined=[];
   let byKc=Object.fromEntries(exercise.kcIds.map(id=>[id,{...emptySkillStats()}]));
+  const problem = (code, detail) => problems.push({code,detail}), at = '2026-09-09T12:00:00.000Z';
+  let learningProfile = {byKc,assessment:emptyAssessment()}, learningChecks = 0;
+  try {
+    learningProfile = observe(learningProfile,exercise,{type:'question',outcome:'incorrect',questionId:'audit-flow-original',at,
+      kcIds:exercise.kcIds,failedKcId:initial.diagnosis?.kcId,confirmedKcIds:initial.diagnosis?.confirmedKcIds??[]}).profile;
+    learningChecks++;
+  } catch(error) {problem('learning-flow-exception',String(error.message??error));}
   while(index<queue.length&&index<bound) {
     const step=queue[index],input=answerForStep(step,index);
     const c={...exercise,step,kcIds:step.kcIds,input,expected:{mode:input==='xyz§'?'unreadable':'correct'}};
-    const checked=auditUniversalCase(c,analyzerForStep(step));problems.push(...checked.problems);
+    const checked=auditUniversalCase(c,analyzerForStep(step),{observe});problems.push(...checked.problems);
+    learningChecks += checked.learningChecks ?? 0;
     if(!checked.result)break;
     const result=checked.result,update=transition(queue,index,result,evaluated,examined);
     for(const id of update.writes){if(writes.has(id))problems.push({code:'duplicate-write',detail:id});writes.add(id);}
@@ -54,9 +67,19 @@ export function auditFlow({exercise,initial,analyzerForStep,transition,answerFor
     const before=byKc;
     byKc=step.diagnosticOnly?byKc:updateKnowledgeStats(byKc,{kcIds:update.assessed.kcIds,correct:result.kind==='correct',failedKcId:result.diagnosis?.kcId,confirmedKcIds:result.diagnosis?.confirmedKcIds??[]});
     for(const id of Object.keys(byKc))if(byKc[id].attempts-(before[id]?.attempts??0)!==Number(update.writes.includes(id)))problems.push({code:'wrong-flow-write',detail:id});
+    try {
+      const previous = learningProfile, observation = {type:'step',outcome:result.kind,questionId:'audit-flow-original',
+        eventId:`audit-flow-step-${index}`,at,step:update.assessed,kcIds:update.assessed.kcIds,
+        failedKcId:result.diagnosis?.kcId,confirmedKcIds:result.diagnosis?.confirmedKcIds??[]};
+      learningProfile = observe(previous,exercise,observation).profile; learningChecks++;
+      auditLearningFlowWrite(previous,learningProfile,update.assessed,result,problem);
+      const replay = observe(learningProfile,exercise,observation); learningChecks++;
+      if(!replay.duplicate)problem('learning-flow-unprotected-repeat',`第 ${index+1} 步`);
+      auditLearningFlowWrite(learningProfile,replay.profile,{...update.assessed,kcIds:[]},result,problem);
+    } catch(error) {problem('learning-flow-exception',String(error.message??error));}
     for(const future of update.nextSteps.slice(index+1))if(future.kcIds.some(id=>update.evaluated.includes(id)))problems.push({code:'redundant-probe',detail:'已评估的知识点仍出现在待答队列'});
     queue=update.nextSteps;evaluated=update.evaluated;examined=update.examined;index++;
   }
   if(index<queue.length)problems.push({code:'nonterminating-flow',detail:`补查超过独立路径上限 ${bound}`});
-  return {problems,steps:index,writes:writes.size};
+  return {problems,steps:index,writes:writes.size,learningChecks};
 }

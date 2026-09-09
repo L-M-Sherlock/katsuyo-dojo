@@ -1,0 +1,22 @@
+{
+  "verbs": {
+    "count": 117,
+    "originalSha256": "0541645285dd8b2a52d530820c0786358a72eaaef25e6d97f7172877e9348a95",
+    "canonicalSha256": "10f65becc55cfda34996028bb511f6c7a4d2a56864a540e4b95734beb5e96c4e"
+  },
+  "adjectives": {
+    "count": 137,
+    "originalSha256": "14e93584fdb6abe5400ac4b7df40091e4888f64649b9372d78b4c4f736221804",
+    "canonicalSha256": "9aa480d335561d29e014edf74645431bef6f673c7fe6b235c44c33b832d2753b"
+  },
+  "compounds": {
+    "count": 94,
+    "originalSha256": "9209b75feed125518520c9a87bfde6e026d9d5e21809a0be1aa56ca66c41a586",
+    "canonicalSha256": "6f212c7c1c3521f40bfe71147c5fff41e54e7f2ffaecab4bd9fd2f1a89f7d1fa"
+  },
+  "adjectives-writing": {
+    "count": 96,
+    "originalSha256": "ce713fa8258803a4e3134ddbff980186be8e16ef9635f5173fc0af4cb98aa4bb",
+    "canonicalSha256": "3c36890644f0657c1ad62268a9ec1301b93d7ac56e8542ac553011391278c637"
+  }
+}

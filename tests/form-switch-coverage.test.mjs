@@ -68,17 +68,21 @@ test('na-adjective complete form switches include colloquial and conditional alt
   }
 });
 
-test('wrong verb class is recognized in accepted contracted and continued variants', () => {
+test('wrong-class variants preserve local-operation collisions and diagnose unique class explanations', () => {
   for (const [form, answer] of [['teiru', '書てる'], ['teoru', '書とる'], ['teshimau', '書ちゃう'],
     ['teoku', '書とく'], ['teiku', '書てく'], ['teiruPast', '書てた'],
     ['potential', '書れる'], ['teiru', 'かてる'], ['causative', '書さす']]) {
     const observed = createAnswerAnalyzer(kaku, form)(answer);
     assert.equal(observed.kind, 'incorrect', `${form}: ${answer}`);
-    assert.equal(observed.diagnosis?.kcId, 'class.godan', `${form}: ${answer}`);
-    assert.deepEqual(observed.diagnosis.confirmedKcIds, []);
+    const omittedSound=['teiru','teiku'].includes(form);
+    assert.equal(observed.diagnosis?.kcId??null, omittedSound?null:'class.godan', `${form}: ${answer}`);
+    assert.deepEqual(observed.diagnosis?.confirmedKcIds??[], []);
+    if(omittedSound)assert.ok(observed.steps.length, `${form}: ambiguous class versus sound omission must be checked independently`);
   }
   const exception = createAnswerAnalyzer(verb('喋る', 'しゃべる'), 'teiru')('しゃべてる');
-  assert.equal(exception.diagnosis?.kcId, 'lexeme.ru-godan.喋る');
+  assert.equal(exception.diagnosis?.kcId??null, null);
+  assert.deepEqual(exception.diagnosis?.confirmedKcIds??[], []);
+  assert.ok(exception.steps.length, 'an exceptional ru verb still permits an omitted sound explanation');
   const irregular = createAnswerAnalyzer(verb('来る', 'くる', 'irregular'), 'teiru')('くてる');
   assert.equal(irregular.diagnosis?.kcId, 'facet.class.irregular.kuru');
 });

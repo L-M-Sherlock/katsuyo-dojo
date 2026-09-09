@@ -16,6 +16,7 @@ const TE_APPEND = new Set([
   'teageru','temorau','tekureru','tekudasai','teiru','teru','tearu','teoru','tehoshii',
   'temo','tewa','temoIi','temiru','teiku','teku','tekuru','teshimau','teoku',
 ]);
+const PAST_APPEND = new Set(['tara','tari','tatte']);
 const OTHER_APPEND_BASES = {
   naide:'negative', naideKudasai:'naide', nakutemoIi:'nakute', nakutewaIkenai:'nakute',
   nakerebaNaranai:'conditionalNegative', naitoIkenai:'negative',
@@ -126,6 +127,19 @@ function candidatesFor(verb,form) {
     for(const changed of alteredSuffixes(suffix,{smallTsu:!(verb.class==='godan'&&['past','te'].includes(form))})) {
       add(base+changed,kcId,`前面的词干或接续形式已保留，但后面的接续写成了「${changed || '（空）'}」，写法不完整或有误。本题这里应接「${suffix}」。`);
     }
+    // A completed godan a-row followed by an ichidan attachment is a suffix
+    // error. Retain the entire observed stem rather than treating the extra
+    // ら/さ as an arbitrary insertion anywhere in the answer.
+    if(verb.class==='godan'&&descriptor.row==='a') {
+      const confused=form==='passive'&&suffix==='れる'?'られる'
+        :form==='causative'&&suffix==='せる'?'させる'
+          :form==='causative'&&suffix==='す'?'さす':null;
+      if(confused)add(base+confused,kcId,`前面的a段词干已形成，但这里误接了一段动词使用的「${confused}」。本题应在「${base}」后接「${suffix}」。`);
+    }
+    if(verb.class==='ichidan') {
+      if(form==='volitional'&&suffix==='よう')add(base+'よお',kcId,'一段动词的意向形接「よう」，长音在这里写作「う」，不是「お」。');
+      if(form==='imperative'&&suffix==='ろ')add(base+'ろう',kcId,'一段动词的命令形可以接「ろ」，后面不用再加「う」。');
+    }
     if(verb.class==='ichidan'&&stemKcId&&form!=='prohibitive') {
       add(verb.surface+suffix,stemKcId,'接续前仍保留了原形末尾的「る」。一段动词在这里需要先去掉「る」。');
     }
@@ -149,8 +163,8 @@ function candidatesFor(verb,form) {
   // Swapping the sound change preserves the fixed lexical root, correct
   // terminal た/て/だ/で and any complete appended expression. A simultaneous
   // voicing mistake is therefore not silently reduced to one onbin error.
-  if(verb.class==='godan'&&(['past','te'].includes(form)||TE_APPEND.has(form))) {
-    const baseForm=form==='past'?'past':'te', target=conjugate(verb.surface,verb.class,baseForm);
+  if(verb.class==='godan'&&(['past','te'].includes(form)||TE_APPEND.has(form)||PAST_APPEND.has(form))) {
+    const baseForm=form==='past'||PAST_APPEND.has(form)?'past':'te', target=conjugate(verb.surface,verb.class,baseForm);
     const root=verb.surface.slice(0,-1), sound=target.slice(root.length,-1), terminal=target.at(-1);
     const ending=verb.surface.at(-1), iku=verb.surface==='行く'||verb.reading==='いく';
     const kcId=iku?'facet.onbin.sokuon.iku':['う','つ','る'].includes(ending)?'onbin.sokuon'
@@ -158,14 +172,27 @@ function candidatesFor(verb,form) {
     for(const correct of acceptedConjugations(verb.surface,verb.class,form)) {
       if(!correct.startsWith(target))continue;
       const tail=correct.slice(target.length);
-      for(const replacement of ['','っ','ん','い','し','つ'])if(replacement!==sound) {
+      // Keeping the dictionary ending is a missing sound change too:
+      // 読むでいる / 話すて retain both the root and the required terminal.
+      for(const replacement of new Set(['','っ','ん','い','し','つ',ending]))if(replacement!==sound) {
         add(root+replacement+terminal+tail,kcId,'词根和后面的接续已保留，但中间的音便形式用错了。请按这个动词的词尾选择音便。');
+      }
+      if(TE_APPEND.has(form)) {
+        const pastTerminal=terminal==='で'?'だ':'た';
+        add(root+sound+pastTerminal+tail,'suffix.te',`音便和后面的表达已保留，但连接处写成了过去形的「${pastTerminal}」。本题这里应接て形的「${terminal}」。`);
       }
     }
   }
   if(CACHE.size>=256)CACHE.delete(CACHE.keys().next().value);
   CACHE.set(key,candidates);
   return candidates;
+}
+
+export function commonVerbErrorKcIds(verb, form, answer, normalize = value => value) {
+  if (typeof answer !== 'string') return [];
+  const actual = normalize(answer);
+  return [...new Set(candidatesFor(verb, form)
+    .filter(candidate => normalize(candidate.answer) === actual).map(candidate => candidate.kcId))];
 }
 
 export function diagnoseCommonVerbError(verb,form,answer,normalize=value=>value,allowedKcIds=[]) {

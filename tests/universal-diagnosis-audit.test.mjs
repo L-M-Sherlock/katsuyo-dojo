@@ -116,13 +116,19 @@ test('merged audits reject missing, duplicate or stale form shards instead of cl
   const families=Object.fromEntries(['accepted','invalid','unreadable','omit','repeat','transpose','voicing','size','row','other-form','stop','lexical','pair','lexical-pair','three-plus','fuzz'].map(name=>[name,1]));
   const shard=(form,cls=0)=>({forms:[form],report:{schemaVersion:1,scope:`forms:${form}`,seed:1,forms:1,coverageErrors:[],
     contexts:1,classifications:cls,plans:1,paths:1,nodes:1,atomicContexts:1,cases:16,flows:1,flowSteps:2,failures:0,savedFailures:0,structuralRepresentatives:1,
+    learningAudit:{version:1,cases:16,checks:192,flows:1,flowChecks:29},
     families:{...families},outcomes:{incorrect:16},failureCodes:{},dimensions:{[form]:1}}});
   const complete=mergeDiagnosticPaths([shard('past',1),shard('te')],['past','te']);
   assert.equal(complete.cases,32);assert.deepEqual(complete.coverageErrors,[]);
+  assert.deepEqual(complete.learningAudit,{version:1,cases:32,checks:384,flows:2,flowChecks:58});
   assert.throws(()=>mergeDiagnosticPaths([shard('past',1)],['past','te']),/Incomplete/);
   assert.throws(()=>mergeDiagnosticPaths([shard('past',1),shard('past')],['past','te']),/Duplicate/);
   const stale=shard('te');stale.report.scope='all';assert.throws(()=>mergeDiagnosticPaths([shard('past',1),stale],['past','te']),/Inconsistent/);
   const counts=shard('past',1);counts.report.cases++;assert.throws(()=>mergeDiagnosticPaths([counts],['past']),/counts/);
+  const noChannels=shard('past',1);delete noChannels.report.learningAudit;
+  assert.throws(()=>mergeDiagnosticPaths([noChannels],['past']),/learning-evidence audit/);
+  const noFlowChannels=shard('past',1);noFlowChannels.report.learningAudit.flowChecks=0;
+  assert.throws(()=>mergeDiagnosticPaths([noFlowChannels],['past']),/learning-evidence audit/);
   const missingFamily=shard('past',1);delete missingFamily.report.families.pair;missingFamily.report.families.omit++;
   assert.ok(mergeDiagnosticPaths([missingFamily],['past']).coverageErrors.includes('未生成 pair'));
 });

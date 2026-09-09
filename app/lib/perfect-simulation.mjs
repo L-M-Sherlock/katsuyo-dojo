@@ -4,9 +4,9 @@ import {
   balanceComponentsForCourse,
   filterReadyExercises,
   isComponentMastered,
-  updateKnowledgeStats,
 } from "./adaptive.mjs";
 import { assignPracticeExercises, exerciseKey, recordRecentWord, wordKey } from "./exercise-selection.mjs";
+import { evidenceCondition, scoreLearningEvidence } from "./learning-evidence.mjs";
 
 function assignmentSegment(model, focus, introduced, byKc, length, rotation, usedKeys, usedWordKeys, recentWordKeys) {
   const balanced = balanceComponentsForCourse(focus, introduced, model.courseKcIds[focus.firstCourseId] ?? []);
@@ -90,7 +90,9 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
           redundantByFocus.set(focus.id, (redundantByFocus.get(focus.id) ?? 0) + 1);
         }
         if (focus.coverageKcIds.some((id) => candidate.kcIds.includes(id))) coverageQuestions += 1;
-        byKc = updateKnowledgeStats(byKc, { kcIds: candidate.kcIds, focusId: item.id, responseMs: 1200, answerLength: 4, ...answerFor({ questionCount, focus: item, exercise: candidate, byKc }) });
+        const answer = answerFor({ questionCount, focus: item, exercise: candidate, byKc });
+        byKc = scoreLearningEvidence({ byKc }, { kcIds: candidate.kcIds, form: candidate.form, focusId: item.id,
+          responseMs: 1200, answerLength: 4, ...answer, support: evidenceCondition(answer) }).byKc;
         answered += 1;
         questionCount += 1;
         if (shouldReplan(focus, byKc, next.review)) {

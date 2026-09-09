@@ -1,0 +1,6296 @@
+{
+  "schemaVersion": 1,
+  "title": "Independent learning-evidence acceptance seeds",
+  "frozenAt": "2026-09-09T03:13:24.759800+00:00",
+  "design": "Declared before the new scoring/retest implementation; no production analyzer or existing generator was used to generate expectations. Gap is a policy parameter, not an inferred constant. Source reads only informed available forms, event fields and observed baseline.",
+  "sourceExport": {
+    "fileName": "katsuyo-dojo-progress-2026-09-09.json",
+    "sha256": "b8e2d92e5189f1bfadd09b41595121ebb0ae1283743b456bfa0eed53cf559bb3",
+    "exportedAt": "2026-09-09T02:59:28.685Z",
+    "observedLatestQuestion": [
+      {
+        "sequence": 17,
+        "at": "2026-09-09T02:58:43.230Z",
+        "type": "question",
+        "outcome": "incorrect",
+        "exercise": {
+          "id": "aspect:teiruNegative:乗る",
+          "courseId": "aspect",
+          "form": "teiruNegative",
+          "surface": "乗る",
+          "reading": "のる",
+          "wordClass": "godan",
+          "domain": "verb"
+        },
+        "target": {
+          "surface": "乗る",
+          "reading": "のる",
+          "form": "teiruNegative",
+          "label": "ている・否定形",
+          "kind": "question",
+          "kcIds": [
+            "class.godan",
+            "heuristic.ru-other",
+            "onbin.sokuon",
+            "suffix.te",
+            "construction.teiru",
+            "stem.ichidan.drop-ru",
+            "suffix.negative",
+            "apply.teiru.continuation",
+            "facet.apply.teiru.negative"
+          ],
+          "answers": [
+            "乗っていない",
+            "乗ってない"
+          ],
+          "readings": [
+            "のっていない",
+            "のってない"
+          ],
+          "stepIndex": null,
+          "totalSteps": 0,
+          "nextTotalSteps": 2
+        },
+        "answer": "のっていた",
+        "hintUsed": false,
+        "diagnosis": {
+          "kcId": null,
+          "confirmedKcIds": [],
+          "resolution": "unresolved",
+          "message": "给定的前部仍可辨认，但后面的变化不能唯一对应某条规则。本次不更新未确认的知识点；下面只检查尚未确认的变化。"
+        },
+        "changes": [],
+        "totals": {
+          "before": {
+            "date": "2026-09-09",
+            "attempted": 8,
+            "correct": 7,
+            "streak": 5
+          },
+          "after": {
+            "date": "2026-09-09",
+            "attempted": 9,
+            "correct": 7,
+            "streak": 0
+          }
+        }
+      },
+      {
+        "sequence": 18,
+        "at": "2026-09-09T02:58:58.238Z",
+        "type": "step",
+        "outcome": "correct",
+        "exercise": {
+          "id": "aspect:teiruNegative:乗る",
+          "courseId": "aspect",
+          "form": "teiruNegative",
+          "surface": "乗る",
+          "reading": "のる",
+          "wordClass": "godan",
+          "domain": "verb"
+        },
+        "target": {
+          "surface": "乗る",
+          "reading": "のる",
+          "form": "teiru",
+          "label": "ている",
+          "kind": "conjugation",
+          "kcIds": [
+            "class.godan",
+            "heuristic.ru-other",
+            "onbin.sokuon",
+            "suffix.te",
+            "construction.teiru"
+          ],
+          "answers": [
+            "乗っている",
+            "乗ってる"
+          ],
+          "readings": [
+            "のっている",
+            "のってる"
+          ],
+          "stepIndex": 1,
+          "totalSteps": 2,
+          "nextTotalSteps": 2
+        },
+        "answer": "のっている",
+        "hintUsed": false,
+        "diagnosis": {
+          "kcId": null,
+          "confirmedKcIds": [],
+          "resolution": "correct",
+          "message": "本步正确。"
+        },
+        "changes": [
+          {
+            "kcId": "class.godan",
+            "label": "五段动词",
+            "before": {
+              "attempts": 516,
+              "correct": 510,
+              "filteredAccuracy": 0.9999985384982641,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 53528.042857142864,
+              "cleanTimeCount": 62
+            },
+            "after": {
+              "attempts": 517,
+              "correct": 511,
+              "filteredAccuracy": 0.9999988307986113,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 53528.042857142864,
+              "cleanTimeCount": 62
+            }
+          },
+          {
+            "kcId": "heuristic.ru-other",
+            "label": "非い／え段＋る的初步判断",
+            "before": {
+              "attempts": 119,
+              "correct": 114,
+              "filteredAccuracy": 0.9475445890778021,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 70580.63333333333,
+              "cleanTimeCount": 46
+            },
+            "after": {
+              "attempts": 120,
+              "correct": 115,
+              "filteredAccuracy": 0.9580356712622418,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 70580.63333333333,
+              "cleanTimeCount": 46
+            }
+          },
+          {
+            "kcId": "onbin.sokuon",
+            "label": "促音便（う・つ・る）",
+            "before": {
+              "attempts": 82,
+              "correct": 80,
+              "filteredAccuracy": 0.9981553169654461,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 8530.75,
+              "cleanTimeCount": 6
+            },
+            "after": {
+              "attempts": 83,
+              "correct": 81,
+              "filteredAccuracy": 0.9985242535723569,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 8530.75,
+              "cleanTimeCount": 6
+            }
+          },
+          {
+            "kcId": "suffix.te",
+            "label": "て形接续「て／で」",
+            "before": {
+              "attempts": 156,
+              "correct": 156,
+              "filteredAccuracy": 1,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 13734.7,
+              "cleanTimeCount": 7
+            },
+            "after": {
+              "attempts": 157,
+              "correct": 157,
+              "filteredAccuracy": 1,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 13734.7,
+              "cleanTimeCount": 7
+            }
+          },
+          {
+            "kcId": "construction.teiru",
+            "label": "ている的接续",
+            "before": {
+              "attempts": 10,
+              "correct": 10,
+              "filteredAccuracy": 1,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 7051.775,
+              "cleanTimeCount": 6
+            },
+            "after": {
+              "attempts": 11,
+              "correct": 11,
+              "filteredAccuracy": 1,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 7051.775,
+              "cleanTimeCount": 6
+            }
+          }
+        ],
+        "totals": {
+          "before": {
+            "date": "2026-09-09",
+            "attempted": 9,
+            "correct": 7,
+            "streak": 0
+          },
+          "after": {
+            "date": "2026-09-09",
+            "attempted": 9,
+            "correct": 7,
+            "streak": 0
+          }
+        }
+      },
+      {
+        "sequence": 19,
+        "at": "2026-09-09T02:59:05.399Z",
+        "type": "step",
+        "outcome": "correct",
+        "exercise": {
+          "id": "aspect:teiruNegative:乗る",
+          "courseId": "aspect",
+          "form": "teiruNegative",
+          "surface": "乗る",
+          "reading": "のる",
+          "wordClass": "godan",
+          "domain": "verb"
+        },
+        "target": {
+          "surface": "乗っている",
+          "reading": "のっている",
+          "form": "teiruNegative",
+          "label": "否定形",
+          "kind": "conjugation",
+          "kcIds": [
+            "stem.ichidan.drop-ru",
+            "suffix.negative",
+            "apply.teiru.continuation",
+            "facet.apply.teiru.negative"
+          ],
+          "answers": [
+            "乗っていない",
+            "乗ってない"
+          ],
+          "readings": [
+            "のっていない",
+            "のってない"
+          ],
+          "stepIndex": 2,
+          "totalSteps": 2,
+          "nextTotalSteps": 2
+        },
+        "answer": "のっていない",
+        "hintUsed": false,
+        "diagnosis": {
+          "kcId": null,
+          "confirmedKcIds": [],
+          "resolution": "correct",
+          "message": "本步正确。"
+        },
+        "changes": [
+          {
+            "kcId": "suffix.negative",
+            "label": "否定接续「ない」",
+            "before": {
+              "attempts": 189,
+              "correct": 186,
+              "filteredAccuracy": 0.9999981721897815,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 4317.766666666666,
+              "cleanTimeCount": 3
+            },
+            "after": {
+              "attempts": 190,
+              "correct": 187,
+              "filteredAccuracy": 0.9999985377518252,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 4317.766666666666,
+              "cleanTimeCount": 3
+            }
+          },
+          {
+            "kcId": "stem.ichidan.drop-ru",
+            "label": "一段动词去掉る",
+            "before": {
+              "attempts": 245,
+              "correct": 244,
+              "filteredAccuracy": 0.9999999999999998,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 16563.57222222222,
+              "cleanTimeCount": 17
+            },
+            "after": {
+              "attempts": 246,
+              "correct": 245,
+              "filteredAccuracy": 0.9999999999999998,
+              "confidence": 1,
+              "bestConfidence": 1,
+              "cleanTimeTotal": 16563.57222222222,
+              "cleanTimeCount": 17
+            }
+          },
+          {
+            "kcId": "apply.teiru.continuation",
+            "label": "ている的后续变化应用",
+            "before": {
+              "attempts": 2,
+              "correct": 2,
+              "filteredAccuracy": 1,
+              "confidence": 0.4705882352941177,
+              "bestConfidence": 0.4705882352941177,
+              "cleanTimeTotal": 2851.6666666666665,
+              "cleanTimeCount": 2
+            },
+            "after": {
+              "attempts": 3,
+              "correct": 3,
+              "filteredAccuracy": 1,
+              "confidence": 0.7058823529411765,
+              "bestConfidence": 0.7058823529411765,
+              "cleanTimeTotal": 2851.6666666666665,
+              "cleanTimeCount": 2
+            }
+          },
+          {
+            "kcId": "facet.apply.teiru.negative",
+            "label": "ている · 否定覆盖",
+            "before": null,
+            "after": {
+              "attempts": 1,
+              "correct": 1,
+              "filteredAccuracy": 1,
+              "confidence": 0.23529411764705885,
+              "bestConfidence": 0.23529411764705885,
+              "cleanTimeTotal": 0,
+              "cleanTimeCount": 0
+            }
+          }
+        ],
+        "totals": {
+          "before": {
+            "date": "2026-09-09",
+            "attempted": 9,
+            "correct": 7,
+            "streak": 0
+          },
+          "after": {
+            "date": "2026-09-09",
+            "attempted": 9,
+            "correct": 7,
+            "streak": 0
+          }
+        }
+      },
+      {
+        "sequence": 20,
+        "at": "2026-09-09T02:59:06.856Z",
+        "type": "diagnostic-end",
+        "outcome": "completed",
+        "exercise": {
+          "id": "aspect:teiruNegative:乗る",
+          "courseId": "aspect",
+          "form": "teiruNegative",
+          "surface": "乗る",
+          "reading": "のる",
+          "wordClass": "godan",
+          "domain": "verb"
+        },
+        "target": {
+          "surface": "乗る",
+          "reading": "のる",
+          "form": "teiruNegative",
+          "label": "拆步练习",
+          "kind": "summary",
+          "kcIds": [
+            "class.godan",
+            "heuristic.ru-other",
+            "onbin.sokuon",
+            "suffix.te",
+            "construction.teiru",
+            "stem.ichidan.drop-ru",
+            "suffix.negative",
+            "apply.teiru.continuation",
+            "facet.apply.teiru.negative"
+          ],
+          "answers": [
+            "乗っていない",
+            "乗ってない"
+          ],
+          "readings": [
+            "のっていない",
+            "のってない"
+          ],
+          "stepIndex": null,
+          "totalSteps": 2,
+          "nextTotalSteps": 2
+        },
+        "answer": "",
+        "hintUsed": false,
+        "diagnosis": {
+          "kcId": null,
+          "confirmedKcIds": [],
+          "resolution": "completed",
+          "message": "完成拆步，已作答 2 / 2 步；原题结果保持不变。"
+        },
+        "changes": [],
+        "totals": {
+          "before": {
+            "date": "2026-09-09",
+            "attempted": 9,
+            "correct": 7,
+            "streak": 0
+          },
+          "after": {
+            "date": "2026-09-09",
+            "attempted": 9,
+            "correct": 7,
+            "streak": 0
+          }
+        }
+      }
+    ]
+  },
+  "invariants": [
+    {
+      "id": "I01",
+      "text": "独立整题错误与具体原子错因分开记录。每次有效终局失败必须留下对应形式的待复测；未知错因不得任意扣原子分。"
+    },
+    {
+      "id": "I02",
+      "text": "自动拆步、给定中间式、给定词类、显示目标规则、显示答案和手动提示都必须保留帮助来源；辅助正确不能增加独立掌握正证。"
+    },
+    {
+      "id": "I03",
+      "text": "辅助作答不得增加来源词类、分类启发式、整体应用或形式覆盖的独立正证；派生词类选择不能冒充原词分类。"
+    },
+    {
+      "id": "I04",
+      "text": "辅助完成不能清除待复测或使课程/知识点成为当前已达标；历史可访问课程保留，历史覆盖与当前待复测要同时表达。"
+    },
+    {
+      "id": "I05",
+      "text": "只给前提时仍可记录局部规则的辅助表现；目标规则或答案已透露时只记录练习表现，不能假装得到未提示规则的证据。"
+    },
+    {
+      "id": "I06",
+      "text": "同一原题同一知识点/同一节点不因重复提交或多阶段共用而重复写入；辅助步骤不增加原题题数、原题正确数或连对。"
+    },
+    {
+      "id": "I07",
+      "text": "明确原子错误可保留被证实的负证；揭晓、模糊输入和错形式只产生支持范围内的记录，禁止把焦点当作已确定错因。"
+    },
+    {
+      "id": "I08",
+      "text": "笔误重试和无效输入不产生整题终局失败、正证或题数，也不清除已有待复测；无答案透露的笔误纠正仍可完成一次独立作答。"
+    },
+    {
+      "id": "I09",
+      "text": "清除待复测必须来自相同目标形式、无帮助、不同词、满足配置间隔的有效整题成功；同词立即重试、其他目标形式和辅助成功均不符合。"
+    },
+    {
+      "id": "I10",
+      "text": "事件、终局问题和评估节点均有可验证的幂等性；同一待复测目标去重，失败/成功历史不被后续重放伪造。"
+    },
+    {
+      "id": "I11",
+      "text": "待复测进入有限、可检查的调度；不被无关薄弱点永久挤出，不让单一词/单一待复测无限霸占；没有合适换词不能伪造通过。"
+    },
+    {
+      "id": "I12",
+      "text": "刷新、导入、跨日和浏览器时钟变化不能抹去待复测、增加间隔或制造独立成功；间隔由有效独立原题序列确定。"
+    },
+    {
+      "id": "I13",
+      "text": "旧日志中的 step 即使 hintUsed:false 也不能认作独立整题；完整日志可重建可验证待复测，裁剪/无日志不得虚构缺失历史。"
+    },
+    {
+      "id": "I14",
+      "text": "迁移保留历史事件和累计数据的来源，显式区分旧版未核验证据；不能无说明复用已知辅助加分来宣称当前已掌握。"
+    },
+    {
+      "id": "I15",
+      "text": "日志、证据通道、待复测及每日统计必须原子保存；冲突时全不提交，写入失败时导出能恢复同一内存快照。"
+    }
+  ],
+  "cases": [
+    {
+      "id": "family-teageru-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teageruPast",
+      "answer": "かいてあげた",
+      "wrongAnswer": "かいてあげない",
+      "givenIntermediate": "かいてあげる",
+      "protectedKcIds": [
+        "apply.teageru.continuation",
+        "facet.apply.teageru.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてあげない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてあげる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてあげる",
+          "answer": "かいてあげた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teageru-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teageruNegative",
+      "answer": "かいてあげない",
+      "wrongAnswer": "かいてあげた",
+      "givenIntermediate": "かいてあげる",
+      "protectedKcIds": [
+        "apply.teageru.continuation",
+        "facet.apply.teageru.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてあげた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてあげる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてあげる",
+          "answer": "かいてあげない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teageru-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teageruNegativePast",
+      "answer": "かいてあげなかった",
+      "wrongAnswer": "かいてあげない",
+      "givenIntermediate": "かいてあげる",
+      "protectedKcIds": [
+        "apply.teageru.continuation",
+        "facet.apply.teageru.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてあげない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてあげる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてあげる",
+          "answer": "かいてあげなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-temorau-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "temorauPast",
+      "answer": "かいてもらった",
+      "wrongAnswer": "かいてもらわない",
+      "givenIntermediate": "かいてもらう",
+      "protectedKcIds": [
+        "apply.temorau.continuation",
+        "facet.apply.temorau.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてもらわない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてもらう",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてもらう",
+          "answer": "かいてもらった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-temorau-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "temorauNegative",
+      "answer": "かいてもらわない",
+      "wrongAnswer": "かいてもらった",
+      "givenIntermediate": "かいてもらう",
+      "protectedKcIds": [
+        "apply.temorau.continuation",
+        "facet.apply.temorau.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてもらった",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてもらう",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてもらう",
+          "answer": "かいてもらわない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-temorau-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "temorauNegativePast",
+      "answer": "かいてもらわなかった",
+      "wrongAnswer": "かいてもらわない",
+      "givenIntermediate": "かいてもらう",
+      "protectedKcIds": [
+        "apply.temorau.continuation",
+        "facet.apply.temorau.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてもらわない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてもらう",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてもらう",
+          "answer": "かいてもらわなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tekureru-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tekureruPast",
+      "answer": "かいてくれた",
+      "wrongAnswer": "かいてくれない",
+      "givenIntermediate": "かいてくれる",
+      "protectedKcIds": [
+        "apply.tekureru.continuation",
+        "facet.apply.tekureru.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてくれない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてくれる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてくれる",
+          "answer": "かいてくれた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tekureru-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tekureruNegative",
+      "answer": "かいてくれない",
+      "wrongAnswer": "かいてくれた",
+      "givenIntermediate": "かいてくれる",
+      "protectedKcIds": [
+        "apply.tekureru.continuation",
+        "facet.apply.tekureru.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてくれた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてくれる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてくれる",
+          "answer": "かいてくれない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tekureru-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tekureruNegativePast",
+      "answer": "かいてくれなかった",
+      "wrongAnswer": "かいてくれない",
+      "givenIntermediate": "かいてくれる",
+      "protectedKcIds": [
+        "apply.tekureru.continuation",
+        "facet.apply.tekureru.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてくれない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてくれる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてくれる",
+          "answer": "かいてくれなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teiru-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruPast",
+      "answer": "のっていた",
+      "wrongAnswer": "のっていない",
+      "givenIntermediate": "のっている",
+      "protectedKcIds": [
+        "apply.teiru.continuation",
+        "facet.apply.teiru.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "のっていない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "のっている",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "のっている",
+          "answer": "のっていた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teiru-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "answer": "のっていない",
+      "wrongAnswer": "のっていた",
+      "givenIntermediate": "のっている",
+      "protectedKcIds": [
+        "apply.teiru.continuation",
+        "facet.apply.teiru.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "のっている",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "のっている",
+          "answer": "のっていない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teiru-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegativePast",
+      "answer": "のっていなかった",
+      "wrongAnswer": "のっていない",
+      "givenIntermediate": "のっている",
+      "protectedKcIds": [
+        "apply.teiru.continuation",
+        "facet.apply.teiru.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "のっていない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "のっている",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "のっている",
+          "answer": "のっていなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tearu-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tearuPast",
+      "answer": "かいてあった",
+      "wrongAnswer": "かいてない",
+      "givenIntermediate": "かいてある",
+      "protectedKcIds": [
+        "apply.tearu.continuation",
+        "facet.apply.tearu.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてある",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてある",
+          "answer": "かいてあった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tearu-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tearuNegative",
+      "answer": "かいてない",
+      "wrongAnswer": "かいてあった",
+      "givenIntermediate": "かいてある",
+      "protectedKcIds": [
+        "apply.tearu.continuation",
+        "facet.apply.tearu.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてあった",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてある",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてある",
+          "answer": "かいてない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tearu-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tearuNegativePast",
+      "answer": "かいてなかった",
+      "wrongAnswer": "かいてない",
+      "givenIntermediate": "かいてある",
+      "protectedKcIds": [
+        "apply.tearu.continuation",
+        "facet.apply.tearu.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてある",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてある",
+          "answer": "かいてなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teoru-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teoruPast",
+      "answer": "かいておった",
+      "wrongAnswer": "かいておらない",
+      "givenIntermediate": "かいておる",
+      "protectedKcIds": [
+        "apply.teoru.continuation",
+        "facet.apply.teoru.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいておらない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいておる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいておる",
+          "answer": "かいておった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teoru-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teoruNegative",
+      "answer": "かいておらない",
+      "wrongAnswer": "かいておった",
+      "givenIntermediate": "かいておる",
+      "protectedKcIds": [
+        "apply.teoru.continuation",
+        "facet.apply.teoru.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいておった",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいておる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいておる",
+          "answer": "かいておらない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teoru-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teoruNegativePast",
+      "answer": "かいておらなかった",
+      "wrongAnswer": "かいておらない",
+      "givenIntermediate": "かいておる",
+      "protectedKcIds": [
+        "apply.teoru.continuation",
+        "facet.apply.teoru.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいておらない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいておる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいておる",
+          "answer": "かいておらなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tai-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "taiPast",
+      "answer": "かきたかった",
+      "wrongAnswer": "かきたくない",
+      "givenIntermediate": "かきたい",
+      "protectedKcIds": [
+        "apply.tai.continuation",
+        "facet.apply.tai.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かきたくない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かきたい",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かきたい",
+          "answer": "かきたかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tai-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "taiNegative",
+      "answer": "かきたくない",
+      "wrongAnswer": "かきたかった",
+      "givenIntermediate": "かきたい",
+      "protectedKcIds": [
+        "apply.tai.continuation",
+        "facet.apply.tai.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かきたかった",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かきたい",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かきたい",
+          "answer": "かきたくない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tai-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "taiNegativePast",
+      "answer": "かきたくなかった",
+      "wrongAnswer": "かきたくない",
+      "givenIntermediate": "かきたい",
+      "protectedKcIds": [
+        "apply.tai.continuation",
+        "facet.apply.tai.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かきたくない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かきたい",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かきたい",
+          "answer": "かきたくなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tehoshii-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tehoshiiPast",
+      "answer": "かいてほしかった",
+      "wrongAnswer": "かいてほしくない",
+      "givenIntermediate": "かいてほしい",
+      "protectedKcIds": [
+        "apply.tehoshii.continuation",
+        "facet.apply.tehoshii.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてほしくない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてほしい",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてほしい",
+          "answer": "かいてほしかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tehoshii-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tehoshiiNegative",
+      "answer": "かいてほしくない",
+      "wrongAnswer": "かいてほしかった",
+      "givenIntermediate": "かいてほしい",
+      "protectedKcIds": [
+        "apply.tehoshii.continuation",
+        "facet.apply.tehoshii.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてほしかった",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてほしい",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてほしい",
+          "answer": "かいてほしくない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tehoshii-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tehoshiiNegativePast",
+      "answer": "かいてほしくなかった",
+      "wrongAnswer": "かいてほしくない",
+      "givenIntermediate": "かいてほしい",
+      "protectedKcIds": [
+        "apply.tehoshii.continuation",
+        "facet.apply.tehoshii.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてほしくない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてほしい",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてほしい",
+          "answer": "かいてほしくなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-youtosuru-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "youtosuruPast",
+      "answer": "かこうとした",
+      "wrongAnswer": "かこうとしない",
+      "givenIntermediate": "かこうとする",
+      "protectedKcIds": [
+        "apply.youtosuru.continuation",
+        "facet.apply.youtosuru.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かこうとしない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かこうとする",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かこうとする",
+          "answer": "かこうとした",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-youtosuru-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "youtosuruNegative",
+      "answer": "かこうとしない",
+      "wrongAnswer": "かこうとした",
+      "givenIntermediate": "かこうとする",
+      "protectedKcIds": [
+        "apply.youtosuru.continuation",
+        "facet.apply.youtosuru.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かこうとした",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かこうとする",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かこうとする",
+          "answer": "かこうとしない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-youtosuru-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "youtosuruNegativePast",
+      "answer": "かこうとしなかった",
+      "wrongAnswer": "かこうとしない",
+      "givenIntermediate": "かこうとする",
+      "protectedKcIds": [
+        "apply.youtosuru.continuation",
+        "facet.apply.youtosuru.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かこうとしない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かこうとする",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かこうとする",
+          "answer": "かこうとしなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-temiru-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "temiruPast",
+      "answer": "かいてみた",
+      "wrongAnswer": "かいてみない",
+      "givenIntermediate": "かいてみる",
+      "protectedKcIds": [
+        "apply.temiru.continuation",
+        "facet.apply.temiru.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてみない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてみる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてみる",
+          "answer": "かいてみた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-temiru-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "temiruNegative",
+      "answer": "かいてみない",
+      "wrongAnswer": "かいてみた",
+      "givenIntermediate": "かいてみる",
+      "protectedKcIds": [
+        "apply.temiru.continuation",
+        "facet.apply.temiru.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてみた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてみる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてみる",
+          "answer": "かいてみない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-temiru-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "temiruNegativePast",
+      "answer": "かいてみなかった",
+      "wrongAnswer": "かいてみない",
+      "givenIntermediate": "かいてみる",
+      "protectedKcIds": [
+        "apply.temiru.continuation",
+        "facet.apply.temiru.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてみない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてみる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてみる",
+          "answer": "かいてみなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teshimau-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teshimauPast",
+      "answer": "かいてしまった",
+      "wrongAnswer": "かいてしまわない",
+      "givenIntermediate": "かいてしまう",
+      "protectedKcIds": [
+        "apply.teshimau.continuation",
+        "facet.apply.teshimau.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてしまわない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてしまう",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてしまう",
+          "answer": "かいてしまった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teshimau-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teshimauNegative",
+      "answer": "かいてしまわない",
+      "wrongAnswer": "かいてしまった",
+      "givenIntermediate": "かいてしまう",
+      "protectedKcIds": [
+        "apply.teshimau.continuation",
+        "facet.apply.teshimau.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてしまった",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてしまう",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてしまう",
+          "answer": "かいてしまわない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teshimau-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teshimauNegativePast",
+      "answer": "かいてしまわなかった",
+      "wrongAnswer": "かいてしまわない",
+      "givenIntermediate": "かいてしまう",
+      "protectedKcIds": [
+        "apply.teshimau.continuation",
+        "facet.apply.teshimau.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてしまわない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてしまう",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてしまう",
+          "answer": "かいてしまわなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teoku-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teokuPast",
+      "answer": "かいておいた",
+      "wrongAnswer": "かいておかない",
+      "givenIntermediate": "かいておく",
+      "protectedKcIds": [
+        "apply.teoku.continuation",
+        "facet.apply.teoku.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいておかない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいておく",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいておく",
+          "answer": "かいておいた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teoku-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teokuNegative",
+      "answer": "かいておかない",
+      "wrongAnswer": "かいておいた",
+      "givenIntermediate": "かいておく",
+      "protectedKcIds": [
+        "apply.teoku.continuation",
+        "facet.apply.teoku.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいておいた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいておく",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいておく",
+          "answer": "かいておかない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teoku-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teokuNegativePast",
+      "answer": "かいておかなかった",
+      "wrongAnswer": "かいておかない",
+      "givenIntermediate": "かいておく",
+      "protectedKcIds": [
+        "apply.teoku.continuation",
+        "facet.apply.teoku.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいておかない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいておく",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいておく",
+          "answer": "かいておかなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teiku-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teikuPast",
+      "answer": "かいていった",
+      "wrongAnswer": "かいていかない",
+      "givenIntermediate": "かいていく",
+      "protectedKcIds": [
+        "apply.teiku.continuation",
+        "facet.apply.teiku.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいていかない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいていく",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいていく",
+          "answer": "かいていった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teiku-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teikuNegative",
+      "answer": "かいていかない",
+      "wrongAnswer": "かいていった",
+      "givenIntermediate": "かいていく",
+      "protectedKcIds": [
+        "apply.teiku.continuation",
+        "facet.apply.teiku.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいていった",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいていく",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいていく",
+          "answer": "かいていかない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-teiku-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "teikuNegativePast",
+      "answer": "かいていかなかった",
+      "wrongAnswer": "かいていかない",
+      "givenIntermediate": "かいていく",
+      "protectedKcIds": [
+        "apply.teiku.continuation",
+        "facet.apply.teiku.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいていかない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいていく",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいていく",
+          "answer": "かいていかなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tekuru-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tekuruPast",
+      "answer": "かいてきた",
+      "wrongAnswer": "かいてこない",
+      "givenIntermediate": "かいてくる",
+      "protectedKcIds": [
+        "apply.tekuru.continuation",
+        "facet.apply.tekuru.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてこない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてくる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてくる",
+          "answer": "かいてきた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tekuru-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tekuruNegative",
+      "answer": "かいてこない",
+      "wrongAnswer": "かいてきた",
+      "givenIntermediate": "かいてくる",
+      "protectedKcIds": [
+        "apply.tekuru.continuation",
+        "facet.apply.tekuru.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてきた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてくる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてくる",
+          "answer": "かいてこない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tekuru-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "tekuruNegativePast",
+      "answer": "かいてこなかった",
+      "wrongAnswer": "かいてこない",
+      "givenIntermediate": "かいてくる",
+      "protectedKcIds": [
+        "apply.tekuru.continuation",
+        "facet.apply.tekuru.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かいてこない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かいてくる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かいてくる",
+          "answer": "かいてこなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-sugiru-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "sugiruPast",
+      "answer": "かきすぎた",
+      "wrongAnswer": "かきすぎない",
+      "givenIntermediate": "かきすぎる",
+      "protectedKcIds": [
+        "apply.sugiru.continuation",
+        "facet.apply.sugiru.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かきすぎない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かきすぎる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かきすぎる",
+          "answer": "かきすぎた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-sugiru-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "sugiruNegative",
+      "answer": "かきすぎない",
+      "wrongAnswer": "かきすぎた",
+      "givenIntermediate": "かきすぎる",
+      "protectedKcIds": [
+        "apply.sugiru.continuation",
+        "facet.apply.sugiru.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かきすぎた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かきすぎる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かきすぎる",
+          "answer": "かきすぎない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-sugiru-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "sugiruNegativePast",
+      "answer": "かきすぎなかった",
+      "wrongAnswer": "かきすぎない",
+      "givenIntermediate": "かきすぎる",
+      "protectedKcIds": [
+        "apply.sugiru.continuation",
+        "facet.apply.sugiru.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かきすぎない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かきすぎる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かきすぎる",
+          "answer": "かきすぎなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tagaru-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "増える",
+        "reading": "ふえる",
+        "class": "ichidan"
+      },
+      "form": "tagaruPast",
+      "answer": "ふえたがった",
+      "wrongAnswer": "ふえたがらない",
+      "givenIntermediate": "ふえたがる",
+      "protectedKcIds": [
+        "apply.tagaru.continuation",
+        "facet.apply.tagaru.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "ふえたがらない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "ふえたがる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "ふえたがる",
+          "answer": "ふえたがった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tagaru-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "増える",
+        "reading": "ふえる",
+        "class": "ichidan"
+      },
+      "form": "tagaruNegative",
+      "answer": "ふえたがらない",
+      "wrongAnswer": "ふえたがった",
+      "givenIntermediate": "ふえたがる",
+      "protectedKcIds": [
+        "apply.tagaru.continuation",
+        "facet.apply.tagaru.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "ふえたがった",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "ふえたがる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "ふえたがる",
+          "answer": "ふえたがらない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-tagaru-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "増える",
+        "reading": "ふえる",
+        "class": "ichidan"
+      },
+      "form": "tagaruNegativePast",
+      "answer": "ふえたがらなかった",
+      "wrongAnswer": "ふえたがらない",
+      "givenIntermediate": "ふえたがる",
+      "protectedKcIds": [
+        "apply.tagaru.continuation",
+        "facet.apply.tagaru.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "ふえたがらない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "ふえたがる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "ふえたがる",
+          "answer": "ふえたがらなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-passive-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "passivePast",
+      "answer": "かかれた",
+      "wrongAnswer": "かかれない",
+      "givenIntermediate": "かかれる",
+      "protectedKcIds": [
+        "apply.passive.continuation",
+        "facet.apply.passive.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかれない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かかれる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かかれる",
+          "answer": "かかれた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-passive-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "passiveNegative",
+      "answer": "かかれない",
+      "wrongAnswer": "かかれた",
+      "givenIntermediate": "かかれる",
+      "protectedKcIds": [
+        "apply.passive.continuation",
+        "facet.apply.passive.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかれた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かかれる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かかれる",
+          "answer": "かかれない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-passive-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "passiveNegativePast",
+      "answer": "かかれなかった",
+      "wrongAnswer": "かかれない",
+      "givenIntermediate": "かかれる",
+      "protectedKcIds": [
+        "apply.passive.continuation",
+        "facet.apply.passive.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかれない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かかれる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かかれる",
+          "answer": "かかれなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-potential-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "potentialPast",
+      "answer": "かけた",
+      "wrongAnswer": "かけない",
+      "givenIntermediate": "かける",
+      "protectedKcIds": [
+        "apply.potential.continuation",
+        "facet.apply.potential.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かけない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かける",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かける",
+          "answer": "かけた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-potential-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "potentialNegative",
+      "answer": "かけない",
+      "wrongAnswer": "かけた",
+      "givenIntermediate": "かける",
+      "protectedKcIds": [
+        "apply.potential.continuation",
+        "facet.apply.potential.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かけた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かける",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かける",
+          "answer": "かけない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-potential-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "potentialNegativePast",
+      "answer": "かけなかった",
+      "wrongAnswer": "かけない",
+      "givenIntermediate": "かける",
+      "protectedKcIds": [
+        "apply.potential.continuation",
+        "facet.apply.potential.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かけない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かける",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かける",
+          "answer": "かけなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-causative-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "causativePast",
+      "answer": "かかせた",
+      "wrongAnswer": "かかせない",
+      "givenIntermediate": "かかせる",
+      "protectedKcIds": [
+        "apply.causative.continuation",
+        "facet.apply.causative.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかせない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かかせる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かかせる",
+          "answer": "かかせた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-causative-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "causativeNegative",
+      "answer": "かかせない",
+      "wrongAnswer": "かかせた",
+      "givenIntermediate": "かかせる",
+      "protectedKcIds": [
+        "apply.causative.continuation",
+        "facet.apply.causative.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかせた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かかせる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かかせる",
+          "answer": "かかせない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-causative-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "causativeNegativePast",
+      "answer": "かかせなかった",
+      "wrongAnswer": "かかせない",
+      "givenIntermediate": "かかせる",
+      "protectedKcIds": [
+        "apply.causative.continuation",
+        "facet.apply.causative.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかせない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かかせる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かかせる",
+          "answer": "かかせなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-causativePassive-Past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "causativePassivePast",
+      "answer": "かかせられた",
+      "wrongAnswer": "かかせられない",
+      "givenIntermediate": "かかせられる",
+      "protectedKcIds": [
+        "apply.causativePassive.continuation",
+        "facet.apply.causativePassive.past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかせられない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かかせられる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かかせられる",
+          "answer": "かかせられた",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-causativePassive-Negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "causativePassiveNegative",
+      "answer": "かかせられない",
+      "wrongAnswer": "かかせられた",
+      "givenIntermediate": "かかせられる",
+      "protectedKcIds": [
+        "apply.causativePassive.continuation",
+        "facet.apply.causativePassive.negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかせられた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かかせられる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かかせられる",
+          "answer": "かかせられない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "family-causativePassive-NegativePast",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "causativePassiveNegativePast",
+      "answer": "かかせられなかった",
+      "wrongAnswer": "かかせられない",
+      "givenIntermediate": "かかせられる",
+      "protectedKcIds": [
+        "apply.causativePassive.continuation",
+        "facet.apply.causativePassive.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかせられない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "answer": "かかせられる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "かかせられる",
+          "answer": "かかせられなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "plain-negative-past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "negativePast",
+      "answer": "かかなかった",
+      "wrongAnswer": "かかない",
+      "givenIntermediate": "かかない",
+      "protectedKcIds": [
+        "compound.negative-past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かかない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "かかない",
+          "answer": "かかなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "polite-past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "masuPast",
+      "answer": "かきました",
+      "wrongAnswer": "かきません",
+      "givenIntermediate": "かきます",
+      "protectedKcIds": [
+        "compound.polite-past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かきません",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "かきます",
+          "answer": "かきました",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "polite-negative",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "masuNegative",
+      "answer": "かきません",
+      "wrongAnswer": "かきました",
+      "givenIntermediate": "かきます",
+      "protectedKcIds": [
+        "compound.polite-negative"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かきました",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "かきます",
+          "answer": "かきません",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "polite-negative-past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "書く",
+        "reading": "かく",
+        "class": "godan"
+      },
+      "form": "masuNegativePast",
+      "answer": "かきませんでした",
+      "wrongAnswer": "かきません",
+      "givenIntermediate": "かきます",
+      "protectedKcIds": [
+        "compound.polite-negative-past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "かきません",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "かきます",
+          "answer": "かきませんでした",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "i-negative-past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "adjective",
+        "surface": "高い",
+        "reading": "たかい",
+        "class": "i"
+      },
+      "form": "adjectiveNegativePast",
+      "answer": "たかくなかった",
+      "wrongAnswer": "たかくない",
+      "givenIntermediate": "たかくない",
+      "protectedKcIds": [
+        "adj.compound.i-negative-past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "たかくない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "たかくない",
+          "answer": "たかくなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "na-negative-past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "adjective",
+        "surface": "静か",
+        "reading": "しずか",
+        "class": "na"
+      },
+      "form": "adjectiveNaNegativePast",
+      "answer": "しずかではなかった",
+      "wrongAnswer": "しずかではない",
+      "givenIntermediate": "しずかではない",
+      "protectedKcIds": [
+        "adj.compound.na-negative-past"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "しずかではない",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "しずかではない",
+          "answer": "しずかではなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "passive-desire-negative-past",
+      "kind": "compound-assisted-recovery",
+      "item": {
+        "domain": "verb",
+        "surface": "騒ぐ",
+        "reading": "さわぐ",
+        "class": "godan"
+      },
+      "form": "passiveDesireNegativePast",
+      "answer": "さわがれたくなかった",
+      "wrongAnswer": "さわがれたかった",
+      "givenIntermediate": "さわがれたい",
+      "protectedKcIds": [
+        "compound.multi-step",
+        "apply.tai.continuation",
+        "facet.apply.tai.negativePast"
+      ],
+      "events": [
+        {
+          "phase": "question",
+          "answer": "さわがれたかった",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "さわがれたい",
+          "answer": "さわがれたくなかった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        }
+      ],
+      "expect": {
+        "independentQuestionFailure": true,
+        "pendingAfterOriginal": true,
+        "pendingAfterAssistedEnd": true,
+        "assistedCanCreateIndependentPositive": false,
+        "assistedCanCreateCoverage": false,
+        "assistedCanCompleteCourse": false,
+        "sourceClassificationPositiveDelta": 0,
+        "wholeQuestionAttempts": 1,
+        "wholeQuestionCorrect": 0
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "original-known-rule-error",
+      "kind": "original-outcome",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "answer": "のていない",
+          "assistance": [],
+          "outcome": "incorrect",
+          "diagnosis": "rule"
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "inventedPrimitivePenalty": false,
+        "diagnosedPrimitivePenaltyAllowed": true
+      },
+      "invariants": [
+        "I01",
+        "I07"
+      ]
+    },
+    {
+      "id": "original-unknown-prefix-tail-error",
+      "kind": "original-outcome",
+      "item": {
+        "domain": "verb",
+        "surface": "増える",
+        "reading": "ふえる",
+        "class": "ichidan"
+      },
+      "form": "tagaruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "answer": "ふせたがれない",
+          "assistance": [],
+          "outcome": "incorrect",
+          "diagnosis": "unresolved"
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "inventedPrimitivePenalty": false
+      },
+      "invariants": [
+        "I01",
+        "I07"
+      ]
+    },
+    {
+      "id": "lexical-typo-does-not-fail",
+      "kind": "original-outcome",
+      "item": {
+        "domain": "verb",
+        "surface": "待つ",
+        "reading": "まつ",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "answer": "めっていない",
+          "assistance": [],
+          "outcome": "typo"
+        },
+        {
+          "phase": "question",
+          "answer": "まっていない",
+          "assistance": [],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "typoCreatesFailure": false,
+        "typoCreatesPositive": false,
+        "finalQuestionAttempts": 1,
+        "finalQuestionCorrect": 1,
+        "correctedWithoutDisclosureCanBeIndependent": true
+      },
+      "invariants": [
+        "I08"
+      ]
+    },
+    {
+      "id": "invalid-is-not-failure",
+      "kind": "original-outcome",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "answer": "あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ",
+          "assistance": [],
+          "outcome": "invalid"
+        }
+      ],
+      "expect": {
+        "pendingCreated": false,
+        "masteryDelta": 0,
+        "dailyDelta": 0
+      },
+      "invariants": [
+        "I08"
+      ]
+    },
+    {
+      "id": "invalid-does-not-clear-pending",
+      "kind": "original-outcome",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "question",
+          "answer": "あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ",
+          "assistance": [],
+          "outcome": "invalid"
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "independentSuccesses": 0
+      },
+      "invariants": [
+        "I08",
+        "I09"
+      ]
+    },
+    {
+      "id": "reveal-is-assisted-failure",
+      "kind": "original-outcome",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "outcome": "revealed",
+          "answer": "",
+          "assistance": [
+            "target-answer"
+          ]
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "independentPositiveDelta": 0,
+        "inventedPrimitivePenalty": false,
+        "revealCount": 1
+      },
+      "invariants": [
+        "I01",
+        "I02",
+        "I07"
+      ]
+    },
+    {
+      "id": "hint-correct-needs-independent-check",
+      "kind": "original-outcome",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "outcome": "correct",
+          "answer": "のっていない",
+          "assistance": [
+            "manual-hint"
+          ]
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "independentPositiveDelta": 0,
+        "coverageDelta": 0,
+        "courseCompletionDelta": 0
+      },
+      "invariants": [
+        "I02",
+        "I03",
+        "I04"
+      ]
+    },
+    {
+      "id": "hint-stays-used-after-collapse",
+      "kind": "original-outcome",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "hint",
+          "action": "open"
+        },
+        {
+          "phase": "hint",
+          "action": "close"
+        },
+        {
+          "phase": "question",
+          "outcome": "correct",
+          "answer": "のっていない",
+          "assistance": [
+            "manual-hint"
+          ]
+        }
+      ],
+      "expect": {
+        "independentPositiveDelta": 0,
+        "pending": true
+      },
+      "invariants": [
+        "I02",
+        "I03"
+      ]
+    },
+    {
+      "id": "provided-class-is-not-source-class-success",
+      "kind": "assistance-scope",
+      "item": {
+        "domain": "verb",
+        "surface": "遅れる",
+        "reading": "おくれる",
+        "class": "ichidan"
+      },
+      "form": "tagaruPast",
+      "events": [
+        {
+          "phase": "step",
+          "given": "おくれたがる",
+          "answer": "godan",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct",
+          "kind": "classification"
+        },
+        {
+          "phase": "step",
+          "given": "おくれたがる",
+          "givenClass": "godan",
+          "answer": "おくれたがった",
+          "assistance": [
+            "provided-intermediate",
+            "provided-class"
+          ],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "sourceClassificationIndependentDelta": 0,
+        "applicationIndependentDelta": 0,
+        "coverageDelta": 0,
+        "assistedLocalEvidenceAllowed": [
+          "onbin.sokuon",
+          "suffix.past"
+        ],
+        "assistedEvidenceMustKeepConditions": true
+      },
+      "invariants": [
+        "I02",
+        "I03",
+        "I05"
+      ]
+    },
+    {
+      "id": "rule-exposed-leaf-is-practice-only",
+      "kind": "assistance-scope",
+      "item": {
+        "domain": "verb",
+        "surface": "遅れる",
+        "reading": "おくれる",
+        "class": "ichidan"
+      },
+      "form": "tagaruPast",
+      "events": [
+        {
+          "phase": "step",
+          "given": "おくれたがる",
+          "answer": "おくれたがった",
+          "assistance": [
+            "provided-intermediate",
+            "target-rule"
+          ],
+          "outcome": "correct",
+          "shownRule": "る结尾用促音便，接った"
+        }
+      ],
+      "expect": {
+        "independentPositiveDelta": 0,
+        "targetRuleMasteryDelta": 0,
+        "practiceSuccessAllowed": true
+      },
+      "invariants": [
+        "I02",
+        "I05"
+      ]
+    },
+    {
+      "id": "answer-exposed-copy-is-practice-only",
+      "kind": "assistance-scope",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "step",
+          "given": "のっている",
+          "answer": "のっていない",
+          "assistance": [
+            "provided-intermediate",
+            "target-answer"
+          ],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "independentPositiveDelta": 0,
+        "targetRuleMasteryDelta": 0,
+        "practiceSuccessAllowed": true
+      },
+      "invariants": [
+        "I02",
+        "I05"
+      ]
+    },
+    {
+      "id": "same-step-repeat-idempotent",
+      "kind": "idempotency",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "step",
+          "eventId": "same-event",
+          "nodeId": "n1",
+          "given": "のっている",
+          "answer": "のっていない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "eventId": "same-event",
+          "nodeId": "n1",
+          "given": "のっている",
+          "answer": "のっていない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "sameEventWrittenOnce": true,
+        "sameNodeEvaluatedOnce": true,
+        "independentPositiveDelta": 0,
+        "dailyDelta": 0
+      },
+      "invariants": [
+        "I06",
+        "I10"
+      ]
+    },
+    {
+      "id": "shared-sound-atom-across-stages",
+      "kind": "idempotency",
+      "item": {
+        "domain": "verb",
+        "surface": "待つ",
+        "reading": "まつ",
+        "class": "godan"
+      },
+      "form": "teoruPast",
+      "events": [
+        {
+          "phase": "question",
+          "answer": "まっておた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "待つ",
+          "answer": "まっておる",
+          "assistance": [
+            "segmented-target"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "step",
+          "given": "待っておる",
+          "answer": "まっておった",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "independentPositiveDelta": 0,
+        "assistedPerKcPerQuestionMaximum": 1,
+        "protectedSharedKc": "onbin.sokuon",
+        "pending": true
+      },
+      "invariants": [
+        "I02",
+        "I06"
+      ]
+    },
+    {
+      "id": "failed-leaf-then-shown-correction-no-overwrite",
+      "kind": "idempotency",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "step",
+          "nodeId": "leaf1",
+          "given": "のっている",
+          "answer": "のっていらない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "nodeId": "leaf1",
+          "given": "のっている",
+          "answer": "のっていない",
+          "assistance": [
+            "provided-intermediate",
+            "target-answer"
+          ],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "firstFailureRemains": true,
+        "independentPositiveDelta": 0,
+        "sameNodeEvaluatedOnce": true
+      },
+      "invariants": [
+        "I02",
+        "I06"
+      ]
+    },
+    {
+      "id": "retest-different-word-with-gap",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "interleave",
+          "count": "configured-minimum-gap",
+          "onlyTerminalOriginals": true
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "item": {
+            "domain": "verb",
+            "surface": "書く",
+            "reading": "かく",
+            "class": "godan"
+          },
+          "answer": "かいていない",
+          "assistance": [],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "pending": false,
+        "independentSuccesses": 1,
+        "coverageCreditAllowed": true
+      },
+      "invariants": [
+        "I09",
+        "I11"
+      ]
+    },
+    {
+      "id": "retest-same-word-immediate",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "answer": "のっていない",
+          "assistance": [],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "retestSuccesses": 0,
+        "independentMasteryCredit": false
+      },
+      "invariants": [
+        "I09"
+      ]
+    },
+    {
+      "id": "retest-different-word-too-early",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "item": {
+            "domain": "verb",
+            "surface": "書く",
+            "reading": "かく",
+            "class": "godan"
+          },
+          "answer": "かいていない",
+          "assistance": [],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "retestSuccesses": 0
+      },
+      "invariants": [
+        "I09"
+      ]
+    },
+    {
+      "id": "retest-gap-not-advanced-by-steps-or-retries",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "interleave",
+          "count": 10,
+          "eventTypes": [
+            "step",
+            "diagnostic-end",
+            "invalid",
+            "typo",
+            "reload",
+            "day-change"
+          ]
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "eligibleGapProgress": 0
+      },
+      "invariants": [
+        "I09",
+        "I10",
+        "I12"
+      ]
+    },
+    {
+      "id": "retest-other-ending-does-not-clear",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "interleave",
+          "count": "configured-minimum-gap",
+          "onlyTerminalOriginals": true
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "form": "teiruPast",
+          "item": {
+            "domain": "verb",
+            "surface": "書く",
+            "reading": "かく",
+            "class": "godan"
+          },
+          "answer": "かいていた",
+          "assistance": [],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "pendingOriginalTarget": true,
+        "retestSuccessesForOriginalTarget": 0
+      },
+      "invariants": [
+        "I09"
+      ]
+    },
+    {
+      "id": "retest-retry-typo-then-correct-without-hint",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "interleave",
+          "count": "configured-minimum-gap",
+          "onlyTerminalOriginals": true
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "item": {
+            "domain": "verb",
+            "surface": "待つ",
+            "reading": "まつ",
+            "class": "godan"
+          },
+          "answer": "めっていない",
+          "assistance": [],
+          "outcome": "typo"
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "item": {
+            "domain": "verb",
+            "surface": "待つ",
+            "reading": "まつ",
+            "class": "godan"
+          },
+          "answer": "まっていない",
+          "assistance": [],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "pending": false,
+        "independentSuccesses": 1,
+        "duplicateAttempt": false
+      },
+      "invariants": [
+        "I08",
+        "I09",
+        "I10"
+      ]
+    },
+    {
+      "id": "retest-correct-contracted-variant",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "interleave",
+          "count": "configured-minimum-gap",
+          "onlyTerminalOriginals": true
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "item": {
+            "domain": "verb",
+            "surface": "書く",
+            "reading": "かく",
+            "class": "godan"
+          },
+          "answer": "かいてない",
+          "assistance": [],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "pending": false,
+        "independentSuccesses": 1,
+        "variantEquivalent": true
+      },
+      "invariants": [
+        "I09",
+        "I11"
+      ]
+    },
+    {
+      "id": "retest-hint-on-new-word-does-not-clear",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "interleave",
+          "count": "configured-minimum-gap",
+          "onlyTerminalOriginals": true
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "item": {
+            "domain": "verb",
+            "surface": "書く",
+            "reading": "かく",
+            "class": "godan"
+          },
+          "answer": "かいていない",
+          "assistance": [
+            "manual-hint"
+          ],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "independentSuccesses": 0,
+        "coverageDelta": 0
+      },
+      "invariants": [
+        "I02",
+        "I09"
+      ]
+    },
+    {
+      "id": "retest-repeat-fail-then-success",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "interleave",
+          "count": "configured-minimum-gap",
+          "onlyTerminalOriginals": true
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "item": {
+            "domain": "verb",
+            "surface": "書く",
+            "reading": "かく",
+            "class": "godan"
+          },
+          "answer": "かいていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "interleave",
+          "count": "configured-minimum-gap",
+          "onlyTerminalOriginals": true
+        },
+        {
+          "phase": "question",
+          "questionId": "q3",
+          "item": {
+            "domain": "verb",
+            "surface": "待つ",
+            "reading": "まつ",
+            "class": "godan"
+          },
+          "answer": "まっていない",
+          "assistance": [],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "pending": false,
+        "failedIndependentQuestions": 2,
+        "successfulIndependentRetests": 1,
+        "duplicatePendingTargets": 0,
+        "historyRetained": true
+      },
+      "invariants": [
+        "I09",
+        "I10",
+        "I11"
+      ]
+    },
+    {
+      "id": "retest-reopened-by-new-failure",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていない",
+          "assistance": [],
+          "outcome": "correct"
+        },
+        {
+          "phase": "question",
+          "questionId": "q2",
+          "item": {
+            "domain": "verb",
+            "surface": "書く",
+            "reading": "かく",
+            "class": "godan"
+          },
+          "answer": "かいていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "historicalCoverageCanRemain": true,
+        "currentMasteredDespitePending": false
+      },
+      "invariants": [
+        "I01",
+        "I04",
+        "I09"
+      ]
+    },
+    {
+      "id": "retest-no-alternative-word-does-not-fabricate-success",
+      "kind": "retest",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "candidate-pool",
+          "eligibleWords": [
+            "乗る"
+          ]
+        },
+        {
+          "phase": "interleave",
+          "count": "configured-minimum-gap",
+          "onlyTerminalOriginals": true
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "completedAutomatically": false,
+        "schedulerTerminates": true
+      },
+      "invariants": [
+        "I09",
+        "I11"
+      ]
+    },
+    {
+      "id": "reload-after-failure-keeps-pending",
+      "kind": "persistence",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "reload"
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "gapUnchanged": true,
+        "historyUnchanged": true
+      },
+      "invariants": [
+        "I12"
+      ]
+    },
+    {
+      "id": "export-import-after-assisted-end",
+      "kind": "persistence",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "のっている",
+          "answer": "のっていない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        },
+        {
+          "phase": "diagnostic-end",
+          "outcome": "completed"
+        },
+        {
+          "phase": "export-import"
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "independentPositiveDelta": 0,
+        "assistancePreserved": true,
+        "idempotentRepeatedImport": true
+      },
+      "invariants": [
+        "I02",
+        "I10",
+        "I12",
+        "I13"
+      ]
+    },
+    {
+      "id": "cross-day-does-not-clear-retest",
+      "kind": "persistence",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "day-change",
+          "days": 1
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "dailyCountsResetOnly": true,
+        "gapUnchanged": true,
+        "evidenceUnchanged": true
+      },
+      "invariants": [
+        "I12"
+      ]
+    },
+    {
+      "id": "legacy-log-failure-plus-assisted-success",
+      "kind": "migration",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "import-fixture",
+          "source": "observedLatestQuestion",
+          "repetitions": 2
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "oldStepPromotedToIndependent": false,
+        "oldStepClearsPending": false,
+        "migrationIdempotent": true,
+        "historicalEventsRewritten": false
+      },
+      "invariants": [
+        "I13",
+        "I14"
+      ]
+    },
+    {
+      "id": "legacy-log-cropped-before-failure",
+      "kind": "migration",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "import-partial-history",
+          "presentPhases": [
+            "step",
+            "diagnostic-end"
+          ],
+          "missingPhases": [
+            "question"
+          ],
+          "hintUsed": false
+        }
+      ],
+      "expect": {
+        "inventIndependentFailure": false,
+        "inventIndependentSuccess": false,
+        "missingProvenanceVisible": true,
+        "historicalEventsRewritten": false
+      },
+      "invariants": [
+        "I13",
+        "I14"
+      ]
+    },
+    {
+      "id": "legacy-profile-without-events",
+      "kind": "migration",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "import-legacy",
+          "cumulativeMasteryOnly": true
+        }
+      ],
+      "expect": {
+        "oldRecordsPreserved": true,
+        "inventIndependentSuccess": false,
+        "inventFailureFromNothing": false,
+        "provenance": "legacy-unverified",
+        "migrationIdempotent": true
+      },
+      "invariants": [
+        "I13",
+        "I14"
+      ]
+    },
+    {
+      "id": "legacy-known-failure-after-earlier-correct",
+      "kind": "migration",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "import-history",
+          "sequence": [
+            "independent-correct",
+            "independent-failure",
+            "assisted-correct",
+            "completed"
+          ]
+        }
+      ],
+      "expect": {
+        "pending": true,
+        "earlierSuccessClearsLaterFailure": false,
+        "assistedCanClearPending": false
+      },
+      "invariants": [
+        "I09",
+        "I13",
+        "I14"
+      ]
+    },
+    {
+      "id": "legacy-later-valid-independent-retest",
+      "kind": "migration",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "import-history",
+          "sequence": [
+            "independent-failure",
+            "eligible-other-originals",
+            "independent-correct-new-word-same-form"
+          ]
+        }
+      ],
+      "expect": {
+        "pending": false,
+        "historyRetained": true,
+        "doubleReplayScores": false
+      },
+      "invariants": [
+        "I09",
+        "I13",
+        "I14"
+      ]
+    },
+    {
+      "id": "transaction-log-score-pending-consistent",
+      "kind": "transaction",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "save-failure",
+          "stateChanges": [
+            "practice-log",
+            "assisted-evidence",
+            "pending-retest"
+          ]
+        },
+        {
+          "phase": "memory-export"
+        }
+      ],
+      "expect": {
+        "allChangesRecoverableTogether": true,
+        "partialDurableState": false,
+        "crossTabConflictCommits": false
+      },
+      "invariants": [
+        "I15"
+      ]
+    },
+    {
+      "id": "pending-blocks-mastered-course-state",
+      "kind": "presentation",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "seed-mastery",
+          "allPrerequisites": true,
+          "applicationConfidence": 1,
+          "coverageComplete": true
+        },
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "step",
+          "given": "のっている",
+          "answer": "のっていない",
+          "assistance": [
+            "provided-intermediate"
+          ],
+          "outcome": "correct"
+        }
+      ],
+      "expect": {
+        "statusShowsPending": true,
+        "courseComplete": false,
+        "applicationConfidentAndPendingDistinguished": true,
+        "accessibleCoursesPreserved": true
+      },
+      "invariants": [
+        "I04",
+        "I14"
+      ]
+    },
+    {
+      "id": "pending-retest-not-starved-by-unrelated-focus",
+      "kind": "scheduling",
+      "item": {
+        "domain": "verb",
+        "surface": "乗る",
+        "reading": "のる",
+        "class": "godan"
+      },
+      "form": "teiruNegative",
+      "events": [
+        {
+          "phase": "question",
+          "questionId": "q1",
+          "answer": "のっていた",
+          "assistance": [],
+          "outcome": "incorrect"
+        },
+        {
+          "phase": "interleave",
+          "count": "configured-minimum-gap",
+          "onlyTerminalOriginals": true
+        },
+        {
+          "phase": "schedule",
+          "weakerUnrelatedAtoms": true
+        }
+      ],
+      "expect": {
+        "dueTargetSelectedWithinFiniteBound": true,
+        "selectedSameForm": true,
+        "selectedDifferentWord": true,
+        "onePendingCannotMonopolizeAllSlots": true
+      },
+      "invariants": [
+        "I09",
+        "I11"
+      ]
+    }
+  ],
+  "revisions": [
+    {
+      "reason": "Fixture self-review corrected the subject/form of rule-exposed-leaf-is-practice-only to match its already declared おくれたがる input. No expected behavior changed. This correction precedes implementation execution.",
+      "priorSha256": "7716d4c34219f3d9e4a7c80b3c0d480b265aba0a65f34512b567537afe102a8f"
+    }
+  ]
+}

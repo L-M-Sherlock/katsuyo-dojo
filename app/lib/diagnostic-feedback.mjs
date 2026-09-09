@@ -4,6 +4,9 @@ export function diagnosticFeedback({item,answer,diagnosis,steps,plan,step,normal
   const actual=normalize(answer),observations=[];
   if(diagnosis?.message)return {resolution:diagnosis.kcId?'rule':diagnosis.stage?'stage':diagnosis.review?'mixed':'partial',
     message:diagnosis.message,observations,terminal:steps.length===0};
+  const selection = steps[0]?.probeSelection;
+  if (selection) return { resolution: 'stage-priority', message: selection.message,
+    observations: [{ kind: 'candidate-stage', text: selection.label }], terminal: false };
   for(const n of plan?.nodes??[]) {
     if(n.operation!=='row')continue;
     const root=normalize(n.fixed.reading),expected=normalize(n.output.reading).slice(root.length);

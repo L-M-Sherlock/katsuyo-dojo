@@ -1,0 +1,532 @@
+import assert from 'node:assert/strict';
+import { after, afterEach, beforeEach, test } from 'node:test';
+import { readFile } from 'node:fs/promises';
+import ts from 'typescript';
+import { assessmentTarget, emptyAssessment, recordIndependentAttempt, recordHintExposure } from '../app/lib/learning-assessment.mjs';
+import { emptyPracticeLog } from '../app/lib/practice-log.mjs';
+import { UNIFIED_COURSES, CURRICULUM_VERSION } from '../app/lib/unified-curriculum.mjs';
+import { createUnifiedExport } from '../app/lib/unified-profile.mjs';
+import { wordKey } from '../app/lib/exercise-selection.mjs';
+import { createAnswerAnalyzer } from '../app/lib/answer-analysis.mjs';
+import { conjugate } from '../app/lib/conjugation.mjs';
+import { conjugateAdjective } from '../app/lib/adjective-conjugation.mjs';
+
+// Use the actual page. The extra export exposes only labels for identifying a
+// rendered form; it changes no state, scoring, planning, or event behavior.
+const pageUrl = new URL('../app/page.tsx', import.meta.url);
+const compiled = ts.transpileModule(`${await readFile(pageUrl, 'utf8')}\nexport { FORM_LABELS as TEST_FORM_LABELS };`, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
+}).outputText.replace(/from ["']([^"']+)["']/g, (_match, specifier) =>
+  `from ${JSON.stringify(specifier.startsWith('.') ? new URL(specifier, pageUrl).href : import.meta.resolve(specifier))}`);
+const { default: Page, KNOWLEDGE, ALL_KCS, TEST_FORM_LABELS } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
+
+const { JSDOM } = await import('jsdom');
+const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost/katsuyo-dojo/', pretendToBeVisual: true });
+for (const key of ['window', 'document', 'navigator', 'HTMLElement', 'HTMLInputElement', 'StorageEvent']) {
+  Object.defineProperty(globalThis, key, { configurable: true, value: dom.window[key] });
+}
+for (const key of ['requestAnimationFrame', 'cancelAnimationFrame', 'addEventListener', 'removeEventListener']) globalThis[key] = dom.window[key].bind(dom.window);
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+const { createElement, StrictMode } = await import('react');
+const { render, cleanup, fireEvent, waitFor, configure, act } = await import('@testing-library/react');
+configure({ asyncUtilTimeout: 8000 });
+const KEY = 'katsuyo-practice-profile-v7';
+const storage = window.localStorage;
+const originalGet = dom.window.Storage.prototype.getItem;
+const originalSet = dom.window.Storage.prototype.setItem;
+const originalConfirm = window.confirm;
+let locks;
+
+beforeEach(() => {
+  storage.clear(); locks = Promise.resolve();
+  window.confirm = () => true;
+  Object.defineProperty(navigator, 'locks', { configurable: true, value: { request: (_key, callback) => {
+    const result = locks.then(callback); locks = result.catch(() => {}); return result;
+  } } });
+});
+afterEach(() => {
+  cleanup();
+  dom.window.Storage.prototype.getItem = originalGet;
+  dom.window.Storage.prototype.setItem = originalSet;
+  window.confirm = originalConfirm;
+});
+after(() => dom.window.close());
+
+const dateKey = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+const stats = { attempts: 5, correct: 5, filteredAccuracy: 1, confidence: 1, bestConfidence: 1, cleanTimeTotal: 0, cleanTimeCount: 0 };
+const catalog = (surface, form) => {
+  const result = KNOWLEDGE.exercises.find(exercise => exercise.item.surface === surface && exercise.form === form);
+  assert.ok(result, `${surface}/${form} is in the real exercise catalog`);
+  return result;
+};
+const noru = catalog('乗る', 'teiruNegative'), toru = catalog('取る', 'teiruNegative');
+const targetKey = assessmentTarget(noru).key;
+const fillerExamples = [catalog('書く', 'masu'), catalog('見る', 'tai')];
+const original = (state, exercise, correct, at = new Date(Date.now() - 3_600_000).toISOString()) => recordIndependentAttempt(state, {
+  exercise, correct, questionId: `seed-${state.originalCount + 1}`, at,
+});
+function profile({ mastered = true, assessment = emptyAssessment(), recentWordKeys = [], ...rest } = {}) {
+  return { version: 7, curriculumVersion: CURRICULUM_VERSION, date: dateKey(), attempted: 0, correct: 0, streak: 0,
+    rotation: 0, byKc: mastered ? Object.fromEntries(ALL_KCS.map(kc => [kc.id, { ...stats }])) : {},
+    introducedKcIds: mastered ? ALL_KCS.filter(kc => kc.gating).map(kc => kc.id) : [ALL_KCS.find(kc => kc.gating).id],
+    accessibleCourseIds: [], coursePractice: {}, recentWordKeys, practiceLog: emptyPracticeLog(), assessment, legacy: null, migration: null, ...rest };
+}
+function readyProfile() {
+  let assessment = original(emptyAssessment(), toru, false);
+  for (const filler of fillerExamples) assessment = original(assessment, filler, true);
+  // Recent real-word history makes 乗る the first available different word;
+  // this is ordinary stored input, not a test override to the page's planner.
+  const beforeNoru = KNOWLEDGE.exercises.filter(exercise => {
+    const target = assessmentTarget(exercise);
+    return target.key === targetKey && target.wordKey < assessmentTarget(noru).wordKey;
+  }).map(wordKey);
+  return profile({ assessment, recentWordKeys: [...new Set(beforeNoru)] });
+}
+const saved = () => JSON.parse(storage.getItem(KEY));
+async function mount() {
+  const view = render(createElement(StrictMode, null, createElement(Page)));
+  await waitFor(() => assert.equal(Boolean(view.queryByText('正在加载学习进度……')), false));
+  assert.equal(Boolean(view.container.querySelector('.practice-controls')?.disabled), false);
+  return view;
+}
+function currentExercise(view) {
+  const ruby = view.container.querySelector('.word-display ruby');
+  assert.ok(ruby, 'a real original question is shown');
+  const surface = ruby.firstChild.textContent;
+  const label = view.container.querySelector('.question-kicker')?.children[1]?.textContent;
+  const isClassQuestion = !view.container.querySelector('#answer');
+  const exercise = KNOWLEDGE.exercises.find(candidate => candidate.item.surface === surface &&
+    (isClassQuestion ? candidate.form === null : TEST_FORM_LABELS[candidate.form] === label));
+  assert.ok(exercise, `${surface}/${label} identifies a current catalog original`);
+  return exercise;
+}
+function correctText(exercise) {
+  const item = exercise.item;
+  return item.domain === 'adjective'
+    ? conjugateAdjective({ ...item, surface: item.reading }, exercise.form)
+    : conjugate(item.reading, item.class, exercise.form);
+}
+function submitText(view, text, double = false) {
+  const input = view.getByLabelText('你的答案');
+  fireEvent.change(input, { target: { value: text } });
+  fireEvent.submit(input.closest('form'));
+  if (double) fireEvent.submit(input.closest('form'));
+}
+async function answerCorrect(view) {
+  const exercise = currentExercise(view), before = saved().attempted;
+  if (exercise.form) submitText(view, correctText(exercise));
+  else {
+    const choices = exercise.item.domain === 'verb' ? ['ichidan', 'godan', 'irregular'] : ['i', 'na'];
+    fireEvent.click(view.container.querySelector(`[data-class-shortcut="${choices.indexOf(exercise.item.class) + 1}"]`));
+  }
+  await waitFor(() => assert.equal(saved().attempted, before + 1));
+  return exercise;
+}
+async function next(view) {
+  fireEvent.click(view.container.querySelector('.next-button'));
+  await waitFor(() => assert.equal(Boolean(view.container.querySelector('.feedback')), false));
+}
+async function exportThroughUI(view) {
+  if (!view.queryByRole('dialog')) fireEvent.click(view.container.querySelector('.progress-trigger'));
+  let blob;
+  const create = URL.createObjectURL, revoke = URL.revokeObjectURL, click = dom.window.HTMLAnchorElement.prototype.click;
+  URL.createObjectURL = value => { blob = value; return 'blob:independent-retest'; };
+  URL.revokeObjectURL = () => {};
+  dom.window.HTMLAnchorElement.prototype.click = () => {};
+  try {
+    fireEvent.click(view.getByRole('button', { name: '导出数据', exact: true }));
+    assert.ok(blob);
+    return JSON.parse(await blob.text());
+  } finally { URL.createObjectURL = create; URL.revokeObjectURL = revoke; dom.window.HTMLAnchorElement.prototype.click = click; }
+}
+async function importThroughUI(view, envelope) {
+  if (!view.queryByRole('dialog')) fireEvent.click(view.container.querySelector('.progress-trigger'));
+  const input = view.container.querySelector('input[type="file"]');
+  const file = { name: 'independent-retest.json', text: async () => JSON.stringify(envelope) };
+  fireEvent.change(input, { target: { files: [file] } });
+  await waitFor(() => assert.equal(view.container.querySelector('.transfer-notice')?.classList.contains('success'), true));
+  fireEvent.click(view.container.querySelector('.progress-drawer header button[aria-label="关闭知识进度"]'));
+}
+
+test('independent page routes 乗る past-for-negative to tail only, preserves mastery through probes, then schedules spaced transfer', async () => {
+  const baseline = readyProfile(); storage.setItem(KEY, JSON.stringify(baseline));
+  const view = await mount();
+  assert.equal(currentExercise(view).id, noru.id);
+  submitText(view, 'のっていた', true);
+  await waitFor(() => assert.equal(saved().attempted, 1));
+  const afterOriginal = saved();
+  assert.equal(afterOriginal.practiceLog.events.filter(event => event.type === 'question').length, 1);
+  assert.equal(afterOriginal.assessment.pending[targetKey].lastWordKey, assessmentTarget(noru).wordKey);
+  const steps = createAnswerAnalyzer(noru.item, noru.form)('のっていた').steps;
+  assert.equal(steps.length, 1, 'the base ている construction must not be asked again');
+  const region = view.getByRole('region', { name: '拆步练习' });
+  assert.match(region.textContent, /のっている/);
+  const input = view.getByLabelText('本步答案');
+  fireEvent.change(input, { target: { value: 'のっていない' } });
+  fireEvent.submit(input.closest('form')); fireEvent.submit(input.closest('form'));
+  await waitFor(() => assert.equal(saved().practiceLog.events.filter(event => event.type === 'step').length, 1));
+  assert.deepEqual(saved().byKc, afterOriginal.byKc, 'given intermediate input cannot increase independent mastery');
+  assert.ok(saved().assessment.assistedByKc['suffix.negative']);
+  assert.equal(saved().assessment.independentByKc['apply.teiru.continuation'], undefined);
+  fireEvent.click(view.container.querySelector('[data-diagnostic-next]'));
+  await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
+  assert.ok(saved().assessment.pending[targetKey]);
+  assert.equal(saved().attempted, 1);
+  assert.equal(saved().correct, 0);
+  await next(view);
+  for (let i = 0; i < 2; i++) {
+    assert.notEqual(assessmentTarget(currentExercise(view)).key, targetKey, `spacing original ${i + 1} must use another target`);
+    await answerCorrect(view); await next(view);
+  }
+  const retest = currentExercise(view);
+  assert.equal(assessmentTarget(retest).key, targetKey);
+  assert.notEqual(assessmentTarget(retest).wordKey, assessmentTarget(noru).wordKey);
+  await answerCorrect(view);
+  const finished = saved();
+  assert.equal(finished.assessment.pending[targetKey], undefined);
+  assert.equal(finished.assessment.byTarget[targetKey].eligibleRetestCorrect, 1);
+  assert.equal(finished.attempted, 4, 'probes do not inflate original question totals');
+  assert.equal(finished.correct, 3);
+  const finalEvent = finished.practiceLog.events.at(-1);
+  assert.equal(finalEvent.support.independent, true);
+});
+
+test('independent page keeps hinted new-word correctness out of mastery and retest success after the hint is collapsed', async () => {
+  const initial = readyProfile(); storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  await waitFor(() => assert.ok(view.getByRole('button', { name: '收起提示' })));
+  fireEvent.click(view.getByRole('button', { name: '收起提示' }));
+  await answerCorrect(view);
+  const after = saved();
+  assert.ok(after.assessment.pending[targetKey]);
+  assert.deepEqual(after.byKc, initial.byKc);
+  assert.deepEqual(after.coursePractice, initial.coursePractice);
+  assert.equal(after.assessment.byTarget[targetKey].eligibleRetestCorrect, 0);
+  assert.equal(after.assessment.byTarget[targetKey].independentCorrect, 0);
+  assert.equal(after.practiceLog.events.at(-1).support.source, 'hinted');
+  assert.equal(after.practiceLog.events.at(-1).support.independent, false);
+  await next(view);
+  assert.notEqual(assessmentTarget(currentExercise(view)).key, targetKey);
+});
+
+test('independent page preserves waiting originals across reload and exports then restores resolved state without reopening history', async () => {
+  storage.setItem(KEY, JSON.stringify(readyProfile()));
+  let view = await mount();
+  const waitingExport = await exportThroughUI(view);
+  assert.ok(waitingExport.profile.assessment.pending[targetKey]);
+  cleanup(); storage.clear(); storage.setItem(KEY, JSON.stringify(profile()));
+  view = await mount();
+  await importThroughUI(view, waitingExport);
+  assert.equal(assessmentTarget(currentExercise(view)).key, targetKey);
+  await answerCorrect(view);
+  assert.equal(saved().assessment.pending[targetKey], undefined);
+  const resolved = await exportThroughUI(view);
+  assert.equal(resolved.profile.assessment.byTarget[targetKey].eligibleRetestCorrect, 1);
+  cleanup(); storage.clear(); storage.setItem(KEY, JSON.stringify(profile()));
+  view = await mount();
+  await importThroughUI(view, resolved);
+  assert.equal(saved().assessment.pending[targetKey], undefined);
+  assert.equal(saved().assessment.byTarget[targetKey].eligibleRetestCorrect, 1);
+  cleanup();
+  view = await mount();
+  assert.equal(saved().assessment.pending[targetKey], undefined);
+  assert.equal(saved().assessment.byTarget[targetKey].eligibleRetestCorrect, 1);
+  assert.ok(view.container.querySelector('.word-display'));
+});
+
+test('independent page reopens a specialist with actual-course filler then presents its pending target at the first eligible slot', async () => {
+  const assessment = original(emptyAssessment(), noru, false);
+  storage.setItem(KEY, JSON.stringify(profile({ assessment })));
+  const view = await mount();
+  const aspect = UNIFIED_COURSES.find(course => course.id === 'aspect');
+  const button = [...view.container.querySelectorAll('.mode-list button')].find(node => node.querySelector('.course-name')?.textContent.includes(aspect.title));
+  assert.ok(button && !button.disabled);
+  fireEvent.click(button);
+  await waitFor(() => assert.equal(button.classList.contains('active'), true));
+  for (let i = 0; i < 2; i++) {
+    const exercise = currentExercise(view);
+    assert.notEqual(assessmentTarget(exercise).key, targetKey);
+    assert.equal(exercise.courseId, 'aspect');
+    await answerCorrect(view);
+    assert.equal(saved().practiceLog.events.at(-1).exercise.courseId, exercise.courseId);
+    await next(view);
+  }
+  assert.equal(assessmentTarget(currentExercise(view)).key, targetKey);
+  assert.notEqual(assessmentTarget(currentExercise(view)).wordKey, assessmentTarget(noru).wordKey);
+  assert.ok(saved().assessment.pending[targetKey]);
+});
+
+test('independent page can space a fresh classification failure using real other class targets without requiring prior mastery', async () => {
+  storage.setItem(KEY, JSON.stringify(profile({ mastered: false })));
+  const view = await mount();
+  const failed = currentExercise(view), key = assessmentTarget(failed).key;
+  assert.equal(failed.form, null);
+  const wrong = [...view.container.querySelectorAll('[data-class-shortcut]')].find((_, index) => ['ichidan', 'godan', 'irregular'][index] !== failed.item.class);
+  fireEvent.click(wrong);
+  await waitFor(() => assert.equal(saved().attempted, 1));
+  assert.ok(saved().assessment.pending[key]);
+  await next(view);
+  for (let i = 0; i < 2; i++) {
+    assert.notEqual(assessmentTarget(currentExercise(view)).key, key, 'a new learner must not be trapped repeatedly rehearsing the pending class');
+    await answerCorrect(view); await next(view);
+  }
+  assert.equal(assessmentTarget(currentExercise(view)).key, key);
+  assert.notEqual(assessmentTarget(currentExercise(view)).wordKey, assessmentTarget(failed).wordKey);
+  await answerCorrect(view);
+  assert.equal(saved().assessment.pending[key], undefined);
+});
+
+test('independent page storage conflict preserves newer pending state and rejects the whole stale correct snapshot', async () => {
+  const initial = readyProfile(); storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount(), shown = currentExercise(view);
+  const external = { ...initial, assessment: original(initial.assessment, catalog('読む', 'past'), false), attempted: 9, correct: 4 };
+  storage.setItem(KEY, JSON.stringify(external));
+  submitText(view, correctText(shown));
+  await waitFor(() => assert.equal(view.container.querySelector('.practice-controls')?.disabled, true));
+  assert.deepEqual(saved(), external);
+  assert.ok(saved().assessment.pending[targetKey]);
+  assert.equal(saved().practiceLog.events.length, 0);
+});
+
+test('independent page quota failure keeps the complete updated assessment and log exportable in memory', async () => {
+  const initial = readyProfile(); storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  dom.window.Storage.prototype.setItem = () => { throw new Error('QuotaExceededError'); };
+  submitText(view, 'のっていた');
+  await waitFor(() => assert.ok(view.container.querySelector('.feedback')));
+  assert.deepEqual(saved(), initial, 'failed local save does not partly overwrite its prior snapshot');
+  const envelope = await exportThroughUI(view);
+  assert.equal(envelope.profile.attempted, 1);
+  assert.equal(envelope.profile.assessment.originalCount, initial.assessment.originalCount + 1);
+  assert.equal(envelope.profile.assessment.pending[targetKey].lastWordKey, assessmentTarget(noru).wordKey);
+  assert.equal(envelope.profile.practiceLog.events.length, 1);
+  assert.ok(view.getByRole('alert'));
+});
+
+test('independent page keeps lifetime retest spacing through daily reset and backup import', async () => {
+  const old = readyProfile(); old.date = '2026-01-01'; old.attempted = 18; old.correct = 12; old.streak = 2;
+  storage.setItem(KEY, JSON.stringify(profile()));
+  const view = await mount();
+  await importThroughUI(view, createUnifiedExport(old));
+  assert.equal(saved().attempted, 0);
+  assert.equal(saved().correct, 0);
+  assert.equal(saved().assessment.originalCount, 3);
+  assert.equal(assessmentTarget(currentExercise(view)).key, targetKey);
+  await answerCorrect(view);
+  assert.equal(saved().assessment.pending[targetKey], undefined);
+  assert.equal(saved().attempted, 1);
+});
+
+test('independent page persists reading a pending-target hint before submission so refresh cannot turn it into independent success', async () => {
+  const initial = readyProfile(); storage.setItem(KEY, JSON.stringify(initial));
+  let view = await mount();
+  assert.equal(currentExercise(view).id, noru.id);
+  fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  await waitFor(() => assert.ok(view.container.querySelector('.hint-box')));
+  cleanup();
+  view = await mount();
+  assert.notEqual(assessmentTarget(currentExercise(view)).key, targetKey, 'unsubmitted hint exposure must survive remount and reopen the spacing requirement');
+  assert.equal(saved().assessment.originalCount, initial.assessment.originalCount);
+  assert.equal(saved().assessment.pending[targetKey].lastPresentedOrdinal, initial.assessment.originalCount);
+  assert.deepEqual(saved().byKc, initial.byKc);
+  await answerCorrect(view);
+  assert.ok(saved().assessment.pending[targetKey], 'answering the intervening original must not clear the hinted target');
+  await next(view);
+  assert.notEqual(assessmentTarget(currentExercise(view)).key, targetKey);
+  await answerCorrect(view); await next(view);
+  const transfer = assessmentTarget(currentExercise(view));
+  assert.equal(transfer.key, targetKey);
+  assert.notEqual(transfer.wordKey, assessmentTarget(noru).wordKey, 'the hinted but unsubmitted word is not a fresh transfer word');
+  assert.notEqual(transfer.wordKey, assessmentTarget(toru).wordKey, 'the earlier failed word is also excluded');
+  await answerCorrect(view);
+  assert.equal(saved().assessment.pending[targetKey], undefined);
+});
+
+test('independent page saves an unsubmitted first hint as pending exposure without inventing a failure or original attempt', async () => {
+  const initial = profile(); storage.setItem(KEY, JSON.stringify(initial));
+  let view = await mount();
+  const exposed = currentExercise(view), key = assessmentTarget(exposed).key;
+  fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  await waitFor(() => assert.ok(view.container.querySelector('.hint-box')));
+  assert.ok(saved().assessment.pending[key]);
+  assert.equal(saved().assessment.pending[key].failures, 0);
+  assert.equal(saved().assessment.originalCount, 0);
+  assert.equal(saved().attempted, 0);
+  assert.deepEqual(saved().byKc, initial.byKc);
+  assert.equal(saved().assessment.byTarget[key].independentAttempts, 0);
+  fireEvent.click(view.getByRole('button', { name: '收起提示' }));
+  const eventCount = saved().practiceLog.events.length;
+  assert.equal(eventCount, 1, 'closing the hint does not append another exposure');
+  cleanup();
+  view = await mount();
+  for (let i = 0; i < 2; i++) {
+    assert.notEqual(assessmentTarget(currentExercise(view)).key, key);
+    await answerCorrect(view); await next(view);
+  }
+  assert.equal(assessmentTarget(currentExercise(view)).key, key);
+  assert.notEqual(assessmentTarget(currentExercise(view)).wordKey, assessmentTarget(exposed).wordKey);
+  await answerCorrect(view);
+  assert.equal(saved().assessment.pending[key], undefined);
+  assert.equal(saved().assessment.byTarget[key].independentAttempts, 1);
+  assert.equal(saved().assessment.byTarget[key].eligibleRetestCorrect, 1);
+  assert.equal(saved().attempted, 3);
+});
+
+test('independent page keeps a last-question failure visible and scheduled after the round ends', async () => {
+  storage.setItem(KEY, JSON.stringify(profile()));
+  const view = await mount();
+  for (let i = 0; i < 11; i++) { await answerCorrect(view); await next(view); }
+  assert.match(view.container.querySelector('.stage-meta').textContent, /12.*12/);
+  const failed = currentExercise(view), key = assessmentTarget(failed).key;
+  assert.equal(failed.form, null);
+  const choices = failed.item.domain === 'verb' ? ['ichidan', 'godan', 'irregular'] : ['i', 'na'];
+  const wrongIndex = choices.findIndex(choice => choice !== failed.item.class);
+  fireEvent.click(view.container.querySelector(`[data-class-shortcut="${wrongIndex + 1}"]`));
+  await waitFor(() => assert.equal(saved().attempted, 12));
+  await next(view);
+  const completion = view.container.querySelector('.completion-card');
+  assert.match(completion.textContent, /待独立复测/);
+  assert.doesNotMatch(completion.textContent, /全部知识点已达标|全部已达标/);
+  fireEvent.click(view.container.querySelector('.restart-button'));
+  await waitFor(() => assert.ok(view.container.querySelector('.word-display')));
+  assert.ok(saved().assessment.pending[key]);
+  for (let i = 0; i < 2; i++) {
+    assert.notEqual(assessmentTarget(currentExercise(view)).key, key);
+    await answerCorrect(view); await next(view);
+  }
+  assert.equal(assessmentTarget(currentExercise(view)).key, key);
+  assert.notEqual(assessmentTarget(currentExercise(view)).wordKey, assessmentTarget(failed).wordKey);
+});
+
+test('independent page shows singleton waiting explicitly, leaves unrelated courses open, and logs the delayed same-word policy', async () => {
+  const iku = catalog('行く', 'past'), key = assessmentTarget(iku).key;
+  let assessment = original(emptyAssessment(), iku, false, new Date().toISOString());
+  for (const filler of fillerExamples) assessment = original(assessment, filler, true);
+  storage.setItem(KEY, JSON.stringify(profile({ assessment })));
+  let view = await mount();
+  assert.notEqual(assessmentTarget(currentExercise(view)).key, key, 'same-word exception cannot be repeated immediately as a retest');
+  const classifyCourse = UNIFIED_COURSES.find(course => course.id === 'classify');
+  const classifyButton = [...view.container.querySelectorAll('.mode-list button')].find(node => node.querySelector('.course-name')?.textContent.includes(classifyCourse.title));
+  assert.equal(classifyButton.disabled, false);
+  assert.doesNotMatch(classifyButton.querySelector('i').textContent, /待复测/);
+  fireEvent.click(view.container.querySelector('.progress-trigger'));
+  fireEvent.click(view.getByRole('tab', { name: '待复测 1', exact: true }));
+  assert.match(view.container.querySelector('.pending-retests').textContent, /24 小时/);
+  assert.match(view.container.querySelector('.pending-retests').textContent, /最早时间/);
+  fireEvent.click(view.container.querySelector('.progress-drawer header button[aria-label="关闭知识进度"]'));
+  fireEvent.click(view.getByRole('button', { name: '结束本轮', exact: true }));
+  await waitFor(() => assert.ok(view.container.querySelector('.completion-card')));
+  assert.doesNotMatch(view.container.querySelector('.completion-card').textContent, /全部知识点已达标|全部已达标/);
+  cleanup();
+
+  const old = new Date(Date.now() - 25 * 3_600_000).toISOString();
+  assessment = original(emptyAssessment(), iku, false, old);
+  for (const filler of fillerExamples) assessment = original(assessment, filler, true, old);
+  storage.setItem(KEY, JSON.stringify(profile({ assessment })));
+  view = await mount();
+  assert.equal(currentExercise(view).id, iku.id);
+  assert.match(view.container.querySelector('.focus-panel').textContent, /独立复测/);
+  await answerCorrect(view);
+  assert.equal(saved().assessment.pending[key], undefined);
+  assert.equal(saved().practiceLog.events.at(-1).assessment.eligibility.policy, 'single-word-delayed');
+});
+
+test('independent page reads legacy storage once and never lets an old tab overwrite its new assessment snapshot', async () => {
+  const legacy = profile(); legacy.version = 6; delete legacy.assessment;
+  const legacyKey = 'katsuyo-practice-profile-v6', raw = JSON.stringify(legacy);
+  storage.setItem(legacyKey, raw);
+  const view = await mount();
+  const exercise = currentExercise(view);
+  assert.equal(exercise.form, null);
+  const wrongIndex = ['ichidan', 'godan', 'irregular'].findIndex(choice => choice !== exercise.item.class);
+  fireEvent.click(view.container.querySelector(`[data-class-shortcut="${wrongIndex + 1}"]`));
+  await waitFor(() => assert.equal(saved()?.version, 7));
+  assert.equal(storage.getItem(legacyKey), raw);
+  const current = saved();
+  assert.ok(current.assessment.pending[assessmentTarget(exercise).key]);
+  storage.setItem(legacyKey, JSON.stringify({ ...legacy, attempted: 99 }));
+  await act(async () => window.dispatchEvent(new StorageEvent('storage', { key: legacyKey, newValue: storage.getItem(legacyKey), storageArea: storage })));
+  assert.deepEqual(saved(), current);
+  assert.equal(view.container.querySelector('.practice-controls').disabled, false);
+  assert.match(view.getByRole('alert').textContent, /旧版标签页/);
+});
+
+test('independent page reaches a qualified retest in the real two-word いい family through explicitly unqualified rehearsal', async () => {
+  const good = catalog('いい', 'adjectivePast'), cool = catalog('かっこいい', 'adjectivePast');
+  const key = assessmentTarget(good).key;
+  assert.equal(assessmentTarget(cool).key, key);
+  const group = KNOWLEDGE.exercises.filter(exercise => assessmentTarget(exercise).key === key);
+  assert.equal(new Set(group.map(exercise => assessmentTarget(exercise).wordKey)).size, 2);
+  let assessment = original(emptyAssessment(), good, false);
+  for (const filler of fillerExamples) assessment = original(assessment, filler, true);
+  assessment = recordHintExposure(assessment, { exercise: cool, questionId: 'cool-unsubmitted', eventId: 'cool-hint', at: new Date(Date.now() - 1_800_000).toISOString() });
+  for (const filler of fillerExamples) assessment = original(assessment, filler, true);
+  const initial = profile({ assessment }); storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  assert.equal(currentExercise(view).id, good.id);
+  assert.match(view.container.querySelector('.focus-panel').textContent, /巩固练习/);
+  assert.match(view.container.querySelector('.focus-panel').textContent, /不计独立掌握/);
+  await answerCorrect(view);
+  assert.ok(saved().assessment.pending[key]);
+  assert.deepEqual(saved().byKc, initial.byKc);
+  assert.equal(saved().practiceLog.events.at(-1).support.source, 'rehearsal');
+  assert.equal(saved().practiceLog.events.at(-1).support.independent, false);
+  await next(view);
+  for (let i = 0; i < 2; i++) {
+    assert.notEqual(assessmentTarget(currentExercise(view)).key, key);
+    await answerCorrect(view); await next(view);
+  }
+  assert.equal(currentExercise(view).id, cool.id);
+  assert.match(view.container.querySelector('.focus-panel').textContent, /独立复测/);
+  await answerCorrect(view);
+  assert.equal(saved().assessment.pending[key], undefined);
+  assert.equal(saved().assessment.byTarget[key].eligibleRetestCorrect, 1);
+});
+
+test('independent page retains pending when probes are skipped or a round is ended before completing them', async () => {
+  for (const exit of ['skip', 'finish-round']) {
+    storage.setItem(KEY, JSON.stringify(readyProfile()));
+    const view = await mount();
+    submitText(view, 'のっていた');
+    await waitFor(() => assert.equal(saved().attempted, 1));
+    const originalSnapshot = saved();
+    assert.ok(view.queryByRole('region', { name: '拆步练习' }));
+    if (exit === 'skip') {
+      fireEvent.click(view.getByRole('button', { name: '跳过剩余拆步，查看解析', exact: true }));
+      await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
+      assert.equal(saved().practiceLog.events.at(-1).outcome, 'skipped');
+      await next(view);
+    } else {
+      fireEvent.click(view.getByRole('button', { name: '结束本轮', exact: true }));
+      await waitFor(() => assert.ok(view.container.querySelector('.completion-card')));
+      assert.match(view.container.querySelector('.completion-card').textContent, /待独立复测/);
+      fireEvent.click(view.container.querySelector('.restart-button'));
+      await waitFor(() => assert.ok(view.container.querySelector('.word-display')));
+    }
+    assert.ok(saved().assessment.pending[targetKey], exit);
+    assert.equal(saved().assessment.originalCount, originalSnapshot.assessment.originalCount, exit);
+    assert.equal(saved().attempted, 1, exit);
+    assert.deepEqual(saved().byKc, originalSnapshot.byKc, exit);
+    assert.notEqual(assessmentTarget(currentExercise(view)).key, targetKey, exit);
+    cleanup();
+  }
+});
+
+test('independent page clears pending only through the explicit all-progress reset and keeps it cleared after reload', async () => {
+  storage.setItem(KEY, JSON.stringify(readyProfile()));
+  let view = await mount();
+  fireEvent.click(view.getByRole('button', { name: '清除本地进度', exact: true }));
+  await waitFor(() => assert.equal(saved().assessment.originalCount, 0));
+  assert.deepEqual(saved().assessment.pending, {});
+  assert.deepEqual(saved().assessment.byTarget, {});
+  assert.deepEqual(saved().byKc, {});
+  assert.equal(saved().practiceLog.events.length, 0);
+  cleanup();
+  view = await mount();
+  assert.deepEqual(saved().assessment.pending, {});
+  assert.ok(view.container.querySelector('.word-display'));
+});

@@ -8,6 +8,7 @@ import { diagnoseEndingOmission } from './ending-omission.mjs';
 import { hasLexicalTypo } from './lexical-typo.mjs';
 import { diagnoseContinuationClassConflict, buildContinuationClassProbes, diagnoseGivenClassPast, diagnoseMixedContinuationPast } from './continuation-class-probes.mjs';
 import { diagnosePassiveStageError } from './passive-stage-diagnosis.mjs';
+import { prioritizeContinuation } from './probe-routing.mjs';
 import { UNIFIED_COURSES, COURSE_BY_ID, sourceForForm } from './unified-curriculum.mjs';
 
 const unique = (ids) => [...new Set(ids)];
@@ -134,6 +135,40 @@ function negativeIntermediate(item, form, answer, normalize) {
 // and transfer/application are not established merely by reaching an output.
 const observableRule = id => id !== 'exception.ru-godan' && /^(stem\.|onbin\.|suffix\.|construction\.|exception\.|adj\.(stem|suffix|exception)\.)/.test(id);
 const transformationRule = id => !/^(class\.|adj\.class\.|heuristic\.|facet\.|lexeme\.)/.test(id);
+
+// A complete negative of a supplied intermediate is observable progress. It
+// does not establish whether the remaining past rule or its application failed.
+// Derive each supplied variant independently; an arbitrary matching suffix is
+// insufficient evidence when the given lexical prefix has been changed.
+function suppliedNegativeIntermediate(item, step, answer, normalize) {
+  const family = item.domain === 'verb' && step.continuation ? familyFor(step.form) : null;
+  if (family?.ending !== 'negativePast' || typeof answer !== 'string') return null;
+  const actual = normalize(answer), matches = [];
+  for (const base of unique(step.providedAnswers ?? [step.surface, step.reading])) {
+    let prefix = '', word = base;
+    const tails = { aru: ['ある'], iku: ['行く', 'いく'], kuru: ['来る', 'くる'], irregular: ['する'] }[family.outputClass];
+    if (tails) {
+      const tail = tails.find(tail => base.endsWith(tail));
+      if (!tail) continue;
+      prefix = base.slice(0, -tail.length);
+      word = tail;
+    }
+    const adjective = family.outputType === 'iAdjective';
+    const proxy = { domain: adjective ? 'adjective' : 'verb', surface: word, reading: word,
+      class: adjective ? 'i' : ['aru', 'iku'].includes(family.outputClass) ? 'godan'
+        : ['kuru', 'irregular'].includes(family.outputClass) ? 'irregular' : family.outputClass,
+      ...(adjective ? { iiFamily: false } : {}) };
+    const negative = family.outputClass === 'aru'
+      ? { acceptedVariants: ['ない'], requiredKcIds: ['exception.aru-negative'] }
+      : deriveUnified(proxy, adjective ? 'adjectiveNegative' : 'negative');
+    if (!negative.acceptedVariants.some(value => normalize(prefix + value) === actual)) continue;
+    matches.push(negative.requiredKcIds.filter(id => observableRule(id) && step.kcIds.includes(id)));
+  }
+  if (!matches.length) return null;
+  return { kcId: null,
+    confirmedKcIds: matches[0].filter(id => matches.every(ids => ids.includes(id))),
+    message: '已写对给定形式的否定变化，但尚未完成过去变化。已确认的规则不重复评估，下面只检查剩余的过去变化。' };
+}
 
 function operationEvidence(item, form, answer, normalize) {
   if (!form || typeof answer !== 'string') return null;
@@ -323,7 +358,18 @@ export function unifiedDiagnosticSteps(item, form, options = {}) {
     }).filter(step => step.kcIds.length);
   }
   const stage = diagnosePassiveStageError(item, form, answer, normalize);
-  if (form === 'passiveDesireNegativePast') return passiveDesireProbes(item, Boolean(stage));
+  if (form === 'passiveDesireNegativePast') {
+    const steps = passiveDesireProbes(item, Boolean(stage));
+    if (stage) return steps;
+    const ending = steps.at(-1), source = ending.analysisItem;
+    const base = deriveUnified(source, 'tai'), target = deriveUnified(source, 'taiNegativePast');
+    const preferred = prioritizeContinuation(item, answer, [{ step: ending,
+      family: { ...familyFor('taiNegativePast'), label: applicationLabels.tai },
+      scope: unique(target.operations.slice(base.operations.length).flatMap(op => op.kcIds)),
+    }], normalize);
+    return preferred && !diagnoseUnified(item, form, answer, normalize)?.kcId
+      && !diagnoseUnified(asReading(item), form, answer, normalize)?.kcId ? preferred : steps;
+  }
   if (stage && form === 'passive') return passiveProbes(item, true);
   const family = item.domain === 'verb' ? familyFor(form) : null;
   const baseForm = family?.form ?? ({ passiveDesireNegativePast: 'passive', negativePast: 'negative', masuPast: 'masu', masuNegative: 'masu', masuNegativePast: 'masu', adjectiveNegativePast: 'adjectiveNegative', adjectiveNaNegativePast: 'adjectiveNaNegative' }[form] ?? null);
@@ -344,6 +390,14 @@ export function unifiedDiagnosticSteps(item, form, options = {}) {
       kcIds: unique(target.operations.slice(base.operations.length).flatMap(op => op.kcIds)).filter(id => !base.requiredKcIds.includes(id)), focusId: family ? applicationId(baseForm) : last.kcIds.filter(id => !id.startsWith('facet.')).at(-1), continuation: true },
   ];
   if (stage) return [...passiveProbes(item, true), ...steps.slice(1)];
+  const preferred = prioritizeContinuation(item, answer, [{ step: steps[1],
+    family: family && { ...family, label: applicationLabels[family.form] },
+    scope: unique(target.operations.slice(base.operations.length).flatMap(op => op.kcIds)),
+  }], normalize);
+  // A standalone caller must preserve the same explicit-diagnosis precedence
+  // as createAnswerAnalyzer. Priority alone never confirms the skipped base.
+  if (preferred && !diagnoseUnified(item, form, answer, normalize)?.kcId
+    && !diagnoseUnified(asReading(item), form, answer, normalize)?.kcId) return preferred;
   return negativeIntermediate(item, form, answer, normalize) ? steps.slice(1) : steps;
 }
 export function diagnoseUnifiedStep(item, step, answer, normalize = value => value) {
@@ -379,9 +433,16 @@ export function diagnoseUnifiedStep(item, step, answer, normalize = value => val
   if (unchanged && step.form === 'tearuNegative' && step.kcIds.includes('exception.aru-negative')) {
     return {kcId:'exception.aru-negative',message:'已提供「てある」，本步需要按「ある」的例外否定变化，将「ある」变为「ない」。',confirmedKcIds:[]};
   }
+  if (step.continuation && step.form === 'tearuNegative' && step.kcIds.includes('exception.aru-negative')
+    && (step.providedAnswers ?? [step.surface, step.reading]).some(base => base.endsWith('ある') && normalize(answer) === normalize(base.slice(0, -2) + 'あらない'))) {
+    return { kcId: 'exception.aru-negative', confirmedKcIds: [],
+      message: '给定的前部已保留，但「ある」的否定是「ない」，不能按普通五段动词变为「あらない」。' };
+  }
   if (unchanged && step.kcIds.includes('adj.suffix.i-past') && ['negativePast', 'adjectiveNegativePast', 'adjectiveNaNegativePast'].includes(step.form)) {
     return { kcId: 'adj.suffix.i-past', message: '已提供否定形式，本步还需要将「ない」变为「なかった」。', confirmedKcIds: [] };
   }
+  const intermediate = suppliedNegativeIntermediate(item, step, answer, normalize);
+  if (intermediate) return intermediate;
   if (step.continuation) {
     const family = item.domain === 'verb' ? familyFor(step.form) : null;
     const diagnostics = [];
@@ -407,6 +468,14 @@ export function diagnoseUnifiedStep(item, step, answer, normalize = value => val
     const family = familyFor(step.form);
     const exact = diagnoseConjugation(item, step.form, answer, normalize) ?? diagnoseConjugation(asReading(item), step.form, answer, normalize);
     if (family && exact && (exact.kcId.startsWith('composition.') || exact.kcId === 'compound.voice-stack')) {
+      // Compatible complete negatives were handled above. A negative that is
+      // legal only for a different supplied variant (notably short causative)
+      // must not be relabeled as a failed negative-past rule of this base.
+      if (family.ending === 'negativePast') {
+        const negativeForm = `${family.form}Negative`;
+        const negatives = [item, asReading(item)].flatMap(word => deriveUnified(word, negativeForm).acceptedVariants);
+        if (negatives.some(value => normalize(value) === normalize(answer))) return null;
+      }
       const ids = family.outputType === 'iAdjective'
         ? { past: 'adj.suffix.i-past', negative: 'adj.suffix.i-negative', negativePast: 'adj.compound.i-negative-past' }
         : { past: 'suffix.past', negative: 'suffix.negative', negativePast: 'compound.negative-past' };

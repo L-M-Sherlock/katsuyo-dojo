@@ -9,6 +9,7 @@ function shard(form,{exploratory=false}={}) {
     examples:explore?[{id:`${form}-${id}`,status:'gap',surface:'書く',form,input:'x',actual:{failed:null,confirmed:[],steps:0}}]:[]});
   return {schemaVersion:2,scope:`forms:${form}`,replay:null,total:5,contractCases:exploratory?2:5,exploratoryCases:exploratory?3:0,
     uniqueInputs:4,forms:1,exercises:2,acceptedCollisionsExcluded:1,regressions:0,gaps:exploratory?3:0,deferred:0,coverageErrors:[],
+    learningAudit:{version:1,cases:5,checks:60},
     patterns:[row('a',2),row('b',3,exploratory)],
     knowledgeCoverage:[{id:'rule',label:'Rule',gating:true,exposure:5,expectedFailure:2,expectedConfirmation:1},
       {id:'facet',label:'Facet',gating:false,exposure:2,expectedFailure:0,expectedConfirmation:0}],
@@ -29,6 +30,7 @@ test('form shards sum exact disjoint counts, pattern evidence and knowledge expo
   assert.equal(merged.exploratoryCases,3);
   assert.equal(merged.acceptedCollisionsExcluded,2);
   assert.equal(merged.gaps,3);
+  assert.deepEqual(merged.learningAudit,{version:1,cases:10,checks:120});
   assert.deepEqual(merged.coverageErrors,[]);
   assert.deepEqual(merged.dimensions,[...first.dimensions,...second.dimensions]);
   assert.equal(merged.patterns[1].level,'mixed');
@@ -48,6 +50,10 @@ test('overlap, wrong scopes, incomplete catalogs and inconsistent dimensions can
   assert.throws(()=>mergeDiagnosisAudits([foreign],{expectedForms:['te']}),/outside shard scope/);
   const negative=shard('te');negative.uniqueInputs=-1;
   assert.throws(()=>mergeDiagnosisAudits([negative],{expectedForms:['te']}),/Invalid audit count/);
+  const noChannels=shard('te');delete noChannels.learningAudit;
+  assert.throws(()=>mergeDiagnosisAudits([noChannels],{expectedForms:['te']}),/learning-evidence audit/);
+  const skippedChannels=shard('te');skippedChannels.learningAudit.checks=0;
+  assert.throws(()=>mergeDiagnosisAudits([skippedChannels],{expectedForms:['te']}),/learning-evidence audit/);
 });
 
 test('missing forms, globally ungenerated patterns and worker coverage failures remain blocking',()=>{

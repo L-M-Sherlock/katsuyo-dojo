@@ -3,13 +3,15 @@ import { acceptedConjugations } from '../../app/lib/conjugation.mjs';
 import { acceptedAdjectiveConjugations } from '../../app/lib/adjective-conjugation.mjs';
 import { deriveUnified, unifiedDiagnosticSteps, unifiedStepDiagnosticSteps } from '../../app/lib/unified-knowledge.mjs';
 import { COMPOUND_FORM_SPECS } from '../../app/lib/compound-forms.mjs';
-import { COMMON_ERROR_PATTERNS, commonLexicalExpectation, generateCommonErrorCases } from './common-error-patterns.mjs';
+import { atomicSteps, planForContext } from '../../app/lib/diagnostic-plan.mjs';
+import { COMMON_ERROR_PATTERNS, commonLexicalExpectation, generateCommonErrorCases, suppliedNegativeIntermediateCases } from './common-error-patterns.mjs';
+import { generateProbeRoutingCases } from './probe-routing-cases.mjs';
 
 // Independent test policy. Never import the diagnoser or its candidate lists.
 // Conjugators supply valid forms; explicit transformations supply wrong inputs.
 export const PATTERNS = [
   ['valid', '正确答案与接受变体', 'contract'],
-  ['normalized', '空白与标点归一化', 'contract'],
+  ['normalized', '空白、标点与片假名归一化', 'contract'],
   ['lexical-substitution', '不变词汇部分的单字替换', 'contract'],
   ['noise', '无意义输入', 'contract'],
   ['multiple-errors', '词汇和词尾同时损坏', 'contract'],
@@ -32,6 +34,10 @@ export const PATTERNS = [
   ['passive-stage-guard', '受身阶段定位的词根与后续多错保护', 'contract'],
   ['passive-stage-probe', '已提供受身构造条件后的词干与接续单独判分', 'contract'],
   ['continuation-classification', '派生词类别的诊断性选择不计分', 'contract'],
+  ['priority-stage', '原题精确匹配后直接检查派生词类与过去变化', 'contract'],
+  ['priority-guard', '前部损坏或其他合法表达保留完整检查', 'contract'],
+  ['priority-form-switch', '完整同表达后续形式混淆只检查尚未确认的尾部', 'contract'],
+  ['priority-form-switch-guard', '不同表达或前部损坏不跳过表达构成', 'contract'],
   ['step-valid', '拆步正确答案与变体', 'contract'],
   ['step-noise', '拆步未知错误不扣分', 'contract'],
   ['step-negative-unchanged', '已提供否定形后仍漏过去', 'contract'],
@@ -45,7 +51,8 @@ export const PATTERNS = [
   ['wrong-class', '套用其他词类活用', 'explore'],
   ['ending-deletion', '单独漏写词尾字符', 'explore'],
 ].map(([id, label, level]) => ({ id, label, level })).concat(COMMON_ERROR_PATTERNS);
-const normalize = value => value.normalize('NFKC').replace(/[\s。．.！!？?]/g,'');
+const normalize = value => value.normalize('NFKC').replace(/[ァ-ヶヽヾ]/g,char=>String.fromCharCode(char.charCodeAt(0)-0x60)).replace(/[\s。．.！!？?]/g,'');
+const katakana = value => value.replace(/[ぁ-ゖゝゞ]/g,char=>String.fromCharCode(char.charCodeAt(0)+0x60));
 const iForms = { adjectiveNegative:'adj.suffix.i-negative', adjectivePast:'adj.suffix.i-past', adjectiveTe:'adj.suffix.i-te', adjectiveBa:'adj.suffix.i-ba', adjectiveAdverb:'adj.suffix.i-adverb' };
 const negativeBases = { adjectiveNegativePast:'adjectiveNegative', adjectiveNaNegativePast:'adjectiveNaNegative' };
 const verbSimple = ['negative','past','te','masu','potential','passive','volitional','ba','imperative'];
@@ -282,6 +289,7 @@ function stepIAffixTarget(item,step) {
 
 function semanticTargetsForStep(item,step) {
   const analysisItem=step.analysisItem??item;
+  if(step.kind==='atomic'&&step.kcIds.length===1&&step.kcIds[0]==='adj.suffix.i-past')return [analysisItem,readings(analysisItem)].flatMap(word=>answersFor(word,'adjectivePast')).map(normalize);
   if(step.providedClass)return [...new Set(step.providedAnswers??[step.surface,step.reading])]
     .flatMap(base=>answersFor({domain:'verb',surface:base,reading:base,class:step.providedClass},step.form)).map(normalize);
   if(step.kind==='stem') {
@@ -324,10 +332,17 @@ export function generateErrorCases(exercise) {
   function emitCommon(step=null,index=null,context=null) {
     // These probes ask for a stem or a suffix attachment, not a full native
     // conjugation. Their dedicated cases below preserve that narrower target.
-    if(step&&['stem','attachment','classification'].includes(step.kind))return;
+    if(step&&['stem','attachment','classification','atomic'].includes(step.kind))return;
     const existingCases=result.filter(c=>JSON.stringify(c.step??null)===JSON.stringify(step)
       &&(c.originalInput??null)===(context?.originalInput??null));
     const generated=generateCommonErrorCases(item,form,{step,existingCases});
+    // Reconcile only previously asserted classification penalties. The common
+    // grammar proves these exact inputs also arise from a supported local
+    // operation; unrelated old contracts retain their stronger assertions.
+    const conflicts=new Set(generated.classificationConflicts);
+    for(const c of existingCases)if(conflicts.has(normalize(c.input))&&/^(class\.|facet\.class\.|lexeme\.)/.test(c.expected.failed??'')) {
+      c.expected={...unknown,...(!step?{minSteps:1}:{})};
+    }
     collisions+=generated.collisions;
     for(const c of generated.cases)emit(c.pattern,c.input,c.expected,c.writing,index,context);
   }
@@ -347,7 +362,10 @@ export function generateErrorCases(exercise) {
   }
   for(const [writing,word] of [['surface',item],['reading',readings(item)]]) {
     const valid=answersFor(word,form);
-    for(const input of valid) {emit('valid',input,{kind:'correct'},writing);emit('normalized',` ${input}。 `,{kind:'correct'},writing);}
+    for(const input of valid) {
+      emit('valid',input,{kind:'correct'},writing);
+      for(const variant of [` ${input}。 `,katakana(input)])emit('normalized',variant,{kind:'correct'},writing);
+    }
     const canonical=valid[0];
     const fixed=unchangedPrefix(word);
     if(fixed&&canonical.startsWith(fixed))for(let index=0;index<fixed.length;index++) {
@@ -487,16 +505,21 @@ export function generateErrorCases(exercise) {
     emitPassiveMicroProbe(step,index);
     emitStepIAffixes(step,index);
     for(const input of [...step.answers,...step.readings])emit('step-valid',input,{kind:'correct'},'mixed',index);
+    for(const input of [...step.answers,...step.readings])emit('step-valid',katakana(input),{kind:'correct'},'mixed',index);
     emit('step-noise','xyz§'+step.surface,unknown,'mixed',index);
     if(step.continuation&&item.domain==='adjective'&&negativeBases[form]) {
       for(const input of answersFor(item,negativeBases[form]).concat(answersFor(readings(item),negativeBases[form])))emit('step-negative-unchanged',input,exact('adj.suffix.i-past'),'mixed',index);
+    }
+    for(const c of suppliedNegativeIntermediateCases(item,step))emit(c.pattern,c.input,c.expected,c.writing,index);
+    if(step.form==='tearuNegative'&&step.continuation&&step.kcIds.includes('exception.aru-negative'))for(const base of new Set(step.providedAnswers??[step.surface,step.reading])) {
+      if(base.endsWith('ある'))emit('common-stem-row',base.slice(0,-2)+'あらない',exact('exception.aru-negative'),'mixed',index);
     }
     emitCommon(step,index);
   });
   // Exercise the actual contexts created by a partial whole-answer. The
   // operation list supplies candidate intermediate surfaces, but step labels
   // must independently agree with the conjugator for their analysis item.
-  const partialInputs=new Map(result.filter(c=>c.pattern==='operation-stop'||c.pattern==='negative-intermediate'||c.pattern==='passive-stage-mixed').map(c=>[normalize(c.input),c]));
+  const partialInputs=new Map(result.filter(c=>!c.step&&(c.pattern==='operation-stop'||c.pattern==='negative-intermediate'||c.pattern==='passive-stage-mixed')).map(c=>[normalize(c.input),c]));
   const seenPartialContexts=new Set();
   for(const original of partialInputs.values()) {
     const remaining=unifiedDiagnosticSteps(item,form,{answer:original.input,normalize});
@@ -517,9 +540,56 @@ export function generateErrorCases(exercise) {
         emit('partial-step-unchanged',input,explicit??{kind:'explore'},'mixed',index,context);
       }
       emitCommon(step,index,context);
+      for(const c of suppliedNegativeIntermediateCases(item,step))emit(c.pattern,c.input,c.expected,c.writing,index,context);
     });
   }
   emitCommon();
+  // Freeze the routing expectation independently, then test both the root
+  // decision and the real supplied contexts it creates before any base score.
+  const seenPriorityContexts = new Set();
+  for (const c of generateProbeRoutingCases(item, form)) {
+    emit(c.pattern, c.input, c.expected, c.writing);
+    if (!c.expected.priority) continue;
+    const expectedClass = c.expected.probes[0].expectedClass;
+    const routed = unifiedDiagnosticSteps(item, form, { answer: c.input, normalize });
+    for (const [index, step] of routed.entries()) {
+      // Every original input retains its own routing assertion. Equivalent
+      // resulting probes need one replay per actual supplied context, not
+      // duplicated replays for each spelling of the same original switch.
+      const probeKey = JSON.stringify(step);
+      if (seenPriorityContexts.has(probeKey)) continue;
+      seenPriorityContexts.add(probeKey);
+      const context = { step, originalInput: c.input, confirmed: [], sourceKcIds: derived.requiredKcIds,
+        semanticTargets: step.kind === 'classification' ? [expectedClass] : semanticTargetsForStep(item, step) };
+      if (step.kind === 'classification') {
+        const classification = { expectedClass, choices: ['godan', 'ichidan'] };
+        for (const choice of classification.choices) emit('continuation-classification', choice,
+          choice === expectedClass ? { kind: 'correct', classification } : { ...unknown, stage: null, steps: 0, classification }, 'choice', index, context);
+      } else {
+        for (const input of [...step.answers, ...step.readings]) emit('partial-step-valid', input, { kind: 'correct' }, 'mixed', index, context);
+        emit('partial-step-noise', 'xyz§' + step.surface, { ...unknown, stage: null }, 'mixed', index, context);
+        if (step.kind === 'atomic' && step.kcIds.length === 1 && step.kcIds[0] === 'adj.suffix.i-past'
+          && step.surface.endsWith('ない')) {
+          for (const input of [step.surface, step.reading]) emit('step-negative-unchanged', input, exact('adj.suffix.i-past'), 'mixed', index, context);
+        }
+        emitCommon(step, index, context);
+      }
+    }
+  }
+  // Metadata comes from the real supplied context; expected completed rules,
+  // the single past target and its unchanged-input failure are independent.
+  const seenNegatives=new Set();
+  for(const original of [...result].filter(c=>c.step&&c.pattern==='negative-intermediate')) {
+    const plan=planForContext(original.step.analysisItem??item,form,original.step);
+    const remaining=atomicSteps(plan,form,original.kcIds,original.expected.confirmed,original.input,normalize);
+    remaining.forEach((step,index)=>{
+      const key=JSON.stringify([step,original.expected.confirmed]);if(seenNegatives.has(key))return;seenNegatives.add(key);
+      const context={step,originalInput:original.input,confirmed:original.expected.confirmed,sourceKcIds:original.kcIds,semanticTargets:semanticTargetsForStep(item,step)};
+      for(const input of [...step.answers,...step.readings])emit('partial-step-valid',input,{kind:'correct'},'mixed',index,context);
+      for(const input of [step.surface,step.reading])emit('step-negative-unchanged',input,exact('adj.suffix.i-past'),'mixed',index,context);
+      emit('partial-step-noise','xyz§'+step.surface,{...unknown,steps:0},'mixed',index,context);
+    });
+  }
   // A bounded second diagnostic level is permitted only for the independently
   // specified derived-class/past conflict. Reuse actual supplied contexts, but
   // choose the expected class from the separate semantic contract above.

@@ -48,7 +48,7 @@ test('verb rows, retained ru, irregular stems and onbin have independent KC owne
     [verb('書く','かく'),'masu','書こます','stem.godan.i'],
     [verb('食べる','たべる','ichidan'),'negative','食べるない','stem.ichidan.drop-ru'],
     [verb('する','する','irregular'),'masu','さます','stem.irregular.connective'],
-    [verb('する','する','irregular'),'masu','すます','facet.class.irregular.suru'],
+    [verb('する','する','irregular'),'masu','すます',null],
     [verb('読む','よむ'),'te','読っで','onbin.hatsuon'],
     [verb('行く','いく'),'past','行んた','facet.onbin.sokuon.iku'],
   ])assert.equal(find(casesFor(item,form),input)?.expected.failed,failed,`${item.surface} ${form} ${input}`);

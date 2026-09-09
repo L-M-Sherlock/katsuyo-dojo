@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "fixtureSha256": "67986bb760c0b15b445a2d09c4a2aec2550c646956a1b29792310780758b6eb8",
+  "reviews": {
+    "retest-different-word-with-gap": {
+      "decision": "policy-clarification",
+      "expect": { "pending": true },
+      "reason": "Root explicitly defined a retest target by form plus actual operation path. 乗る uses 促音便 while 書く uses イ音便, so the independent correct 書く answer can count for its own path but must not clear the original 乗る path. The original seed and original pending:false expectation are retained."
+    },
+    "retest-correct-contracted-variant": {
+      "decision": "policy-clarification",
+      "expect": { "pending": true },
+      "reason": "The contracted answer かいてない remains a valid correct variant. It does not clear 乗る's pending target because 書く has a different sound-operation path. This is a target-identity clarification, not rejection of the contraction. The original seed remains unchanged."
+    }
+  },
+  "apiClarifications": [
+    {
+      "scenarios": ["lexical-typo-does-not-fail", "retest-retry-typo-then-correct-without-hint"],
+      "reason": "Pure lexical retry with no disclosed target rule or answer preserves independent grammar eligibility. hadFeedback denotes grammar/answer feedback, not a lexical-only retry. The frozen expectations remain in force."
+    }
+  ],
+  "positiveControls": [
+    {
+      "id": "same-path-noru-to-toru",
+      "failed": { "surface": "乗る", "reading": "のる", "class": "godan", "form": "teiruNegative", "answer": "のっていた" },
+      "retest": { "surface": "取る", "reading": "とる", "class": "godan", "form": "teiruNegative", "answer": "とっていない" },
+      "interveningOriginals": 2,
+      "expect": { "pending": false }
+    },
+    {
+      "id": "same-path-noru-to-matsu-contracted",
+      "failed": { "surface": "乗る", "reading": "のる", "class": "godan", "form": "teiruNegative", "answer": "のっていた" },
+      "retest": { "surface": "待つ", "reading": "まつ", "class": "godan", "form": "teiruNegative", "answer": "まってない" },
+      "interveningOriginals": 2,
+      "expect": { "pending": false }
+    }
+  ]
+}

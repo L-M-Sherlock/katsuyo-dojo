@@ -24,7 +24,7 @@ export const COMMON_ERROR_PATTERNS = [
   ['common-mixed-past-guard', '混合过去补查的多处损坏与范围保护'],
 ].map(([id,label]) => ({id,label,level:'contract'}));
 
-const normalize = value => value.normalize('NFKC').replace(/[\s。．.！!？?]/g,'');
+const normalize = value => value.normalize('NFKC').replace(/[ァ-ヶヽヾ]/g,char=>String.fromCharCode(char.charCodeAt(0)-0x60)).replace(/[\s。．.！!？?]/g,'');
 const exact = failed => ({kind:'incorrect',failed,confirmed:[],steps:0});
 const unknown = {kind:'incorrect',failed:null,confirmed:[]};
 // Independent semantic scope: these derived outputs are ordinary verbs. The
@@ -244,15 +244,17 @@ function stemCases(word,form,specs) {
   const out=[],add=(pattern,input,failed)=>out.push({pattern,input,expected:exact(failed),operator:pattern.replace('common-','')});
   if(word.domain==='adjective') {
     if(word.class==='na')for(const spec of specs)for(const extra of spec.retained??[])add('common-stem-retained',spec.base+extra+spec.suffix,spec.failed);
+    const naAnalogy={adjectiveNaNegative:'だない',adjectiveNaTe:'だて',adjectiveAttributive:'の',adjectiveBa:'だば'}[form];
+    if(word.class==='na'&&naAnalogy)add('common-stem-retained',word.surface+naAnalogy,naKcs[form]);
     if(word.class==='i') {
       const root=word.iiFamily?word.surface.slice(0,-2)+'よ':word.surface.slice(0,-1);
       const tail={adjectiveNegative:'ない',adjectiveTe:'て',adjectiveAdverb:''}[form];
       if(tail!==undefined)for(const wrong of ['','ぐ','くく'])add('common-stem-row',root+wrong+tail,'adj.stem.i-ku');
-      if(['adjectivePast','adjectiveBa'].includes(form))for(const ending of form==='adjectivePast'?['かった']:['ければ','ば'])add('common-stem-row',root+'く'+ending,form==='adjectivePast'?'adj.suffix.i-past':'adj.suffix.i-ba');
+      if(['adjectivePast','adjectiveBa'].includes(form))for(const ending of form==='adjectivePast'?['かった']:['ければ','ば','れば'])add('common-stem-row',root+'く'+ending,form==='adjectivePast'?'adj.suffix.i-past':'adj.suffix.i-ba');
     }
     return out;
   }
-  if(extraAppend[form])return out;
+  if(extraAppend[form]&&(!['tara','tari','tatte'].includes(form)||word.class!=='godan'))return out;
   const row=rowForms[form];
   if(row&&word.class==='godan')for(const spec of specs) {
     const ending=word.surface.at(-1),root=word.surface.slice(0,-1),letters=rowLetters[ending];
@@ -260,7 +262,11 @@ function stemCases(word,form,specs) {
       if(root+alternative===spec.base)continue;
       add('common-stem-row',root+alternative+spec.suffix,ending==='う'&&row==='a'&&alternative==='あ'?'stem.godan.u-wa':`stem.godan.${row}`);
     }
+    if(form==='passive'&&spec.suffix==='れる')add('common-stem-retained',spec.base+'られる','suffix.passive');
+    if(form==='causative'&&['せる','す'].includes(spec.suffix))add('common-stem-retained',spec.base+'さ'+spec.suffix,'suffix.causative');
   }
+  if(word.class==='ichidan'&&form==='volitional')add('common-suffix-kana-size',word.surface.slice(0,-1)+'よお','suffix.volitional');
+  if(word.class==='ichidan'&&form==='imperative')add('common-suffix-repeat',word.surface.slice(0,-1)+'ろう','suffix.imperative');
   if(word.class==='ichidan'&&form!=='prohibitive'&&!teAppend.has(form))for(const spec of specs)add('common-stem-retained',word.surface+spec.suffix,'stem.ichidan.drop-ru');
   if(word.class==='irregular'&&form!=='prohibitive'&&!teAppend.has(form))for(const spec of specs) {
     const connective=iAppend.has(form)||['masu','nasai'].includes(form),failed=connective?'stem.irregular.connective':`suffix.${form}`;
@@ -268,17 +274,18 @@ function stemCases(word,form,specs) {
     const candidates=word.surface.endsWith('する')?['し','さ','せ','す','する','でき']:word.surface==='くる'?['き','こ','く','くる']:word.surface==='来る'?['来る']:[];
     for(const stem of candidates)if(root+stem!==spec.base)add('common-stem-row',root+stem+spec.suffix,failed);
   }
-  if(word.class==='godan'&&(['past','te'].includes(form)||teAppend.has(form))) {
+  if(word.class==='godan'&&(['past','te','tara','tari','tatte'].includes(form)||teAppend.has(form))) {
     const root=word.surface.slice(0,-1),ending=word.surface.at(-1);
     const iku=word.surface==='行く'||word.reading==='いく';
     const failed=iku?'facet.onbin.sokuon.iku':ending==='す'?'stem.godan.shi-connective':['む','ぶ','ぬ'].includes(ending)?'onbin.hatsuon':['く','ぐ'].includes(ending)?'onbin.i':'onbin.sokuon';
     for(const target of answers(word,form)) {
       // Only the complete, correctly connected target is eligible; contractions
       // replace a boundary and do not provide an unambiguous onbin operation.
-      const baseForm=teAppend.has(form)?'te':form;
+      const baseForm=teAppend.has(form)?'te':['tara','tari','tatte'].includes(form)?'past':form;
       const core=answers(word,baseForm)[0];if(!target.startsWith(core))continue;
       const body=core.slice(root.length,-1),tail=target.slice(root.length+body.length);
-      for(const wrong of ['','っ','ん','い','し','つ'])if(wrong!==body)add('common-onbin-choice',root+wrong+tail,failed);
+      for(const wrong of new Set(['','っ','ん','い','し','つ',ending]))if(wrong!==body)add('common-onbin-choice',root+wrong+tail,failed);
+      if(teAppend.has(form))add('common-suffix-voicing',root+body+(tail[0]==='で'?'だ':'た')+tail.slice(1),'suffix.te');
     }
   }
   return out;
@@ -344,10 +351,51 @@ function family(form) {
   const voice=form.match(/^(passive|potential|causative|causativePassive)(Past|Negative|NegativePast)$/);
   return voice?{form:voice[1],outputType:'verb',outputClass:'ichidan',ending:{Past:'past',Negative:'negative',NegativePast:'negativePast'}[voice[2]]}:null;
 }
+// A supplied complete negative demonstrates native operations only. Keep the
+// expected rule list separate from the production knowledge graph and intersect
+// it with the caller's scope only after all accepted base variants are checked.
+export function suppliedNegativeIntermediateCases(item,step) {
+  const f=step?.continuation&&item.domain==='verb'?family(step.form):null;
+  if(f?.ending!=='negativePast'||step.kind)return [];
+  const matches=new Map();
+  for(const base of new Set(step.providedAnswers??[step.surface,step.reading])) {
+    let word=base,prefix='',cls=f.outputClass;
+    const tails={aru:['ある'],iku:['行く','いく'],kuru:['来る','くる'],irregular:['する']}[cls];
+    if(tails) {
+      const tail=tails.find(tail=>base.endsWith(tail));if(!tail)continue;
+      prefix=base.slice(0,-tail.length);word=tail;
+    }
+    const adjective=f.outputType==='iAdjective';
+    const proxy={domain:adjective?'adjective':'verb',surface:word,reading:word,class:adjective?'i':['aru','iku'].includes(cls)?'godan':['kuru','irregular'].includes(cls)?'irregular':cls,iiFamily:false};
+    const negatives=cls==='aru'?['ない']:answers(proxy,adjective?'adjectiveNegative':'negative');
+    const evidence=cls==='aru'?['exception.aru-negative']:adjective?['adj.stem.i-ku','adj.suffix.i-negative']:[...stemEvidence(proxy,'negative'),'suffix.negative'];
+    for(const negative of negatives) {
+      const input=prefix+negative,key=normalize(input),confirmed=evidence.filter(id=>step.kcIds.includes(id));
+      const prior=matches.get(key);
+      matches.set(key,{input,confirmed:prior?prior.confirmed.filter(id=>confirmed.includes(id)):confirmed});
+    }
+  }
+  return [...matches.values()].map(({input,confirmed})=>({pattern:'negative-intermediate',input,writing:'mixed',
+    expected:{...unknown,confirmed,steps:1,continuation:true,probes:[{kind:'atomic',focusId:'adj.suffix.i-past'}]}}));
+}
 function classFailure(word) {
   if(word.class==='irregular')return `facet.class.irregular.${word.surface.endsWith('する')?'suru':'kuru'}`;
   if(word.class==='godan'&&word.surface.endsWith('る')&&/[いきぎしじちぢにひびぴみりえけげせぜてでねへべぺめれ]る$/.test(word.reading))return `lexeme.ru-godan.${word.lexicalSurface??word.surface}`;
   return `class.${word.class}`;
+}
+const counterclassCache=new Map();
+function counterclassMatches(word,form,input) {
+  if(word.domain!=='verb')return false;
+  const key=JSON.stringify([word.surface,word.class,form]);
+  if(!counterclassCache.has(key)) {
+    const forms=new Set();
+    for(const cls of ['godan','ichidan','irregular'].filter(cls=>cls!==word.class)) {
+      try{for(const value of answers({...word,class:cls},form))forms.add(normalize(value));}catch{ /* Unsupported counterclass. */ }
+    }
+    if(counterclassCache.size>=256)counterclassCache.delete(counterclassCache.keys().next().value);
+    counterclassCache.set(key,forms);
+  }
+  return counterclassCache.get(key).has(normalize(input));
 }
 function stemEvidence(word,form) {
   if(word.class==='irregular')return ['masu','nasai',...iAppend].includes(form)?['stem.irregular.connective']:[];
@@ -377,9 +425,7 @@ function oldBoundaryExpected(word,form,input,scope,{providedPrimitive=false,prov
   }
   const simple=['negative','past','te','masu','potential','passive','volitional','ba','imperative'];
   const alternative=simple.includes(form)&&simple.some(other=>other!==form&&answers(word,other).some(answer=>normalize(answer)===normalized));
-  const counterfactual=['godan','ichidan','irregular'].filter(cls=>cls!==word.class).some(cls=>{
-    try{return answers({...word,class:cls},form).some(answer=>normalize(answer)===normalized);}catch{return false;}
-  });
+  const counterfactual=counterclassMatches(word,form,input);
   if(counterfactual)return alternative||scope&&!scope.includes(classFailure(word))?unknown:result(classFailure(word));
   if(alternative)return result(`suffix.${form}`);
   if(!providedClass&&word.class==='godan'&&form==='past'&&normalize(answers(word,'masu')[0].slice(0,-2)+'た')===normalized)return result(stemEvidence(word,'past')[0]);
@@ -451,11 +497,10 @@ export function generateCommonErrorCases(item,form,{step=null,existingCases=[]}=
     if(c.expected?.kind==='explore'||c.expected?.kind==='correct')continue;
     if(!existing.has(normalize(c.input)))existing.set(normalize(c.input),c.expected);
   }
-  // A full target form of the counterfactual class is stronger prior evidence
-  // than a new local mutation. These older inputs were exploratory in the old
-  // generator; their class-rule contract is explicit here, not read from output.
+  // A complete counterclass form is only a candidate explanation. Resolve it
+  // against independently generated operation candidates before assigning a KC.
   if(!step&&item.domain==='verb')for(const input of wrongClasses)if(!existing.has(input))existing.set(input,exact(classFailure(item)));
-  const candidates=[],targets=lexicalTargets(item,form,step),boundaries=new Map();let collisions=0;
+  const candidates=[],targets=lexicalTargets(item,form,step),boundaries=new Map(),classCandidates=new Map();let collisions=0;
   function add(c) {if(accepted.has(normalize(c.input))){collisions++;return;}candidates.push(c);}
   for(const c of mixedPastCases(item,step))add(c);
   for(const context of contexts)for(const [writing,word] of [['surface',context.item],['reading',kana(context.item)]]) {
@@ -465,6 +510,10 @@ export function generateCommonErrorCases(item,form,{step=null,existingCases=[]}=
     for(const spec of specs)for(const c of commonSuffixMutations(spec.suffix,{sokuon:spec.sokuon??false,smallKana:word.domain==='adjective'}))add({...c,input:prefix+spec.base+c.suffix,expected:exact(spec.failed),writing});
     if(!context.providedKu)for(const c of stemCases(word,context.form,specs))add({...c,input:prefix+c.input,writing});
     for(const c of candidates)if(c.writing===writing&&c.input.startsWith(prefix)) {
+      if(!context.providedClass&&counterclassMatches(word,context.form,c.input.slice(prefix.length))) {
+        const key=normalize(c.input);if(!classCandidates.has(key))classCandidates.set(key,new Set());
+        classCandidates.get(key).add(classFailure(word));
+      }
       const expected=oldBoundaryExpected(word,context.form,c.input.slice(prefix.length),step?.kcIds,context);
       if(expected)boundaries.set(normalize(c.input),expected);
     }
@@ -508,7 +557,7 @@ export function generateCommonErrorCases(item,form,{step=null,existingCases=[]}=
   for(const c of candidates) {
     const key=normalize(c.input);if(!byInput.has(key))byInput.set(key,[]);byInput.get(key).push(c);
   }
-  const cases=[],seen=new Set();
+  const cases=[],seen=new Set(),classificationConflicts=[];
   for(const c of candidates) {
     const key=c.pattern+'\0'+normalize(c.input);if(seen.has(key))continue;seen.add(key);
     const same=byInput.get(normalize(c.input));
@@ -517,7 +566,12 @@ export function generateCommonErrorCases(item,form,{step=null,existingCases=[]}=
     const inherited=existing.get(normalize(c.input));
     const obsoleteTypo=inherited?.kind==='typo'&&c.pattern.startsWith('common-lexical-')&&c.expected.kind==='incorrect';
     const stage=continuationClassStageExpectation(step,c.input);
-    let expected=stage??(obsoleteTypo?c.expected:inherited)??boundaries.get(normalize(c.input))??(step&&resolved.failed&&!step.kcIds.includes(resolved.failed)?unknown:resolved);
+    // Scope cannot eliminate a competing explanation. The raw operator set is
+    // collected before scope filtering, independently of production candidates.
+    const classConflict=[...(classCandidates.get(normalize(c.input))??[])].some(id=>[...failed].some(operation=>operation!==id));
+    if(classConflict)classificationConflicts.push(normalize(c.input));
+    const conservative=classConflict?{...unknown,...(!step?{minSteps:1}:{})}:null;
+    let expected=stage??conservative??(obsoleteTypo?c.expected:inherited)??boundaries.get(normalize(c.input))??(step&&resolved.failed&&!step.kcIds.includes(resolved.failed)?unknown:resolved);
     const protectedRetainedRu=step?.providedClass==='ichidan'&&!step.kcIds.includes('stem.ichidan.drop-ru')
       &&(step.providedAnswers??[]).some(base=>normalize(base+'た')===normalize(c.input));
     if(!expected.failed&&!expected.confirmed?.length&&!expected.stage&&expected.kind!=='typo'&&!protectedRetainedRu&&!c.pattern.endsWith('guard')) {
@@ -526,5 +580,5 @@ export function generateCommonErrorCases(item,form,{step=null,existingCases=[]}=
     }
     cases.push({...c,expected});
   }
-  return {cases,collisions};
+  return {cases,collisions,classificationConflicts:[...new Set(classificationConflicts)]};
 }

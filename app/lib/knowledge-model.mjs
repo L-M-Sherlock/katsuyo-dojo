@@ -6,7 +6,7 @@ import {
   explainConjugation,
 } from "./conjugation.mjs";
 import { COMPOUND_FORM_SPECS } from "./compound-forms.mjs";
-import { diagnoseCommonVerbError } from "./verb-common-errors.mjs";
+import { diagnoseCommonVerbError, commonVerbErrorKcIds } from "./verb-common-errors.mjs";
 
 export const KC_FAMILY_LABELS = {
   classification: "词类判断",
@@ -513,6 +513,11 @@ export function diagnoseConjugation(verb, form, answer, normalize = (value) => v
   const matches = diagnosticCandidates(verb, form).filter((candidate) => normalize(candidate.answer) === normalize(answer));
   const uniqueKcs = unique(matches.map((match) => match.kcId));
   if (uniqueKcs.length !== 1) return null;
+  // A complete other-class form is not unique evidence of misclassification
+  // when a supported local edit produces exactly the same answer. Inspect
+  // every operation candidate before a narrower caller scope is applied.
+  if (uniqueKcs[0] === primaryClassKc(verb)
+    && commonVerbErrorKcIds(verb, form, answer, normalize).some(id => id !== uniqueKcs[0])) return null;
   // If multiple explanations lead to the same failure, credit only the facts
   // supported by every explanation, never their union.
   const confirmedKcIds = (matches[0].confirmedKcIds ?? []).filter((id) =>

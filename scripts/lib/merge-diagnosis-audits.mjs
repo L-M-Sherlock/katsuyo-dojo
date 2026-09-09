@@ -44,7 +44,7 @@ export function mergeDiagnosisAudits(reports,{expectedForms,baseline=null,baseli
   const expected=new Set(expectedForms);
   if(expected.size!==expectedForms.length)throw new Error('Expected forms must be unique.');
   const seenForms=new Set(),actualForms=new Set(),dimensions=[],dimensionKeys=new Set(),patterns=new Map(),knowledge=new Map(),coverageErrors=[];
-  const merged={schemaVersion:2,scope:'all',replay:null,...Object.fromEntries(TOP_COUNTS.map(key=>[key,0]))};
+  const merged={schemaVersion:2,scope:'all',replay:null,...Object.fromEntries(TOP_COUNTS.map(key=>[key,0])),learningAudit:{version:1,cases:0,checks:0}};
   let patternIds,knowledgeIds;
   reports.forEach((report,index)=>{
     const assigned=assignedForms(report),scope=new Set(assigned);
@@ -65,6 +65,10 @@ export function mergeDiagnosisAudits(reports,{expectedForms,baseline=null,baseli
     for(const form of assigned)if(!localForms.has(form))coverageErrors.push(`分片 ${index+1} 未生成形式 ${form}`);
     coverageErrors.push(...report.coverageErrors.map(error=>`分片 ${index+1}：${error}`));
     addCounts(merged,report,TOP_COUNTS,`shard ${index+1}`);
+    const learning = report.learningAudit;
+    if(learning?.version!==1 || learning.cases!==report.total || !Number.isSafeInteger(learning.checks) || learning.checks<report.total*7)
+      throw new Error('Missing or incomplete learning-evidence audit in diagnosis shard.');
+    merged.learningAudit.cases += learning.cases; merged.learningAudit.checks += learning.checks;
     const currentPatternIds=report.patterns.map(row=>row.id).sort().join('\0');
     const currentKnowledgeIds=report.knowledgeCoverage.map(row=>row.id).sort().join('\0');
     if(patternIds!==undefined&&patternIds!==currentPatternIds)throw new Error('Pattern catalogs differ between shards.');
@@ -126,6 +130,7 @@ export function renderMergedDiagnosisReport(report) {
   const lines=['# 归因生成审计报告','',
     `生成用例：${report.total}；不同输入上下文：${report.uniqueInputs}；覆盖形式：${report.forms}。`,
     `约定回归或安全违规：${report.regressions}；探索模式未识别：${report.gaps}；仅有拆步回退：${report.deferred}。`,'',
+    `学习证据审计 v${report.learningAudit.version}：${report.learningAudit.cases} 个输入执行 ${report.learningAudit.checks} 次真实计分／重放检查；独立、拆步、提示、反馈、揭晓和过早同词练习分别验证。`,'',
     '按目标形式划分的独立分片已合并；形式互不重叠，因此用例、不同输入上下文和练习数可以精确相加。',
     '探索未识别不表示可以直接推断某个知识点错误；此报告不能证明覆盖所有自然错误。','',
     '| 模式 | 级别 | 用例 | 约定通过 | 已识别（待语义评审） | 提示重试 | 仅拆步回退 | 探索未识别 | 回归／违规 |',

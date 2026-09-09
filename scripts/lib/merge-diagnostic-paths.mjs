@@ -5,7 +5,7 @@ const requiredFamilies=['accepted','invalid','unreadable','omit','repeat','trans
 const sum=object=>Object.values(object).reduce((a,b)=>a+b,0);
 export function mergeDiagnosticPaths(shards,expectedForms) {
   const result={schemaVersion:1,scope:'all',seed:shards[0]?.report.seed,forms:expectedForms.length,coverageErrors:[],shards:shards.length,
-    ...Object.fromEntries(counters.map(k=>[k,0])),families:{},outcomes:{},failureCodes:{},dimensions:{}};
+    ...Object.fromEntries(counters.map(k=>[k,0])),families:{},outcomes:{},failureCodes:{},dimensions:{},learningAudit:{version:1,cases:0,checks:0,flows:0,flowChecks:0}};
   const seen=new Set();
   for(const {forms,report} of shards) {
     if(report.seed!==result.seed||report.forms!==forms.length||report.scope!==`forms:${forms.join(',')}`)throw new Error('Inconsistent audit shard');
@@ -16,6 +16,12 @@ export function mergeDiagnosticPaths(shards,expectedForms) {
       result[key][name]=(result[key][name]??0)+value;
     }
     if(sum(report.families)!==report.cases||sum(report.outcomes)!==report.cases||sum(report.dimensions)!==report.contexts)throw new Error('Inconsistent audit counts');
+    const learning = report.learningAudit;
+    if(learning?.version!==1 || learning.cases!==report.cases || learning.flows!==report.flows
+      || !Number.isSafeInteger(learning.checks) || learning.checks<report.cases*7
+      || !Number.isSafeInteger(learning.flowChecks) || learning.flowChecks<report.flowSteps*14+report.flows)
+      throw new Error('Missing or incomplete learning-evidence audit in path shard.');
+    for(const key of ['cases','checks','flows','flowChecks'])result.learningAudit[key]+=learning[key];
     result.coverageErrors.push(...report.coverageErrors);
   }
   if(seen.size!==expectedForms.length)throw new Error('Incomplete all-form path audit');
@@ -28,6 +34,7 @@ export function renderPathAudit(report) {
     `词条／形式组合 ${report.contexts} 个，分类词条 ${report.classifications} 个，合法路径 ${report.paths} 条，操作节点 ${report.nodes} 个。`,
     `输入用例 ${report.cases} 条，基本拆步上下文 ${report.atomicContexts} 个，流程 ${report.flows} 轮（执行 ${report.flowSteps} 步）。`,
     `违规 ${report.failures} 项；覆盖违规 ${report.coverageErrors.length} 项。`,'',
+    `学习证据审计 v${report.learningAudit.version}：输入计分／重放 ${report.learningAudit.checks} 次；连续流程计分／重放 ${report.learningAudit.flowChecks} 次。独立、拆步、提示、反馈、揭晓和过早同词练习均经过实际页面计分入口。`,'',
     '路径顺序、规则和给定类别由独立测试策略核对；正确完整词形采用既有活用器，每个基本操作另有语言规则校验。',
     '单处错误与接受变体覆盖全词库；跨节点两处错误、词汇与活用混合、三处以上错误及固定种子模糊输入覆盖全部结构代表。检查未知输入的补查路径、合法变体、答案泄露、重复扣分及流程终止。',
     '独立预期不会把所有未知输入都指定到一个知识点，也不会用“不扣分”替代完整反馈与可继续练习的合同。有限模式覆盖不能证明任意自然输入都能唯一归因。','',

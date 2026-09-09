@@ -8,6 +8,7 @@ import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import { auditPlan,referenceStages,referenceFamily } from './lib/diagnostic-oracle.mjs';
 import { wholeErrorCases,atomicErrorCases,structuralKey,UNIVERSAL_FAMILIES,shrinkCounterexample } from './lib/universal-error-cases.mjs';
 import { auditUniversalCase,auditFlow } from './lib/universal-diagnosis-audit.mjs';
+import { LEARNING_AUDIT_VERSION } from './lib/learning-evidence-contracts.mjs';
 
 const options={output:'outputs/diagnostic-paths',forms:null,replay:null,representatives:false,classifications:false,seed:20260908};
 const args=process.argv.slice(2);
@@ -24,6 +25,7 @@ const summary={schemaVersion:1,scope:options.replay?'replay':options.representat
   contexts:0,forms:0,classifications:0,plans:0,paths:0,nodes:0,atomicContexts:0,cases:0,flows:0,flowSteps:0,failures:0,
   families:Object.fromEntries(UNIVERSAL_FAMILIES.map(f=>[f,0])),outcomes:{},failureCodes:{},dimensions:{},coverageErrors:[],savedFailures:0};
 const findings=[],shrunk=[],representatives=new Set(),forms=new Set(),atomicIds=new Set(),savedGroups=new Map();
+summary.learningAudit={version:LEARNING_AUDIT_VERSION,cases:0,checks:0,flows:0,flowChecks:0};
 function analyzer(item,form,step) {
   const run=createAnswerAnalyzer(item,form,step?{step}:{}),cache=new Map();
   return input=>{if(!cache.has(input))cache.set(input,run(input));return cache.get(input);};
@@ -40,7 +42,8 @@ function failure(c,problems,analyze) {
 }
 function check(c,analyze) {
   if(!c)return;
-  const {result,problems}=auditUniversalCase(c,analyze);
+  const {result,problems,learningChecks=0}=auditUniversalCase(c,analyze);
+  summary.learningAudit.cases++;summary.learningAudit.checks+=learningChecks;
   summary.cases++;summary.families[c.family]=(summary.families[c.family]??0)+1;
   const key=result?.kind??'exception';summary.outcomes[key]=(summary.outcomes[key]??0)+1;
   if(problems.length)failure(c,problems,analyze);
@@ -58,7 +61,7 @@ if(options.replay) {
     if(c.family==='flow') {
       const result=auditFlow({exercise:c,initial:c.startSteps?{steps:c.startSteps,diagnosis:null}:createAnswerAnalyzer(c.item,c.form)(c.input),transition:planDiagnosticTransition,bound:referenceStages(c.item,c.form).length*4+4,
         analyzerForStep:step=>createAnswerAnalyzer(c.item,c.form,{step}),answerForStep:(step,index)=>step.kind==='classification'?step.expectedClass:c.route==='correct'||c.route==='alternating'&&index%2?step.readings[0]:'xyz§'});
-      summary.flows++;summary.flowSteps+=result.steps;if(result.problems.length)failure(c,result.problems);continue;
+      summary.flows++;summary.flowSteps+=result.steps;summary.learningAudit.flows++;summary.learningAudit.flowChecks+=result.learningChecks??0;if(result.problems.length)failure(c,result.problems);continue;
     }
     check(c,analyzer(c.item,c.form,c.step));
   }
@@ -118,7 +121,7 @@ if(options.replay) {
       const result=auditFlow({exercise,initial:start,transition:planDiagnosticTransition,bound,
         analyzerForStep:step=>createAnswerAnalyzer(item,form,{step}),
         answerForStep:(step,index)=>step.kind==='classification'?step.expectedClass:route==='correct'||route==='alternating'&&index%2?step.readings[0]:'xyz§'});
-      summary.flows++;summary.flowSteps+=result.steps;
+      summary.flows++;summary.flowSteps+=result.steps;summary.learningAudit.flows++;summary.learningAudit.flowChecks+=result.learningChecks??0;
       if(result.problems.length)failure({...exercise,route,startSteps:start.steps,input:'xyz§',family:'flow',expected:{mode:'unreadable'}},result.problems);
     }
     if(Date.now()-logged>20000){process.stdout.write(JSON.stringify({contexts:summary.contexts,cases:summary.cases,failures:summary.failures})+'\n');logged=Date.now();}
@@ -137,6 +140,7 @@ await writeFile(path.join(options.output,'report.md'),[
   `词条／形式上下文：${summary.contexts}；活用形式：${summary.forms}；分类词条：${summary.classifications}。`,
   `校验变化路径：${summary.paths}；操作节点：${summary.nodes}；独立拆步上下文：${summary.atomicContexts}。`,
   `输入用例：${summary.cases}；流程：${summary.flows}（实际执行 ${summary.flowSteps} 步）；违规：${summary.failures}。`,'',
+  `学习证据审计 v${LEARNING_AUDIT_VERSION}：输入计分／重放 ${summary.learningAudit.checks} 次，连续流程计分／重放 ${summary.learningAudit.flowChecks} 次；两者均使用页面的实际独立／辅助渠道。`,'',
   '基本操作顺序由独立测试策略给出，不从生产归因候选反推；合法答案由既有活用器提供，再单独核对每个操作的语言规则。',
   '全词库覆盖单处变化、所有接受变体及基本拆步；不同节点两处错误、词汇＋规则混合、三处以上错误和固定种子模糊输入使用每种结构的代表词条。',
   '检查拒绝正确答案、错误扣分、缺少补查、给定词形／目标不一致、提前泄露答案、重复评估和不能结束。原答不能唯一归因时允许保守反馈与补查；这不等于宣称能从任意输入读出学习者的真实想法。','',

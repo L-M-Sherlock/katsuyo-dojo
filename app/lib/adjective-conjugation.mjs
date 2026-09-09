@@ -210,6 +210,19 @@ function commonAdjectiveCandidates(adjective, form) {
   };
   const naId = adjective.class === "na" ? NA_SIMPLE_FORM_KCS[form] : null;
   if (naId) {
+    // Common analogies replace one complete connection while preserving the
+    // lexical word. Keep this finite: arbitrary tails or damaged roots still
+    // need a probe, and negative-past spans more than this one connection.
+    const mistakenConnection = {
+      adjectiveNaNegative: ["だない", "ではない／じゃない／でない"],
+      adjectiveNaTe: ["だて", "で"],
+      adjectiveAttributive: ["の", "な"],
+      adjectiveBa: ["だば", "なら／ならば／であれば"],
+    }[form];
+    if (mistakenConnection) {
+      const [wrong, expected] = mistakenConnection;
+      add(adjective.surface, wrong, naId, `原词已保留；本题的${ADJECTIVE_FORM_LABELS[form]}应接「${expected}」，不能接「${wrong}」。`);
+    }
     for (const target of acceptedAdjectiveConjugations(adjective, form)) {
       const suffix = target.slice(adjective.surface.length);
       for (const wrong of suffixMutations(suffix)) {
@@ -223,6 +236,9 @@ function commonAdjectiveCandidates(adjective, form) {
   if (adjective.class === "i" && I_SIMPLE_FORM_KCS[form]) {
     const root = iStem(adjective.surface, isIiFamily(adjective));
     const suffix = { adjectivePast: "かった", adjectiveBa: "ければ", adjectiveNegative: "ない", adjectiveTe: "て" }[form];
+    if (form === "adjectiveBa") {
+      add(root, "くれば", "adj.suffix.i-ba", "条件形需要把词尾「い」替换为「ければ」，不能使用「くれば」。");
+    }
     const needsKu = ["adjectiveNegative", "adjectiveTe", "adjectiveAdverb"].includes(form);
     if (suffix) {
       const base = root + (needsKu ? "く" : "");

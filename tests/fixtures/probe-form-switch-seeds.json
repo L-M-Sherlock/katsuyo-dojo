@@ -1,0 +1,42 @@
+{
+  "contract": "Inputs and expectations fixed before analyzer replay. A complete sibling continuation identifies only a stage to check, never knowledge evidence. Native negative-past without a retained negative is not evidence to skip the negative stage.",
+  "priority": [
+    ["乗る", "のる", "godan", "teiruNegative", "のっていた", "teiruNegative"],
+    ["乗る", "のる", "godan", "teiruNegative", "のってた", "teiruNegative"],
+    ["増える", "ふえる", "ichidan", "tagaruNegative", "ふえたがった", "tagaruNegative"],
+    ["待つ", "まつ", "godan", "temorauPast", "まってもらわなかった", "temorauPast"],
+    ["書く", "かく", "godan", "tekureruPast", "かいてくれない", "tekureruPast"],
+    ["書く", "かく", "godan", "teageruNegativePast", "かいてあげた", "teageruNegativePast"],
+    ["書く", "かく", "godan", "tearuPast", "かいてなかった", "tearuPast"],
+    ["書く", "かく", "godan", "teoruNegative", "かいておった", "teoruNegative"],
+    ["食べる", "たべる", "ichidan", "taiNegative", "たべたかった", "taiNegative"],
+    ["書く", "かく", "godan", "tehoshiiPast", "かいてほしくない", "tehoshiiPast"],
+    ["書く", "かく", "godan", "youtosuruNegative", "かこうとした", "youtosuruNegative"],
+    ["書く", "かく", "godan", "temiruNegativePast", "かいてみた", "temiruNegativePast"],
+    ["書く", "かく", "godan", "teshimauNegative", "かいちゃった", "teshimauNegative"],
+    ["書く", "かく", "godan", "teokuPast", "かいとかなかった", "teokuPast"],
+    ["書く", "かく", "godan", "teikuNegative", "かいていった", "teikuNegative"],
+    ["書く", "かく", "godan", "tekuruNegativePast", "かいてきた", "tekuruNegativePast"],
+    ["食べる", "たべる", "ichidan", "sugiruPast", "たべすぎない", "sugiruPast"],
+    ["書く", "かく", "godan", "passiveNegative", "かかれた", "passiveNegative"],
+    ["書く", "かく", "godan", "potentialPast", "かけない", "potentialPast"],
+    ["書く", "かく", "godan", "causativeNegativePast", "かかせた", "causativeNegativePast"],
+    ["書く", "かく", "godan", "causativePassiveNegative", "かかされた", "causativePassiveNegative"],
+    ["騒ぐ", "さわぐ", "godan", "passiveDesireNegativePast", "さわがれたかった", "taiNegativePast"]
+  ],
+  "guard": [
+    ["乗る", "のる", "godan", "teiruNegative", "もっていた"],
+    ["書く", "かく", "godan", "teiruNegative", "かいていった"],
+    ["書く", "かく", "godan", "teiruNegative", "かいてもらった"],
+    ["食べる", "たべる", "ichidan", "potentialNegative", "たべられた"],
+    ["騒ぐ", "さわぐ", "godan", "passiveDesireNegativePast", "さわがれなかった"],
+    ["騒ぐ", "さわぐ", "godan", "passiveDesireNegativePast", "さわぎれたかった"],
+    ["乗る", "のる", "godan", "negativePast", "のった"]
+  ],
+  "correct": [
+    ["乗る", "のる", "godan", "teiruNegative", "のってない"],
+    ["書く", "かく", "godan", "causativePassiveNegative", "かかされない"],
+    ["する", "する", "irregular", "potentialNegativePast", "出来なかった"],
+    ["騒ぐ", "さわぐ", "godan", "passiveDesireNegativePast", "さわがれたくなかった"]
+  ]
+}

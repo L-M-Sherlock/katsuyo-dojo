@@ -6,6 +6,7 @@ import { createServer } from 'vite';
 import { createAnswerAnalyzer } from '../app/lib/answer-analysis.mjs';
 import { PATTERNS, generateErrorCases } from './lib/error-patterns.mjs';
 import { auditGeneratedCase } from './lib/diagnosis-audit.mjs';
+import { LEARNING_AUDIT_VERSION } from './lib/learning-evidence-contracts.mjs';
 
 const args=process.argv.slice(2), options={output:null,strict:false,pattern:null,forms:null,replay:null,cases:false,compare:null};
 for(let i=0;i<args.length;i++) {
@@ -39,7 +40,7 @@ const caseFile=options.cases?await open(path.join(options.output,'cases.jsonl'),
 const rows=new Map(PATTERNS.filter(p=>!options.pattern||options.pattern===p.id).map(p=>[p.id,{...p,total:0,contractCases:0,exploratoryCases:0,pass:0,regression:0,recognized:0,retry:0,deferred:0,gap:0,examples:[]} ]));
 const dimensions=new Map(), forms=new Set(), inputs=new Set(), exercises=new Set();
 const knowledge=new Map(model.components.map(kc=>[kc.id,{id:kc.id,label:kc.label,gating:kc.gating,exposure:0,expectedFailure:0,expectedConfirmation:0}]));
-let total=0,collisions=0,regressions=0,gaps=0,deferred=0,issueBuffer='',caseBuffer='';
+let total=0,collisions=0,regressions=0,gaps=0,deferred=0,learningChecks=0,issueBuffer='',caseBuffer='';
 try {
 for(const exercise of model.exercises) {
   if(!exercise.form)continue;
@@ -58,6 +59,7 @@ for(const exercise of model.exercises) {
       analyzeCase=stepAnalyzers.get(stepKey);
     }
     const result=auditGeneratedCase(c,analyzeCase);
+    learningChecks += result.learningChecks ?? 0;
     for(const id of c.kcIds)if(knowledge.has(id))knowledge.get(id).exposure++;
     if(c.expected.failed&&knowledge.has(c.expected.failed))knowledge.get(c.expected.failed).expectedFailure++;
     for(const id of c.expected.confirmed??[])if(knowledge.has(id))knowledge.get(id).expectedConfirmation++;
@@ -92,7 +94,8 @@ const gating=knowledgeCoverage.filter(kc=>kc.gating);
 for(const row of rows.values())row.level=row.contractCases&&row.exploratoryCases?'mixed':row.contractCases?'contract':'explore';
 const contractCases=[...rows.values()].reduce((sum,row)=>sum+row.contractCases,0);
 const scope=selectedForms?`forms:${[...selectedForms].sort().join(',')}${options.pattern?`;pattern:${options.pattern}`:''}`:options.pattern??'all';
-const report={schemaVersion:2,scope,replay:options.replay,total,contractCases,exploratoryCases:total-contractCases,uniqueInputs:inputs.size,forms:forms.size,exercises:exercises.size,acceptedCollisionsExcluded:collisions,regressions,gaps,deferred,coverageErrors,knowledgeCoverage,patterns:[...rows.values()],dimensions:[...dimensions.values()]};
+const report={schemaVersion:2,scope,replay:options.replay,total,contractCases,exploratoryCases:total-contractCases,uniqueInputs:inputs.size,forms:forms.size,exercises:exercises.size,acceptedCollisionsExcluded:collisions,regressions,gaps,deferred,coverageErrors,knowledgeCoverage,patterns:[...rows.values()],dimensions:[...dimensions.values()],
+  learningAudit:{version:LEARNING_AUDIT_VERSION,cases:total,checks:learningChecks}};
 if(options.compare) {
   const {readFile}=await import('node:fs/promises');
   const before=JSON.parse(await readFile(options.compare,'utf8'));
@@ -107,7 +110,8 @@ if(options.compare) {
   }));
 }
 await writeFile(path.join(options.output,'summary.json'),JSON.stringify(report,null,2)+'\n');
-const lines=['# 归因生成审计报告','',`生成用例：${total}；不同输入上下文：${inputs.size}；覆盖形式：${forms.size}。`,`约定回归或安全违规：${regressions}；探索模式未识别：${gaps}；仅有拆步回退：${deferred}。`,'',
+const lines=['# 归因生成审计报告','',`生成用例：${total}；不同输入上下文：${inputs.size}；覆盖形式：${forms.size}。`,`约定回归或安全违规：${regressions}；探索模式未识别：${gaps}；仅有拆步回退：${deferred}。`,
+`学习证据审计 v${LEARNING_AUDIT_VERSION}：${total} 个输入执行 ${learningChecks} 次真实计分／重放检查，覆盖独立、拆步、提示、反馈、揭晓和过早同词练习。`,'',
 '“探索未识别”是待评审的能力缺口，不代表可以直接推断某个知识点错误；未知多错输入的保守处理属于通过。此报告不能证明覆盖所有自然错误。','',
 '| 模式 | 级别 | 用例 | 约定通过 | 已识别（待语义评审） | 提示重试 | 仅拆步回退 | 探索未识别 | 回归／违规 |','|---|---|---:|---:|---:|---:|---:|---:|---:|',
 ...[...rows.values()].map(r=>`| ${r.label} | ${r.level} | ${r.total} | ${r.pass} | ${r.recognized} | ${r.retry} | ${r.deferred} | ${r.gap} | ${r.regression} |`),'',

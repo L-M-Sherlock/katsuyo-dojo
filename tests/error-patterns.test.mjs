@@ -167,7 +167,7 @@ test('newly attributable subsets have explicit independent contracts, including 
   // おしえられる with an omission and おしえれる with a substitution are
   // different accepted correction targets, so a retry is not established.
   assert.equal(find('教える','potential','おしられる','lexical-deletion').expected.kind,'explore');
-  assert.deepEqual(find('書く','teiru','書てる','wrong-class').expected,{kind:'incorrect',failed:'class.godan',confirmed:[],steps:0});
+  assert.deepEqual(find('書く','teiru','書てる','wrong-class').expected,{kind:'incorrect',failed:null,confirmed:[],minSteps:1});
   assert.equal(find('書く','teiru','書てる','wrong-class').level,'contract');
 });
 

@@ -1,5 +1,6 @@
 import { updateKnowledgeStats, emptySkillStats } from '../../app/lib/adaptive.mjs';
 import { auditGuidance } from './diagnostic-contracts.mjs';
+import { auditLearningCase } from './learning-evidence-contracts.mjs';
 
 const sameIds=(a,b)=>JSON.stringify([...new Set(a)].sort())===JSON.stringify([...new Set(b)].sort());
 function diagnosticClassification(step) {
@@ -11,8 +12,8 @@ function diagnosticClassification(step) {
     &&sameIds(step.classChoices.map(choice=>choice.value),['godan','ichidan'])
     &&step.classChoices.every(choice=>typeof choice.label==='string'&&choice.label.length>0);
 }
-export function auditGeneratedCase(testCase, analyze) {
-  try { return evaluateGeneratedCase(testCase, analyze(testCase.input)); }
+export function auditGeneratedCase(testCase, analyze, options = {}) {
+  try { return evaluateGeneratedCase(testCase, analyze(testCase.input), options); }
   catch (error) {
     return { status:'regression', actual:{kind:'exception',failed:null,confirmed:[],steps:0,continuation:false,message:String(error.message??error)},
       problems:[{code:'analyzer-exception',detail:String(error.message??error)}] };
@@ -24,7 +25,7 @@ export function observeAnalysis(analysis) {
     steps:analysis.steps.length, continuation:analysis.steps.length>0&&analysis.steps.every(step=>step.continuation),
     message:analysis.diagnosis?.message??null };
 }
-export function evaluateGeneratedCase(testCase, analysis) {
+export function evaluateGeneratedCase(testCase, analysis, options = {}) {
   const actual=observeAnalysis(analysis), expected=testCase.expected, problems=[];
   const problem=(code,detail)=>problems.push({code,detail});
   // Previous zero-probe guards forbid a spurious *specific* diagnosis. The
@@ -71,6 +72,8 @@ export function evaluateGeneratedCase(testCase, analysis) {
   }
   if(analysis.kind!=='incorrect'&&(actual.failed||actual.confirmed.length||actual.steps||actual.stage||actual.review))problem('invalid-accepted-state','正确答案／重试不得携带错误证据');
   if(expected.kind!=='explore') {
+    if ('priority' in expected && Boolean(analysis.steps[0]?.probeSelection) !== expected.priority) problem('wrong-probe-priority', '补查顺序与独立阶段匹配约定不同');
+    if (expected.priority && (actual.failed || actual.confirmed.length || analysis.feedback?.resolution !== 'stage-priority')) problem('unsafe-probe-priority', '补查优先级不能代替原题计分，且必须说明选择原因');
     if(expected.classification&&(!diagnosticClassification(testCase.step)
       ||testCase.step.expectedClass!==expected.classification.expectedClass
       ||!sameIds(testCase.step.classChoices.map(choice=>choice.value),expected.classification.choices)))problem('wrong-classification-target','诊断性分类与独立派生词类别约定不同');
@@ -92,6 +95,9 @@ export function evaluateGeneratedCase(testCase, analysis) {
       const step=analysis.steps[index];
       if(!step||Object.entries(probe).some(([field,value])=>step[field]!==value))problem('wrong-probe-target',`第 ${index+1} 步没有检查约定的构造目标`);
     }
+    for (const [index, ids] of (expected.probeKcIds ?? []).entries()) {
+      if (!sameIds(analysis.steps[index]?.kcIds ?? [], ids)) problem('wrong-probe-scope', `第 ${index + 1} 步没有保留独立约定的评估范围`);
+    }
     if(expected.minSteps&&actual.steps<expected.minSteps)problem('missing-probe','需要进一步拆步确认');
     if(expected.continuation&&!actual.continuation)problem('repeated-base','重复要求已经完成的前置步骤');
   } else if(actual.kind==='correct')problem('false-accept','生成的非接受变体被判为正确');
@@ -112,6 +118,10 @@ export function evaluateGeneratedCase(testCase, analysis) {
     }
     for(const id of Object.keys(after))if(!(id in before))problem('out-of-scope-write',id);
   }
+  // Preserve the low-level diagnosis arithmetic above, while also exercising
+  // the actual profile wrapper and all independent/assisted scoring channels.
+  const learning = auditLearningCase(testCase, analysis, options);
+  problems.push(...learning.problems);
   const status=problems.length?'regression':expected.kind==='explore'?(actual.failed||actual.confirmed.length?'recognized':actual.kind==='typo'?'retry':actual.steps?'deferred':'gap'):'pass';
-  return {status,actual,problems};
+  return {status,actual,problems,learningChecks:learning.checks};
 }

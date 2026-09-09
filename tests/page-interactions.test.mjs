@@ -8,15 +8,20 @@ import { conjugate } from '../app/lib/conjugation.mjs';
 import { COMPOUND_FORM_LABELS, COMPOUND_FORM_SPECS } from '../app/lib/compound-forms.mjs';
 import { unifiedDiagnosticSteps as buildDiagnosticSteps } from '../app/lib/unified-knowledge.mjs';
 import { emptySkillStats } from '../app/lib/adaptive.mjs';
+import { emptyPracticeLog } from '../app/lib/practice-log.mjs';
+import { emptyAssessment } from '../app/lib/learning-assessment.mjs';
+import { CURRICULUM_VERSION } from '../app/lib/unified-curriculum.mjs';
 import { wordKey } from '../app/lib/exercise-selection.mjs';
 
 // Compile the actual page without starting Vite's development server in tests.
 const pageUrl = new URL('../app/page.tsx', import.meta.url);
-const compiled = ts.transpileModule(await readFile(pageUrl, 'utf8'), {
+// Exposing the display-label table only lets the UI driver identify the
+// question shown on screen; expected scores remain independently asserted.
+const compiled = ts.transpileModule((await readFile(pageUrl, 'utf8')) + '\nexport { FORM_LABELS };', {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
 }).outputText.replace(/from ["']([^"']+)["']/g, (_match, specifier) =>
   `from ${JSON.stringify(specifier.startsWith('.') ? new URL(specifier, pageUrl).href : import.meta.resolve(specifier))}`);
-const { default: Page, VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE, ALL_KCS } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
+const { default: Page, VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE, KNOWLEDGE, ALL_KCS, FORM_LABELS } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
 
 const { JSDOM } = await import('jsdom');
 const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost/katsuyo-dojo/', pretendToBeVisual: true });
@@ -28,7 +33,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 const { createElement, StrictMode } = await import('react');
 const { render, cleanup, fireEvent, waitFor, act, configure } = await import('@testing-library/react');
 configure({ asyncUtilTimeout: 5000 });
-const KEY = 'katsuyo-practice-profile-v6';
+const KEY = 'katsuyo-practice-profile-v7';
 const DOMAIN = 'katsuyo-practice-domain-v1';
 const storage = dom.window.localStorage;
 const originalGet = dom.window.Storage.prototype.getItem;
@@ -51,8 +56,48 @@ after(() => { dom.window.close(); });
 
 function profile(overrides = {}) {
   const date = new Date();
-  return { version: 6, accessibleCourseIds: [], coursePractice: {}, legacy: null, migration: null, date: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
+  return { version: 7, assessment: emptyAssessment(), curriculumVersion: CURRICULUM_VERSION, recentWordKeys: [], practiceLog: emptyPracticeLog(), accessibleCourseIds: [], coursePractice: {}, legacy: null, migration: null, date: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
     attempted: 0, correct: 0, streak: 0, rotation: 0, byKc: {}, introducedKcIds: [VERB_KNOWLEDGE.components.find((kc) => kc.gating).id], ...overrides };
+}
+function progressWithoutLog(value) {
+  const result = typeof value === 'string' ? JSON.parse(value) : structuredClone(value);
+  delete result.practiceLog;
+  // Finish/skip actions legitimately record when guidance was exposed. They
+  // must preserve scores, attempts and the pending task itself.
+  delete result.assessment.seenExposureIds;
+  for (const pending of Object.values(result.assessment.pending)) {
+    delete pending.lastPresentedAt;
+    delete pending.lastPresentedOrdinal;
+  }
+  return result;
+}
+function assertProgressUnchanged(before) {
+  assert.deepEqual(progressWithoutLog(storage.getItem(KEY)), progressWithoutLog(before));
+}
+const localPracticeIds = ids => ids.filter(id => ['stem.', 'onbin.', 'suffix.', 'construction.', 'contraction.', 'adj.stem.', 'adj.suffix.', 'adj.exception.', 'compound.polite-'].some(prefix => id.startsWith(prefix)) || id === 'exception.aru-negative');
+const assistedStat = (profile, id) => profile.assessment.assistedByKc[id] ?? emptySkillStats();
+function assertAssistedChanges(before, after, ids, correct = true) {
+  const expected = localPracticeIds(ids);
+  assert.deepEqual(after.byKc, before.byKc, 'guided work cannot update independent mastery');
+  assert.deepEqual(after.assessment.independentByKc, before.assessment.independentByKc);
+  const changed = Object.keys(after.assessment.assistedByKc).filter(id => JSON.stringify(after.assessment.assistedByKc[id]) !== JSON.stringify(before.assessment.assistedByKc[id]));
+  assert.deepEqual(changed.sort(), [...expected].sort());
+  for (const id of expected) {
+    assert.equal(assistedStat(after, id).attempts, assistedStat(before, id).attempts + 1, id);
+    assert.equal(assistedStat(after, id).correct, assistedStat(before, id).correct + Number(correct), id);
+  }
+  assert.ok(Object.keys(after.assessment.assistedByKc).every(id => localPracticeIds([id]).length === 1));
+}
+function assertStepChanges(before, after, ids, correct = true) {
+  assertAssistedChanges(before, after, ids, correct);
+  assert.equal(after.assessment.originalCount, before.assessment.originalCount);
+  assert.deepEqual(Object.keys(after.assessment.pending), Object.keys(before.assessment.pending));
+  for (const key of Object.keys(before.assessment.pending)) {
+    assert.deepEqual(after.assessment.pending[key].failedKcIds, before.assessment.pending[key].failedKcIds);
+    assert.equal(after.assessment.pending[key].failures, before.assessment.pending[key].failures);
+  }
+  assert.deepEqual(after.coursePractice, before.coursePractice);
+  for (const key of ['attempted', 'correct', 'streak']) assert.equal(after[key], before[key]);
 }
 function masteredProfile() {
   const stats = { attempts: 5, correct: 5, filteredAccuracy: 1, confidence: 1, bestConfidence: 1, cleanTimeTotal: 0, cleanTimeCount: 0 };
@@ -62,6 +107,12 @@ async function mount() {
   const view = render(createElement(StrictMode, null, createElement(Page)));
   await waitFor(() => assert.equal(Boolean(view.queryByText('正在加载学习进度……')), false));
   return view;
+}
+async function showHint(view) {
+  fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  await waitFor(() => assert.ok(view.getByRole('button', { name: '收起提示' })));
+  await waitFor(() => assert.equal(view.container.querySelector('.practice-controls').disabled, false));
+  assert.equal(JSON.parse(storage.getItem(KEY)).practiceLog.events.at(-1).type, 'hint');
 }
 async function classifyCorrect(view) {
   const surface = view.container.querySelector('.word-display ruby').firstChild.textContent;
@@ -74,16 +125,59 @@ async function next(view) {
   fireEvent.click(view.container.querySelector('.next-button'));
   await waitFor(() => assert.equal(Boolean(view.queryByText('正解！')), false));
 }
+function displayedExercise(view) {
+  const surface = view.container.querySelector('.word-display ruby').firstChild.textContent;
+  const label = view.container.querySelector('.question-kicker span:nth-child(2)').textContent;
+  const form = view.queryByLabelText('你的答案') ? Object.keys(FORM_LABELS).find(form => FORM_LABELS[form] === label
+    && KNOWLEDGE.exercises.some(exercise => exercise.item.surface === surface && exercise.form === form)) : null;
+  const exercise = KNOWLEDGE.exercises.find(exercise => exercise.item.surface === surface && exercise.form === form);
+  assert.ok(exercise, `${surface}: ${label}`);
+  return exercise;
+}
+async function answerDisplayedCorrectly(view) {
+  const exercise = displayedExercise(view);
+  if (!exercise.form) await classifyCorrect(view);
+  else {
+    const item = exercise.item;
+    const correct = item.domain === 'adjective' ? conjugateAdjective({ ...item, surface: item.reading }, exercise.form)
+      : conjugate(item.reading, item.class, exercise.form);
+    fireEvent.change(view.getByLabelText('你的答案'), { target: { value: correct } });
+    fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
+    await waitFor(() => assert.ok(view.getByText('正解！')));
+  }
+  return exercise;
+}
 
-test('page keeps the hint penalty after collapse and clears it on the next question', async () => {
+async function exportedProfile(view, name = '导出数据') {
+  let captured;
+  const create = URL.createObjectURL, revoke = URL.revokeObjectURL, click = dom.window.HTMLAnchorElement.prototype.click;
+  URL.createObjectURL = blob => { captured = blob; return 'blob:practice-log-test'; };
+  URL.revokeObjectURL = () => {};
+  dom.window.HTMLAnchorElement.prototype.click = () => {};
+  try {
+    fireEvent.click(view.getByRole('button', { name }));
+    assert.ok(captured);
+    return JSON.parse(await captured.text()).profile;
+  } finally { URL.createObjectURL = create; URL.revokeObjectURL = revoke; dom.window.HTMLAnchorElement.prototype.click = click; }
+}
+
+test('page preserves hint assistance after collapse and clears the manual hint on the next question', async () => {
   const view = await mount();
-  fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  await showHint(view);
   fireEvent.click(view.getByRole('button', { name: '收起提示' }));
   await classifyCorrect(view);
-  assert.equal(JSON.parse(storage.getItem(KEY)).byKc['class.godan'].filteredAccuracy, .7);
+  const hinted = JSON.parse(storage.getItem(KEY));
+  assert.deepEqual(hinted.byKc, {});
+  assert.deepEqual(hinted.assessment.assistedByKc, {}, 'a hinted classification supplies no local transformation evidence');
+  assert.equal(hinted.practiceLog.events.at(-1).support.source, 'hinted');
+  assert.equal(Object.keys(hinted.assessment.pending).length, 1);
   await next(view);
   await classifyCorrect(view);
-  assert.equal(JSON.parse(storage.getItem(KEY)).byKc['class.godan'].filteredAccuracy, .76);
+  const saved = JSON.parse(storage.getItem(KEY)), event = saved.practiceLog.events.at(-1);
+  assert.equal(event.hintUsed, false);
+  assert.ok(!event.support.provided.includes('hint'));
+  assert.notEqual(event.support.source, 'hinted');
+  assert.equal(saved.attempted, 2);
 });
 
 test('storage write failure retains loaded totals and still displays grading feedback', async () => {
@@ -155,17 +249,22 @@ test('a completed route plays twelve questions and rotates to another course', a
   assert.notEqual(view.container.querySelector('.focus-panel strong').textContent, initialCourse);
 });
 
-test('a regression in review is prioritized in the next round', async () => {
-  storage.setItem(KEY, JSON.stringify(masteredProfile()));
+test('revealing in review creates a pending retest and the next round starts with spacing instead of fabricated mastery loss', async () => {
+  const initial = masteredProfile();
+  storage.setItem(KEY, JSON.stringify(initial));
   const view = await mount();
   fireEvent.click(view.getByRole('button', { name: '不知道' }));
   await waitFor(() => assert.ok(view.getByText('记住这个变化')));
+  const revealed = JSON.parse(storage.getItem(KEY));
+  assert.deepEqual(revealed.byKc, initial.byKc);
+  assert.equal(Object.keys(revealed.assessment.pending).length, 1);
+  assert.deepEqual(revealed.practiceLog.events.at(-1).changes, []);
+  assert.equal(revealed.practiceLog.events.at(-1).diagnosis.kcId, null);
   fireEvent.click(view.getByRole('button', { name: '结束本轮' }));
   await waitFor(() => assert.ok(view.getByText('本轮完成')));
   fireEvent.click(view.getByRole('button', { name: /继续下一轮/ }));
-  await waitFor(() => assert.ok(view.getByText('本轮重点')));
-  assert.equal(Boolean(view.queryByText('巩固训练')), false);
-  assert.equal(view.container.querySelector('.focus-panel strong').textContent, '动词分类');
+  await waitFor(() => assert.match(view.container.querySelector('.focus-panel').textContent, /间隔练习/));
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).assessment.pending, revealed.assessment.pending);
 });
 
 test('compound review varies words across forms and saved history survives starting another round and reloading', async () => {
@@ -275,12 +374,13 @@ test('lexical typo retries leave all statistics untouched and a correction is gr
   const { view, item, form } = await mountCompoundPast('negativePast');
   const before = storage.getItem(KEY);
   const correct = await submitLexicalTypo(view, item, form);
-  assert.equal(storage.getItem(KEY), before);
+  assertProgressUnchanged(before);
   assert.equal(view.getByLabelText('你的答案').disabled, false);
   assert.equal(Boolean(view.queryByText('差一点')), false);
   assert.equal(Boolean(view.container.querySelector('.next-button')), false);
   fireEvent.click(view.getByRole('button', { name: '检查答案' }));
-  assert.equal(storage.getItem(KEY), before);
+  await waitFor(() => assert.equal(JSON.parse(storage.getItem(KEY)).practiceLog.events.length, 2));
+  assertProgressUnchanged(before);
   fireEvent.change(view.getByLabelText('你的答案'), { target: { value: correct } });
   assert.equal(Boolean(view.queryByText(/可能是输入笔误/)), false);
   fireEvent.click(view.getByRole('button', { name: '检查答案' }));
@@ -291,19 +391,27 @@ test('lexical typo retries leave all statistics untouched and a correction is gr
   assert.equal(saved.correct, JSON.parse(before).correct + 1);
   assert.equal(saved.byKc['apply.teageru.continuation'].attempts, 1);
   assert.equal(saved.byKc['apply.teageru.continuation'].correct, 1);
+  assert.equal(saved.assessment.independentByKc['apply.teageru.continuation'].correct, 1);
+  assert.equal(saved.practiceLog.events.at(-1).support.independent, true);
+  assert.ok(saved.practiceLog.events.at(-1).support.provided.includes('lexical-retry'));
   await next(view);
   assert.equal(Boolean(view.queryByText(/可能是输入笔误/)), false);
 });
 
 test('a typo retry retains hint usage when the corrected answer is graded', async () => {
-  const { view, item, form } = await mountCompoundPast();
-  fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  const { view, item, form, initial } = await mountCompoundPast();
+  await showHint(view);
   fireEvent.click(view.getByRole('button', { name: '收起提示' }));
   const correct = await submitLexicalTypo(view, item, form);
   fireEvent.change(view.getByLabelText('你的答案'), { target: { value: correct } });
   fireEvent.click(view.getByRole('button', { name: '检查答案' }));
   await waitFor(() => assert.ok(view.getByText('正解！')));
-  assert.equal(JSON.parse(storage.getItem(KEY)).byKc['apply.teageru.continuation'].filteredAccuracy, .7);
+  const saved = JSON.parse(storage.getItem(KEY));
+  assert.deepEqual(saved.byKc, initial.byKc);
+  assert.equal(saved.assessment.assistedByKc['apply.teageru.continuation'], undefined);
+  assert.equal(saved.practiceLog.events.at(-1).support.source, 'hinted');
+  assert.equal(saved.practiceLog.events.at(-1).support.independent, false);
+  assert.equal(Object.keys(saved.assessment.pending).length, 1);
 });
 
 test('revealing after a typo grades normally and clears the retry notice', async () => {
@@ -321,7 +429,7 @@ async function startDiagnosticPractice(withHint = false) {
   const context = await mountCompoundPast('past', 'i-adjective');
   const { view, item, form } = context;
   if (withHint) {
-    fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+    await showHint(view);
     fireEvent.click(view.getByRole('button', { name: '收起提示' }));
   }
   fireEvent.change(view.getByLabelText('你的答案'), { target: { value: 'たのんだいた' } });
@@ -330,16 +438,20 @@ async function startDiagnosticPractice(withHint = false) {
   return { ...context, steps: buildDiagnosticSteps(item, form) };
 }
 
-function assertDiagnosticSummary(view, { skipped = false, updated }) {
-  const summary = view.container.querySelector('.feedback-copy p').textContent;
-  const footer = view.container.querySelector('.feedback-meta > span').textContent;
-  assert.match(summary, skipped ? /跳过/ : /拆步练习已完成/);
-  assert.match(summary, /原题仍计为错误/);
-  assert.match(summary, updated ? /知识点掌握度已更新/ : /掌握度未更新/);
-  assert.doesNotMatch(summary, /暂时无法确定出错步骤/);
-  assert.doesNotMatch(footer, /待确认|后续变化单独评估|拆步作答单独评估/);
-  assert.match(footer, /已完成|已结束|跳过|已更新|未更新/);
-  if (!updated) assert.doesNotMatch(`${summary} ${footer}`, /掌握度已更新/);
+async function assertDiagnosticSummary(view, { skipped = false, updated }) {
+  await waitFor(() => {
+    const summary = view.container.querySelector('.feedback-copy p').textContent;
+    const footer = view.container.querySelector('.feedback-meta > span').textContent;
+    assert.match(summary, skipped ? /跳过/ : /拆步练习已完成/);
+    assert.match(summary, /原题仍计为错误/);
+    assert.match(summary, /独立掌握度/);
+    assert.match(summary, /待复测/);
+    assert.match(summary, updated ? /已记录 \d+ 个局部知识点的辅助练习/ : /已记录本次诊断过程/);
+    assert.doesNotMatch(summary, /暂时无法确定出错步骤/);
+    assert.doesNotMatch(footer, /后续变化单独评估|拆步作答单独评估/);
+    assert.match(footer, /已完成|已结束|跳过|待复测|辅助/);
+    assert.doesNotMatch(`${summary} ${footer}`, /独立掌握度已更新|知识点掌握度已更新/);
+  });
 }
 
 async function mountPassiveDesirePractice() {
@@ -381,7 +493,7 @@ for (const localized of [false, true]) test(`passive desire probes show each tar
   if (localized) assert.match(view.container.querySelector('.feedback-copy p').textContent, /受身/);
   else assert.match(view.container.querySelector('.feedback-copy p').textContent, /缺少足够完整的片段/);
 
-  // These expectations describe independently performed work, rather than
+  // These expectations specify the local work each probe asks for, rather than
   // borrowing the diagnostic generator's own KC list as a grading oracle.
   const steps = [
     ...(localized ? [
@@ -405,14 +517,9 @@ for (const localized of [false, true]) test(`passive desire probes show each tar
     fireEvent.change(input, { target: { value: step.answer } });
     fireEvent.submit(input.closest('form'));
     fireEvent.submit(input.closest('form'));
-    await waitFor(() => assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+    await waitFor(() => assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
     const saved = JSON.parse(storage.getItem(KEY));
-    const changed = Object.keys(saved.byKc).filter(id => JSON.stringify(saved.byKc[id]) !== JSON.stringify(before.byKc[id]));
-    assert.deepEqual(changed.sort(), [...step.kcIds].sort());
-    for (const id of step.kcIds) {
-      assert.equal(saved.byKc[id].attempts, before.byKc[id].attempts + 1, id);
-      assert.equal(saved.byKc[id].correct, before.byKc[id].correct + 1, id);
-    }
+    assertStepChanges(before, saved, step.kcIds);
     assert.deepEqual(saved.byKc['compound.multi-step'], initial.byKc['compound.multi-step']);
     assert.deepEqual(saved.coursePractice, initial.coursePractice);
     assert.equal(saved.attempted, whole.attempted);
@@ -429,7 +536,7 @@ for (const localized of [false, true]) test(`passive desire probes show each tar
   }
   await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
   assert.ok(view.getByText('差一点'));
-  assertDiagnosticSummary(view, { updated: true });
+  await assertDiagnosticSummary(view, { updated: true });
   assert.equal(view.container.querySelector('.rule-line').parentElement.hidden, false);
   const nextButton = view.container.querySelector('.next-button');
   assert.equal(nextButton.disabled, false);
@@ -458,21 +565,21 @@ test('a completed compound base is saved once and Enter completes only its remai
   fireEvent.change(view.getByLabelText('本步答案'),{target:{value:conjugate(item.reading,item.class,form)}});
   fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
   fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
-  await waitFor(()=>assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+  await waitFor(()=>assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
   const saved=JSON.parse(storage.getItem(KEY));
   assert.equal(saved.attempted,1);
   assert.equal(saved.correct,0);
   assert.equal(saved.streak,0);
   assert.deepEqual(saved.byKc[`construction.${baseForm}`],beforeProbe.byKc[`construction.${baseForm}`]);
-  assert.equal(saved.byKc['adj.suffix.i-past'].attempts,beforeProbe.byKc['adj.suffix.i-past'].attempts+1);
+  assertStepChanges(beforeProbe, saved, ['adj.suffix.i-past']);
   fireEvent.keyDown(view.getByRole('button',{name:/完成拆步/}),{key:'Enter'});
   await waitFor(()=>assert.equal(Boolean(view.queryByRole('region',{name:'拆步练习'})),false));
-  assertDiagnosticSummary(view, { updated: true });
+  await assertDiagnosticSummary(view, { updated: true });
   fireEvent.keyDown(view.container.querySelector('.next-button'),{key:'Enter'});
   await waitFor(()=>assert.equal(Boolean(view.queryByText('差一点')),false));
 });
 
-test('unlocalized compound errors are followed by two independent steps without revealing the full answer', async () => {
+test('unlocalized compound errors are followed by two guided steps without revealing the full answer', async () => {
   const { view, initial, steps, item } = await startDiagnosticPractice();
   assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc, initial.byKc);
   assert.equal(JSON.parse(storage.getItem(KEY)).attempted, 1);
@@ -489,18 +596,16 @@ test('unlocalized compound errors are followed by two independent steps without 
     // Repeated submissions must not race into duplicate evidence.
     fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
     fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
-    await waitFor(() => assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+    await waitFor(() => assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
     const saved = JSON.parse(storage.getItem(KEY));
-    const changed = Object.keys(saved.byKc).filter((id) => JSON.stringify(saved.byKc[id]) !== JSON.stringify(before.byKc[id]));
-    assert.deepEqual(changed.sort(), [...step.kcIds].sort());
-    for (const id of step.kcIds) assert.equal(saved.byKc[id].attempts, before.byKc[id].attempts + 1);
+    assertStepChanges(before, saved, step.kcIds);
     assert.equal(saved.attempted, 1);
     assert.equal(saved.correct, 0);
     assert.equal(saved.streak, 0);
     assert.deepEqual(saved.recentWordKeys, [wordKey({ item })]);
     fireEvent.click(view.getByRole('button', { name: index === 0 ? '练习下一步' : '完成拆步' }));
   }
-  assertDiagnosticSummary(view, { updated: true });
+  await assertDiagnosticSummary(view, { updated: true });
   assert.equal(view.container.querySelector('.rule-line').parentElement.hidden, false);
   assert.equal(view.container.querySelector('.next-button').disabled, false);
   const beforeNext = JSON.parse(storage.getItem(KEY));
@@ -535,21 +640,24 @@ test('an unknown first step remains ungraded and the second step diagnoses only 
   fireEvent.click(view.getByRole('button', { name: '检查本步' }));
   await waitFor(() => assert.ok(view.getByText(/还没有继续变为过去形/)));
   const saved = JSON.parse(storage.getItem(KEY));
-  assert.equal(saved.byKc['adj.suffix.i-past'].attempts, initial.byKc['adj.suffix.i-past'].attempts + 1);
+  assert.equal(assistedStat(saved, 'adj.suffix.i-past').attempts, 1);
+  assert.equal(assistedStat(saved, 'adj.suffix.i-past').correct, 0);
+  assert.deepEqual(saved.byKc, initial.byKc);
   assert.equal(saved.byKc[steps[1].focusId].attempts, 0);
   for (const id of steps[0].kcIds) assert.deepEqual(saved.byKc[id], initial.byKc[id]);
   fireEvent.click(view.getByRole('button', { name: '完成拆步' }));
-  assertDiagnosticSummary(view, { updated: true });
+  await assertDiagnosticSummary(view, { updated: true });
 });
 
 test('skipping diagnostic steps adds no evidence or counts', async () => {
   const { view } = await startDiagnosticPractice();
   const before = storage.getItem(KEY);
   fireEvent.click(view.getByRole('button', { name: '跳过剩余拆步，查看解析' }));
-  assert.equal(storage.getItem(KEY), before);
+  await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
+  assertProgressUnchanged(before);
   assert.equal(view.container.querySelector('.rule-line').parentElement.hidden, false);
   assert.equal(Boolean(view.queryByLabelText('本步答案')), false);
-  assertDiagnosticSummary(view, { skipped: true, updated: false });
+  await assertDiagnosticSummary(view, { skipped: true, updated: false });
 });
 
 for (const firstStepCorrect of [true, false]) test(`skipping the remaining probe reports only saved evidence (firstStepCorrect=${firstStepCorrect})`, async () => {
@@ -557,12 +665,13 @@ for (const firstStepCorrect of [true, false]) test(`skipping the remaining probe
   const before = JSON.parse(storage.getItem(KEY));
   fireEvent.change(view.getByLabelText('本步答案'), { target: { value: firstStepCorrect ? steps[0].readings[0] : 'xyz' } });
   fireEvent.click(view.getByRole('button', { name: '检查本步' }));
-  await waitFor(() => assert.ok(view.getByText(firstStepCorrect ? /本步正确，已更新本步知识点/ : /本次不更新未确认的知识点|本步不更新掌握度/)));
+  await waitFor(() => assert.ok(view.getByText(firstStepCorrect ? /本步正确，已记录辅助练习/ : /本次不更新未确认的知识点|本步不更新掌握度/)));
   const afterStep = JSON.parse(storage.getItem(KEY));
-  if (firstStepCorrect) assert.notDeepEqual(afterStep.byKc, before.byKc);
-  else assert.deepEqual(afterStep.byKc, before.byKc);
+  assertStepChanges(before, afterStep, firstStepCorrect ? steps[0].kcIds : []);
   const inProgress = view.container.querySelector('.feedback-copy p').textContent;
-  assert.match(inProgress, firstStepCorrect ? /知识点掌握度已更新/ : /掌握度未更新/);
+  assert.match(inProgress, /拆步不改变独立掌握度|独立掌握度.*不变/);
+  assert.match(inProgress, /待复测/);
+  if (firstStepCorrect) assert.match(inProgress, /辅助练习/);
   assert.doesNotMatch(inProgress, /拆步练习已完成/);
   assert.equal(afterStep.attempted, before.attempted);
   assert.equal(afterStep.correct, before.correct);
@@ -570,8 +679,9 @@ for (const firstStepCorrect of [true, false]) test(`skipping the remaining probe
   fireEvent.click(view.getByRole('button', { name: '练习下一步' }));
   const beforeSkip = storage.getItem(KEY);
   fireEvent.click(view.getByRole('button', { name: '跳过剩余拆步，查看解析' }));
-  assert.equal(storage.getItem(KEY), beforeSkip);
-  assertDiagnosticSummary(view, { skipped: true, updated: firstStepCorrect });
+  await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
+  assertProgressUnchanged(beforeSkip);
+  await assertDiagnosticSummary(view, { skipped: true, updated: firstStepCorrect });
   assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false);
   assert.equal(view.container.querySelector('.next-button').disabled, false);
 });
@@ -585,7 +695,7 @@ async function mountDerivedPastProbe(baseForm) {
   const baseReading = conjugate(item.reading, item.class, baseForm);
   fireEvent.change(view.getByLabelText('本步答案'), { target: { value: baseReading } });
   fireEvent.click(view.getByRole('button', { name: '检查本步' }));
-  await waitFor(() => assert.ok(view.getByText(/本步正确，已更新本步知识点/)));
+  await waitFor(() => assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
   fireEvent.click(view.getByRole('button', { name: '练习下一步' }));
   const derivedClass = baseForm === 'tagaru' ? 'godan' : 'ichidan';
   return {
@@ -622,7 +732,7 @@ test('two omissions inside the causative-passive suffix do not add redundant ste
   await waitFor(() => assert.ok(view.getByText(/接续写成了「せれる」.*「させられる」/)));
   assert.ok(view.getByText('拆步练习 · 第 1 / 2 步'));
   const after = JSON.parse(storage.getItem(KEY));
-  assert.deepEqual(Object.keys(after.byKc).filter(id => JSON.stringify(after.byKc[id]) !== JSON.stringify(before.byKc[id])), ['suffix.causativePassive']);
+  assertStepChanges(before, after, ['suffix.causativePassive'], false);
   assert.equal(after.attempted, before.attempted);
   assert.equal(after.correct, before.correct);
   assert.deepEqual(after.recentWordKeys, before.recentWordKeys);
@@ -637,7 +747,7 @@ for (const { baseForm, correctClass, correctPast } of [
   { baseForm: 'tagaru', correctClass: false, correctPast: true },
   { baseForm: 'teageru', correctClass: true, correctPast: true },
   { baseForm: 'teageru', correctClass: false, correctPast: false },
-]) test(`derived past ambiguity adds independent checks (${baseForm}, class=${correctClass}, past=${correctPast})`, async () => {
+]) test(`derived past ambiguity adds isolated guided checks (${baseForm}, class=${correctClass}, past=${correctPast})`, async () => {
   const { view, classLabel, correctReading, correctSurface, wrongReading, allowedKcIds } = await mountDerivedPastProbe(baseForm);
   const beforeAmbiguous = JSON.parse(storage.getItem(KEY));
   const originalQuestion = view.container.querySelector('.stage-meta').textContent;
@@ -687,21 +797,16 @@ for (const { baseForm, correctClass, correctPast } of [
   await waitFor(() => assert.ok(view.getByRole('button', { name: '完成拆步' })));
   assert.match(region.querySelector('h3').textContent, /第\s*4\s*\/\s*4\s*步/);
   const saved = JSON.parse(storage.getItem(KEY));
-  const changed = Object.keys(saved.byKc).filter(id => JSON.stringify(saved.byKc[id]) !== JSON.stringify(beforePast.byKc[id]));
   const expectedKcIds = correctPast ? allowedKcIds : [baseForm === 'tagaru' ? 'onbin.sokuon' : 'suffix.past'];
-  assert.deepEqual(changed.sort(), [...expectedKcIds].sort());
-  for (const id of expectedKcIds) {
-    assert.equal(saved.byKc[id].attempts, beforePast.byKc[id].attempts + 1, id);
-    assert.equal(saved.byKc[id].correct, beforePast.byKc[id].correct + Number(correctPast), id);
-  }
+  assertStepChanges(beforePast, saved, expectedKcIds, correctPast);
   assert.equal(saved.attempted, beforeAmbiguous.attempted);
   assert.equal(saved.correct, beforeAmbiguous.correct);
   assert.equal(saved.streak, beforeAmbiguous.streak);
   assert.deepEqual(saved.coursePractice, beforeAmbiguous.coursePractice);
-  await waitFor(() => { assert.equal(view.container.querySelector('.practice-controls').disabled,false); assert.equal(document.activeElement,view.getByRole('button', { name: '完成拆步' })); });
+  await waitFor(() => { assert.equal(view.container.querySelector('.practice-controls').disabled,false); assert.equal(document.activeElement === view.getByRole('button', { name: '完成拆步' }), true); });
   fireEvent.keyDown(view.getByRole('button', { name: '完成拆步' }), { key: 'Enter' });
   await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
-  assertDiagnosticSummary(view, { updated: true });
+  await assertDiagnosticSummary(view, { updated: true });
   assert.match(view.container.querySelector('.feedback-copy p').textContent, /已作答\s*4\s*\/\s*4\s*步/);
   fireEvent.keyDown(view.container.querySelector('.next-button'), { key: 'Enter' });
   await waitFor(() => assert.notEqual(view.container.querySelector('.stage-meta').textContent, originalQuestion));
@@ -735,8 +840,9 @@ test('skipping appended classification probes keeps their expanded total and sav
   await waitFor(() => assert.ok(view.getByRole('button', { name: '五段动词' })));
   const beforeSkip = storage.getItem(KEY);
   fireEvent.click(view.getByRole('button', { name: '跳过剩余拆步，查看解析' }));
-  assert.equal(storage.getItem(KEY), beforeSkip);
-  assertDiagnosticSummary(view, { skipped: true, updated: true });
+  await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
+  assertProgressUnchanged(beforeSkip);
+  await assertDiagnosticSummary(view, { skipped: true, updated: true });
   assert.match(view.container.querySelector('.feedback-copy p').textContent, /已作答\s*2\s*\/\s*4\s*步/);
   assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false);
   assert.equal(view.container.querySelector('.next-button').disabled, false);
@@ -782,6 +888,10 @@ for (const outcome of ['correct', 'ending-error', 'mixed-error']) test(`mixed le
   await waitFor(() => assert.match(region.textContent, /本步只确认词类，不更新知识点掌握度/));
   assert.match(region.textContent, classCorrect ? /词类判断正确/ : /词类判断有误/);
   assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc, beforeMixed.byKc);
+  await waitFor(() => {
+    assert.equal(view.container.querySelector('.practice-controls').disabled, false);
+    assert.equal(document.activeElement === view.getByRole('button', { name: '练习下一步' }), true);
+  });
   fireEvent.keyDown(view.getByRole('button', { name: '练习下一步' }), { key: 'Enter' });
   await waitFor(() => assert.ok(view.getByLabelText('本步答案')));
   region = view.getByRole('region', { name: '拆步练习' });
@@ -797,13 +907,8 @@ for (const outcome of ['correct', 'ending-error', 'mixed-error']) test(`mixed le
   assert.match(region.querySelector('h3').textContent, outcome === 'mixed-error' ? /第\s*4\s*\/\s*6\s*步/ : /第\s*4\s*\/\s*4\s*步/);
   assert.equal(Boolean(view.queryByRole('button', { name: '五段动词' })), false);
   const saved = JSON.parse(storage.getItem(KEY));
-  const changed = Object.keys(saved.byKc).filter(id => JSON.stringify(saved.byKc[id]) !== JSON.stringify(beforeGivenClass.byKc[id]));
   const expectedKcIds = outcome === 'correct' ? ['onbin.sokuon', 'suffix.past'] : outcome === 'ending-error' ? ['onbin.sokuon'] : [];
-  assert.deepEqual(changed.sort(), expectedKcIds.sort());
-  for (const id of expectedKcIds) {
-    assert.equal(saved.byKc[id].attempts, beforeGivenClass.byKc[id].attempts + 1, id);
-    assert.equal(saved.byKc[id].correct, beforeGivenClass.byKc[id].correct + Number(outcome === 'correct'), id);
-  }
+  assertStepChanges(beforeGivenClass, saved, expectedKcIds, outcome === 'correct');
   if (outcome === 'mixed-error') {
     const review = region.querySelector('[role="status"] > p').textContent;
     assert.match(review, /前部|前面|原词部分|词根/);
@@ -816,7 +921,7 @@ for (const outcome of ['correct', 'ending-error', 'mixed-error']) test(`mixed le
   assert.equal(saved.streak, beforeMixed.streak);
   assert.deepEqual(saved.coursePractice, beforeMixed.coursePractice);
   if (outcome === 'mixed-error') {
-    // The given-class attempt remains ungraded; two independent rule probes
+    // The given-class attempt remains ungraded; two separate rule probes under supplied facts
     // finish the diagnosis without asking for classification a second time.
     for (let i=0;i<2;i++) {
       fireEvent.click(view.getByRole('button', { name: '练习下一步' }));
@@ -828,10 +933,10 @@ for (const outcome of ['correct', 'ending-error', 'mixed-error']) test(`mixed le
     }
     assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc,beforeMixed.byKc);
   }
-  await waitFor(() => { assert.equal(view.container.querySelector('.practice-controls').disabled,false); assert.equal(document.activeElement,view.getByRole('button', { name: '完成拆步' })); });
+  await waitFor(() => { assert.equal(view.container.querySelector('.practice-controls').disabled,false); assert.equal(document.activeElement === view.getByRole('button', { name: '完成拆步' }), true); });
   fireEvent.keyDown(view.getByRole('button', { name: '完成拆步' }), { key: 'Enter' });
   await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
-  assertDiagnosticSummary(view, { updated: true });
+  await assertDiagnosticSummary(view, { updated: true });
   assert.match(view.container.querySelector('.feedback-copy p').textContent, outcome === 'mixed-error' ? /已作答\s*6\s*\/\s*6\s*步/ : /已作答\s*4\s*\/\s*4\s*步/);
   const correctSteps = outcome === 'correct' ? 3 : outcome === 'ending-error' ? 1 : 2;
   assert.match(view.container.querySelector('.feedback-copy p').textContent, new RegExp(`答对\\s*${correctSteps}\\s*步`));
@@ -842,14 +947,16 @@ test('diagnostic steps preserve prior hint usage and do not record whole-answer 
   for (const [index, step] of steps.entries()) {
     fireEvent.change(view.getByLabelText('本步答案'), { target: { value: step.readings[0] } });
     fireEvent.click(view.getByRole('button', { name: '检查本步' }));
-    await waitFor(() => assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+    await waitFor(() => assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
     const saved = JSON.parse(storage.getItem(KEY));
-    for (const id of step.kcIds) {
-      assert.equal(saved.byKc[id].filteredAccuracy, initial.byKc[id].attempts ? .94 : .7);
-      assert.equal(saved.byKc[id].cleanTimeCount, initial.byKc[id].cleanTimeCount);
+    assert.deepEqual(saved.byKc, initial.byKc);
+    for (const id of localPracticeIds(step.kcIds)) {
+      assert.equal(assistedStat(saved, id).filteredAccuracy, .7);
+      assert.equal(assistedStat(saved, id).cleanTimeCount, 0);
     }
     fireEvent.click(view.getByRole('button', { name: index === 0 ? '练习下一步' : '完成拆步' }));
   }
+  await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
 });
 
 test('diagnostic evidence uses the same cross-tab write protection as ordinary grading', async () => {
@@ -860,7 +967,7 @@ test('diagnostic evidence uses the same cross-tab write protection as ordinary g
   fireEvent.click(view.getByRole('button', { name: '检查本步' }));
   await waitFor(() => assert.match(view.getByRole('alert').textContent, /本次操作未保存/));
   assert.deepEqual(JSON.parse(storage.getItem(KEY)), latest);
-  assert.equal(Boolean(view.queryByText('本步正确，已更新本步知识点。')), false);
+  assert.equal(Boolean(view.queryByText(/本步正确，已记录辅助练习/)), false);
   assert.doesNotMatch(view.container.querySelector('.feedback-copy p').textContent, /掌握度已更新|拆步练习已完成/);
   assert.doesNotMatch(view.container.querySelector('.feedback-meta > span').textContent, /掌握度已更新|拆步.*已完成/);
   assert.equal(Boolean(view.queryByRole('button', { name: '练习下一步' })), false);
@@ -876,7 +983,7 @@ test('diagnostic lexical typo retries preserve the current step and all evidence
   fireEvent.change(view.getByLabelText('本步答案'), { target: { value: typo } });
   fireEvent.click(view.getByRole('button', { name: '检查本步' }));
   await waitFor(() => assert.ok(view.getByText(/本步尚未计分/)));
-  assert.equal(storage.getItem(KEY), before);
+  assertProgressUnchanged(before);
   assert.equal(view.getByLabelText('本步答案').disabled, false);
   assert.equal(Boolean(view.queryByRole('button', { name: '练习下一步' })), false);
 });
@@ -889,13 +996,13 @@ test('Enter advances diagnostic feedback, completes diagnostics, then goes to th
   for (const [index, step] of steps.entries()) {
     fireEvent.change(view.getByLabelText('本步答案'), { target: { value: step.readings[0] } });
     fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
-    await waitFor(() => assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+    await waitFor(() => assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
     const advance = view.container.querySelector('[data-diagnostic-next]');
     assert.equal(document.activeElement === advance, true);
     assert.equal(advance.getAttribute('aria-keyshortcuts'), 'Enter');
     for (const extra of [{ isComposing: true }, { keyCode: 229 }, { repeat: true }, { ctrlKey: true }]) {
       assert.equal(fireEvent.keyDown(advance, { key: 'Enter', ...extra }), false);
-      assert.equal(Boolean(view.queryByText('本步正确，已更新本步知识点。')), true);
+      assert.equal(Boolean(view.queryByText(/本步正确，已记录辅助练习/)), true);
     }
     fireEvent.keyDown(document.activeElement, { key: 'Enter' });
     assert.equal(view.container.querySelector('.stage-meta').textContent, question);
@@ -923,12 +1030,13 @@ test('Enter from a retained disabled answer or the page body also advances a dia
     fireEvent.submit(answer.closest('form'));
     await waitFor(() => assert.ok(view.getByText(/本次不更新未确认的知识点|本步不更新掌握度/)));
     assert.equal(answer.disabled, true);
-    await waitFor(() => assert.equal(document.activeElement, view.container.querySelector('[data-diagnostic-next]')));
+    await waitFor(() => assert.equal(document.activeElement === view.container.querySelector('[data-diagnostic-next]'), true));
     fireEvent.keyDown(index % 2 === 0 ? answer : document.body, { key: 'Enter' });
+    await waitFor(() => assert.ok(!view.queryByRole('region', { name: '拆步练习' }) || !view.getByLabelText('本步答案').disabled));
   }
   assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false);
   assert.equal(view.container.querySelector('.next-button').disabled, false);
-  assertDiagnosticSummary(view, { updated: false });
+  await assertDiagnosticSummary(view, { updated: false });
   const saved = JSON.parse(storage.getItem(KEY));
   assert.deepEqual(saved.byKc, before.byKc);
   assert.equal(saved.attempted, before.attempted);
@@ -944,25 +1052,28 @@ test('Enter cannot bypass unanswered steps or run behind the progress drawer', a
   assert.ok(view.getByText('拆步练习 · 第 1 / 2 步'));
   fireEvent.change(view.getByLabelText('本步答案'), { target: { value: steps[0].readings[0] } });
   fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
-  await waitFor(() => assert.ok(view.getByText('本步正确，已更新本步知识点。')));
+  await waitFor(() => assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
   fireEvent.click(view.getByRole('button', { name: /知识进度 全部课程/ }));
   assert.ok(view.getByRole('dialog'));
   fireEvent.keyDown(document.body, { key: 'Enter' });
   assert.ok(view.getByText('拆步练习 · 第 1 / 2 步'));
 });
 
-test('v5 automatically migrates on use, retains its snapshot and reloads v6 without replaying migration', async () => {
-  const legacyKey = 'katsuyo-practice-profile-v5';
-  const legacy = { ...profile({ attempted: 7, correct: 6 }), version: 5 };
+for (const legacyVersion of [5, 6]) test(`v${legacyVersion} automatically migrates on use, retains its snapshot and reloads v7 without replaying migration`, async () => {
+  const legacyKey = `katsuyo-practice-profile-v${legacyVersion}`;
+  const legacy = { ...profile({ attempted: 7, correct: 6 }), version: legacyVersion };
+  delete legacy.assessment;
   const raw = JSON.stringify(legacy);
   storage.setItem(legacyKey, raw);
   const view = await mount();
-  assert.match(view.container.textContent, /等价规则记录保留/);
+  assert.match(view.container.textContent, /独立评估已启用/);
   await classifyCorrect(view);
   const saved = JSON.parse(storage.getItem(KEY));
-  assert.equal(saved.version, 6);
+  assert.equal(saved.version, 7);
   assert.equal(saved.attempted, 8);
-  assert.deepEqual(saved.legacy.profile, legacy);
+  if (legacyVersion === 5) assert.deepEqual(saved.legacy.profile, legacy);
+  else assert.deepEqual(saved.legacy, legacy.legacy);
+  assert.equal(saved.practiceLog.events.filter(event => event.type === 'migration').length, 1);
   assert.equal(storage.getItem(legacyKey), raw);
   cleanup();
   await mount();
@@ -1023,7 +1134,7 @@ for (const hintUsed of [false, true]) test(`adjective ku omission persists preci
   assert.equal(view.container.querySelector('.question-kicker span:nth-child(2)').textContent, '否定形');
   const surface = view.container.querySelector('.word-display ruby').firstChild.textContent;
   const item = ADJECTIVE_KNOWLEDGE.exercises.find(e => e.item.surface === surface && e.form === 'adjectiveNegative').item;
-  if (hintUsed) fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  if (hintUsed) await showHint(view);
   const stem = conjugateAdjective({ ...item, surface: item.reading }, 'adjectiveNegative').slice(0, -2);
   fireEvent.change(view.getByLabelText('你的答案'), { target: { value: stem } });
   fireEvent.click(view.getByRole('button', { name: '检查答案' }));
@@ -1031,10 +1142,12 @@ for (const hintUsed of [false, true]) test(`adjective ku omission persists preci
   const saved = JSON.parse(storage.getItem(KEY));
   assert.equal(saved.attempted, 1);
   assert.equal(saved.correct, 0);
-  assert.equal(saved.byKc['adj.suffix.i-negative'].attempts, 1);
-  assert.equal(saved.byKc['adj.suffix.i-negative'].correct, 0);
-  assert.equal(saved.byKc['adj.stem.i-ku'].correct, initial.byKc['adj.stem.i-ku'].correct + 1);
-  assert.equal(saved.byKc['adj.stem.i-ku'].filteredAccuracy, hintUsed ? .94 : 1);
+  const scores = hintUsed ? saved.assessment.assistedByKc : saved.byKc;
+  assert.equal(scores['adj.suffix.i-negative'].attempts, 1);
+  assert.equal(scores['adj.suffix.i-negative'].correct, 0);
+  assert.equal(scores['adj.stem.i-ku'].correct, hintUsed ? 1 : initial.byKc['adj.stem.i-ku'].correct + 1);
+  assert.equal(scores['adj.stem.i-ku'].filteredAccuracy, hintUsed ? .7 : 1);
+  if (hintUsed) assert.deepEqual(saved.byKc, initial.byKc);
   assert.deepEqual(saved.byKc['adj.class.i'], initial.byKc['adj.class.i']);
   assert.deepEqual(saved.byKc['adj.suffix.i-adverb'], initial.byKc['adj.suffix.i-adverb']);
   assert.equal(Boolean(view.queryByText(/暂时无法确定出错步骤/)), false);
@@ -1158,7 +1271,7 @@ for (const outcome of ['success', 'failure', 'unknown', 'skip', 'hint']) test(`r
   const item = ADJECTIVE_KNOWLEDGE.exercises.find(e => e.form === 'adjectiveNegativePast' && e.item.surface === surface).item;
   const readingItem = { ...item, surface: item.reading };
   const negative = conjugateAdjective(readingItem, 'adjectiveNegative');
-  if (outcome === 'hint') fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  if (outcome === 'hint') await showHint(view);
   fireEvent.change(view.getByLabelText('你的答案'), { target: { value: negative } });
   fireEvent.click(view.getByRole('button', { name: '检查答案' }));
   await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 1 / 1 步')));
@@ -1172,9 +1285,11 @@ for (const outcome of ['success', 'failure', 'unknown', 'skip', 'hint']) test(`r
   assert.equal(beforeProbe.correct, 0);
   assert.equal(beforeProbe.streak, 0);
   for (const id of ['adj.stem.i-ku', 'adj.suffix.i-negative']) {
-    assert.equal(beforeProbe.byKc[id].attempts, initial.byKc[id].attempts + 1);
-    assert.equal(beforeProbe.byKc[id].filteredAccuracy, outcome === 'hint' ? .94 : 1);
+    const scores = outcome === 'hint' ? beforeProbe.assessment.assistedByKc : beforeProbe.byKc;
+    assert.equal(scores[id].attempts, outcome === 'hint' ? 1 : initial.byKc[id].attempts + 1);
+    assert.equal(scores[id].filteredAccuracy, outcome === 'hint' ? .7 : 1);
   }
+  if (outcome === 'hint') assert.deepEqual(beforeProbe.byKc, initial.byKc);
   for (const id of ['adj.class.i', 'adj.suffix.i-past', 'adj.compound.i-negative-past']) assert.deepEqual(beforeProbe.byKc[id], initial.byKc[id]);
   if (outcome === 'skip') {
     fireEvent.click(view.getByRole('button', { name: '跳过剩余拆步，查看解析' }));
@@ -1194,20 +1309,15 @@ for (const outcome of ['success', 'failure', 'unknown', 'skip', 'hint']) test(`r
   }
   await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
   const afterProbe = JSON.parse(storage.getItem(KEY));
-  assertDiagnosticSummary(view, { skipped: outcome === 'skip', updated: outcome !== 'skip' && outcome !== 'unknown' });
+  await assertDiagnosticSummary(view, { skipped: outcome === 'skip', updated: outcome !== 'skip' && outcome !== 'unknown' });
   if (outcome === 'skip' || outcome === 'unknown') {
-    assert.match(view.container.querySelector('.feedback-copy p').textContent, /本次拆步掌握度未更新.*原题已确认的记录保留/);
+    assert.match(view.container.querySelector('.feedback-copy p').textContent, /拆步不改变独立掌握度|独立掌握度.*不变|独立掌握度.*未更新/);
   }
   assert.doesNotMatch(view.container.querySelector('.partial-evidence-note').textContent, /继续单独检查/);
   for (const id of ['adj.stem.i-ku', 'adj.suffix.i-negative', 'adj.class.i']) assert.deepEqual(afterProbe.byKc[id], beforeProbe.byKc[id]);
   assert.equal(afterProbe.attempted, 1);
   assert.equal(afterProbe.correct, 0);
-  if (outcome === 'skip' || outcome === 'unknown') assert.deepEqual(afterProbe.byKc, beforeProbe.byKc);
-  else {
-    assert.equal(afterProbe.byKc['adj.suffix.i-past'].attempts, beforeProbe.byKc['adj.suffix.i-past'].attempts + 1);
-    if (outcome === 'failure') assert.deepEqual(afterProbe.byKc['adj.compound.i-negative-past'], beforeProbe.byKc['adj.compound.i-negative-past']);
-    else assert.equal(afterProbe.byKc['adj.compound.i-negative-past'].correct, 1);
-  }
+  assertStepChanges(beforeProbe, afterProbe, outcome === 'skip' || outcome === 'unknown' ? [] : ['adj.suffix.i-past'], outcome !== 'failure');
   fireEvent.keyDown(view.container.querySelector('.next-button'), { key: 'Enter' });
   await waitFor(() => assert.equal(Boolean(view.queryByText('差一点')), false));
 });
@@ -1242,14 +1352,12 @@ for (const outcome of ['correct','wrong','malformed','skip']) test(`negative-pas
     fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
     await waitFor(()=>assert.ok(view.container.querySelector('[data-diagnostic-next]')));
     const after=JSON.parse(storage.getItem(KEY));
-    const changed=Object.keys(after.byKc).filter(id=>JSON.stringify(after.byKc[id])!==JSON.stringify(prior.byKc[id]));
-    assert.deepEqual(changed,outcome==='malformed'?[]:[ids[i]]);
-    if(changed.length)assert.equal(after.byKc[ids[i]].attempts,prior.byKc[ids[i]].attempts+1);
+    assertStepChanges(prior, after, outcome === 'malformed' ? [] : [ids[i]], outcome !== 'wrong');
     assert.equal(after.attempted,before.attempted);assert.equal(after.correct,before.correct);assert.equal(after.streak,before.streak);
     fireEvent.click(view.container.querySelector('[data-diagnostic-next]'));
   }
   await waitFor(()=>assert.equal(Boolean(view.queryByRole('region',{name:'拆步练习'})),false));
-  assertDiagnosticSummary(view,{skipped:outcome==='skip',updated:outcome!=='malformed'});
+  await assertDiagnosticSummary(view,{skipped:outcome==='skip',updated:outcome!=='malformed'});
   assert.equal(view.container.querySelector('.next-button').disabled,false);
   for(const id of [`apply.tagaru.continuation`,`facet.apply.tagaru.negativePast`])assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc[id],before.byKc[id]);
 });
@@ -1260,8 +1368,11 @@ test('invalid whole and probe input asks for re-entry without consuming a questi
   for(const value of [' 。 ','あ'.repeat(257)]) {
     fireEvent.change(view.getByLabelText('你的答案'),{target:{value}});
     fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
-    assert.equal(storage.getItem(KEY),initial);assert.equal(Boolean(view.queryByText('差一点')),false);
-    assert.ok(view.getByText(value.length>256?/输入过长/:/请输入答案后再检查/));
+    await waitFor(() => assert.ok(view.getByText(value.length>256?/输入过长/:/请输入答案后再检查/)));
+    assertProgressUnchanged(initial);assert.equal(Boolean(view.queryByText('差一点')),false);
+    const event = JSON.parse(storage.getItem(KEY)).practiceLog.events.at(-1);
+    assert.equal(event.outcome, 'invalid'); assert.deepEqual(event.changes, []);
+    assert.equal(event.answerTruncated, value.length > 256);
   }
   fireEvent.change(view.getByLabelText('你的答案'),{target:{value:'xyz§'}});
   fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
@@ -1270,8 +1381,299 @@ test('invalid whole and probe input asks for re-entry without consuming a questi
   for(const value of [' 。 ','あ'.repeat(257)]) {
     fireEvent.change(view.getByLabelText('本步答案'),{target:{value}});
     fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
-    assert.equal(storage.getItem(KEY),before);
+    await waitFor(() => assert.ok(view.getByText(value.length>256?/输入过长/:/请输入答案后再检查/)));
+    assertProgressUnchanged(before);
     assert.equal(view.getByRole('region',{name:'拆步练习'}).querySelector('h3').textContent,heading);
     assert.equal(Boolean(view.container.querySelector('[data-diagnostic-next]')),false);
   }
+});
+
+test('a supplied negative records only assisted local evidence and asks for the remaining past on the page', async () => {
+  const { view, item } = await mountCompoundPast('negativePast', 'verb', 'tagaru');
+  const base = conjugate(item.reading, item.class, 'tagaru');
+  const negative = conjugate(base, 'godan', 'negative');
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: base } });
+  fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 1 / 1 步')));
+  const before = JSON.parse(storage.getItem(KEY));
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: negative } });
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 1 / 2 步')));
+  assert.match(view.getByRole('region', { name: '拆步练习' }).textContent, /已写对给定形式的否定变化/);
+  const afterNegative = JSON.parse(storage.getItem(KEY));
+  assertStepChanges(before, afterNegative, ['stem.godan.a', 'suffix.negative']);
+  for (const id of ['adj.suffix.i-past', 'compound.negative-past', 'apply.tagaru.continuation', 'facet.apply.tagaru.negativePast'])
+    assert.deepEqual(afterNegative.byKc[id], before.byKc[id]);
+  fireEvent.keyDown(view.container.querySelector('[data-diagnostic-next]'), { key: 'Enter' });
+  await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 2 / 2 步')));
+  assert.ok(view.container.querySelector('.diagnostic-word').textContent.includes(negative));
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: negative } });
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByRole('button', { name: /完成拆步/ })));
+  const afterPast = JSON.parse(storage.getItem(KEY));
+  assertStepChanges(afterNegative, afterPast, ['adj.suffix.i-past'], false);
+  for (const key of ['attempted', 'correct', 'streak']) assert.equal(afterPast[key], before[key]);
+  fireEvent.keyDown(view.getByRole('button', { name: /完成拆步/ }), { key: 'Enter' });
+  await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
+  await assertDiagnosticSummary(view, { skipped: false, updated: true });
+  assert.equal(view.container.querySelector('.next-button').disabled, false);
+});
+
+test('an independent na-te analogue in katakana directly saves only its suffix error', async () => {
+  const initial = masteredProfile();
+  initial.byKc['adj.suffix.na-te'] = emptySkillStats();
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  const surface = view.container.querySelector('.word-display ruby').firstChild.textContent;
+  const item = ADJECTIVE_KNOWLEDGE.exercises.find(e => e.item.surface === surface && e.form === 'adjectiveNaTe').item;
+  const input = (item.reading + 'だて').replace(/[ぁ-ゖ]/g, kana => String.fromCharCode(kana.charCodeAt(0) + 0x60));
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: input } });
+  fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByText('差一点')));
+  assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false);
+  const saved = JSON.parse(storage.getItem(KEY));
+  assert.equal(saved.attempted, 1); assert.equal(saved.correct, 0);
+  assert.deepEqual(Object.keys(saved.byKc).filter(id => JSON.stringify(saved.byKc[id]) !== JSON.stringify(initial.byKc[id])), ['adj.suffix.na-te']);
+  assert.equal(view.container.querySelector('.next-button').disabled, false);
+});
+
+test('practice logs link original and expanded steps, show exact changes, and survive export and reload', async () => {
+  const { view, item, form } = await mountCompoundPast('negative', 'verb', 'tagaru');
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: 'xyz§' } });
+  fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 1 / 2 步')));
+  const original = JSON.parse(storage.getItem(KEY)), base = conjugate(item.reading, item.class, 'tagaru');
+  const firstScope = buildDiagnosticSteps(item, form)[0].kcIds;
+  const inputs = [base, (base[0] === 'ふ' ? 'せ' : 'ふ') + base.slice(1, -1) + 'れない', base.slice(0, -1) + 'ら', base.slice(0, -1) + 'らない'];
+  const changes = [firstScope, [], ['stem.godan.a'], ['suffix.negative']];
+  for (const [index, input] of inputs.entries()) {
+    const before = JSON.parse(storage.getItem(KEY));
+    fireEvent.change(view.getByLabelText('本步答案'), { target: { value: input } });
+    fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+    fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+    await waitFor(() => assert.ok(view.container.querySelector('[data-diagnostic-next]')));
+    const current = JSON.parse(storage.getItem(KEY)), log = current.practiceLog.events.at(-1);
+    assert.equal(current.practiceLog.events.length, index + 2);
+    assert.equal(log.answer, input); assert.equal(log.target.stepIndex, index + 1);
+    assert.deepEqual(log.changes, []);
+    assert.deepEqual(log.assistedChanges.map(c => c.kcId), localPracticeIds(changes[index]));
+    for (const c of log.assistedChanges) { assert.deepEqual(c.before, before.assessment.assistedByKc[c.kcId] ?? null); assert.deepEqual(c.after, current.assessment.assistedByKc[c.kcId]); }
+    assert.equal(log.support.independent, false);
+    assert.equal(log.assessment.before.pending, true); assert.equal(log.assessment.after.pending, true);
+    assertStepChanges(before, current, changes[index]);
+    assert.deepEqual(log.totals.before, log.totals.after);
+    if (index === 1) { assert.equal(log.target.totalSteps, 2); assert.equal(log.target.nextTotalSteps, 4); }
+    fireEvent.keyDown(view.container.querySelector('[data-diagnostic-next]'), { key: 'Enter' });
+    if (index < 3) await waitFor(() => assert.equal(view.getByLabelText('本步答案').disabled, false));
+  }
+  await assertDiagnosticSummary(view, { updated: true });
+  const saved = JSON.parse(storage.getItem(KEY)), events = saved.practiceLog.events;
+  assert.equal(events.length, 6); assert.equal(new Set(events.map(e => e.questionId)).size, 1);
+  assert.deepEqual(events.map(e => e.outcome), ['incorrect', 'correct', 'incorrect', 'correct', 'correct', 'completed']);
+  assert.deepEqual(events.at(-1).changes, []);
+  assert.equal(saved.attempted, original.attempted); assert.equal(saved.correct, original.correct);
+  fireEvent.click(view.getByRole('button', { name: /知识进度 全部课程/ }));
+  fireEvent.click(view.getByRole('tab', { name: '作答日志' }));
+  const history = view.getByRole('region', { name: '作答日志' });
+  assert.equal(history.querySelectorAll('details').length, 6);
+  assert.match(history.textContent, /本次未更新独立掌握度/);
+  assert.match(history.textContent, /辅助练习/);
+  assert.ok(history.textContent.includes(inputs[1]));
+  assert.deepEqual((await exportedProfile(view)).practiceLog, saved.practiceLog);
+  cleanup();
+  const reloaded = await mount();
+  fireEvent.click(reloaded.getByRole('button', { name: /知识进度 全部课程/ }));
+  fireEvent.click(reloaded.getByRole('tab', { name: '作答日志' }));
+  assert.equal(reloaded.getByRole('region', { name: '作答日志' }).querySelectorAll('details').length, 6);
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).practiceLog, saved.practiceLog);
+});
+
+test('a storage failure keeps the score and matching log together in the downloadable memory copy', async () => {
+  const initial = profile({ attempted: 12, correct: 10 });
+  storage.setItem(KEY, JSON.stringify(initial));
+  dom.window.Storage.prototype.setItem = () => { throw new Error('QuotaExceededError'); };
+  const view = await mount();
+  await classifyCorrect(view);
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)), initial);
+  const exported = await exportedProfile(view, '导出本页记录');
+  assert.equal(exported.attempted, 13); assert.equal(exported.practiceLog.events.length, 1);
+  const event = exported.practiceLog.events[0];
+  assert.equal(event.outcome, 'correct'); assert.equal(event.totals.before.attempted, 12); assert.equal(event.totals.after.attempted, 13);
+  for (const change of event.changes) assert.deepEqual(change.after, exported.byKc[change.kcId]);
+});
+
+test('skips are logged without evidence, and the next original question receives a new identity', async () => {
+  const { view } = await startDiagnosticPractice();
+  const before = JSON.parse(storage.getItem(KEY));
+  fireEvent.click(view.getByRole('button', { name: '跳过剩余拆步，查看解析' }));
+  await assertDiagnosticSummary(view, { skipped: true, updated: false });
+  const skipped = JSON.parse(storage.getItem(KEY));
+  assertProgressUnchanged(before);
+  assert.equal(skipped.practiceLog.events.at(-1).outcome, 'skipped');
+  assert.deepEqual(skipped.practiceLog.events.at(-1).changes, []);
+  fireEvent.click(view.container.querySelector('.next-button'));
+  await waitFor(() => assert.ok(view.getByRole('button', { name: '不知道' })));
+  fireEvent.click(view.getByRole('button', { name: '不知道' }));
+  await waitFor(() => assert.ok(view.getByText('记住这个变化')));
+  const events = JSON.parse(storage.getItem(KEY)).practiceLog.events;
+  assert.equal(events.at(-1).outcome, 'revealed');
+  assert.notEqual(events.at(-1).questionId, events[0].questionId);
+});
+
+for (const corrected of [true, false]) test(`whole past collision starts at the useful checks with no base credit (corrected=${corrected})`, async () => {
+  const { view, item, form, initial } = await mountCompoundPast('past', 'verb', 'tagaru');
+  const base = conjugate(item.reading, item.class, 'tagaru');
+  const wrong = base.slice(0, -1) + 'た', correct = conjugate(item.reading, item.class, form);
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: wrong } });
+  fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
+  fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 1 / 2 步')));
+  const original = JSON.parse(storage.getItem(KEY));
+  assert.deepEqual(original.byKc, initial.byKc);
+  assert.equal(original.practiceLog.events.length, 1);
+  assert.equal(original.practiceLog.events[0].diagnosis.resolution, 'stage-priority');
+  assert.deepEqual(original.practiceLog.events[0].changes, []);
+  assert.match(view.container.querySelector('.feedback-copy p').textContent, /前面的构成步骤未单独检查/);
+  const region = view.getByRole('region', { name: '拆步练习' });
+  assert.equal(Boolean(view.queryByLabelText('本步答案')), false);
+  assert.equal(region.textContent.includes(correct), false);
+  assert.equal(view.container.querySelector('.rule-line').parentElement.hidden, true);
+  fireEvent.click(view.getByRole('button', { name: '五段动词' }));
+  await waitFor(() => assert.ok(view.getByText(/本步只确认词类，不更新知识点掌握度/)));
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc, initial.byKc);
+  await waitFor(() => assert.equal(document.activeElement === view.getByRole('button', { name: '练习下一步' }), true));
+  fireEvent.keyDown(document.activeElement, { key: 'Enter' });
+  await waitFor(() => assert.ok(view.getByLabelText('本步答案')));
+  assert.equal(region.textContent.includes(correct), false);
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: corrected ? correct : wrong } });
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByRole('button', { name: '完成拆步' })));
+  const saved = JSON.parse(storage.getItem(KEY)), event = saved.practiceLog.events.at(-1);
+  assert.equal(saved.practiceLog.events.length, 3);
+  assert.deepEqual(event.changes, []);
+  assert.deepEqual(new Set(event.assistedChanges.map(c => c.kcId)), new Set(corrected ? ['onbin.sokuon', 'suffix.past'] : ['onbin.sokuon']));
+  assertStepChanges(original, saved, corrected ? ['onbin.sokuon', 'suffix.past'] : ['onbin.sokuon'], corrected);
+  assert.equal(event.target.stepIndex, 2); assert.equal(event.target.totalSteps, 2);
+  assert.equal(event.diagnosis.kcId, corrected ? null : 'onbin.sokuon');
+  for (const id of ['class.ichidan', 'class.godan', 'heuristic.ru-ie', 'construction.tagaru', 'apply.tagaru.continuation', 'facet.apply.tagaru.past'])
+    assert.deepEqual(saved.byKc[id], initial.byKc[id], id);
+  assert.equal(saved.attempted, original.attempted); assert.equal(saved.correct, original.correct); assert.equal(saved.streak, original.streak);
+  fireEvent.click(view.getByRole('button', { name: '完成拆步' }));
+  await assertDiagnosticSummary(view, { updated: true });
+  const events = JSON.parse(storage.getItem(KEY)).practiceLog.events;
+  assert.equal(events.length, 4); assert.equal(new Set(events.map(e => e.questionId)).size, 1);
+  assert.equal(events.at(-1).outcome, 'completed');
+});
+
+test('a complete sibling-form error stays pending after its focused practice and clears only after two other originals and a different-word independent retest', async () => {
+  const { view, item, form, initial } = await mountCompoundPast('negative', 'verb', 'teiru');
+  const source = displayedExercise(view);
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: conjugate(item.reading, item.class, 'teiruPast') } });
+  fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 1 / 1 步')));
+  assert.match(view.container.querySelector('.feedback-copy p').textContent, /过去形.*否定形/);
+  const failed = JSON.parse(storage.getItem(KEY)), pendingKey = Object.keys(failed.assessment.pending)[0];
+  assert.equal(Object.keys(failed.assessment.pending).length, 1);
+  assert.deepEqual(failed.byKc, initial.byKc);
+  assert.deepEqual(failed.practiceLog.events[0].changes, []);
+  assert.equal(failed.practiceLog.events[0].diagnosis.resolution, 'stage-priority');
+  const region = view.getByRole('region', { name: '拆步练习' });
+  assert.ok(region.querySelector('.diagnostic-word').textContent.includes(conjugate(item.surface, item.class, 'teiru')));
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: conjugate(item.reading, item.class, form) } });
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByRole('button', { name: /完成拆步/ })));
+  const practiced = JSON.parse(storage.getItem(KEY));
+  assertStepChanges(failed, practiced, ['stem.ichidan.drop-ru', 'suffix.negative']);
+  assert.equal(practiced.assessment.byTarget[pendingKey].independentCorrect, 0);
+  assert.equal(practiced.assessment.byTarget[pendingKey].assistedStepCorrect, 1);
+  fireEvent.click(view.getByRole('button', { name: /完成拆步/ }));
+  await assertDiagnosticSummary(view, { updated: true });
+  await next(view);
+  for (let index = 0; index < 2; index++) {
+    assert.match(view.container.querySelector('.focus-panel').textContent, /间隔练习/);
+    assert.ok(JSON.parse(storage.getItem(KEY)).assessment.pending[pendingKey]);
+    await answerDisplayedCorrectly(view);
+    const spaced = JSON.parse(storage.getItem(KEY)), event = spaced.practiceLog.events.at(-1);
+    assert.notEqual(event.assessment.targetKey, pendingKey, 'spacing must use another target');
+    assert.ok(spaced.assessment.pending[pendingKey]);
+    assert.equal(spaced.assessment.originalCount, index + 2);
+    await next(view);
+  }
+  assert.match(view.container.querySelector('.focus-panel').textContent, /独立复测/);
+  const retest = displayedExercise(view);
+  assert.equal(retest.form, form);
+  assert.notEqual(retest.item.reading, item.reading, 'another spelling of the same word is insufficient');
+  assert.deepEqual(localPracticeIds(retest.kcIds).sort(), localPracticeIds(source.kcIds).sort());
+  const beforeRetest = JSON.parse(storage.getItem(KEY));
+  await answerDisplayedCorrectly(view);
+  const saved = JSON.parse(storage.getItem(KEY)), event = saved.practiceLog.events.at(-1);
+  assert.equal(saved.assessment.pending[pendingKey], undefined);
+  assert.equal(saved.assessment.byTarget[pendingKey].eligibleRetestCorrect, 1);
+  assert.equal(event.support.independent, true);
+  assert.equal(event.assessment.before.pending, true); assert.equal(event.assessment.after.pending, false);
+  assert.equal(event.assessment.eligibility.eligible, true);
+  assert.equal(saved.assessment.originalCount, 4); assert.equal(saved.attempted, 4); assert.equal(saved.correct, 3);
+  assert.equal(saved.byKc['apply.teiru.continuation'].correct, beforeRetest.byKc['apply.teiru.continuation'].correct + 1);
+  assert.deepEqual(saved.assessment.assistedByKc, beforeRetest.assessment.assistedByKc);
+});
+
+test('v7 export and UI import preserve assisted records, pending retests and logs without replaying historical work', async () => {
+  const { view, steps } = await startDiagnosticPractice();
+  fireEvent.change(view.getByLabelText('本步答案'), { target: { value: steps[0].readings[0] } });
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  await waitFor(() => assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
+  fireEvent.click(view.getByRole('button', { name: '跳过剩余拆步，查看解析' }));
+  await assertDiagnosticSummary(view, { skipped: true, updated: true });
+  const saved = JSON.parse(storage.getItem(KEY));
+  fireEvent.click(view.getByRole('button', { name: /知识进度 全部课程/ }));
+  fireEvent.click(view.getByRole('tab', { name: /待复测 1/ }));
+  assert.match(view.getByRole('region', { name: '待独立复测' }).textContent, /先完成 2 道其他整题/);
+  const backup = await exportedProfile(view);
+  assert.equal(backup.version, 7); assert.deepEqual(backup.assessment, saved.assessment);
+  cleanup(); storage.clear();
+  const fresh = await mount();
+  fireEvent.click(fresh.getByRole('button', { name: /知识进度 全部课程/ }));
+  const oldConfirm = window.confirm;
+  window.confirm = () => true;
+  try {
+    fireEvent.change(fresh.container.querySelector('input[type="file"]'), { target: { files: [{ name: 'progress.json', text: async () => JSON.stringify(backup) }] } });
+    await waitFor(() => assert.deepEqual(JSON.parse(storage.getItem(KEY)).assessment, saved.assessment));
+  } finally { window.confirm = oldConfirm; }
+  const imported = JSON.parse(storage.getItem(KEY));
+  assert.deepEqual(imported.byKc, saved.byKc); assert.deepEqual(imported.practiceLog, saved.practiceLog);
+  assert.match(fresh.container.querySelector('.focus-panel').textContent, /间隔练习/);
+  cleanup();
+  const reloaded = await mount();
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).assessment, saved.assessment);
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).practiceLog, saved.practiceLog);
+  assert.match(reloaded.container.querySelector('.focus-panel').textContent, /间隔练习/);
+});
+
+test('opening a hint without submitting persists exposure and pending status across reload', async () => {
+  const { view, initial } = await mountCompoundPast('past', 'verb', 'teageru');
+  await showHint(view);
+  const hinted = JSON.parse(storage.getItem(KEY)), event = hinted.practiceLog.events.at(-1);
+  assert.equal(event.type, 'hint'); assert.equal(event.outcome, 'shown');
+  assert.equal(event.support.independent, false);
+  assert.deepEqual(event.changes, []); assert.deepEqual(event.assistedChanges, []);
+  assert.deepEqual(hinted.byKc, initial.byKc);
+  assert.equal(hinted.attempted, 0); assert.equal(hinted.assessment.originalCount, 0);
+  const pendingKey = Object.keys(hinted.assessment.pending)[0];
+  assert.equal(Object.keys(hinted.assessment.pending).length, 1);
+  fireEvent.click(view.getByRole('button', { name: '收起提示' }));
+  assert.equal(storage.getItem(KEY), JSON.stringify(hinted), 'collapsing a hint cannot erase its exposure');
+  cleanup();
+  const reloaded = await mount();
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).assessment.pending, hinted.assessment.pending);
+  assert.match(reloaded.container.querySelector('.focus-panel').textContent, /间隔练习/);
+  assert.equal(Boolean(reloaded.queryByText('收起提示')), false);
+  await answerDisplayedCorrectly(reloaded);
+  const saved = JSON.parse(storage.getItem(KEY));
+  assert.ok(saved.assessment.pending[pendingKey]);
+  assert.equal(saved.assessment.originalCount, 1);
+  assert.notEqual(saved.practiceLog.events.at(-1).assessment.targetKey, pendingKey);
+  assert.equal(saved.assessment.byTarget[pendingKey]?.eligibleRetestCorrect ?? 0, 0);
 });
