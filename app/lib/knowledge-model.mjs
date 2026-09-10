@@ -489,7 +489,9 @@ function diagnosticCandidates(verb, form) {
   const lastConstruction = [...ids].reverse().find((id) => id.startsWith("construction.") || id.startsWith("compound.") || id.startsWith("contraction."));
   if (lastConstruction && !family) {
     const intermediate = detail.steps?.at(-2) ?? (detail.parts?.length > 1 ? detail.parts[0] : null);
-    if (intermediate && intermediate !== canonical) result.push({ answer: intermediate, kcId: lastConstruction, message: `前面的变化已经形成，但还没有完成${metadataFor(lastConstruction, {}).label}。` });
+    if (intermediate && intermediate !== canonical) result.push({ answer: intermediate, kcId: lastConstruction, message: lastConstruction === "contraction.causative-passive"
+      ? "你已正确构成使役受身形，但尚未按题目要求缩约。请将「せられる」缩约为「される」。"
+      : `前面的变化已经形成，但还没有完成${metadataFor(lastConstruction, {}).label}。` });
   }
   return result;
 }
