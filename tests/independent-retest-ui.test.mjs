@@ -797,3 +797,31 @@ for(const [form,kc] of [['temiruDesirePast','compound.chain.temiru-desire-past']
   assert.equal(saved().correct,0);assert.equal(saved().attempted,1);
   assert.ok(saved().assessment.pending[assessmentTarget(exercise).key]);
 });
+
+test('knowledge progress nests coverage under its declared parent without duplicate rows or score changes',async()=>{
+  storage.setItem(KEY,JSON.stringify(profile()));
+  const view=await mount(),before=saved();
+  fireEvent.click(view.container.querySelector('.progress-trigger'));
+  fireEvent.click(view.getByRole('tab',{name:'按知识点',exact:true}));
+  const list=view.container.querySelector('.atomic-progress-list');
+  for(const base of ['tai','tehoshii']) {
+    const id=`apply.${base}.continuation`;
+    const group=list.querySelector(`[data-coverage-parent="${id}"]`);
+    assert.ok(group);
+    const expected=ALL_KCS.find(kc=>kc.id===id).coverageKcIds;
+    assert.deepEqual([...group.querySelectorAll('.knowledge-coverage-children [data-kc-id]')].map(row=>row.dataset.kcId),expected);
+    for(const child of expected)assert.equal(list.querySelectorAll(`[data-kc-id="${child}"]`).length,1);
+  }
+  const rendered=[...list.querySelectorAll('[data-kc-id]')].map(row=>row.dataset.kcId);
+  assert.equal(new Set(rendered).size,ALL_KCS.length);
+  assert.equal(rendered.length,ALL_KCS.length);
+  // A coverage item's original family does not prevent nesting under its parent.
+  const past=ALL_KCS.find(kc=>kc.id==='suffix.past');
+  const pastGroup=list.querySelector('[data-coverage-parent="suffix.past"]');
+  for(const child of past.coverageKcIds)assert.ok(pastGroup.querySelector(`[data-kc-id="${child}"]`));
+  fireEvent.click(view.getByRole('tab',{name:'按课程',exact:true}));
+  const courseList=view.container.querySelector('.course-progress-list');
+  const taiGroup=courseList.querySelector('[data-coverage-parent="apply.tai.continuation"]');
+  assert.equal(taiGroup.querySelectorAll('.knowledge-coverage-children [data-kc-id]').length,3);
+  assert.deepEqual(saved(),before);
+});
