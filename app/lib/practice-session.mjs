@@ -23,8 +23,14 @@ export function planPractice(candidates, byKc, courseKcIds, { adaptive = true, l
   let focus = selectFocus(candidates, byKc);
   const byId = new Map(components.map(kc => [kc.id, kc]));
   const retained = goalCourseId && candidates.some(kc => (kc.firstCourseId === goalCourseId || courseKcIds[goalCourseId]?.includes(kc.id)) && !isComponentMastered(kc, byKc));
-  let goal = retained ? goalCourseId : focus?.firstCourseId ?? null;
-  let scoped = candidates;
+  // Pick the course before comparing confidence. Newly introduced 0% atoms
+  // in later courses must not displace a partially learned earlier course.
+  const earliest = adaptive && !review ? [...candidates]
+    .filter(kc => !isComponentMastered(kc, byKc))
+    .sort((a, b) => a.firstCourseIndex - b.firstCourseIndex || a.order - b.order)[0] : null;
+  let goal = retained ? goalCourseId : earliest?.firstCourseId ?? focus?.firstCourseId ?? null;
+  let scoped = adaptive && !review ? candidates.filter(kc => kc.firstCourseId === goal || courseKcIds[goal ?? '']?.includes(kc.id)) : candidates;
+  if (adaptive && !review) focus = selectFocus(scoped, byKc);
   let globalRecovery = false;
   if (review) {
     if (!adaptive && goalCourseId) {

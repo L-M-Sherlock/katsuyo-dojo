@@ -534,7 +534,7 @@ test('independent page clears pending only through the explicit all-progress res
 
 for (const mode of ['adaptive', 'giving']) test(`giving recovery in ${mode} uses real classification and completes the retained course`, async () => {
   const fixture = JSON.parse(await readFile(new URL('./fixtures/giving-recovery-profile.json', import.meta.url), 'utf8')).profile;
-  storage.setItem(KEY, JSON.stringify({ ...fixture, date: dateKey() }));
+  storage.setItem(KEY, JSON.stringify({ ...fixture, date: dateKey(), practiceGoalCourseId: 'giving' }));
   let view = await mount();
   if (mode === 'giving') {
     fireEvent.click([...view.container.querySelectorAll('.mode-list button')].find(button => button.textContent.includes('て形授受补助')));
@@ -771,4 +771,19 @@ test('unfinished comprehensive review is selected before mastered-course rotatio
   await waitFor(()=>assert.ok(view.container.querySelector('.completion-card')));
   assert.equal(view.container.querySelector('.completion-card .score'),null);
 
+});
+
+test('after masu completion adaptive resumes partially learned adjectives before new verb negatives', async () => {
+  const initial=profile({practiceGoalCourseId:'masu'});
+  initial.byKc['adj.class.i']={...stats,attempts:2,correct:2,confidence:2/4.25,bestConfidence:2/4.25};
+  for(const id of ['adj.class.na','stem.godan.a','suffix.negative'])initial.byKc[id]={...stats,attempts:0,correct:0,confidence:0,bestConfidence:0,filteredAccuracy:null};
+  initial.introducedKcIds=initial.introducedKcIds.filter(id=>id!=='adj.class.na');
+  storage.setItem(KEY,JSON.stringify(initial));
+  const view=await mount();
+  assert.equal(currentExercise(view).courseId,'adjectiveClassify');
+  assert.equal(currentExercise(view).item.class,'i');
+  assert.match(view.container.querySelector('.focus-panel').textContent,/形容词分类/);
+  await answerCorrect(view);await next(view);
+  assert.equal(currentExercise(view).courseId,'adjectiveClassify');
+  assert.equal(saved().byKc['stem.godan.a'].attempts,0);
 });

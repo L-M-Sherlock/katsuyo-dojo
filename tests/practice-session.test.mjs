@@ -66,3 +66,20 @@ test('a learner with errors, hints and revealed answers eventually completes the
   assert.ok(report.questionCount > 15);
   assert.equal(report.redundantFocusQuestions, 0);
 });
+
+test('course order wins over lower confidence in later courses, but an unfinished current course is retained', () => {
+  const byKc = {a:{confidence:.47},b:{confidence:0},c:{confidence:0}};
+  for (const candidatesFor of [undefined,()=>[{}]]) {
+    const next = planPractice(components,byKc,courseKcIds,{candidatesFor});
+    assert.equal(next.goalCourseId,'first');assert.equal(next.focus.id,'a');
+    const retained = planPractice(components,byKc,courseKcIds,{goalCourseId:'second',candidatesFor});
+    assert.equal(retained.goalCourseId,'second');
+    const completed = planPractice(components,{...byKc,b:{confidence:1},c:{confidence:1}},courseKcIds,{goalCourseId:'second',candidatesFor});
+    assert.equal(completed.goalCourseId,'first');
+  }
+});
+test('regressed fundamentals still interrupt the retained course without replacing its goal', () => {
+  const next=planPractice(components,{a:{confidence:.8},b:{confidence:.4}},courseKcIds,
+    {goalCourseId:'second',recoveryIds:['a'],candidatesFor:()=>[{}]});
+  assert.equal(next.goalCourseId,'second');assert.equal(next.focus.id,'a');assert.equal(next.globalRecovery,true);
+});

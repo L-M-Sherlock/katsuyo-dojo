@@ -13,7 +13,8 @@ import { createUnifiedExport, parseUnifiedImport } from '../app/lib/unified-prof
 const server = await createServer({ appType:'custom', logLevel:'silent', server:{middlewareMode:true} });
 let model;
 try { model = (await server.ssrLoadModule('/app/page.tsx')).KNOWLEDGE; } finally { await server.close(); }
-const fixture = JSON.parse(await readFile(new URL('./fixtures/giving-recovery-profile.json', import.meta.url),'utf8')).profile;
+// Retention is explicit; an old snapshot without a current goal now follows course order.
+const fixture = { ...JSON.parse(await readFile(new URL('./fixtures/giving-recovery-profile.json', import.meta.url),'utf8')).profile, practiceGoalCourseId: 'giving' };
 const byId = new Map(model.components.map(kc => [kc.id,kc]));
 const planner = createPracticePlanner(model);
 const course = UNIFIED_COURSES.find(c => c.id === 'giving');
