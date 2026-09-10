@@ -2,7 +2,7 @@ import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
 import { COURSES as VERB_COURSES, ADJECTIVE_COURSES } from './curriculum.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
 
-export const CURRICULUM_VERSION = 4;
+export const CURRICULUM_VERSION = 5;
 
 // Group by the course's primary learning objective, including courses whose
 // later exercises apply past/negative endings to the newly introduced form.
@@ -15,8 +15,8 @@ export const COURSE_STAGES = [
   },
   {
     id: 'voice', label: '可能与态',
-    objective: '表达能否完成动作，以及动作中的受事、使役和使役受身关系。',
-    courseIds: ['potential', 'passive', 'causative', 'causativePassive'],
+    objective: '掌握可能、受身、使役和使役受身的构形，再练习这些形式的否定、过去和否定过去。',
+    courseIds: ['potential', 'passive', 'causative', 'causativePassive', 'voiceCompound'],
   },
   {
     id: 'linking', label: '连接与条件',
@@ -35,8 +35,8 @@ export const COURSE_STAGES = [
   },
   {
     id: 'integration', label: '综合运用',
-    objective: '学习可能与态的后续变化，再组合受身、愿望和否定过去。',
-    courseIds: ['voiceCompound', 'multiStepCompound'],
+    objective: '综合组合已学的态、愿望、尝试、状态和授受表达。',
+    courseIds: ['multiStepCompound'],
   },
 ];
 export const STAGES = COURSE_STAGES.map(stage => stage.label);
@@ -45,11 +45,11 @@ export const STAGES = COURSE_STAGES.map(stage => stage.label);
 // Keeping a theme contiguous here does not make it a prerequisite for others.
 export const COURSE_ORDER = [
   'classify', 'adjectiveClassify', 'masu', 'adjectiveIBase', 'adjectiveNaBase', 'adjectiveAdverb', 'negative', 'past', 'basicCompound', 'te', 'adjectiveITe',
-  'potential', 'passive', 'causative', 'causativePassive',
+  'potential', 'passive', 'causative', 'causativePassive', 'voiceCompound',
   'nakuteNaide', 'zuZuni', 'ba', 'adjectiveConditional', 'tara', 'temo', 'tatte', 'concurrent', 'listing',
   'desire', 'tagaru', 'volitional', 'youtosuru', 'request', 'imperative', 'nasai', 'prohibitive', 'permission', 'obligation',
   'aspect', 'giving', 'temiru', 'teshimauChau', 'teokuToku', 'direction', 'sugiru',
-  'voiceCompound', 'multiStepCompound',
+  'multiStepCompound',
 ];
 export const VOICE_BASE_FORMS = ['potential', 'passive', 'causative', 'causativePassive'];
 export const VOICE_CONTINUATION_FORMS = [...VERB_COURSES.find(course => course.id === 'voiceCompound').forms];

@@ -742,7 +742,7 @@ test('nakute grouped probes and ahead-of-step retries preserve scoring and allow
   assert.ok(saved().assessment.pending[key]);
 });
 
-test('voice continuation skills belong to the integration course and existing mastery needs no new review quota', async () => {
+test('voice continuation skills belong to the voice application course and existing mastery needs no new review quota', async () => {
   const initial = profile();
   initial.byKc['apply.potential.continuation'] = {...stats, attempts:0, correct:0, confidence:0, bestConfidence:0, filteredAccuracy:null};
   storage.setItem(KEY,JSON.stringify(initial));
