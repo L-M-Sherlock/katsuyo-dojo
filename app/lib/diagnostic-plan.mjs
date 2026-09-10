@@ -1,3 +1,4 @@
+import { CHAIN_FORM_SPECS, chainOutputClass } from './multi-step-forms.mjs';
 import { acceptedConjugations } from './conjugation.mjs';
 import { acceptedAdjectiveConjugations } from './adjective-conjugation.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
@@ -17,7 +18,7 @@ const adjectiveForms = ['adjectiveNegative','adjectivePast','adjectiveNegativePa
 const voiceForms = Object.fromEntries(['passive','potential','causative','causativePassive'].flatMap(form =>
   ['Past','Negative','NegativePast'].map(ending => [form+ending,{form,ending:ending[0].toLowerCase()+ending.slice(1),outputType:'verb',outputClass:'ichidan'}])));
 export const DIAGNOSTIC_FORMS = unique([...primitives,...stemAppends,...teAppends,...Object.keys(contractions),...Object.keys(appendBases),...adjectiveForms,
-  ...Object.keys(COMPOUND_FORM_SPECS),...Object.keys(voiceForms),'negativePast','masuPast','masuNegative','masuNegativePast','masenka','nakute','zu','zuni','nakerebaNaranai','nakutewaIkenai','passiveDesireNegativePast']);
+  ...Object.keys(CHAIN_FORM_SPECS),...Object.keys(COMPOUND_FORM_SPECS),...Object.keys(voiceForms),'negativePast','masuPast','masuNegative','masuNegativePast','masenka','nakute','zu','zuni','nakerebaNaranai','nakutewaIkenai','passiveDesireNegativePast']);
 const formSet = new Set(DIAGNOSTIC_FORMS);
 export const diagnosticFamily = form => COMPOUND_FORM_SPECS[form] ?? voiceForms[form] ?? null;
 const className = cls => ({godan:'五段动词',ichidan:'一段动词',irregular:'不规则动词',i:'い形容词',na:'な形容词'})[cls];
@@ -139,6 +140,8 @@ function pathsFor(item, form) {
     return pathsFor(provided,target);
   });
   if(form==='negativePast')return compose(pathsFor(item,'negative'),state=>pathsFor({...state,domain:'adjective',class:'i',iiFamily:false,tailClass:undefined},'adjectivePast'));
+  const chain=CHAIN_FORM_SPECS[form];
+  if(chain)return compose(pathsFor(item,chain.base),state=>pathsFor({...state,domain:'verb',class:chainOutputClass(chain,state.surface)},chain.tail));
   if(form==='passiveDesireNegativePast')return compose(pathsFor(item,'passive'),state=>pathsFor({...state,class:'ichidan'},'taiNegativePast'));
   if(primitives.includes(form))return primitivePaths(item,form);
   if(stemAppends.includes(form)) {

@@ -109,8 +109,12 @@ test('specialist mode preserves unrelated pending and never inserts another doma
   assert.equal(plan(profile, 'adaptive').kind, 'retest');
 });
 
+// Synthetic restricted specialty preserves the cross-course catalog guard;
+// production voice continuations now exist only in voiceCompound.
+const restrictedVoice = surface => ({...get(surface, 'potentialNegative', 'voiceCompound'), courseId:'potential', id:`restricted:${surface}`});
+
 test('a specialist without local fillers uses an already-open basic classification exercise and its actual course id', () => {
-  const failed = get('見る', 'potentialNegative', 'potential');
+  const failed = restrictedVoice('見る');
   const otherCatalogWord = get('食べる', 'potentialNegative', 'voiceCompound');
   const classification = get('書く', null, 'classify');
   const pool = [failed, otherCatalogWord, classification];
@@ -126,7 +130,7 @@ test('a specialist without local fillers uses an already-open basic classificati
 });
 
 test('filtered specialist pools never manufacture singleton exceptions despite a long wait', () => {
-  const failed = get('見る', 'potentialNegative', 'potential');
+  const failed = restrictedVoice('見る');
   const actualAlternate = get('食べる', 'potentialNegative', 'voiceCompound');
   const classification = get('書く', null, 'classify');
   const pool = [failed, actualAlternate, classification];
@@ -193,7 +197,7 @@ test('a two-word rule recovers through explicitly unqualified rehearsal, two fil
 });
 
 test('filtered course access cannot manufacture the two-word exhaustion recovery', () => {
-  const first = get('見る', 'potentialNegative', 'potential'), second = get('食べる', 'potentialNegative', 'potential');
+  const first = restrictedVoice('見る'), second = restrictedVoice('食べる');
   const third = get('教える', 'potentialNegative', 'voiceCompound'), basic = get('書く', null, 'classify');
   const completePool = [first, second, third, basic], registry = assessmentCatalog(completePool);
   let profile = gap(record(fresh(), first, 'first-failed'));

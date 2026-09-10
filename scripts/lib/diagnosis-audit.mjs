@@ -49,7 +49,7 @@ export function evaluateGeneratedCase(testCase, analysis, options = {}) {
     if(actual.review.rootMismatch) {
       const observation=actual.review.rootMismatch;
       if(typeof observation.expected!=='string'||typeof observation.actual!=='string'||!['substitution','deletion','insertion','transposition'].includes(observation.operation))problem('invalid-root-observation','词汇差异观察缺少明确的局部编辑');
-      const source=testCase.step?.reviewContext?.sourceItem??testCase.item;
+      const source=testCase.step?.reviewContext?.sourceItem??testCase.step?.analysisItem??testCase.item;
       const trim=source.class==='irregular'?2:1;
       if(![source.surface,source.reading].map(value=>value.slice(0,-trim)).includes(observation.expected))problem('revealed-ending','词汇差异只能展示原词固定前部，不能透露完整正确过去形');
     }

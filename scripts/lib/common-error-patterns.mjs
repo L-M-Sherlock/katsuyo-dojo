@@ -55,7 +55,7 @@ function mixedPastContext(item,step) {
   const spec=continuationPastClasses[form];if(!spec)return null;
   const [baseForm,cls,label]=spec,scope=step.providedClass?step.reviewContext?.kcIds:step.kcIds;
   if(!scope?.includes(`apply.${baseForm}.continuation`)||!scope.includes(cls==='godan'?'onbin.sokuon':'suffix.past'))return null;
-  const source=step.providedClass?step.reviewContext?.sourceItem:item;
+  const source=step.providedClass?step.reviewContext?.sourceItem:(step.analysisItem??item);
   if(source?.domain!=='verb')return null;
   const bases=[...new Set(step.providedAnswers??[step.surface,step.reading])];
   if(!bases.length||bases.some(base=>!base.endsWith('る')))return null;

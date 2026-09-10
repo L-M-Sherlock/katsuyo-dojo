@@ -1,7 +1,8 @@
+import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
 import { COURSES as VERB_COURSES, ADJECTIVE_COURSES } from './curriculum.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
 
-export const CURRICULUM_VERSION = 3;
+export const CURRICULUM_VERSION = 4;
 
 // Group by the course's primary learning objective, including courses whose
 // later exercises apply past/negative endings to the newly introduced form.
@@ -34,7 +35,7 @@ export const COURSE_STAGES = [
   },
   {
     id: 'integration', label: '综合运用',
-    objective: '综合复习可能与态的后续变化，再组合受身、愿望和否定过去。',
+    objective: '学习可能与态的后续变化，再组合受身、愿望和否定过去。',
     courseIds: ['voiceCompound', 'multiStepCompound'],
   },
 ];
@@ -50,6 +51,8 @@ export const COURSE_ORDER = [
   'aspect', 'giving', 'temiru', 'teshimauChau', 'teokuToku', 'direction', 'sugiru',
   'voiceCompound', 'multiStepCompound',
 ];
+export const VOICE_BASE_FORMS = ['potential', 'passive', 'causative', 'causativePassive'];
+export const VOICE_CONTINUATION_FORMS = [...VERB_COURSES.find(course => course.id === 'voiceCompound').forms];
 const originals = [...VERB_COURSES, ...ADJECTIVE_COURSES];
 export const SOURCE_COURSES = originals;
 const stageByCourse = new Map(COURSE_STAGES.flatMap((definition, stage) =>
@@ -57,16 +60,13 @@ const stageByCourse = new Map(COURSE_STAGES.flatMap((definition, stage) =>
 export const UNIFIED_COURSES = COURSE_ORDER.map((id, index) => {
   const original = originals.find((course) => course.id === id);
   const { stage, id: stageId, label: stageLabel, objective: stageObjective } = stageByCourse.get(id);
-  const forms = id === 'multiStepCompound' ? ['passiveDesireNegativePast'] : [...original.forms];
+  const forms = id === 'multiStepCompound' ? ['passiveDesireNegativePast', ...Object.keys(CHAIN_FORM_SPECS)] : [...original.forms];
   for (const [form, spec] of Object.entries(COMPOUND_FORM_SPECS)) {
     if (original.forms.includes(spec.form) && id !== 'multiStepCompound') forms.push(form);
   }
-  for (const form of VERB_COURSES.find((course) => course.id === 'voiceCompound').forms) {
-    if (original.forms.includes(form.replace(/NegativePast$|Negative$|Past$/, ''))) forms.push(form);
-  }
   return { ...original, title: id === 'masu' ? '连用词干与ます形' : original.title,
     forms: [...new Set(forms)], stage, stageId, stageLabel, stageObjective,
-    review: id === 'voiceCompound', order: index };
+    review: false, order: index };
 });
 export const COURSE_BY_ID = new Map(UNIFIED_COURSES.map((course) => [course.id, course]));
 export function sourceForForm(domain, form) {

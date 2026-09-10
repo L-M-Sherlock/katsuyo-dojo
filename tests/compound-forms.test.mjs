@@ -7,8 +7,8 @@ test("generates past, negative, and negative-past continuations for every predic
   assert.equal(specs.length, 48);
   assert.deepEqual(new Set(specs.map((spec) => spec.ending)), new Set(["past", "negative", "negativePast"]));
   assert.deepEqual(new Set(specs.map((spec) => spec.outputType)), new Set(["verb", "iAdjective"]));
-  assert.equal(MULTI_STEP_FORMS.length, 49);
-  assert.equal(MULTI_STEP_FORMS.at(-1), "passiveDesireNegativePast");
+  assert.equal(MULTI_STEP_FORMS.length, 52);
+  assert.ok(MULTI_STEP_FORMS.includes("passiveDesireNegativePast"));
   assert.equal(COMPOUND_FORM_LABELS.teiruPast, "ている・过去形");
   assert.equal(COMPOUND_FORM_LABELS.taiNegativePast, "たい・否定过去形");
 });

@@ -26,7 +26,7 @@ test("places the complete core conjugation route before the curriculum boundary"
     forms: MULTI_STEP_FORMS,
     domain: "verb",
   });
-  assert.equal(MULTI_STEP_FORMS.length, 49);
+  assert.equal(MULTI_STEP_FORMS.length, 52);
 });
 
 test("defaults the core scope to only the courses before the boundary", () => {

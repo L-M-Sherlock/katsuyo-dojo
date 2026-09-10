@@ -1,3 +1,4 @@
+import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
 import { COMPOUND_FORM_SPECS } from "./compound-forms.mjs";
 
 function semantic(concise, coreMeaning, extras = {}) {
@@ -282,6 +283,7 @@ const ADJECTIVE_SEMANTICS = {
 };
 
 const STATIC_FORM_SEMANTICS = Object.freeze({
+  ...Object.fromEntries(Object.entries(CHAIN_FORM_SPECS).map(([id,spec])=>[id,semantic(spec.functionText,spec.meaning,{usageNote:spec.rule})])),
   ...BASIC_SEMANTICS,
   ...VOICE_COMPOUND_SEMANTICS,
   ...CONSTRUCTION_SEMANTICS,

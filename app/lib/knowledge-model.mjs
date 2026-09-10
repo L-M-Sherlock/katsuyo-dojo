@@ -1,3 +1,4 @@
+import { CHAIN_FORM_SPECS, chainOutputClass } from './multi-step-forms.mjs';
 import {
   acceptedConjugations,
   classLabel,
@@ -81,7 +82,7 @@ const STATIC_METADATA = {
   "compound.polite-negative": ["ます→ません", "compound"],
   "compound.polite-negative-past": ["ます→ませんでした", "compound"],
   "compound.voice-stack": ["态后继续叠加活用", "compound"],
-  "compound.multi-step": ["多步活用组合", "compound"],
+  "compound.multi-step": ["受身・愿望・否定过去的组合应用", "compound"],
   "contraction.causative-passive": ["使役受身「せられる→される」", "contraction"],
 };
 
@@ -168,6 +169,11 @@ function primitiveKcIds(verb, form) {
 }
 
 function formKcIds(verb, form) {
+  const chain = CHAIN_FORM_SPECS[form];
+  if (chain) {
+    const base = conjugate(verb.surface, verb.class, chain.base);
+    return [...formKcIds(verb, chain.base), ...formKcIds({surface:base,reading:base,class:chainOutputClass(chain,base)},chain.tail), chain.kcId];
+  }
   const compoundSpec = COMPOUND_FORM_SPECS[form];
   if (compoundSpec) {
     const continuationId = `composition.${compoundSpec.outputType === "iAdjective" ? "i-adjective" : "verb"}.${compoundSpec.ending}`;
@@ -223,6 +229,8 @@ function metadataFor(id, formLabels) {
     const [, , form, kind] = id.split(".");
     return { label: `${kind === "suru" ? "する类" : "来る"}在${formLabels[form] ?? form}中的覆盖`, family: "exception", gating: false };
   }
+  const chain = Object.values(CHAIN_FORM_SPECS).find(spec => spec.kcId === id);
+  if (chain) return {label:`${chain.title}的组合应用`,family:'compound',gating:true};
   if (id.startsWith("composition.")) {
     const [, output, ending] = id.split(".");
     const endingLabels = { past: "过去形", negative: "否定形", negativePast: "否定过去形" };

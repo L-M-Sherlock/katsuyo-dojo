@@ -1121,13 +1121,13 @@ test('historically accessible compound courses recover new shared prerequisites 
   assert.equal(Boolean(view.container.querySelector('[data-class-shortcut]')), false);
 });
 
-test('the unified review rotation includes the course without a new owned atom', async () => {
+test('the mastered voice application course remains available in review rotation without a separate quota', async () => {
   const saved = masteredProfile();
   saved.rotation = 41;
   storage.setItem(KEY, JSON.stringify(saved));
   const view = await mount();
   assert.match(view.container.querySelector('.focus-panel').textContent, /態|态|复合/);
-  assert.match(view.container.querySelector('.mode-list button:nth-child(42)').textContent, /综合复习 0\/12/);
+  assert.match(view.container.querySelector('.mode-list button:nth-child(42)').textContent, /已达标/);
   assert.ok(view.getByText('巩固训练'));
 });
 

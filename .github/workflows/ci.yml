@@ -13,37 +13,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
+  tests:
+    name: Tests (${{ matrix.suite }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [unit, ui, diagnosis, paths]
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Select audit scope
-        id: scope
-        run: node scripts/ci-audit-scope.mjs
-      - run: npm test
-      - run: npm run audit
-      - name: Representative diagnosis audit
-        if: steps.scope.outputs.diagnosis == 'true'
-        run: node scripts/audit-diagnosis.mjs --representatives --output outputs/diagnosis-representatives
-      - name: Representative path audit
-        if: steps.scope.outputs.diagnosis == 'true'
-        run: node scripts/audit-diagnostic-paths.mjs --representatives --output outputs/path-representatives
-      - name: Upload representative audit
-        if: always() && steps.scope.outputs.diagnosis == 'true'
-        uses: actions/upload-artifact@v4
+      - run: node scripts/ci-tests.mjs ${{ matrix.suite }}
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          name: representative-audit
-          path: |
-            outputs/diagnosis-representatives/
-            outputs/path-representatives/
-          retention-days: 14
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run audit
       - run: npm run simulate:perfect
       - run: npm run simulate:mixed
       - run: npm run typecheck
@@ -53,6 +47,16 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           path: dist
+  verify:
+    if: always()
+    needs: [tests, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all checks
+        env:
+          TEST_RESULT: ${{ needs.tests.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: test "$TEST_RESULT" = success && test "$BUILD_RESULT" = success
   deploy:
     needs: verify
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

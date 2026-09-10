@@ -55,15 +55,15 @@ test('all real continuation pools cover missing endings and avoid round and rece
   }
 });
 
-test('the unified curriculum keeps all 43 courses and 131 forms in prerequisite order', () => {
+test('the unified curriculum keeps all 43 courses and 134 forms in prerequisite order', () => {
   assert.equal(UNIFIED_COURSES.length, 43);
   assert.equal(new Set(COURSE_ORDER).size, 43);
   const oldForms = new Set([...COURSES,...ADJECTIVE_COURSES].flatMap(c => c.forms));
-  assert.equal(oldForms.size, 131);
+  assert.equal(oldForms.size, 134);
   assert.deepEqual(new Set(model.exercises.map(e => e.form).filter(Boolean)), oldForms);
   assert.ok(COURSE_ORDER.indexOf('adjectiveIBase') < COURSE_ORDER.indexOf('basicCompound'));
   assert.ok(UNIFIED_COURSES.find(c => c.id === 'desire').forms.includes('taiNegativePast'));
-  assert.deepEqual(UNIFIED_COURSES.at(-1).forms, ['passiveDesireNegativePast']);
+  assert.deepEqual(UNIFIED_COURSES.at(-1).forms, ['passiveDesireNegativePast','temiruDesirePast','passiveProgressivePast','causativeReceivePast']);
   assert.deepEqual(auditKnowledgeModel(model), []);
 });
 
@@ -279,7 +279,7 @@ test('v6 course reordering preserves mastered e-row and adverb evidence together
 });
 
 test('revision 1 e-row introductions preserve imperative access without inventing revision 2 ba access', () => {
-  assert.equal(CURRICULUM_VERSION, 3);
+  assert.equal(CURRICULUM_VERSION, 4);
   for (const version of [undefined, 1]) {
     const before = {
       ...parseUnifiedImport(profile({}), options),
@@ -345,14 +345,15 @@ test('a revision 3 e-row introduction opens potential without granting historica
   assert.deepEqual(parseUnifiedImport(createUnifiedExport(restored), options), restored);
 });
 
-test('review-only courses require their own distinct practice evidence, not a fictitious new atom', () => {
+test('voice applications determine course mastery without an extra twelve-question review quota', () => {
   const c=UNIFIED_COURSES.find(c=>c.id==='voiceCompound');
   const required=model.courseKcIds[c.id].map(id=>byId.get(id));
   const p={byKc:Object.fromEntries(model.components.map(k=>[k.id,mastered])),accessibleCourseIds:[],coursePractice:{}};
   const introduced=model.components.filter(k=>k.gating).map(k=>k.id);
-  assert.equal(summarizeUnifiedCourse(c,required,introduced,p).complete,false);
-  p.coursePractice[c.id]=Array.from({length:12},(_,i)=>String(i));
   assert.equal(summarizeUnifiedCourse(c,required,introduced,p).complete,true);
+  p.byKc['apply.potential.continuation'] = {...mastered, confidence:0};
+  p.coursePractice[c.id]=Array.from({length:12},(_,i)=>String(i));
+  assert.equal(summarizeUnifiedCourse(c,required,introduced,p).complete,false);
 });
 
 test('every form keeps legacy accepted answers and exposes a continuous operation sequence', () => {
@@ -437,4 +438,34 @@ test('partial or misspelled negative intermediates never skip a diagnostic step'
   const ii={domain:'adjective',surface:'いい',reading:'いい',class:'i',iiFamily:true};
   assert.equal(unifiedDiagnosticSteps(ii,'adjectiveNegativePast',{answer:'いくない'}).length,2);
   assert.equal(unifiedDiagnosticSteps(adjective,'adjectiveNegativePast',{answer:' たかくない ',normalize:value=>value.trim()}).length,1);
+});
+
+test('basic voice courses exclude continuations and all four application/coverage owners move together',()=>{
+  for(const base of ['potential','passive','causative','causativePassive']) {
+    const c=UNIFIED_COURSES.find(c=>c.id===base);
+    assert.deepEqual(c.forms,base==='causativePassive'?['causativePassive','causativePassiveContracted']:[base]);
+    for(const id of [`apply.${base}.continuation`,...['past','negative','negativePast'].map(ending=>`facet.apply.${base}.${ending}`)])assert.equal(byId.get(id).firstCourseId,'voiceCompound');
+    for(const suffix of ['Past','Negative','NegativePast'])assert.deepEqual([...new Set(model.exercises.filter(e=>e.form===base+suffix).map(e=>e.courseId))],['voiceCompound']);
+  }
+  assert.equal(UNIFIED_COURSES.find(c=>c.id==='voiceCompound').review,false);
+});
+
+test('revision 3 voice scores survive relocation and pending targets move without rewriting history',async()=>{
+  const {emptyAssessment,recordIndependentAttempt,assessmentTarget}=await import('../app/lib/learning-assessment.mjs');
+  const current=model.exercises.find(e=>e.form==='potentialPast');
+  const old={...current,courseId:'potential',id:current.id.replace('voiceCompound:','potential:')};
+  const assessment=recordIndependentAttempt(emptyAssessment(),{exercise:old,correct:false,questionId:'old-voice',at:'2026-09-10T00:00:00Z'});
+  const source={...parseUnifiedImport(profile(),options),curriculumVersion:3,assessment,
+    introducedKcIds:['apply.potential.continuation'],byKc:{'apply.potential.continuation':{...mastered}},coursePractice:{voiceCompound:['old-review']}};
+  const restored=parseUnifiedImport(source,options),key=assessmentTarget(old).key;
+  assert.deepEqual(restored.byKc,source.byKc);
+  assert.deepEqual(restored.practiceLog,source.practiceLog);
+  assert.deepEqual(restored.coursePractice,source.coursePractice);
+  assert.equal(restored.assessment.byTarget[key].target.courseId,'voiceCompound');
+  assert.equal(restored.assessment.pending[key].courseId,'voiceCompound');
+  assert.equal(restored.assessment.pending[key].target.courseId,'voiceCompound');
+  assert.equal(restored.assessment.pending[key].lastPresentedOrdinal,source.assessment.pending[key].lastPresentedOrdinal);
+  assert.equal(restored.assessment.byTarget[key].independentAttempts,1);
+  assert.deepEqual(parseUnifiedImport(createUnifiedExport(restored),options),restored);
+  assert.equal(source.assessment.pending[key].courseId,'potential');
 });

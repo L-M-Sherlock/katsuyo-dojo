@@ -1,3 +1,4 @@
+import { CURRICULUM_VERSION } from '../app/lib/unified-curriculum.mjs';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
@@ -157,7 +158,7 @@ test('omitting the optional migration clock produces a valid current timestamp',
 
 function hintOnlyProfile() {
   const old = legacyNoru(), exercise = find('乗る', 'teiruNegative');
-  const initial = { ...old, version: 7, assessment: emptyAssessment(), byKc: {}, attempted: 0, correct: 0,
+  const initial = { ...old, version: 7, curriculumVersion: CURRICULUM_VERSION, assessment: emptyAssessment(), byKc: {}, attempted: 0, correct: 0,
     introducedKcIds: [], practiceLog: emptyPracticeLog() };
   const observation = applyLearningObservation(initial, exercise, { type: 'hint', outcome: 'shown', questionId: 'unsubmitted', eventId: 'hint', at: options.at });
   return appendPracticeEvent(initial, observation.profile, { id: 'hint', type: 'hint', outcome: 'shown', questionId: 'unsubmitted', at: options.at,

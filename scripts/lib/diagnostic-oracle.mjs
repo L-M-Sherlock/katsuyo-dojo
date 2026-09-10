@@ -69,6 +69,8 @@ export function referenceStages(word, form) {
       supplied.domain=type==='i'?'adjective':'verb';
       walk(supplied,type==='i'?{past:'adjectivePast',negative:'adjectiveNegative',negativePast:'adjectiveNegativePast'}[family.ending]:family.ending);return;
     }
+    const chain={temiruDesirePast:['temiru','taiPast'],passiveProgressivePast:['passive','teiruPast'],causativeReceivePast:['causative','temorauPast']}[f];
+    if(chain){walk(w,chain[0]);const intermediate=correctSpellings(w,chain[0])[0];walk(changed(w,intermediate,'ichidan'),chain[1]);return;}
     if(f==='passiveDesireNegativePast') {walk(w,'passive');walk(changed(w,correctSpellings(w,'passive')[0],'ichidan'),'taiNegativePast');return;}
     if(f==='negativePast') {walk(w,'negative');walk({...changed(w,correctSpellings(w,'negative')[0],'i'),domain:'adjective',auxiliary:undefined},'adjectivePast');return;}
     if(/^masu(Past|Negative|NegativePast)$/.test(f)) {join('masu',`compound.polite-${{masuPast:'past',masuNegative:'negative',masuNegativePast:'negative-past'}[f]}`);return;}

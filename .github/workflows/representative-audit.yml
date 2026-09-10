@@ -1,4 +1,4 @@
-name: Full diagnosis audit
+name: Extended representative audit
 
 on:
   workflow_dispatch:
@@ -14,11 +14,9 @@ jobs:
       matrix:
         include:
           - kind: diagnosis
-            command: npm run audit:diagnosis:parallel
-            output: outputs/diagnosis-audit/
+            script: scripts/audit-diagnosis.mjs
           - kind: paths
-            command: npm run audit:paths:parallel
-            output: outputs/diagnostic-paths/
+            script: scripts/audit-diagnostic-paths.mjs
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,11 +24,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: ${{ matrix.command }}
-      - name: Upload full audit
+      - run: node ${{ matrix.script }} --representatives --output outputs/representative-${{ matrix.kind }}
+      - name: Upload representative audit
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: full-${{ matrix.kind }}
-          path: ${{ matrix.output }}
+          name: representative-${{ matrix.kind }}
+          path: outputs/representative-${{ matrix.kind }}/
           retention-days: 14

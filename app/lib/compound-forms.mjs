@@ -1,3 +1,4 @@
+import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
 const ENDINGS = [
   { id: "Past", form: "past", label: "过去形" },
   { id: "Negative", form: "negative", label: "否定形" },
@@ -33,4 +34,4 @@ export const COMPOUND_FORM_LABELS = Object.fromEntries(Object.entries(COMPOUND_F
   `${spec.label}・${spec.endingLabel}`,
 ]));
 
-export const MULTI_STEP_FORMS = [...Object.keys(COMPOUND_FORM_SPECS), "passiveDesireNegativePast"];
+export const MULTI_STEP_FORMS = [...Object.keys(COMPOUND_FORM_SPECS), "passiveDesireNegativePast", ...Object.keys(CHAIN_FORM_SPECS)];

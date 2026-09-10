@@ -17,9 +17,9 @@ const fixture=()=>{
   return {item:close,form,step,input,kcIds:step.kcIds,requiredSteps:[['stem.godan.a'],['suffix.negative'],['adj.suffix.i-past']],noEvidence:true};
 };
 
-test('all 131 forms have declared plans and every representative accepted branch reaches the right answer',()=>{
+test('all 134 forms have declared plans and every representative accepted branch reaches the right answer',()=>{
   const courses=new Map(UNIFIED_COURSES.flatMap(c=>c.forms.map(form=>[form,c])));
-  assert.equal(courses.size,131);assert.deepEqual(new Set(DIAGNOSTIC_FORMS),new Set(courses.keys()));
+  assert.equal(courses.size,134);assert.deepEqual(new Set(DIAGNOSTIC_FORMS),new Set(courses.keys()));
   for(const [form,c] of courses)for(const item of c.domain==='verb'?verbs:adjectives) {
     if(form==='causativePassiveContracted'&&(item.class!=='godan'||item.surface.endsWith('す')))continue;
     if(item.domain==='adjective'&&form!=='adjectiveAdverb'&&form!=='adjectiveBa'

@@ -742,35 +742,16 @@ test('nakute grouped probes and ahead-of-step retries preserve scoring and allow
   assert.ok(saved().assessment.pending[key]);
 });
 
-test('unfinished comprehensive review is selected before mastered-course rotation and never starts empty', async () => {
-  const initial = profile({rotation:0, coursePractice: Object.fromEntries(UNIFIED_COURSES.filter(c=>c.id!=='voiceCompound').map(c=>[c.id, [...new Set(KNOWLEDGE.exercises.filter(e=>e.courseId===c.id).map(exerciseKey))].slice(0,12)]))});
+test('voice continuation skills belong to the integration course and existing mastery needs no new review quota', async () => {
+  const initial = profile();
+  initial.byKc['apply.potential.continuation'] = {...stats, attempts:0, correct:0, confidence:0, bestConfidence:0, filteredAccuracy:null};
   storage.setItem(KEY,JSON.stringify(initial));
   const view = await mount();
   assert.equal(view.container.querySelector('.focus-panel strong').textContent,'态的复合活用');
   assert.equal(view.container.querySelector('.completion-card'),null);
-  const firstId = currentExercise(view).id;
+  assert.equal(currentExercise(view).courseId,'voiceCompound');
   await answerCorrect(view);
-  assert.equal(saved().coursePractice.voiceCompound.length,1);
-  fireEvent.click(view.getByRole('button',{name:'结束本轮',exact:true}));
-  await waitFor(()=>assert.ok(view.container.querySelector('.completion-card')));
-  fireEvent.click(view.container.querySelector('.restart-button'));
-  await waitFor(()=>assert.ok(view.container.querySelector('.word-display')));
-  assert.equal(view.container.querySelector('.focus-panel strong').textContent,'态的复合活用');
-  assert.notEqual(currentExercise(view).id,firstId);
-  for (let i=1;i<12;i++) {
-    await answerCorrect(view);
-    if(i<11)await next(view);
-  }
-  assert.equal(saved().coursePractice.voiceCompound.length,12);
-  fireEvent.click(view.getByRole('button',{name:'结束本轮',exact:true}));
-  await waitFor(()=>assert.ok(view.container.querySelector('.completion-card')));
-  fireEvent.click(view.container.querySelector('.restart-button'));
-  await waitFor(()=>assert.ok(view.container.querySelector('.word-display')));
-  assert.notEqual(view.container.querySelector('.focus-panel strong').textContent,'态的复合活用');
-  fireEvent.click(view.getByRole('button',{name:'结束本轮',exact:true}));
-  await waitFor(()=>assert.ok(view.container.querySelector('.completion-card')));
-  assert.equal(view.container.querySelector('.completion-card .score'),null);
-
+  assert.ok(saved().byKc['apply.potential.continuation'].attempts>0);
 });
 
 test('after masu completion adaptive resumes partially learned adjectives before new verb negatives', async () => {
@@ -786,4 +767,33 @@ test('after masu completion adaptive resumes partially learned adjectives before
   await answerCorrect(view);await next(view);
   assert.equal(currentExercise(view).courseId,'adjectiveClassify');
   assert.equal(saved().byKc['stem.godan.a'].attempts,0);
+});
+
+for(const [form,kc] of [['temiruDesirePast','compound.chain.temiru-desire-past'],['passiveProgressivePast','compound.chain.passive-progressive-past'],['causativeReceivePast','compound.chain.causative-receive-past']])test(`new chain ${form} renders three guided stages without awarding independent application`,async()=>{
+  const initial=profile({practiceGoalCourseId:'multiStepCompound'});
+  initial.byKc[kc]={...stats,attempts:0,correct:0,filteredAccuracy:null,confidence:0,bestConfidence:0};
+  storage.setItem(KEY,JSON.stringify(initial));
+
+  const view=await mount(),exercise=currentExercise(view);
+
+  assert.equal(exercise.form,form);
+  const before=saved();
+  const plan=createAnswerAnalyzer(exercise.item,form)('xyz').steps;
+  assert.equal(plan.length,3);
+
+  submitText(view,'xyz');await waitFor(()=>assert.equal(saved().attempted,1));
+  for(const step of plan){
+
+    const total=saved().practiceLog.totalEvents;
+    const input=view.getByLabelText('本步答案');
+    fireEvent.change(input,{target:{value:step.readings[0]}});fireEvent.submit(input.closest('form'));
+    await waitFor(()=>assert.equal(saved().practiceLog.totalEvents,total+1));
+    assert.equal(saved().practiceLog.events.at(-1).outcome,'correct');
+    fireEvent.click(view.container.querySelector('[data-diagnostic-next]'));
+    await waitFor(()=>assert.equal(Boolean(view.container.querySelector('[data-diagnostic-next]')),false));
+  }
+  assert.deepEqual(saved().byKc,before.byKc);
+  assert.equal(saved().assessment.assistedByKc[kc],undefined);
+  assert.equal(saved().correct,0);assert.equal(saved().attempted,1);
+  assert.ok(saved().assessment.pending[assessmentTarget(exercise).key]);
 });

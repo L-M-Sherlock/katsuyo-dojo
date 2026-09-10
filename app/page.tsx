@@ -1,4 +1,5 @@
 "use client";
+import { CHAIN_FORM_SPECS, CHAIN_FORM_LABELS } from "./lib/multi-step-forms.mjs";
 
 import { FormEvent, Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ADJECTIVES } from "./lib/adjective-catalog.mjs";
@@ -36,7 +37,7 @@ type PracticeDomain = "verb" | "adjective";
 type CompoundBase = "teageru" | "temorau" | "tekureru" | "teiru" | "tearu" | "teoru" | "tai" | "tehoshii" | "youtosuru" | "temiru" | "teshimau" | "teoku" | "teiku" | "tekuru" | "sugiru" | "tagaru";
 type CompoundEnding = "Past" | "Negative" | "NegativePast";
 type CompoundForm = `${CompoundBase}${CompoundEnding}`;
-type Form = "negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "causativePassiveContracted" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru" | CompoundForm | "adjectiveNegative" | "adjectivePast" | "adjectiveNegativePast" | "adjectiveTe" | "adjectiveAttributive" | "adjectivePredicative" | "adjectiveNaNegative" | "adjectiveNaPast" | "adjectiveNaNegativePast" | "adjectiveNaTe" | "adjectiveBa" | "adjectiveAdverb";
+type Form = "negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "causativePassiveContracted" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru" | "temiruDesirePast" | "passiveProgressivePast" | "causativeReceivePast" | CompoundForm | "adjectiveNegative" | "adjectivePast" | "adjectiveNegativePast" | "adjectiveTe" | "adjectiveAttributive" | "adjectivePredicative" | "adjectiveNaNegative" | "adjectiveNaPast" | "adjectiveNaNegativePast" | "adjectiveNaTe" | "adjectiveBa" | "adjectiveAdverb";
 type ModeId = "classify" | "negative" | "past" | "te" | "giving" | "request" | "imperative" | "masu" | "aspect" | "passive" | "potential" | "volitional" | "desire" | "ba" | "tara" | "nasai" | "prohibitive" | "temo" | "concurrent" | "obligation" | "listing" | "permission" | "youtosuru" | "temiru" | "causative" | "causativePassive" | "nakuteNaide" | "zuZuni" | "teshimauChau" | "teokuToku" | "direction" | "tatte" | "sugiru" | "tagaru" | "multiStepCompound" | "basicCompound" | "voiceCompound" | "adjectiveClassify" | "adjectiveIBase" | "adjectiveITe" | "adjectiveNaBase" | "adjectiveConditional" | "adjectiveAdverb";
 type PracticeMode = "adaptive" | ModeId;
 type Result = "correct" | "incorrect" | "revealed" | null;
@@ -218,7 +219,7 @@ const COURSES = UNIFIED_COURSES as Course[];
 const FORM_LABELS: Record<string, string> = {
   negative: "否定形", past: "过去形", te: "て形", masu: "ます形", passive: "受身形", potential: "可能形", imperative: "命令形", volitional: "意向形", ba: "ば形", nasai: "なさい命令", prohibitive: "禁止形", causative: "使役形", causativePassive: "使役受身形", causativePassiveContracted: "使役受身缩约形", nakute: "なくて形", naide: "ないで形", zu: "ず形", zuni: "ずに形", teshimau: "てしまう", chau: "ちゃう・じゃう", teoku: "ておく", toku: "とく・どく", negativePast: "否定过去形", masuPast: "礼貌过去形", masuNegative: "礼貌否定形", masuNegativePast: "礼貌否定过去形", passivePast: "受身・过去形", passiveNegative: "受身・否定形", passiveNegativePast: "受身・否定过去形", potentialPast: "可能・过去形", potentialNegative: "可能・否定形", potentialNegativePast: "可能・否定过去形", causativePast: "使役・过去形", causativeNegative: "使役・否定形", causativeNegativePast: "使役・否定过去形", causativePassivePast: "使役受身・过去形", causativePassiveNegative: "使役受身・否定形", causativePassiveNegativePast: "使役受身・否定过去形",
   passiveDesireNegativePast: "受身・愿望・否定过去", teageru: "てあげる", temorau: "てもらう", tekureru: "てくれる", tekudasai: "てください", naideKudasai: "ないでください", teiru: "ている", teru: "てる", tearu: "てある", teoru: "ておる", toru: "とる・どる", tai: "たい", tehoshii: "てほしい", tara: "たら形", temo: "ても・でも", nagara: "ながら", tsutsu: "つつ", nakerebaNaranai: "なければならない", nakutewaIkenai: "なくてはいけない", naitoIkenai: "ないといけない", tari: "たり形", tewa: "ては・では", temoIi: "てもいい", nakutemoIi: "なくてもいい", masenka: "ませんか", youtosuru: "ようとする", temiru: "てみる", teiku: "ていく", teku: "てく", tekuru: "てくる", tatte: "たって・だって", sugiru: "すぎる", tagaru: "たがる",
-  ...COMPOUND_FORM_LABELS,
+  ...COMPOUND_FORM_LABELS, ...CHAIN_FORM_LABELS,
   ...ADJECTIVE_FORM_LABELS,
 };
 const SESSION_LENGTH = 12;
@@ -233,6 +234,7 @@ function clockNow() { return Date.now(); }
 function todayKey() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
 
 function eligibleFor(verb: Verb, form: Form | null) {
+  if (form && CHAIN_FORM_SPECS[form]) return CHAIN_FORM_SPECS[form].words.includes(verb.surface);
   const baseForm = form ? COMPOUND_FORM_SPECS[form]?.form ?? form : form;
   if (baseForm === "tearu") return TRANSITIVE_VERBS.has(verb.surface);
   if (form === "causativePassiveContracted") return verb.class === "godan" && !verb.surface.endsWith("す");
