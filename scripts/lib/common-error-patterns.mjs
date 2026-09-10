@@ -1,3 +1,4 @@
+import { completeFormExpectation } from './complete-form-oracle.mjs';
 import { acceptedConjugations } from '../../app/lib/conjugation.mjs';
 import { acceptedAdjectiveConjugations } from '../../app/lib/adjective-conjugation.mjs';
 import { COMPOUND_FORM_SPECS } from '../../app/lib/compound-forms.mjs';
@@ -578,7 +579,7 @@ export function generateCommonErrorCases(item,form,{step=null,existingCases=[]}=
       const review=mixedPastReviewExpectation(item,step,c.input);
       if(review)expected=lexicalExpectation(c.input,targets).kind==='typo'?{kind:'typo'}:review;
     }
-    cases.push({...c,expected});
+    cases.push({...c,expected:completeFormExpectation(item,form,c.input,expected,step)});
   }
   return {cases,collisions,classificationConflicts:[...new Set(classificationConflicts)]};
 }

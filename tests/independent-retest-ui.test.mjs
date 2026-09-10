@@ -825,3 +825,19 @@ test('knowledge progress nests coverage under its declared parent without duplic
   assert.equal(taiGroup.querySelectorAll('.knowledge-coverage-children [data-kc-id]').length,3);
   assert.deepEqual(saved(),before);
 });
+
+test('complete polite negative-past is named on screen and logged without a false stem penalty',async()=>{
+  const initial=profile({practiceGoalCourseId:'basicCompound'});
+  initial.byKc['compound.negative-past']={...stats,attempts:0,correct:0,filteredAccuracy:null,confidence:0,bestConfidence:0};
+  storage.setItem(KEY,JSON.stringify(initial));
+  const view=await mount(),exercise=currentExercise(view);
+  assert.equal(exercise.form,'negativePast');
+  assert.match(view.container.querySelector('.instruction').textContent,/普通体否定过去形/);
+  submitText(view,conjugate(exercise.item.reading,exercise.item.class,'masuNegativePast'));
+  await waitFor(()=>assert.equal(saved().attempted,1));
+  const event=saved().practiceLog.events.at(-1);
+  assert.equal(event.diagnosis.resolution,'target-form');assert.equal(event.diagnosis.kcId,null);
+  assert.deepEqual(event.changes,[]);assert.deepEqual(saved().byKc,initial.byKc);
+  assert.match(view.container.querySelector('.feedback-copy').textContent,/礼貌否定过去形.*普通体否定过去形/);
+  assert.doesNotMatch(view.container.querySelector('.feedback-copy').textContent,/词干位置/);
+});

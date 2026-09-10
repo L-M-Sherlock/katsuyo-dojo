@@ -1,17 +1,18 @@
 "use client";
 
+import { FORM_LABELS } from "./lib/form-labels.mjs";
+
 import { groupKnowledgeCoverage } from "./lib/knowledge-display.mjs";
-import { CHAIN_FORM_SPECS, CHAIN_FORM_LABELS } from "./lib/multi-step-forms.mjs";
+import { eligibleVerbForm as eligibleFor } from "./lib/form-eligibility.mjs";
 
 import { FormEvent, Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ADJECTIVES } from "./lib/adjective-catalog.mjs";
-import { ADJECTIVE_FORM_LABELS, adjectiveTargetLabel, adjectiveClassLabel, conjugateAdjective, explainAdjectiveConjugation } from "./lib/adjective-conjugation.mjs";
+import { adjectiveTargetLabel, adjectiveClassLabel, conjugateAdjective, explainAdjectiveConjugation } from "./lib/adjective-conjugation.mjs";
 import { buildAdjectiveKnowledgeModel } from "./lib/adjective-knowledge-model.mjs";
 import { acceptedVariantKcIds, acceptedVariantNote } from "./lib/answer-variants.mjs";
 import { advanceIntroductions, componentConfidence, emptySkillStats, isComponentMastered, selectFocus } from "./lib/adaptive.mjs";
 import { exerciseKey, recordRecentWord, wordKey } from "./lib/exercise-selection.mjs";
 import { classLabel, conjugate, explainConjugation } from "./lib/conjugation.mjs";
-import { COMPOUND_FORM_LABELS, COMPOUND_FORM_SPECS } from "./lib/compound-forms.mjs";
 import { summarizeUnifiedCourse } from "./lib/unified-progress.mjs";
 import { ADJECTIVE_COURSES as ADJECTIVE_CURRICULUM, CHINESE_YOKUBI_URL, COURSES as VERB_CURRICULUM } from "./lib/curriculum.mjs";
 import { furiganaFor } from "./lib/furigana.mjs";
@@ -218,30 +219,19 @@ const VERB_COURSES = VERB_CURRICULUM as Course[];
 const ADJECTIVE_COURSES = ADJECTIVE_CURRICULUM as Course[];
 const COURSES = UNIFIED_COURSES as Course[];
 
-const FORM_LABELS: Record<string, string> = {
-  negative: "否定形", past: "过去形", te: "て形", masu: "ます形", passive: "受身形", potential: "可能形", imperative: "命令形", volitional: "意向形", ba: "ば形", nasai: "なさい命令", prohibitive: "禁止形", causative: "使役形", causativePassive: "使役受身形", causativePassiveContracted: "使役受身缩约形", nakute: "なくて形", naide: "ないで形", zu: "ず形", zuni: "ずに形", teshimau: "てしまう", chau: "ちゃう・じゃう", teoku: "ておく", toku: "とく・どく", negativePast: "否定过去形", masuPast: "礼貌过去形", masuNegative: "礼貌否定形", masuNegativePast: "礼貌否定过去形", passivePast: "受身・过去形", passiveNegative: "受身・否定形", passiveNegativePast: "受身・否定过去形", potentialPast: "可能・过去形", potentialNegative: "可能・否定形", potentialNegativePast: "可能・否定过去形", causativePast: "使役・过去形", causativeNegative: "使役・否定形", causativeNegativePast: "使役・否定过去形", causativePassivePast: "使役受身・过去形", causativePassiveNegative: "使役受身・否定形", causativePassiveNegativePast: "使役受身・否定过去形",
-  passiveDesireNegativePast: "受身・愿望・否定过去", teageru: "てあげる", temorau: "てもらう", tekureru: "てくれる", tekudasai: "てください", naideKudasai: "ないでください", teiru: "ている", teru: "てる", tearu: "てある", teoru: "ておる", toru: "とる・どる", tai: "たい", tehoshii: "てほしい", tara: "たら形", temo: "ても・でも", nagara: "ながら", tsutsu: "つつ", nakerebaNaranai: "なければならない", nakutewaIkenai: "なくてはいけない", naitoIkenai: "ないといけない", tari: "たり形", tewa: "ては・では", temoIi: "てもいい", nakutemoIi: "なくてもいい", masenka: "ませんか", youtosuru: "ようとする", temiru: "てみる", teiku: "ていく", teku: "てく", tekuru: "てくる", tatte: "たって・だって", sugiru: "すぎる", tagaru: "たがる",
-  ...COMPOUND_FORM_LABELS, ...CHAIN_FORM_LABELS,
-  ...ADJECTIVE_FORM_LABELS,
-};
+
 const SESSION_LENGTH = 12;
 const STORAGE_KEY = UNIFIED_STORAGE_KEY;
 const PRACTICE_DOMAIN_KEY = "katsuyo-practice-domain-v1";
 const LEGACY_PROFILE_KEY_V4 = "katsuyo-practice-profile-v4";
 const LEGACY_PROFILE_KEY_V3 = "katsuyo-practice-profile-v3";
 const LEGACY_PROFILE_KEY_V2 = "katsuyo-practice-profile-v2";
-const TRANSITIVE_VERBS = new Set(["書く", "弾く", "話す", "待つ", "読む", "買う", "切る", "飲む", "聞く", "取る", "使う", "置く", "脱ぐ", "貸す", "消す", "持つ", "打つ", "選ぶ", "作る", "売る", "習う", "言う", "払う", "洗う", "手伝う", "拾う", "描く", "磨く", "焼く", "注ぐ", "防ぐ", "稼ぐ", "出す", "直す", "渡す", "返す", "押す", "探す", "落とす", "指す", "起こす", "運ぶ", "学ぶ", "頼む", "申し込む", "包む", "送る", "守る", "食べる", "見る", "教える", "開ける", "閉める", "借りる", "浴びる", "忘れる", "覚える", "着る", "信じる", "調べる", "始める", "続ける", "助ける", "考える", "決める", "止める", "見せる", "受ける", "付ける", "集める", "捨てる", "迎える", "伝える", "変える", "届ける", "片付ける", "する"]);
+
 
 function clockNow() { return Date.now(); }
 function todayKey() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
 
-function eligibleFor(verb: Verb, form: Form | null) {
-  if (form && CHAIN_FORM_SPECS[form]) return CHAIN_FORM_SPECS[form].words.includes(verb.surface);
-  const baseForm = form ? COMPOUND_FORM_SPECS[form]?.form ?? form : form;
-  if (baseForm === "tearu") return TRANSITIVE_VERBS.has(verb.surface);
-  if (form === "causativePassiveContracted") return verb.class === "godan" && !verb.surface.endsWith("す");
-  return true;
-}
+
 
 export const VERB_KNOWLEDGE = buildKnowledgeModel(VERB_COURSES, VERBS, { eligibleFor, formLabels: FORM_LABELS }) as {
   components: KnowledgeComponent[];

@@ -1,3 +1,4 @@
+import { completeFormExpectation } from './complete-form-oracle.mjs';
 import { createHash } from 'node:crypto';
 import { acceptedConjugations } from '../../app/lib/conjugation.mjs';
 import { acceptedAdjectiveConjugations } from '../../app/lib/adjective-conjugation.mjs';
@@ -311,6 +312,7 @@ export function generateErrorCases(exercise) {
   const result=[],seen=new Set();let collisions=0;
   function emit(pattern,input,expected,writing,stepIndex=null,context=null) {
     const step=context?.step??(stepIndex===null?null:steps[stepIndex]);
+    expected=completeFormExpectation(item,form,input,expected,step);
     const valid=step?new Set([...step.answers,...step.readings].map(normalize)):accepted;
     // Different grammatical forms can have identical surfaces. Such a surface
     // is a valid answer to this question and cannot be used as a negative test.

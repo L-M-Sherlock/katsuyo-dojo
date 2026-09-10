@@ -43,7 +43,7 @@ test('independent adjective contracts distinguish ku stems from the following su
 
 test('verb rows, retained ru, irregular stems and onbin have independent KC owners',()=>{
   for(const [item,form,input,failed] of [
-    [verb('書く','かく'),'negative','書けない','stem.godan.a'],
+    [verb('書く','かく'),'negative','書けない',null], // Complete potential-negative form: not proof of an a-row error.
     [verb('買う','かう'),'negative','買あない','stem.godan.u-wa'],
     [verb('書く','かく'),'masu','書こます','stem.godan.i'],
     [verb('食べる','たべる','ichidan'),'negative','食べるない','stem.ichidan.drop-ru'],

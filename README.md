@@ -139,3 +139,5 @@ npm run build
 课程内容与部分教学表述参考 [Yokubi 中文版](https://l-m-sherlock.github.io/yokubi-zh-cn/)。详见 [CREDITS.md](./CREDITS.md)。
 
 常见多步组合的题型、步骤和计分范围见[多步组合](docs/multi-step-combinations.md)。
+
+完整答案会先匹配当前词项的其他已支持形式，明确提示语体或目标变化差异；详见[完整词形识别](docs/form-recognition.md)。

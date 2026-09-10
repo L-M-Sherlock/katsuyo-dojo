@@ -1,3 +1,4 @@
+import { recognizeForms, recognizedFormLabel } from './form-recognition.mjs';
 import { matchAcceptedAnswer } from './answer-variants.mjs';
 import { hasLexicalTypo } from './lexical-typo.mjs';
 import { deriveUnified, diagnoseUnified, diagnoseUnifiedStep, unifiedDiagnosticSteps, unifiedStepDiagnosticSteps, diagnoseUnifiedStepReview } from './unified-knowledge.mjs';
@@ -39,9 +40,20 @@ export function createAnswerAnalyzer(item, form, options = {}) {
       return {kind:'incorrect',match,diagnosis:{kcId,confirmedKcIds:[],message:'词类判断有误，请对照正确类别及分类依据。'},steps:[],
         feedback:{resolution:'rule',observations:[],terminal:true,message:'词类判断有误，请对照正确类别及分类依据。'}};
     }
+    const canRecognize = !step?.kind || step.kind === 'conjugation';
+    const tailClass = ({tearu:'aru',teiku:'iku',tekuru:'kuru',youtosuru:'irregular'})[step?.reviewContext?.family?.form];
+    const recognitionItem = tailClass ? {...item,tailClass} : item;
+    const recognizedForms = canRecognize ? recognizeForms(recognitionItem,answer,normalize).filter(match=>match.form!==form) : [];
+    // A correctly completed prefix retains its existing, scoped follow-up.
+    // Otherwise a complete supported form must not be blamed on a local rule.
+    const inPath = recognizedForms.length && (
+      [item.surface,item.reading,...(step?.providedAnswers??[])].filter(Boolean).some(value=>normalize(value)===normalize(answer))
+      || (getPlan().paths??[]).some(path=>path.nodes.slice(0,-1).some(node=>[node.output.surface,node.output.reading].some(value=>normalize(value)===normalize(answer))))
+    );
     let diagnosis = step?.kind==='atomic' ? diagnoseAtomicStep(step,answer,normalize) : step ? diagnoseUnifiedStep(item, step, answer, normalize)
       : diagnoseUnified(item, form, answer, normalize) ?? diagnoseUnified(readingItem, form, answer, normalize);
-    if (!diagnosis && hasLexicalTypo(item, answer, surface.acceptedVariants, reading.acceptedVariants, normalize)) {
+    if (!step && recognizedForms.length && !inPath && /^(class\.|heuristic\.|stem\.|onbin\.|exception\.)/.test(diagnosis?.kcId??'')) diagnosis = null;
+    if (!diagnosis && !recognizedForms.length && hasLexicalTypo(item, answer, surface.acceptedVariants, reading.acceptedVariants, normalize)) {
       return { kind: 'typo', match, diagnosis: null, steps: [] };
     }
     if (!diagnosis && step && step.kind!=='atomic') diagnosis = diagnoseUnifiedStepReview(item, step, answer, normalize);
@@ -58,6 +70,16 @@ export function createAnswerAnalyzer(item, form, options = {}) {
       planFallback=steps.length>0;
     }
     const feedback=diagnosticFeedback({item,answer,diagnosis,steps,plan:!diagnosis?getPlan():plan,step,normalize});
-    return {kind:'incorrect',match,diagnosis,steps,feedback,planFallback};
+    if(recognizedForms.length && !inPath) {
+      const labels=[...new Set(recognizedForms.map(match=>match.label))].join('／');
+      const target=step?.targetLabel??recognizedFormLabel(item,form);
+      const identification=`你的答案与${labels}一致，本题要求${target}。`;
+      if(!diagnosis?.message&&!steps[0]?.probeSelection) {
+        feedback.message=identification+(steps.length?'本次不据此扣除具体知识点的掌握度；下面检查本题要求的变化。':'本次不据此扣除具体知识点的掌握度，请对照本题解析核对形式。');
+        feedback.resolution='target-form';feedback.observations=[];
+      } else if (!diagnosis?.message || !recognizedForms.every(match=>diagnosis.message.includes(match.label))) feedback.message=identification+feedback.message;
+    }
+
+    return {kind:'incorrect',match,diagnosis,recognizedForms,steps,feedback,planFallback};
   };
 }
