@@ -537,8 +537,8 @@ for (const mode of ['adaptive', 'giving']) test(`giving recovery in ${mode} uses
   storage.setItem(KEY, JSON.stringify({ ...fixture, date: dateKey(), practiceGoalCourseId: 'giving' }));
   let view = await mount();
   if (mode === 'giving') {
-    fireEvent.click([...view.container.querySelectorAll('.mode-list button')].find(button => button.textContent.includes('て形授受补助')));
-    await waitFor(() => assert.ok(view.container.querySelector('.mode-list button.active')?.textContent.includes('て形授受补助')));
+    fireEvent.click([...view.container.querySelectorAll('.mode-list button')].find(button => button.textContent.includes('授受表达')));
+    await waitFor(() => assert.ok(view.container.querySelector('.mode-list button.active')?.textContent.includes('授受表达')));
   }
   const { summarizeUnifiedCourse } = await import('../app/lib/unified-progress.mjs');
   const giving = UNIFIED_COURSES.find(c => c.id === 'giving');
@@ -550,7 +550,7 @@ for (const mode of ['adaptive', 'giving']) test(`giving recovery in ${mode} uses
   let resumed = false;
   assert.equal(status().mastered, 18);
   for (let i = 0; i < 24 && !status().complete; i++) {
-    assert.match(view.container.querySelector('.focus-panel strong').textContent, /て形授受补助/);
+    assert.match(view.container.querySelector('.focus-panel strong').textContent, /授受表达/);
     const exercise = currentExercise(view);
     seen.push(exercise);
     if (exercise.form === null) {
@@ -563,7 +563,7 @@ for (const mode of ['adaptive', 'giving']) test(`giving recovery in ${mode} uses
     if (mode === 'adaptive' && !resumed && saved().byKc['apply.tekureru.continuation']?.confidence === 1) {
       assert.equal(saved().practiceGoalCourseId, 'giving');
       cleanup(); view = await mount(); resumed = true;
-      assert.match(view.container.querySelector('.focus-panel strong').textContent, /て形授受补助/);
+      assert.match(view.container.querySelector('.focus-panel strong').textContent, /授受表达/);
       continue;
     }
     fireEvent.click(view.container.querySelector('.next-button'));
@@ -747,7 +747,7 @@ test('voice continuation skills belong to the voice application course and exist
   initial.byKc['apply.potential.continuation'] = {...stats, attempts:0, correct:0, confidence:0, bestConfidence:0, filteredAccuracy:null};
   storage.setItem(KEY,JSON.stringify(initial));
   const view = await mount();
-  assert.equal(view.container.querySelector('.focus-panel strong').textContent,'态的复合活用');
+  assert.equal(view.container.querySelector('.focus-panel strong').textContent,'可能与态的后续活用');
   assert.equal(view.container.querySelector('.completion-card'),null);
   assert.equal(currentExercise(view).courseId,'voiceCompound');
   await answerCorrect(view);

@@ -1100,15 +1100,15 @@ test('historically accessible compound courses recover new shared prerequisites 
   saved.byKc['adj.suffix.i-past'] = emptySkillStats();
   storage.setItem(KEY, JSON.stringify(saved));
   const view = await mount();
-  const button = [...view.container.querySelectorAll('.mode-list button')].find(b => b.textContent.includes('多步活用组合'));
+  const button = [...view.container.querySelectorAll('.mode-list button')].find(b => b.textContent.includes('多种表达的组合活用'));
   assert.equal(button.disabled, false);
   fireEvent.click(button);
   await waitFor(() => assert.match(view.container.querySelector('.focus-panel').textContent, /补基础/));
-  assert.match(view.container.querySelector('.focus-panel strong').textContent, /多步活用组合/);
+  assert.match(view.container.querySelector('.focus-panel strong').textContent, /多种表达的组合活用/);
   assert.ok(view.container.querySelector('#answer'));
   for (let i = 0; i < 8 && displayedExercise(view).form !== 'passiveDesireNegativePast'; i++) {
     if (i === 0) assert.ok(displayedExercise(view).kcIds.includes('adj.suffix.i-past'));
-    assert.match(view.container.querySelector('.focus-panel strong').textContent, /多步活用组合/);
+    assert.match(view.container.querySelector('.focus-panel strong').textContent, /多种表达的组合活用/);
     await answerDisplayedCorrectly(view);
     await next(view);
     if (view.container.querySelector('.completion-card')) {

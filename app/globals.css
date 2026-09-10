@@ -94,7 +94,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .adaptive-icon { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: var(--red); color: white; font-family: "Yu Mincho", serif; font-size: 15px; }
 .adaptive-entry strong, .adaptive-entry small { display: block; }
 .adaptive-entry strong { font-size: 15px; }
-.adaptive-entry small { margin-top: 4px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 11px; }
+.adaptive-entry small { margin-top: 4px; max-width: 180px; white-space: normal; overflow-wrap: anywhere; color: var(--muted); font-size: 11px; }
 .adaptive-entry.active small { color: #bfc5c1; }
 .adaptive-entry b { font-size: 13px; font-variant-numeric: tabular-nums; }
 
@@ -114,7 +114,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 }
 .mode-list button:hover:not(.active) { background: rgba(255, 255, 255, .45); transform: translateX(2px); }
 .mode-list button span { color: #979a93; font-size: 12px; font-variant-numeric: tabular-nums; }
-.mode-list button .course-name { min-width: 0; overflow: hidden; color: inherit; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
+.mode-list button .course-name { min-width: 0; color: inherit; font-size: 15px; white-space: normal; overflow-wrap: anywhere; }
 .mode-list button i { font-style: normal; color: #999d96; font-size: 12px; white-space: nowrap; }
 .mode-list button.active { background: var(--ink); color: #fbf8f0; box-shadow: 0 6px 15px rgba(23,33,28,.1); }
 .mode-list button.active span, .mode-list button.active i { color: #d8d6cf; }

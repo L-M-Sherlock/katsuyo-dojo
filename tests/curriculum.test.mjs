@@ -20,7 +20,7 @@ test("places the complete core conjugation route before the curriculum boundary"
   assert.equal(COURSES.find((course) => course.id === "aspect").title, "ている・てある・ておる");
   assert.deepEqual(COURSES.at(-1), {
     id: "multiStepCompound",
-    title: "多步活用组合",
+    title: "多种表达的组合活用",
     lesson: "复习",
     url: "https://l-m-sherlock.github.io/yokubi-zh-cn/Section1/Part2/Lesson26.html",
     forms: MULTI_STEP_FORMS,
