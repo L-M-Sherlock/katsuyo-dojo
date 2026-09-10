@@ -1,3 +1,4 @@
+import { structuralKey } from './lib/universal-error-cases.mjs';
 import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { mkdir, writeFile, open } from 'node:fs/promises';
@@ -8,10 +9,11 @@ import { PATTERNS, generateErrorCases } from './lib/error-patterns.mjs';
 import { auditGeneratedCase } from './lib/diagnosis-audit.mjs';
 import { LEARNING_AUDIT_VERSION } from './lib/learning-evidence-contracts.mjs';
 
-const args=process.argv.slice(2), options={output:null,strict:false,pattern:null,forms:null,replay:null,cases:false,compare:null};
+const args=process.argv.slice(2), options={output:null,strict:false,pattern:null,forms:null,replay:null,cases:false,compare:null,representatives:false};
 for(let i=0;i<args.length;i++) {
   const arg=args[i];
-  if(arg==='--strict')options.strict=true;
+  if(arg==='--representatives')options.representatives=true;
+  else if(arg==='--strict')options.strict=true;
   else if(arg==='--cases')options.cases=true;
   else if(['--output','--pattern','--forms','--replay','--compare'].includes(arg)&&args[i+1])options[arg.slice(2)]=args[++i];
   else throw new Error(`Unknown/missing option: ${arg}`);
@@ -38,6 +40,7 @@ await mkdir(options.output,{recursive:true});
 const issueFile=await open(path.join(options.output,'findings.jsonl'),'w');
 const caseFile=options.cases?await open(path.join(options.output,'cases.jsonl'),'w'):null;
 const rows=new Map(PATTERNS.filter(p=>!options.pattern||options.pattern===p.id).map(p=>[p.id,{...p,total:0,contractCases:0,exploratoryCases:0,pass:0,regression:0,recognized:0,retry:0,deferred:0,gap:0,examples:[]} ]));
+const representatives=new Set();
 const dimensions=new Map(), forms=new Set(), inputs=new Set(), exercises=new Set();
 const knowledge=new Map(model.components.map(kc=>[kc.id,{id:kc.id,label:kc.label,gating:kc.gating,exposure:0,expectedFailure:0,expectedConfirmation:0}]));
 let total=0,collisions=0,regressions=0,gaps=0,deferred=0,learningChecks=0,issueBuffer='',caseBuffer='';
@@ -46,6 +49,9 @@ for(const exercise of model.exercises) {
   if(!exercise.form)continue;
   if(selectedForms&&!selectedForms.has(exercise.form))continue;
   if(replayExercise&&(exercise.item.domain!==replayExercise.domain||exercise.item.surface!==replayExercise.surface||exercise.form!==replayExercise.form))continue;
+  const structure=structuralKey(exercise.item,exercise.form);
+  if(options.representatives&&representatives.has(structure))continue;
+  representatives.add(structure);
   const exerciseKey=JSON.stringify([exercise.item.domain,exercise.item.surface,exercise.form]);
   if(exercises.has(exerciseKey))continue;exercises.add(exerciseKey);
   const generated=generateErrorCases(exercise);collisions+=generated.collisions;
@@ -86,14 +92,14 @@ for(const exercise of model.exercises) {
 if(issueBuffer)await issueFile.write(issueBuffer);if(caseBuffer)await caseFile.write(caseBuffer);
 }finally {await issueFile.close();await caseFile?.close();}
 if(!total)throw new Error('No cases matched; check replay ID or pattern.');
-const coverageErrors=!options.pattern&&!options.replay&&!selectedForms?[...rows.values()].filter(row=>row.total===0).map(row=>`未生成模式 ${row.id}`):[];
+const coverageErrors=!options.representatives&&!options.pattern&&!options.replay&&!selectedForms?[...rows.values()].filter(row=>row.total===0).map(row=>`未生成模式 ${row.id}`):[];
 const expectedFormCount=selectedForms?.size??new Set(model.exercises.map(e=>e.form).filter(Boolean)).size;
 if(!options.pattern&&!options.replay&&forms.size!==expectedFormCount)coverageErrors.push(`仅覆盖 ${forms.size}/${expectedFormCount} 种形式`);
 const knowledgeCoverage=[...knowledge.values()];
 const gating=knowledgeCoverage.filter(kc=>kc.gating);
 for(const row of rows.values())row.level=row.contractCases&&row.exploratoryCases?'mixed':row.contractCases?'contract':'explore';
 const contractCases=[...rows.values()].reduce((sum,row)=>sum+row.contractCases,0);
-const scope=selectedForms?`forms:${[...selectedForms].sort().join(',')}${options.pattern?`;pattern:${options.pattern}`:''}`:options.pattern??'all';
+const scope=options.representatives?'structural-representatives':selectedForms?`forms:${[...selectedForms].sort().join(',')}${options.pattern?`;pattern:${options.pattern}`:''}`:options.pattern??'all';
 const report={schemaVersion:2,scope,replay:options.replay,total,contractCases,exploratoryCases:total-contractCases,uniqueInputs:inputs.size,forms:forms.size,exercises:exercises.size,acceptedCollisionsExcluded:collisions,regressions,gaps,deferred,coverageErrors,knowledgeCoverage,patterns:[...rows.values()],dimensions:[...dimensions.values()],
   learningAudit:{version:LEARNING_AUDIT_VERSION,cases:total,checks:learningChecks}};
 if(options.compare) {
