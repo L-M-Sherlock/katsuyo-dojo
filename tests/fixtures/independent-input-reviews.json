@@ -20,5 +20,21 @@
   "adj-i-adv-repeat-ku": {"expect":{"kind":"incorrect","failedKcId":"adj.stem.i-ku"},"reason":"重复く属于共享い→く操作，不应扣副词形应用。"},
   "adj-i-adv-kept-i": {"expect":{"kind":"incorrect","failedKcId":"adj.stem.i-ku"},"reason":"保留い属于共享词干操作，不应扣副词形应用。"},
   "compound-passive-desire-stage-i-retained": {"expect":{"kind":"incorrect","failedKcId":"adj.stem.i-ku","needsGuidance":false},"reason":"给定たい后的い没有替换，后接なかった完整，符合已定义的单一词干错误。"},
-  "compound-tehoshii-verb-past": {"expect":{"kind":"incorrect","failedKcId":"adj.suffix.i-past","needsGuidance":false},"reason":"给定ほしい后保留い直接接た，是明确的い形容词过去接续错误。"}
+  "compound-tehoshii-verb-past": {"expect":{"kind":"incorrect","failedKcId":"adj.suffix.i-past","needsGuidance":false},"reason":"给定ほしい后保留い直接接た，是明确的い形容词过去接续错误。"},
+  "compound-causative-passive-extra-sa": {
+    "reason": "已补充独立验证的五段ア段词干＋させられる混用规则。此输入保留完整かか词干和由错误中间形式生成的过去结尾，可以定位到较早的使役受身接续；不能归到最后的过去变化，也不新增其他知识点正证。冻结输入和原始期望不改，只更新本条审查结论。",
+    "expect": {
+      "kind": "incorrect",
+      "failedKcId": "suffix.causativePassive",
+      "confirmedKcIds": [],
+      "needsGuidance": false,
+      "forbiddenKcIds": [
+        "class.godan",
+        "stem.godan.a",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "apply.causativePassive.continuation"
+      ]
+    }
+  }
 }

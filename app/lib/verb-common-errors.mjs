@@ -30,6 +30,8 @@ for(const group of ['かが','きぎ','くぐ','けげ','こご','さざ','し�
   for(const character of group)VOICING.set(character,[...group].filter(other=>other!==character));
 }
 const CACHE = new Map();
+const CAUSATIVE_PASSIVE_ENDINGS = {causativePassivePast:'past',causativePassiveNegative:'negative',causativePassiveNegativePast:'negativePast'};
+const attachmentMessage = base => `ア段词干「${base}」已正确。这里应接「せられる」，你写成了「させられる」，多了一个「さ」。`;
 
 function alteredSuffixes(suffix, { smallTsu = true } = {}) {
   if(!suffix)return new Set();
@@ -122,6 +124,10 @@ function candidatesFor(verb,form) {
     const key=JSON.stringify([answer,kcId]);
     if(!seen.has(key)){seen.add(key);candidates.push({answer,kcId,confirmedKcIds:[],message});}
   };
+  if(verb.class==='godan'&&CAUSATIVE_PASSIVE_ENDINGS[form]) {
+    const stem=verb.surface.slice(0,-1)+ROWS[verb.surface.at(-1)][0];
+    for(const answer of acceptedConjugations(stem+'させられる','ichidan',CAUSATIVE_PASSIVE_ENDINGS[form]))add(answer,'suffix.causativePassive',attachmentMessage(stem));
+  }
   for(const descriptor of descriptors(verb,form)) {
     const {base,suffix,kcId,stemKcId}=descriptor;
     for(const changed of alteredSuffixes(suffix,{smallTsu:!(verb.class==='godan'&&['past','te'].includes(form))})) {
@@ -133,8 +139,9 @@ function candidatesFor(verb,form) {
     if(verb.class==='godan'&&descriptor.row==='a') {
       const confused=form==='passive'&&suffix==='れる'?'られる'
         :form==='causative'&&suffix==='せる'?'させる'
-          :form==='causative'&&suffix==='す'?'さす':null;
-      if(confused)add(base+confused,kcId,`前面的a段词干已形成，但这里误接了一段动词使用的「${confused}」。本题应在「${base}」后接「${suffix}」。`);
+          :form==='causative'&&suffix==='す'?'さす'
+            :form==='causativePassive'&&suffix==='せられる'?'させられる':null;
+      if(confused)add(base+confused,kcId,form==='causativePassive'?attachmentMessage(base):`前面的a段词干已形成，但这里误接了一段动词使用的「${confused}」。本题应在「${base}」后接「${suffix}」。`);
     }
     if(verb.class==='ichidan') {
       if(form==='volitional'&&suffix==='よう')add(base+'よお',kcId,'一段动词的意向形接「よう」，长音在这里写作「う」，不是「お」。');
@@ -197,7 +204,7 @@ export function commonVerbErrorKcIds(verb, form, answer, normalize = value => va
 
 export function diagnoseCommonVerbError(verb,form,answer,normalize=value=>value,allowedKcIds=[]) {
   if(!form||verb.domain&&verb.domain!=='verb'||typeof answer!=='string')return null;
-  if(!PRIMITIVES.has(form)&&!STEM_APPEND.has(form)&&!TE_APPEND.has(form)&&!OTHER_APPEND_BASES[form])return null;
+  if(!PRIMITIVES.has(form)&&!STEM_APPEND.has(form)&&!TE_APPEND.has(form)&&!OTHER_APPEND_BASES[form]&&!CAUSATIVE_PASSIVE_ENDINGS[form])return null;
   const actual=normalize(answer);
   if(acceptedConjugations(verb.surface,verb.class,form).some(correct=>normalize(correct)===actual))return null;
   const matches=candidatesFor(verb,form).filter(candidate=>normalize(candidate.answer)===actual);

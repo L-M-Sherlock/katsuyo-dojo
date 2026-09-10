@@ -264,6 +264,7 @@ function stemCases(word,form,specs) {
       add('common-stem-row',root+alternative+spec.suffix,ending==='う'&&row==='a'&&alternative==='あ'?'stem.godan.u-wa':`stem.godan.${row}`);
     }
     if(form==='passive'&&spec.suffix==='れる')add('common-stem-retained',spec.base+'られる','suffix.passive');
+    if(form==='causativePassive'&&spec.suffix==='せられる')add('common-stem-retained',spec.base+'させられる','suffix.causativePassive');
     if(form==='causative'&&['せる','す'].includes(spec.suffix))add('common-stem-retained',spec.base+'さ'+spec.suffix,'suffix.causative');
   }
   if(word.class==='ichidan'&&form==='volitional')add('common-suffix-kana-size',word.surface.slice(0,-1)+'よお','suffix.volitional');
@@ -504,6 +505,11 @@ export function generateCommonErrorCases(item,form,{step=null,existingCases=[]}=
   const candidates=[],targets=lexicalTargets(item,form,step),boundaries=new Map(),classCandidates=new Map();let collisions=0;
   function add(c) {if(accepted.has(normalize(c.input))){collisions++;return;}candidates.push(c);}
   for(const c of mixedPastCases(item,step))add(c);
+  if(!step&&item.domain==='verb'&&item.class==='godan') {
+    const tail={causativePassivePast:'させられた',causativePassiveNegative:'させられない',causativePassiveNegativePast:'させられなかった'}[form];
+    if(tail)for(const [writing,word] of [['surface',item],['reading',kana(item)]])add({pattern:'common-stem-retained',operator:'causative-passive-attachment',input:word.surface.slice(0,-1)+rowLetters[word.surface.at(-1)][0]+tail,writing,expected:exact('suffix.causativePassive')});
+  }
+
   for(const context of contexts)for(const [writing,word] of [['surface',context.item],['reading',kana(context.item)]]) {
     const prefix=context.prefix;
     let specs=context.providedKu?[{base:context.providedKu[writing==='surface'?'surface':'reading'],suffix:context.form==='adjectiveNegative'?'ない':'て',failed:context.form==='adjectiveNegative'?'adj.suffix.i-negative':'adj.suffix.i-te'}]
