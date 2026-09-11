@@ -446,3 +446,4 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 
 .knowledge-coverage-children { margin: 5px 0 0 16px; padding-left: 10px; border-left: 2px solid var(--line); display: grid; gap: 5px; }
 .knowledge-coverage-children .skill-progress-row.lexical { margin-left: 0; }
+.feedback-copy .original-form-identification { color: var(--ink); }

@@ -355,7 +355,7 @@ test('an unrecognized compound answer gives no partial credit', async () => {
   const saved = JSON.parse(storage.getItem(KEY));
   const changed = Object.keys(saved.byKc).filter((id) => JSON.stringify(saved.byKc[id]) !== JSON.stringify(initial.byKc[id]));
   assert.deepEqual(changed, []);
-  assert.match(view.container.querySelector('.feedback-copy p').textContent, /缺少足够完整的片段/);
+  assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /缺少足够完整的片段/);
   assert.equal(view.container.querySelectorAll('.knowledge-tags .target').length, 0);
   assert.ok(view.getByRole('region', { name: '拆步练习' }));
   assert.equal(view.container.querySelectorAll('.knowledge-tags .confirmed').length, 0);
@@ -442,7 +442,7 @@ async function startDiagnosticPractice(withHint = false) {
 
 async function assertDiagnosticSummary(view, { skipped = false, updated }) {
   await waitFor(() => {
-    const summary = view.container.querySelector('.feedback-copy p').textContent;
+    const summary = view.container.querySelector('.feedback-copy .feedback-summary').textContent;
     const footer = view.container.querySelector('.feedback-meta > span').textContent;
     assert.match(summary, skipped ? /跳过/ : /拆步练习已完成/);
     assert.match(summary, /原题仍计为错误/);
@@ -492,8 +492,8 @@ for (const localized of [false, true]) test(`passive desire probes show each tar
   assert.equal(whole.streak, 0);
   assert.equal(view.container.querySelectorAll('.knowledge-tags .target').length, 0);
   assert.equal(view.container.querySelectorAll('.knowledge-tags .confirmed').length, 0);
-  if (localized) assert.match(view.container.querySelector('.feedback-copy p').textContent, /受身/);
-  else assert.match(view.container.querySelector('.feedback-copy p').textContent, /缺少足够完整的片段/);
+  if (localized) assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /受身/);
+  else assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /缺少足够完整的片段/);
 
   // These expectations specify the local work each probe asks for, rather than
   // borrowing the diagnostic generator's own KC list as a grading oracle.
@@ -617,7 +617,7 @@ test('unlocalized compound errors are followed by two guided steps without revea
   fireEvent.change(view.getByLabelText('你的答案'), { target: { value: 'xyz' } });
   fireEvent.click(view.getByRole('button', { name: '检查答案' }));
   await waitFor(() => assert.ok(view.getByRole('region', { name: '拆步练习' })));
-  assert.doesNotMatch(view.container.querySelector('.feedback-copy p').textContent, /拆步练习已完成|掌握度已更新/);
+  assert.doesNotMatch(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /拆步练习已完成|掌握度已更新/);
   assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc, beforeNext.byKc);
 });
 
@@ -627,7 +627,7 @@ test('an unknown first step remains ungraded and the second step diagnoses only 
   fireEvent.click(view.getByRole('button', { name: '检查本步' }));
   await waitFor(() => assert.ok(view.getByText(/本次不更新未确认的知识点|本步不更新掌握度/)));
   assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc, initial.byKc);
-  assert.doesNotMatch(view.container.querySelector('.feedback-copy p').textContent, /掌握度已更新/);
+  assert.doesNotMatch(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /掌握度已更新/);
   fireEvent.click(view.getByRole('button', { name: '练习下一步' }));
   const supplements = createAnswerAnalyzer(item, form, { step: steps[0] })('xyz').steps;
   assert.ok(supplements.length, 'the unknown base now has finite primitive checks');
@@ -670,7 +670,7 @@ for (const firstStepCorrect of [true, false]) test(`skipping the remaining probe
   await waitFor(() => assert.ok(view.getByText(firstStepCorrect ? /本步正确，已记录辅助练习/ : /本次不更新未确认的知识点|本步不更新掌握度/)));
   const afterStep = JSON.parse(storage.getItem(KEY));
   assertStepChanges(before, afterStep, firstStepCorrect ? steps[0].kcIds : []);
-  const inProgress = view.container.querySelector('.feedback-copy p').textContent;
+  const inProgress = view.container.querySelector('.feedback-copy .feedback-summary').textContent;
   assert.match(inProgress, /拆步不改变独立掌握度|独立掌握度.*不变/);
   assert.match(inProgress, /待复测/);
   if (firstStepCorrect) assert.match(inProgress, /辅助练习/);
@@ -809,7 +809,7 @@ for (const { baseForm, correctClass, correctPast } of [
   fireEvent.keyDown(view.getByRole('button', { name: '完成拆步' }), { key: 'Enter' });
   await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
   await assertDiagnosticSummary(view, { updated: true });
-  assert.match(view.container.querySelector('.feedback-copy p').textContent, /已作答\s*4\s*\/\s*4\s*步/);
+  assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /已作答\s*4\s*\/\s*4\s*步/);
   fireEvent.keyDown(view.container.querySelector('.next-button'), { key: 'Enter' });
   await waitFor(() => assert.notEqual(view.container.querySelector('.stage-meta').textContent, originalQuestion));
   assert.doesNotMatch(view.container.textContent, /拆步练习已完成/);
@@ -817,7 +817,7 @@ for (const { baseForm, correctClass, correctPast } of [
 
 test('a save conflict cannot append derived classification probes or claim their evidence', async () => {
   const { view, wrongReading } = await mountDerivedPastProbe('tagaru');
-  const summaryBefore = view.container.querySelector('.feedback-copy p').textContent;
+  const summaryBefore = view.container.querySelector('.feedback-copy .feedback-summary').textContent;
   const footerBefore = view.container.querySelector('.feedback-meta > span').textContent;
   const latest = { ...JSON.parse(storage.getItem(KEY)), attempted: 20, correct: 18 };
   storage.setItem(KEY, JSON.stringify(latest));
@@ -826,7 +826,7 @@ test('a save conflict cannot append derived classification probes or claim their
   await waitFor(() => assert.match(view.getByRole('alert').textContent, /本次操作未保存/));
   assert.deepEqual(JSON.parse(storage.getItem(KEY)), latest);
   assert.match(view.getByRole('region', { name: '拆步练习' }).querySelector('h3').textContent, /第\s*2\s*\/\s*2\s*步/);
-  assert.equal(view.container.querySelector('.feedback-copy p').textContent, summaryBefore);
+  assert.equal(view.container.querySelector('.feedback-copy .feedback-summary').textContent, summaryBefore);
   assert.equal(view.container.querySelector('.feedback-meta > span').textContent, footerBefore);
   assert.equal(Boolean(view.queryByRole('button', { name: '练习下一步' })), false);
   assert.equal(Boolean(view.queryByRole('button', { name: '五段动词' })), false);
@@ -845,7 +845,7 @@ test('skipping appended classification probes keeps their expanded total and sav
   await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
   assertProgressUnchanged(beforeSkip);
   await assertDiagnosticSummary(view, { skipped: true, updated: true });
-  assert.match(view.container.querySelector('.feedback-copy p').textContent, /已作答\s*2\s*\/\s*4\s*步/);
+  assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /已作答\s*2\s*\/\s*4\s*步/);
   assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false);
   assert.equal(view.container.querySelector('.next-button').disabled, false);
 });
@@ -939,9 +939,9 @@ for (const outcome of ['correct', 'ending-error', 'mixed-error']) test(`mixed le
   fireEvent.keyDown(view.getByRole('button', { name: '完成拆步' }), { key: 'Enter' });
   await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: '拆步练习' })), false));
   await assertDiagnosticSummary(view, { updated: true });
-  assert.match(view.container.querySelector('.feedback-copy p').textContent, outcome === 'mixed-error' ? /已作答\s*6\s*\/\s*6\s*步/ : /已作答\s*4\s*\/\s*4\s*步/);
+  assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, outcome === 'mixed-error' ? /已作答\s*6\s*\/\s*6\s*步/ : /已作答\s*4\s*\/\s*4\s*步/);
   const correctSteps = outcome === 'correct' ? 3 : outcome === 'ending-error' ? 1 : 2;
-  assert.match(view.container.querySelector('.feedback-copy p').textContent, new RegExp(`答对\\s*${correctSteps}\\s*步`));
+  assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, new RegExp(`答对\\s*${correctSteps}\\s*步`));
 });
 
 test('diagnostic steps preserve prior hint usage and do not record whole-answer speed', async () => {
@@ -970,7 +970,7 @@ test('diagnostic evidence uses the same cross-tab write protection as ordinary g
   await waitFor(() => assert.match(view.getByRole('alert').textContent, /本次操作未保存/));
   assert.deepEqual(JSON.parse(storage.getItem(KEY)), latest);
   assert.equal(Boolean(view.queryByText(/本步正确，已记录辅助练习/)), false);
-  assert.doesNotMatch(view.container.querySelector('.feedback-copy p').textContent, /掌握度已更新|拆步练习已完成/);
+  assert.doesNotMatch(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /掌握度已更新|拆步练习已完成/);
   assert.doesNotMatch(view.container.querySelector('.feedback-meta > span').textContent, /掌握度已更新|拆步.*已完成/);
   assert.equal(Boolean(view.queryByRole('button', { name: '练习下一步' })), false);
   assert.equal(view.container.querySelector('.practice-controls').disabled, true);
@@ -1327,7 +1327,7 @@ for (const outcome of ['success', 'failure', 'unknown', 'skip', 'hint']) test(`r
   const afterProbe = JSON.parse(storage.getItem(KEY));
   await assertDiagnosticSummary(view, { skipped: outcome === 'skip', updated: outcome !== 'skip' && outcome !== 'unknown' });
   if (outcome === 'skip' || outcome === 'unknown') {
-    assert.match(view.container.querySelector('.feedback-copy p').textContent, /拆步不改变独立掌握度|独立掌握度.*不变|独立掌握度.*未更新/);
+    assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /拆步不改变独立掌握度|独立掌握度.*不变|独立掌握度.*未更新/);
   }
   assert.doesNotMatch(view.container.querySelector('.partial-evidence-note').textContent, /继续单独检查/);
   for (const id of ['adj.stem.i-ku', 'adj.suffix.i-negative', 'adj.class.i']) assert.deepEqual(afterProbe.byKc[id], beforeProbe.byKc[id]);
@@ -1550,7 +1550,7 @@ for (const corrected of [true, false]) test(`whole past collision starts at the 
   assert.equal(original.practiceLog.events.length, 1);
   assert.equal(original.practiceLog.events[0].diagnosis.resolution, 'stage-priority');
   assert.deepEqual(original.practiceLog.events[0].changes, []);
-  assert.match(view.container.querySelector('.feedback-copy p').textContent, /前面的构成步骤未单独检查/);
+  assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /前面的构成步骤未单独检查/);
   const region = view.getByRole('region', { name: '拆步练习' });
   assert.equal(Boolean(view.queryByLabelText('本步答案')), false);
   assert.equal(region.textContent.includes(correct), false);
@@ -1589,7 +1589,7 @@ test('a complete sibling-form error stays pending after its focused practice and
   fireEvent.change(view.getByLabelText('你的答案'), { target: { value: conjugate(item.reading, item.class, 'teiruPast') } });
   fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
   await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 1 / 1 步')));
-  assert.match(view.container.querySelector('.feedback-copy p').textContent, /过去形.*否定形/);
+  assert.match(view.container.querySelector('.feedback-copy .feedback-summary').textContent, /过去形.*否定形/);
   const failed = JSON.parse(storage.getItem(KEY)), pendingKey = Object.keys(failed.assessment.pending)[0];
   assert.equal(Object.keys(failed.assessment.pending).length, 1);
   assert.deepEqual(failed.byKc, initial.byKc);

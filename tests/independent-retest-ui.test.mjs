@@ -841,3 +841,39 @@ test('complete polite negative-past is named on screen and logged without a fals
   assert.match(view.container.querySelector('.feedback-copy').textContent,/礼貌否定过去形.*普通体否定过去形/);
   assert.doesNotMatch(view.container.querySelector('.feedback-copy').textContent,/词干位置/);
 });
+
+for(const ending of ['completed','skipped'])test(`original form identification survives diagnostic ${ending} separately from progress`,async()=>{
+  const initial=profile({practiceGoalCourseId:'voiceCompound'});
+  initial.byKc['apply.causative.continuation']={...stats,attempts:0,correct:0,filteredAccuracy:null,confidence:0,bestConfidence:0};
+  initial.byKc['facet.apply.causative.negativePast']={...stats,attempts:0,correct:0,filteredAccuracy:null,confidence:0,bestConfidence:0};
+  storage.setItem(KEY,JSON.stringify(initial));
+  const view=await mount(),exercise=currentExercise(view);
+  assert.equal(exercise.form,'causativeNegativePast');
+  const input=conjugate(exercise.item.reading,exercise.item.class,'causativePassiveNegativePast');
+  const steps=createAnswerAnalyzer(exercise.item,exercise.form)(input).steps;
+  assert.equal(steps.length,2);
+  submitText(view,input);await waitFor(()=>assert.equal(saved().attempted,1));
+  const assertIdentity=()=>{
+    const text=view.container.querySelector('.feedback-copy').textContent;
+    assert.match(text,/使役受身・否定过去形一致，本题要求使役・否定过去形/);
+  };
+  assertIdentity();
+  if(ending==='completed')for(const [index,step] of steps.entries()){
+    const count=saved().practiceLog.totalEvents,field=view.getByLabelText('本步答案');
+    fireEvent.change(field,{target:{value:step.readings[0]}});fireEvent.submit(field.closest('form'));
+    await waitFor(()=>assert.equal(saved().practiceLog.totalEvents,count+1));
+    assertIdentity();
+    assert.match(view.container.querySelector('.feedback-summary').textContent,new RegExp(`已作答 ${index+1} / 2`));
+    fireEvent.click(view.container.querySelector('[data-diagnostic-next]'));
+    await waitFor(()=>assert.equal(Boolean(view.container.querySelector('[data-diagnostic-next]')),false));
+  }
+  else fireEvent.click(view.getByRole('button',{name:'跳过剩余拆步，查看解析'}));
+  await waitFor(()=>assert.equal(Boolean(view.queryByRole('region',{name:'拆步练习'})),false));
+  assertIdentity();
+  const identification=view.container.querySelector('.original-form-identification').textContent;
+  assert.doesNotMatch(identification,/下面检查|本次不据此/);
+  assert.match(view.container.querySelector('.feedback-summary').textContent,ending==='completed'?/拆步练习已完成/:/已跳过/);
+  assert.deepEqual(saved().byKc,initial.byKc);
+  await next(view);
+  assert.equal(view.container.querySelector('.original-form-identification'),null);
+});
