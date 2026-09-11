@@ -145,25 +145,15 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .quiet-button { justify-self: end; border: 0; padding: 7px 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; }
 .quiet-button:hover { color: var(--ink); }
 
-.focus-panel {
-  width: min(900px, 100%); margin: 18px auto -6px; padding: 14px 18px;
-  display: grid; grid-template-columns: minmax(0, 1fr) 140px 36px; gap: 14px; align-items: center;
-  border: 1px solid #d8d3c8; border-radius: 7px; background: rgba(250,248,242,.62);
-}
-.focus-panel div:first-child { min-width: 0; }
-.focus-panel div:first-child span, .focus-panel div:first-child strong { display: block; }
-.focus-panel div:first-child span { color: var(--red); font-size: 11px; font-weight: 750; letter-spacing: .1em; }
-.focus-panel div:first-child strong { margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
-.focus-panel > b { text-align: right; font-size: 13px; font-variant-numeric: tabular-nums; }
-.confidence-meter { height: 5px; overflow: hidden; border-radius: 5px; background: #ddd8cc; }
-.confidence-meter span { display: block; height: 100%; border-radius: inherit; background: var(--red); transition: width .3s ease; }
+.practice-notice { margin: 10px 0 0; padding: 7px 10px; border-left: 2px solid var(--red); background: rgba(250,248,242,.6); color: var(--muted); font-size: 12px; }
+.practice-notice strong { margin-right: 10px; color: var(--red-dark); }
 
 .exercise-card {
   width: min(900px, 100%); margin: clamp(22px, 3.5vh, 34px) auto 0; padding: clamp(32px, 4vw, 48px);
   background: rgba(250, 248, 242, .94); border: 1px solid #dedad0; border-radius: 5px;
   box-shadow: 0 22px 70px rgba(49, 45, 36, .075); animation: card-in .25s ease-out both;
 }
-.question-kicker { display: flex; gap: 8px; }
+.question-kicker { display: flex; flex-wrap: wrap; gap: 8px; }
 .question-kicker span { padding: 6px 10px; background: #ebe7dd; color: #666c65; border-radius: 4px; font-size: 12px; font-weight: 650; letter-spacing: .04em; }
 .instruction { margin: 27px 0 7px; color: var(--muted); font-size: 16px; font-weight: 500; letter-spacing: .01em; }
 .instruction strong { color: var(--ink); font-weight: 850; }
@@ -362,12 +352,34 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes drawer-in { from { transform: translateX(18px); } to { transform: translateX(0); } }
 
-@media (max-height: 760px) and (min-width: 761px) {
-  .lesson-rail { padding-top: 24px; }
-  .mode-list { margin-top: 14px; }
-  .rail-note { margin-top: 35px; }
-  .exercise-card { margin-top: 20px; }
+/* Compact laptops, including a short viewport at larger screen widths. */
+@media (min-width: 761px) and (max-height: 900px), (min-width: 761px) and (max-width: 1280px) {
+  .topbar { height: 60px; padding-inline: 24px; }
+  .practice-layout { width: calc(100% - 32px); grid-template-columns: clamp(220px, 23vw, 280px) minmax(0, 1fr); min-height: calc(100vh - 61px); }
+  .lesson-rail { padding: 18px 16px 24px 0; }
+  .lesson-rail h1 { font-size: 25px; }
+  .eyebrow { font-size: 11px; }
+  .domain-switch { margin-top: 12px; }
+  .domain-switch button { padding: 8px 4px; }
+  .adaptive-entry { padding: 11px; }
+  .mode-list { margin-top: 12px; }
+  .mode-list button { grid-template-columns: 28px minmax(0, 1fr) auto; padding: 9px 5px; gap: 5px; }
+  .mode-list button .course-name { font-size: 13px; }
+  .rail-note { margin-top: 24px; }
+  .exercise-stage { padding: 14px 0 20px 20px; }
+  .exercise-card { margin-top: 14px; padding: 22px 24px; }
+  .question-kicker span { padding: 4px 8px; font-size: 11px; }
+  .instruction { margin-top: 14px; }
+  .word-display { min-height: 88px; font-size: clamp(48px, 8vh, 64px); line-height: 1.35; gap: 14px; flex-wrap: wrap; }
+  .word-display rt { font-size: 12px; }
+  .exercise-card form { margin-top: 14px; }
+  .answer-row input { padding: 12px 14px; font-size: 20px; }
+  .answer-row button { min-width: 100px; }
+  .feedback { margin-top: 14px; padding: 14px 16px; }
+  .exercise-card.has-result .word-display { min-height: 68px; font-size: 48px; }
 }
+
+.feedback, .diagnostic-practice, .exercise-card { scroll-margin-top: 16px; }
 
 @media (max-width: 760px) {
   .topbar { height: 74px; padding-inline: 20px; }
@@ -386,7 +398,6 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
   .exercise-stage { order: 1; padding: 18px 0 20px; min-height: 600px; }
   .adaptive-entry { max-width: 420px; }
   .progress-trigger { max-width: 420px; }
-  .focus-panel { margin-top: 18px; grid-template-columns: 1fr 70px 34px; }
   .stage-meta { grid-template-columns: auto 1fr; }
   .quiet-button { display: none; }
   .exercise-card { margin-top: 20px; }

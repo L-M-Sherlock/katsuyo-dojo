@@ -430,7 +430,7 @@ test('independent page shows count-only singleton retests and keeps unrelated co
   storage.setItem(KEY, JSON.stringify(profile({ assessment })));
   view = await mount();
   assert.equal(currentExercise(view).id, iku.id);
-  assert.match(view.container.querySelector('.focus-panel').textContent, /独立复测/);
+  assert.match(view.container.querySelector('.practice-notice').textContent, /独立复测/);
   await answerCorrect(view);
   assert.equal(saved().assessment.pending[key], undefined);
   assert.equal(saved().practiceLog.events.at(-1).assessment.eligibility.policy, 'single-word-spaced');
@@ -469,8 +469,8 @@ test('independent page reaches a qualified retest in the real two-word いい fa
   const initial = profile({ assessment }); storage.setItem(KEY, JSON.stringify(initial));
   const view = await mount();
   assert.equal(currentExercise(view).id, good.id);
-  assert.match(view.container.querySelector('.focus-panel').textContent, /巩固练习/);
-  assert.match(view.container.querySelector('.focus-panel').textContent, /不计独立掌握/);
+  assert.match(view.container.querySelector('.practice-notice').textContent, /巩固练习/);
+  assert.match(view.container.querySelector('.practice-notice').textContent, /不计独立掌握/);
   await answerCorrect(view);
   assert.ok(saved().assessment.pending[key]);
   assert.deepEqual(saved().byKc, initial.byKc);
@@ -482,7 +482,7 @@ test('independent page reaches a qualified retest in the real two-word いい fa
     await answerCorrect(view); await next(view);
   }
   assert.equal(currentExercise(view).id, cool.id);
-  assert.match(view.container.querySelector('.focus-panel').textContent, /独立复测/);
+  assert.match(view.container.querySelector('.practice-notice').textContent, /独立复测/);
   await answerCorrect(view);
   assert.equal(saved().assessment.pending[key], undefined);
   assert.equal(saved().assessment.byTarget[key].eligibleRetestCorrect, 1);
@@ -550,12 +550,12 @@ for (const mode of ['adaptive', 'giving']) test(`giving recovery in ${mode} uses
   let resumed = false;
   assert.equal(status().mastered, 18);
   for (let i = 0; i < 24 && !status().complete; i++) {
-    assert.match(view.container.querySelector('.focus-panel strong').textContent, /授受表达/);
+    assert.match(view.container.querySelector('.current-course-name').textContent, /授受表达/);
     const exercise = currentExercise(view);
     seen.push(exercise);
     if (exercise.form === null) {
-      assert.match(view.container.querySelector('.focus-panel').textContent, /补基础/);
-      assert.doesNotMatch(view.container.querySelector('.focus-panel').textContent, /一段动词|五段动词|不规则动词/, 'the independent classification answer must not be disclosed');
+      assert.match(view.container.querySelector('.practice-notice').textContent, /补基础/);
+      assert.doesNotMatch(view.container.querySelector('.practice-notice').textContent, /一段动词|五段动词|不规则动词/, 'the independent classification answer must not be disclosed');
       assert.ok(['ichidan','i'].includes(exercise.item.class));
     }
     await answerCorrect(view);
@@ -563,7 +563,7 @@ for (const mode of ['adaptive', 'giving']) test(`giving recovery in ${mode} uses
     if (mode === 'adaptive' && !resumed && saved().byKc['apply.tekureru.continuation']?.confidence === 1) {
       assert.equal(saved().practiceGoalCourseId, 'giving');
       cleanup(); view = await mount(); resumed = true;
-      assert.match(view.container.querySelector('.focus-panel strong').textContent, /授受表达/);
+      assert.match(view.container.querySelector('.current-course-name').textContent, /授受表达/);
       continue;
     }
     fireEvent.click(view.container.querySelector('.next-button'));
@@ -598,8 +598,8 @@ test('a genuine cross-course classification regression is scheduled before the r
   for (let i = 0; i < 2; i++) {
     const e = currentExercise(view);
     assert.equal(e.courseId, 'adjectiveClassify'); assert.equal(e.form, null);
-    assert.match(view.container.querySelector('.focus-panel').textContent, /之前退步/);
-    assert.doesNotMatch(view.container.querySelector('.focus-panel').textContent, /い形容词|な形容词/);
+    assert.match(view.container.querySelector('.practice-notice').textContent, /之前退步/);
+    assert.doesNotMatch(view.container.querySelector('.practice-notice').textContent, /い形容词|な形容词/);
     await answerCorrect(view); await next(view);
   }
   assert.equal(saved().byKc['adj.class.i'].confidence, 1);
@@ -747,7 +747,7 @@ test('voice continuation skills belong to the voice application course and exist
   initial.byKc['apply.potential.continuation'] = {...stats, attempts:0, correct:0, confidence:0, bestConfidence:0, filteredAccuracy:null};
   storage.setItem(KEY,JSON.stringify(initial));
   const view = await mount();
-  assert.equal(view.container.querySelector('.focus-panel strong').textContent,'可能与态的后续活用');
+  assert.equal(view.container.querySelector('.current-course-name').textContent,'可能与态的后续活用');
   assert.equal(view.container.querySelector('.completion-card'),null);
   assert.equal(currentExercise(view).courseId,'voiceCompound');
   await answerCorrect(view);
@@ -763,7 +763,7 @@ test('after masu completion adaptive resumes partially learned adjectives before
   const view=await mount();
   assert.equal(currentExercise(view).courseId,'adjectiveClassify');
   assert.equal(currentExercise(view).item.class,'i');
-  assert.match(view.container.querySelector('.focus-panel').textContent,/形容词分类/);
+  assert.match(view.container.querySelector('.current-course-name').textContent,/形容词分类/);
   await answerCorrect(view);await next(view);
   assert.equal(currentExercise(view).courseId,'adjectiveClassify');
   assert.equal(saved().byKc['stem.godan.a'].attempts,0);

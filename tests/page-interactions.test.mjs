@@ -235,7 +235,7 @@ test('a completed route plays twelve questions and rotates to another course', a
   complete.coursePractice.voiceCompound = KNOWLEDGE.exercises.filter(e=>e.courseId==='voiceCompound').slice(0,12).map(exerciseKey);
   storage.setItem(KEY, JSON.stringify(complete));
   const view = await mount();
-  const initialCourse = view.container.querySelector('.focus-panel strong').textContent;
+  const initialCourse = view.container.querySelector('.current-course-name').textContent;
   assert.ok(view.getByText('巩固训练'));
   const words = new Set();
   for (let i = 0; i < 12; i++) {
@@ -248,7 +248,7 @@ test('a completed route plays twelve questions and rotates to another course', a
   assert.ok(view.getByText('本轮完成'));
   fireEvent.click(view.getByRole('button', { name: /继续下一轮/ }));
   await waitFor(() => assert.ok(view.getByText('巩固训练')));
-  assert.notEqual(view.container.querySelector('.focus-panel strong').textContent, initialCourse);
+  assert.notEqual(view.container.querySelector('.current-course-name').textContent, initialCourse);
 });
 
 test('revealing in review creates a pending retest and the next round starts with spacing instead of fabricated mastery loss', async () => {
@@ -265,7 +265,7 @@ test('revealing in review creates a pending retest and the next round starts wit
   fireEvent.click(view.getByRole('button', { name: '结束本轮' }));
   await waitFor(() => assert.ok(view.getByText('本轮完成')));
   fireEvent.click(view.getByRole('button', { name: /继续下一轮/ }));
-  await waitFor(() => assert.match(view.container.querySelector('.focus-panel').textContent, /间隔练习/));
+  await waitFor(() => assert.match(view.container.querySelector('.practice-notice').textContent, /间隔练习/));
   assert.deepEqual(JSON.parse(storage.getItem(KEY)).assessment.pending, revealed.assessment.pending);
 });
 
@@ -274,7 +274,7 @@ test('compound review varies words across forms and saved history survives start
   let view = await mount();
   const startPotential = async () => {
     fireEvent.click([...view.container.querySelectorAll('.mode-list button')].find(button => button.textContent.includes('可能形')));
-    await waitFor(() => assert.match(view.container.querySelector('.focus-panel strong').textContent, /可能形/));
+    await waitFor(() => assert.match(view.container.querySelector('.current-course-name').textContent, /可能形/));
   };
   await startPotential();
   const seen = [];
@@ -1103,12 +1103,12 @@ test('historically accessible compound courses recover new shared prerequisites 
   const button = [...view.container.querySelectorAll('.mode-list button')].find(b => b.textContent.includes('多种表达的组合活用'));
   assert.equal(button.disabled, false);
   fireEvent.click(button);
-  await waitFor(() => assert.match(view.container.querySelector('.focus-panel').textContent, /补基础/));
-  assert.match(view.container.querySelector('.focus-panel strong').textContent, /多种表达的组合活用/);
+  await waitFor(() => assert.match(view.container.querySelector('.practice-notice').textContent, /补基础/));
+  assert.match(view.container.querySelector('.current-course-name').textContent, /多种表达的组合活用/);
   assert.ok(view.container.querySelector('#answer'));
   for (let i = 0; i < 8 && displayedExercise(view).form !== 'passiveDesireNegativePast'; i++) {
     if (i === 0) assert.ok(displayedExercise(view).kcIds.includes('adj.suffix.i-past'));
-    assert.match(view.container.querySelector('.focus-panel strong').textContent, /多种表达的组合活用/);
+    assert.match(view.container.querySelector('.current-course-name').textContent, /多种表达的组合活用/);
     await answerDisplayedCorrectly(view);
     await next(view);
     if (view.container.querySelector('.completion-card')) {
@@ -1126,7 +1126,7 @@ test('the mastered voice application course remains available in review rotation
   saved.rotation = 15;
   storage.setItem(KEY, JSON.stringify(saved));
   const view = await mount();
-  assert.match(view.container.querySelector('.focus-panel').textContent, /態|态|复合/);
+  assert.match(view.container.querySelector('.current-course-name').textContent, /態|态|复合/);
   assert.match(view.container.querySelector('.mode-list button:nth-child(16)').textContent, /已达标/);
   assert.ok(view.getByText('巩固训练'));
 });
@@ -1609,7 +1609,7 @@ test('a complete sibling-form error stays pending after its focused practice and
   await assertDiagnosticSummary(view, { updated: true });
   await next(view);
   for (let index = 0; index < 2; index++) {
-    assert.match(view.container.querySelector('.focus-panel').textContent, /间隔练习/);
+    assert.match(view.container.querySelector('.practice-notice').textContent, /间隔练习/);
     assert.ok(JSON.parse(storage.getItem(KEY)).assessment.pending[pendingKey]);
     await answerDisplayedCorrectly(view);
     const spaced = JSON.parse(storage.getItem(KEY)), event = spaced.practiceLog.events.at(-1);
@@ -1618,7 +1618,7 @@ test('a complete sibling-form error stays pending after its focused practice and
     assert.equal(spaced.assessment.originalCount, index + 2);
     await next(view);
   }
-  assert.match(view.container.querySelector('.focus-panel').textContent, /独立复测/);
+  assert.match(view.container.querySelector('.practice-notice').textContent, /独立复测/);
   const retest = displayedExercise(view);
   assert.equal(retest.form, form);
   assert.notEqual(retest.item.reading, item.reading, 'another spelling of the same word is insufficient');
@@ -1660,12 +1660,12 @@ test('v7 export and UI import preserve assisted records, pending retests and log
   } finally { window.confirm = oldConfirm; }
   const imported = JSON.parse(storage.getItem(KEY));
   assert.deepEqual(imported.byKc, saved.byKc); assert.deepEqual(imported.practiceLog, saved.practiceLog);
-  assert.match(fresh.container.querySelector('.focus-panel').textContent, /间隔练习/);
+  assert.match(fresh.container.querySelector('.practice-notice').textContent, /间隔练习/);
   cleanup();
   const reloaded = await mount();
   assert.deepEqual(JSON.parse(storage.getItem(KEY)).assessment, saved.assessment);
   assert.deepEqual(JSON.parse(storage.getItem(KEY)).practiceLog, saved.practiceLog);
-  assert.match(reloaded.container.querySelector('.focus-panel').textContent, /间隔练习/);
+  assert.match(reloaded.container.querySelector('.practice-notice').textContent, /间隔练习/);
 });
 
 test('opening a hint without submitting persists exposure and pending status across reload', async () => {
@@ -1684,7 +1684,7 @@ test('opening a hint without submitting persists exposure and pending status acr
   cleanup();
   const reloaded = await mount();
   assert.deepEqual(JSON.parse(storage.getItem(KEY)).assessment.pending, hinted.assessment.pending);
-  assert.match(reloaded.container.querySelector('.focus-panel').textContent, /间隔练习/);
+  assert.match(reloaded.container.querySelector('.practice-notice').textContent, /间隔练习/);
   assert.equal(Boolean(reloaded.queryByText('收起提示')), false);
   await answerDisplayedCorrectly(reloaded);
   const saved = JSON.parse(storage.getItem(KEY));
@@ -1692,4 +1692,30 @@ test('opening a hint without submitting persists exposure and pending status acr
   assert.equal(saved.assessment.originalCount, 1);
   assert.notEqual(saved.practiceLog.events.at(-1).assessment.targetKey, pendingKey);
   assert.equal(saved.assessment.byTarget[pendingKey]?.eligibleRetestCorrect ?? 0, 0);
+});
+
+for (const offscreen of [true,false]) test(`feedback is brought into view only when needed (${offscreen}) without moving keyboard focus`, async()=>{
+  const rect=dom.window.HTMLElement.prototype.getBoundingClientRect;
+  const scroll=dom.window.HTMLElement.prototype.scrollIntoView;
+  const calls=[];
+  dom.window.HTMLElement.prototype.getBoundingClientRect=function(){
+    if(this.classList.contains('feedback'))return {top:offscreen?700:100,bottom:offscreen?1000:400,height:300,left:0,right:800,width:800,x:0,y:0,toJSON(){return {};}};
+    return rect.call(this);
+  };
+  dom.window.HTMLElement.prototype.scrollIntoView=function(options){calls.push({element:this,options});};
+  try {
+    const view=await mount();
+    assert.equal(view.container.querySelector('.focus-panel'),null);
+    assert.ok(view.container.querySelector('.current-course-name'));
+    await classifyCorrect(view);
+    await act(async()=>{await new Promise(resolve=>requestAnimationFrame(resolve));});
+    const feedback=view.container.querySelector('.feedback');
+    assert.equal(calls.filter(call=>call.element===feedback).length,Number(offscreen));
+    if(offscreen)assert.equal(calls.find(call=>call.element===feedback).options.block,'nearest');
+    assert.equal(JSON.parse(storage.getItem(KEY)).attempted,1);
+    assert.equal(document.activeElement===view.container.querySelector('.next-button'),false);
+  } finally {
+    dom.window.HTMLElement.prototype.getBoundingClientRect=rect;
+    if(scroll)dom.window.HTMLElement.prototype.scrollIntoView=scroll;else delete dom.window.HTMLElement.prototype.scrollIntoView;
+  }
 });
