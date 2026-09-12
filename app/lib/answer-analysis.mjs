@@ -1,4 +1,4 @@
-import { recognizeForms, recognizedFormLabel } from './form-recognition.mjs';
+import { recognizeForms, recognizedFormLabel, recognizedFormsIdentification } from './form-recognition.mjs';
 import { matchAcceptedAnswer } from './answer-variants.mjs';
 import { hasLexicalTypo } from './lexical-typo.mjs';
 import { deriveUnified, diagnoseUnified, diagnoseUnifiedStep, unifiedDiagnosticSteps, unifiedStepDiagnosticSteps, diagnoseUnifiedStepReview } from './unified-knowledge.mjs';
@@ -42,7 +42,7 @@ export function createAnswerAnalyzer(item, form, options = {}) {
     }
     const canRecognize = !step?.kind || step.kind === 'conjugation';
     const tailClass = ({tearu:'aru',teiku:'iku',tekuru:'kuru',youtosuru:'irregular'})[step?.reviewContext?.family?.form];
-    const recognitionItem = tailClass ? {...item,tailClass} : item;
+    const recognitionItem = {...item,...(tailClass?{tailClass}:{}),...(step?.analysisItem?{usageOrigin:'derived'}:{})};
     const recognizedForms = canRecognize ? recognizeForms(recognitionItem,answer,normalize).filter(match=>match.form!==form) : [];
     // A correctly completed prefix retains its existing, scoped follow-up.
     // Otherwise a complete supported form must not be blamed on a local rule.
@@ -71,13 +71,12 @@ export function createAnswerAnalyzer(item, form, options = {}) {
     }
     const feedback=diagnosticFeedback({item,answer,diagnosis,steps,plan:!diagnosis?getPlan():plan,step,normalize});
     if(recognizedForms.length && !inPath) {
-      const labels=[...new Set(recognizedForms.map(match=>match.label))].join('／');
       const target=step?.targetLabel??recognizedFormLabel(item,form);
-      const identification=`你的答案与${labels}一致，本题要求${target}。`;
+      const identification=recognizedFormsIdentification(item,recognizedForms,target);
       if(!diagnosis?.message&&!steps[0]?.probeSelection) {
         feedback.message=identification+(steps.length?'本次不据此扣除具体知识点的掌握度；下面检查本题要求的变化。':'本次不据此扣除具体知识点的掌握度，请对照本题解析核对形式。');
         feedback.resolution='target-form';feedback.observations=[];
-      } else if (!diagnosis?.message || !recognizedForms.every(match=>diagnosis.message.includes(match.label))) feedback.message=identification+feedback.message;
+      } else if (!diagnosis?.message || !recognizedForms.every(match=>match.usage?.status==='allowed'&&diagnosis.message.includes(match.label))) feedback.message=identification+feedback.message;
     }
 
     return {kind:'incorrect',match,diagnosis,recognizedForms,steps,feedback,planFallback};

@@ -1,4 +1,4 @@
-import { filterReadyExercises, isComponentMastered } from './adaptive.mjs';
+import { adaptiveConstants, filterReadyExercises, isComponentMastered } from './adaptive.mjs';
 import { assignPracticeExercises } from './exercise-selection.mjs';
 import { isSourceClassification } from './learning-evidence.mjs';
 import { planPractice } from './practice-session.mjs';
@@ -20,6 +20,23 @@ export function createPracticePlanner(model) {
     if (!pools.has(key)) pools.set(key, []);
     pools.get(key).push(exercise);
   }
+  // Match the evidence that an independent correct answer can actually supply:
+  // conjugating a word does not independently demonstrate source classification.
+  function hasLearningOpportunity(exercise, profile) {
+    return exercise.kcIds.some(id => {
+      const kc = byId.get(id);
+      if (!kc?.gating || isComponentMastered(kc, profile.byKc)
+        || (exercise.form != null && isSourceClassification(id))) return false;
+      const stats = profile.byKc[id];
+      const missingCoverage = (kc.coverageKcIds ?? []).some(facet => exercise.kcIds.includes(facet) && !(profile.byKc[facet]?.correct >= 1));
+      // A parent waiting only for a particular facet cannot be advanced by
+      // ordinary examples that omit that facet, even though it is not mastered.
+      const needsPerformance = kc.coverageOnly
+        ? stats?.filteredAccuracy != null && stats.filteredAccuracy < adaptiveConstants.accuracyTarget
+        : (stats?.confidence ?? 0) < 1;
+      return needsPerformance || missingCoverage;
+    });
+  }
   const courseComponents = id => (model.courseKcIds[id] ?? []).map(id => byId.get(id)).filter(kc => kc !== undefined);
   function candidatesFor(kc, profile, goalCourseId = kc.firstCourseId) {
     const ready = courseId => filterReadyExercises(pools.get(`${courseId}:${kc.id}`) ?? [], kc.id, model.components, profile.byKc);
@@ -39,7 +56,7 @@ export function createPracticePlanner(model) {
   }
   /** @param {ReturnType<typeof plan>} planned @param {any} profile @param {{seed?: number, usedKeys?: string[], usedWordKeys?: string[]}} options */
   function assign(planned, profile, { seed = 0, usedKeys = [], usedWordKeys = [] } = {}) {
-    return assignPracticeExercises(planned.plan, { seed: seed + profile.rotation, byKc: profile.byKc,
+    return assignPracticeExercises(planned.plan, { allowReview: item => isComponentMastered(item, profile.byKc), isUseful: planned.review ? undefined : candidate => hasLearningOpportunity(candidate, profile), seed: seed + profile.rotation, byKc: profile.byKc,
       recentWordKeys: profile.recentWordKeys,
       usedKeys: planned.review ? [...new Set([...usedKeys, ...(profile.coursePractice?.[planned.goalCourseId] ?? [])])] : usedKeys,
       usedWordKeys,
@@ -49,5 +66,5 @@ export function createPracticePlanner(model) {
       },
       candidatesFor: kc => candidatesFor(kc, profile, planned.goalCourseId) });
   }
-  return { plan, assign, candidatesFor, courseComponents };
+  return { plan, assign, candidatesFor, courseComponents, hasLearningOpportunity };
 }

@@ -855,7 +855,8 @@ for(const ending of ['completed','skipped'])test(`original form identification s
   submitText(view,input);await waitFor(()=>assert.equal(saved().attempted,1));
   const assertIdentity=()=>{
     const text=view.container.querySelector('.feedback-copy').textContent;
-    assert.match(text,/使役受身・否定过去形一致，本题要求使役・否定过去形/);
+    assert.match(text,/使役受身・否定过去形(?:一致)?，本题要求使役・否定过去形/);
+    if(exercise.context) assert.match(text,/实际使用需要合适的语境/);
   };
   assertIdentity();
   if(ending==='completed')for(const [index,step] of steps.entries()){
@@ -876,4 +877,51 @@ for(const ending of ['completed','skipped'])test(`original form identification s
   assert.deepEqual(saved().byKc,initial.byKc);
   await next(view);
   assert.equal(view.container.querySelector('.original-form-identification'),null);
+});
+
+
+test('a two-word recovery ends its short round with accurate progress and no mastered filler', async () => {
+  const initial = profile({ practiceGoalCourseId: 'masu' });
+  initial.byKc['stem.irregular.connective'] = { ...stats, attempts: 1, correct: 0, filteredAccuracy: 0, confidence: 0 };
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount(), words = [];
+  for (let i = 0; i < 2; i++) {
+    assert.match(view.container.querySelector('.stage-meta').textContent, new RegExp(`第 ${i + 1} 题 / 2`));
+    const current = currentExercise(view);
+    assert.equal(current.form, 'masu');
+    assert.ok(['する', '来る'].includes(current.item.surface));
+    words.push(current.item.surface);
+    await answerCorrect(view);
+    await next(view);
+  }
+  assert.equal(new Set(words).size, 2);
+  assert.ok(view.container.querySelector('.completion-card'));
+  assert.match(view.container.querySelector('.score').textContent, /2\s*\/ 2/);
+  assert.equal(saved().attempted, 2);
+  assert.equal(saved().byKc['stem.irregular.connective'].confidence < 1, true);
+  const snapshot = structuredClone(saved());
+  fireEvent.click(view.container.querySelector('.restart-button'));
+  await waitFor(() => assert.ok(view.container.querySelector('.exercise-card')));
+  assert.ok(['する', '来る'].includes(currentExercise(view).item.surface));
+  assert.deepEqual(saved().byKc, snapshot.byKc, 'starting another short round does not award mastery');
+});
+
+test('a hint in a short recovery still schedules two real intervening originals before retesting', async () => {
+  const initial = profile({ practiceGoalCourseId: 'masu' });
+  initial.byKc['stem.irregular.connective'] = { ...stats, attempts: 1, correct: 0, filteredAccuracy: 0, confidence: 0 };
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount(), first = currentExercise(view), key = assessmentTarget(first).key;
+  fireEvent.click(view.getByRole('button', { name: '看一条提示' }));
+  await waitFor(() => assert.ok(saved().assessment.pending[key]));
+  await answerCorrect(view);
+  await next(view);
+  for (let i = 0; i < 2; i++) {
+    assert.notEqual(assessmentTarget(currentExercise(view)).key, key);
+    assert.ok(saved().assessment.pending[key]);
+    await answerCorrect(view);
+    await next(view);
+  }
+  assert.equal(assessmentTarget(currentExercise(view)).key, key);
+  await answerCorrect(view);
+  assert.equal(saved().assessment.pending[key], undefined);
 });

@@ -2,7 +2,7 @@ import { UNIFIED_COURSES } from './unified-curriculum.mjs';
 import { acceptedConjugations } from './conjugation.mjs';
 import { acceptedAdjectiveConjugations, adjectiveTargetLabel } from './adjective-conjugation.mjs';
 import { FORM_LABELS } from './form-labels.mjs';
-import { eligibleVerbForm } from './form-eligibility.mjs';
+import { supportsVerbForm, assessFormUsage } from './form-eligibility.mjs';
 
 const byDomain = Object.fromEntries(['verb','adjective'].map(domain=>[domain,
   [...new Set(UNIFIED_COURSES.filter(course=>course.domain===domain).flatMap(course=>course.forms))]]));
@@ -12,11 +12,44 @@ const indexes = new WeakMap();
 export function recognizableForms(item) {
   return (byDomain[item.domain]??[]).filter(form => {
     if(item.domain==='adjective')return bothAdjectives.has(form)||(item.class==='na'?naForms.has(form):!naForms.has(form));
-    return eligibleVerbForm({...item,surface:item.lexicalSurface??item.surface},form);
+    return supportsVerbForm({...item,surface:item.lexicalSurface??item.surface},form);
   });
 }
 export function recognizedFormLabel(item, form) {
   return item.domain==='adjective' ? adjectiveTargetLabel(item,form) : FORM_LABELS[form];
+}
+
+// Recognition describes the submitted structure; it does not establish that
+// the expression fits the lemma's reviewed sense or an unspecified situation.
+// Share this copy with the page so the qualification survives guided practice.
+export function recognizedFormsIdentification(item, matches, target) {
+  if(!matches?.length)return '';
+  const labels=[...new Set(matches.map(match=>match.label??recognizedFormLabel(item,match.form)))].join('／');
+  const qualified=matches.some(match=>match.usage&&match.usage.status!=='allowed');
+  const identification=qualified
+    ? `从构形上看，你的答案对应${labels}，本题要求${target}。`
+    : `你的答案与${labels}一致，本题要求${target}。`;
+  const notes=[];
+  for(const match of matches) {
+    const usage=match.usage;
+    if(!usage||usage.status==='allowed')continue;
+    const reason=usage.reason?.replace(/[。；;]+$/u,'');
+    const qualification=usage.reasonCode==='unreviewed-lexeme'?'实际用法尚未确认'
+      :usage.status==='context-required'?'实际使用需要合适的语境':'不适合这里给定的词义';
+    const note=`${match.label}${qualification}${reason?`：${reason}`:''}。`;
+    if(!notes.includes(note))notes.push(note);
+  }
+  return identification+notes.join('');
+}
+
+function recognizedUsage(item, form) {
+  const usage=assessFormUsage(item,form);
+  if(usage.reasonCode!=='unreviewed-lexeme'||(!item.tailClass&&item.usageOrigin!=='derived'))return usage;
+  return {
+    status:'context-required',category:'context',reviewVersion:usage.reviewVersion,
+    reasonCode:'derived-expression',
+    reason:'这是给定中间形式的后续变化，实际用法需要结合整题语境判断。',
+  };
 }
 function verbVariants(item, word, form) {
   const kind=item.tailClass;
@@ -52,5 +85,7 @@ export function recognizeForms(item, answer, normalize) {
     cache.set(key,index);
     if(cache.size>128)cache.delete(cache.keys().next().value);
   }
-  return [...(index.get(normalize(answer))??[])].map(form=>({form,label:recognizedFormLabel(item,form)}));
+  return [...(index.get(normalize(answer))??[])].map(form=>({
+    form,label:recognizedFormLabel(item,form),usage:recognizedUsage(item,form),
+  }));
 }

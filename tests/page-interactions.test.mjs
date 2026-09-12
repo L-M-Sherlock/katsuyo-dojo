@@ -10,7 +10,7 @@ import { COMPOUND_FORM_LABELS, COMPOUND_FORM_SPECS } from '../app/lib/compound-f
 import { unifiedDiagnosticSteps as buildDiagnosticSteps } from '../app/lib/unified-knowledge.mjs';
 import { emptySkillStats } from '../app/lib/adaptive.mjs';
 import { emptyPracticeLog } from '../app/lib/practice-log.mjs';
-import { emptyAssessment } from '../app/lib/learning-assessment.mjs';
+import { assessmentTarget, emptyAssessment, recordIndependentAttempt } from '../app/lib/learning-assessment.mjs';
 import { CURRICULUM_VERSION } from '../app/lib/unified-curriculum.mjs';
 import { wordKey } from '../app/lib/exercise-selection.mjs';
 
@@ -282,11 +282,9 @@ test('compound review varies words across forms and saved history survives start
     const surface = view.container.querySelector('.word-display ruby').firstChild.textContent;
     assert.ok(!seen.includes(`verb:${surface}`), `repeated ${surface} in a twelve-question round`);
     seen.push(`verb:${surface}`);
-    fireEvent.change(view.getByLabelText('你的答案'), { target: { value: view.container.querySelector('.word-display rt').textContent } });
-    // Reveal to exercise the original-question path without coupling this test
-    // to a particular form. It must still add exactly one history entry.
-    fireEvent.click(view.getByRole('button', { name: '不知道' }));
-    await waitFor(() => assert.ok(view.getByText('记住这个变化')));
+    // Keep this a normal review: revealing する legitimately creates a
+    // singleton-rule retest after two other questions, which may reuse it.
+    await answerDisplayedCorrectly(view);
     assert.deepEqual(JSON.parse(storage.getItem(KEY)).recentWordKeys, seen);
     await next(view);
   }
@@ -308,6 +306,38 @@ test('a legacy adjective preference does not create a separate adaptive route', 
   assert.equal(view.getByRole('tab', { name: '全部课程' }).getAttribute('aria-selected'), 'true');
   await classifyCorrect(view);
   assert.ok(JSON.parse(storage.getItem(KEY)).introducedKcIds.includes('class.godan'));
+});
+
+test('reviewed question context is visible before hints and remains independent evidence in the saved log', async () => {
+  const exercise = KNOWLEDGE.exercises.find(candidate => candidate.item.surface === '来る' && candidate.form === 'passive');
+  assert.ok(exercise?.context, 'the visitor situation must accompany the intransitive passive');
+  const initial = masteredProfile();
+  initial.assessment = recordIndependentAttempt(initial.assessment, { exercise, questionId: 'context-failure', correct: false });
+  const fillers = KNOWLEDGE.exercises.filter(candidate => candidate.form === null).slice(0, 2);
+  for (const [index, filler] of fillers.entries()) {
+    initial.assessment = recordIndependentAttempt(initial.assessment, { exercise: filler, questionId: `context-filler-${index}`, correct: true });
+  }
+  initial.attempted = 3; initial.correct = 2; initial.streak = 2;
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  const shown = displayedExercise(view);
+  assert.equal(shown.id, exercise.id);
+  assert.equal(view.container.querySelector('.exercise-context').textContent, `语境${exercise.context.text}`);
+  assert.ok(view.getByRole('button', { name: '看一条提示' }));
+  assert.equal(JSON.parse(storage.getItem(KEY)).practiceLog.events.length, 0, 'rendering the question is not hint exposure');
+
+  const anotherContext = { ...exercise, context: { ...exercise.context, id: 'another-reviewed-context', text: '谈论访客与家人的安排。' } };
+  assert.equal(wordKey(anotherContext), wordKey(exercise));
+  assert.deepEqual(assessmentTarget(anotherContext), assessmentTarget(exercise), 'context cannot manufacture a different-word retest');
+  await answerDisplayedCorrectly(view);
+  const saved = JSON.parse(storage.getItem(KEY));
+  const event = saved.practiceLog.events.at(-1);
+  assert.deepEqual(event.exercise.context, { ...exercise.context, reviewVersion: exercise.usageReviewVersion });
+  assert.equal(event.hintUsed, false);
+  assert.equal(event.support.independent, true);
+  assert.equal(event.assessment.after.pending, false);
+  assert.equal(event.assessment.after.eligibleRetestCorrect, 1);
+  assert.equal(saved.assessment.originalCount, 4);
 });
 
 test('corrupt progress is preserved and recovery controls stay usable', async () => {
@@ -499,7 +529,7 @@ for (const localized of [false, true]) test(`passive desire probes show each tar
   // borrowing the diagnostic generator's own KC list as a grading oracle.
   const steps = [
     ...(localized ? [
-      { surface: item.surface, target: /[アaａ]段/i, answer: passiveReading.slice(0, -2), kcIds: ['stem.godan.a'] },
+      { surface: item.surface, target: /[アaａ]段/i, answer: passiveReading.slice(0, -2), kcIds: ['stem.godan.a', ...(item.reading.endsWith('う') ? ['stem.godan.u-wa'] : [])] },
       { surface: passive.slice(0, -2), target: /受身/, answer: passiveReading, kcIds: ['suffix.passive'] },
     ] : [
       { surface: item.surface, target: /受身/, answer: passiveReading, kcIds: passiveKcIds },

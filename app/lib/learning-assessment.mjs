@@ -11,7 +11,8 @@ import { isRuGodanException } from './knowledge-model.mjs';
  * @typedef {{key: string, form: string | null, courseId: string, domain: string, ruleSignature: string, kcIds: string[], wordKey: string, surface: string, reading: string}} AssessmentTarget
  * @typedef {{target: AssessmentTarget, attempts: number, independentAttempts: number, independentCorrect: number, assistedOriginalAttempts: number, assistedOriginalCorrect: number, assistedStepAttempts: number, assistedStepCorrect: number, eligibleRetestCorrect: number, lastAt: string, lastQuestionId: string, lastWordKey: string, lastOrdinal: number, lastOutcome: string, lastRetestPolicy: string | null}} TargetEvidence
  * @typedef {{key: string, target: AssessmentTarget, courseId: string, kcIds: string[], failedKcIds: string[], reason: string, createdAt: string, createdOrdinal: number, lastFailureAt: string | null, lastFailureOrdinal: number | null, lastWordKey: string, lastQuestionId: string, lastPresentedOrdinal: number, lastPresentedAt: string, lastPresentedWordKey: string, failures: number}} PendingRetest
- * @typedef {{version: 1, originalCount: number, byTarget: Record<string, TargetEvidence>, pending: Record<string, PendingRetest>, independentByKc: Record<string, import('./adaptive.mjs').SkillStats>, assistedByKc: Record<string, import('./adaptive.mjs').SkillStats>, seenQuestionIds: string[], seenAssistedIds: string[], seenExposureIds: string[]}} LearningAssessment
+ * @typedef {PendingRetest & {suspension: {reason: 'no-eligible-exercise', catalogVersion: number}}} SuspendedPendingRetest
+ * @typedef {{version: 2, originalCount: number, byTarget: Record<string, TargetEvidence>, pending: Record<string, PendingRetest>, suspendedPending: Record<string, SuspendedPendingRetest>, independentByKc: Record<string, import('./adaptive.mjs').SkillStats>, assistedByKc: Record<string, import('./adaptive.mjs').SkillStats>, seenQuestionIds: string[], seenAssistedIds: string[], seenExposureIds: string[]}} LearningAssessment
  * @typedef {{eligible: boolean, reason: string, remainingQuestions: number, availableAt: string | null, policy: string}} RetestStatus
  */
 
@@ -25,7 +26,53 @@ const targetCache = new WeakMap();
 
 /** @returns {LearningAssessment} */
 export function emptyAssessment() {
-  return { version: 1, originalCount: 0, byTarget: {}, pending: {}, independentByKc: {}, assistedByKc: {}, seenQuestionIds: [], seenAssistedIds: [], seenExposureIds: [] };
+  return { version: 2, originalCount: 0, byTarget: {}, pending: {}, suspendedPending: {}, independentByKc: {}, assistedByKc: {}, seenQuestionIds: [], seenAssistedIds: [], seenExposureIds: [] };
+}
+
+/** Reconcile obligations against the complete practice catalog, never a
+ * course/readiness/recency-filtered pool. Removing the last usable word pauses
+ * an obligation without awarding credit or discarding its original anchors.
+ * Restoring any compatible word resumes it with those same anchors.
+ * @param {LearningAssessment} assessment
+ * @param {AssessmentExercise[]} exercises
+ * @param {number} catalogVersion
+ * @returns {LearningAssessment}
+ */
+export function reconcileAssessmentCatalog(assessment, exercises, catalogVersion) {
+  if (!Array.isArray(exercises) || !Number.isSafeInteger(catalogVersion) || catalogVersion < 1) {
+    throw new Error('Assessment reconciliation requires a complete catalog and its version');
+  }
+  const obligations = [...Object.values(assessment.pending), ...Object.values(assessment.suspendedPending ?? {})];
+  if (!obligations.length) return assessment.version === 2 && assessment.suspendedPending !== undefined
+    ? assessment : { ...assessment, version: 2, suspendedPending: {} };
+  const forms = new Set(obligations.map(entry => `${entry.target.domain}:${entry.target.form ?? 'classify'}`));
+  const signatures = new Map();
+  for (const exercise of exercises) {
+    if (!forms.has(`${exercise.item.domain ?? 'verb'}:${exercise.form ?? 'classify'}`)) continue;
+    const target = assessmentTarget(exercise);
+    if (!signatures.has(target.key)) signatures.set(target.key, new Set());
+    signatures.get(target.key).add(target.ruleSignature);
+  }
+  const compatible = entry => signatures.get(entry.key)?.has(entry.target.ruleSignature) ?? false;
+  const pending = { ...assessment.pending }, suspendedPending = { ...assessment.suspendedPending };
+  let changed = assessment.version !== 2 || assessment.suspendedPending === undefined;
+  for (const [key, entry] of Object.entries(suspendedPending)) {
+    if (!compatible(entry)) continue;
+    const original = { ...entry };
+    delete original.suspension;
+    if (pending[key]) throw new Error('Assessment target cannot be active and suspended simultaneously');
+    pending[key] = original;
+    delete suspendedPending[key];
+    changed = true;
+  }
+  for (const [key, entry] of Object.entries(pending)) {
+    if (compatible(entry)) continue;
+    if (suspendedPending[key]) throw new Error('Assessment target cannot be active and suspended simultaneously');
+    suspendedPending[key] = { ...entry, suspension: { reason: 'no-eligible-exercise', catalogVersion } };
+    delete pending[key];
+    changed = true;
+  }
+  return changed ? { ...assessment, version: 2, pending, suspendedPending } : assessment;
 }
 
 function nativeKind(item) {

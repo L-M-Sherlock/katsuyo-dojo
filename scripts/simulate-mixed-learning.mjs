@@ -19,6 +19,6 @@ try {
     } });
     assert.equal(report.completed, true, `${route}: ${report.reason}`);
     assert.equal(report.completedFacetCount, report.facetCount, `${route}: missing coverage`);
-    console.log(JSON.stringify({ route, completed: report.completed, rounds: report.roundCount, questions: report.questionCount }));
+    console.log(JSON.stringify({ route, completed: report.completed, rounds: report.roundCount, questions: report.questionCount, masteredOnlyQuestions: report.masteredOnlyQuestions }));
   }
 } finally { await server.close(); }

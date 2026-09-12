@@ -53,7 +53,7 @@ const BASIC_SEMANTICS = {
   ba: semantic("如果……", "提出条件，表示在该条件成立时会出现后项结果。", {
     contrast: "可能形表示“能做”，ば形表示“如果做”；五段动词虽然都用 e 段，结尾不同。",
   }),
-  causative: semantic("让／使某人做……", "表示使某人做某事，语境可以是强制，也可以是许可。", {
+  causative: semantic("让某人做……／使……发生", "表示让某人做某事，或使某种变化发生。涉及人的动作时，可以表示强制或许可。", {
     usageNote: "究竟是“让”还是“使”，要由人物关系和语境判断。",
   }),
   causativePassive: semantic("被迫／被要求做……", "表示主语受到他人驱使而做某事，常带有不情愿或受影响的语感。", {
@@ -87,9 +87,9 @@ const VOICE_COMPOUND_SEMANTICS = {
   potentialPast: continuedSemantic("potential", "past", "过去能够……"),
   potentialNegative: continuedSemantic("potential", "negative", "不能……"),
   potentialNegativePast: continuedSemantic("potential", "negativePast", "过去不能……"),
-  causativePast: continuedSemantic("causative", "past", "曾让／使某人做……"),
-  causativeNegative: continuedSemantic("causative", "negative", "不让／不使某人做……"),
-  causativeNegativePast: continuedSemantic("causative", "negativePast", "过去没让／没使某人做……"),
+  causativePast: continuedSemantic("causative", "past", "曾让某人做……／使……发生了"),
+  causativeNegative: continuedSemantic("causative", "negative", "不让某人做……／不使……发生"),
+  causativeNegativePast: continuedSemantic("causative", "negativePast", "过去没让某人做……／没使……发生"),
   causativePassivePast: continuedSemantic("causativePassive", "past", "过去被迫做……"),
   causativePassiveNegative: continuedSemantic("causativePassive", "negative", "不被迫做……"),
   causativePassiveNegativePast: continuedSemantic("causativePassive", "negativePast", "过去没有被迫做……"),
@@ -128,7 +128,7 @@ const CONSTRUCTION_SEMANTICS = {
   temorau: semantic("得到别人……的帮助", "表示主语接受别人做某事所带来的帮助或恩惠。", {
     contrast: "「てあげる」从给予帮助的一方叙述；「てもらう」从接受帮助的一方叙述。",
   }),
-  tekureru: semantic("别人为我方做……", "表示别人主动为说话人或说话人一方做某事。", {
+  tekureru: semantic("别人为我方做……／……给我方带来好处", "表示他人的动作或某种情况给说话人或说话人一方带来好处。", {
     contrast: "「てもらう」着重我方得到帮助；「てくれる」着重对方为我方做。",
   }),
   tekudasai: semantic("请做……", "礼貌地请求对方进行某个动作。", {
@@ -145,8 +145,8 @@ const CONSTRUCTION_SEMANTICS = {
   teru: semantic("正在……／一直……／处于……状态", "是「ている／でいる」的口语缩约，核心含义与「ている」相同。", {
     register: "口语缩约",
   }),
-  tearu: semantic("已经事先……好／保留着……后的状态", "表示某人有意完成了动作，其结果状态目前仍然存在。", {
-    usageNote: "通常接他动词，并把处于结果状态的对象作为话题或用「が」标记。",
+  tearu: semantic("已经事先……好／保留着……后的状态", "表示有意完成动作后保留的结果状态，也可说明为了某个目的已经事先做完某事。", {
+    usageNote: "描述对象的结果状态时，通常接他动词，对象用「が」标记；表示事先完成某事时，对象也可用「を」标记。",
     contrast: "「ている」可单纯描述进行或结果；「てある」突出人为准备及留下的状态。",
   }),
   teoru: semantic("正在……／一直……／处于……状态", "基本相当于「ている」，表示进行、习惯或结果状态。", {
@@ -160,11 +160,11 @@ const CONSTRUCTION_SEMANTICS = {
   }),
   tai: semantic("想做……", "表示说话人希望自己进行某个动作，并像い形容词一样继续活用。", {
     usageNote: "直接陈述第三人的愿望时，常改用「たがる」或加传闻、推测表达。",
-    contrast: "「てほしい」表示希望别人做；「たい」表示自己想做。",
+    contrast: "「てほしい」表示对他人的动作或某种情况的期待；「たい」表示自己的愿望。",
   }),
-  tehoshii: semantic("希望别人做……", "表示希望某人进行某动作，或希望某种情况出现。", {
+  tehoshii: semantic("希望别人做……／希望……发生", "表示希望某人进行某动作，或希望某种情况出现。", {
     usageNote: "动作执行者常用「に」标记；整体按い形容词方式继续活用。",
-    contrast: "「たい」表示自己想做；「てほしい」表示希望别人做。",
+    contrast: "「たい」表示自己的愿望；「てほしい」表示对他人的动作或某种情况的期待。",
   }),
   temo: semantic("即使……也……", "提出让步条件，表示即使前项成立，后项仍然成立。", {
     contrast: "「たら」提出一般条件；「ても」强调结果不受该条件影响。",
@@ -277,7 +277,7 @@ const ADJECTIVE_SEMANTICS = {
   adjectiveBa: semantic("如果……", "提出以某种性质或状态成立为前提的条件。", {
     usageNote: "い形容词通常用「ければ」，な形容词通常用「なら」。",
   }),
-  adjectiveAdverb: semantic("……地", "把形容词变为副词，用来修饰动作、变化或另一种状态。", {
+  adjectiveAdverb: semantic("……地／变得……", "把形容词变为副词，用来修饰动作、变化或另一种状态。", {
     usageNote: "い形容词通常变为「く」，な形容词通常接「に」。",
   }),
 };
@@ -307,9 +307,9 @@ const COMPOUND_MEANINGS = {
     negativePast: ["过去没有得到别人……的帮助", "表示过去没有接受或得到别人做某事所带来的帮助或恩惠。"],
   },
   tekureru: {
-    past: ["别人为我方做了……", "表示过去别人为说话人或说话人一方做了某事。"],
-    negative: ["别人不为我方做……", "表示别人不为说话人或说话人一方做某事。"],
-    negativePast: ["过去别人没有为我方做……", "表示过去别人没有为说话人或说话人一方做某事。"],
+    past: ["别人为我方做了……／……给我方带来了好处", "表示过去他人的动作或某种情况给说话人一方带来了好处。"],
+    negative: ["别人不为我方做……／期待的……没有出现", "表示所期待的、能给说话人一方带来好处的动作或情况没有发生。"],
+    negativePast: ["过去别人没有为我方做……／当时期待的……没有出现", "表示过去所期待的、能给说话人一方带来好处的动作或情况没有发生。"],
   },
   teiru: {
     past: ["当时正在……／过去一直……／当时处于……状态", "表示过去某时动作正在进行、过去的习惯，或当时存在的结果状态。"],
@@ -317,9 +317,9 @@ const COMPOUND_MEANINGS = {
     negativePast: ["当时没有在……／当时没有处于……状态", "根据动词和语境，表示过去某时动作没有在进行、过去没有相应习惯，或当时不存在相应的结果状态。"],
   },
   tearu: {
-    past: ["当时已经……好／当时保留着……后的状态", "表示过去某时，有人有意完成某事后留下的结果状态仍然存在。"],
-    negative: ["还没有事先……好", "表示没有处于有人有意完成某事后留下的结果状态。"],
-    negativePast: ["当时还没有事先……好", "表示过去某时，没有处于有人有意完成某事后留下的结果状态。"],
+    past: ["当时已经……好／当时保留着……后的状态", "表示过去某时，有意完成动作后留下的结果状态仍然存在，或为某个目的事先做完了某事。"],
+    negative: ["还没有事先……好", "表示尚未处于有意完成动作后留下的结果状态，或还没有事先做完某事。"],
+    negativePast: ["当时还没有事先……好", "表示过去某时，尚未处于有意完成动作后留下的结果状态，或当时还没有事先做完某事。"],
   },
   teoru: {
     past: ["当时正在……／过去一直……／当时处于……状态", "基本相当于「ていた」，表示过去的进行、习惯或结果状态。"],
@@ -332,9 +332,9 @@ const COMPOUND_MEANINGS = {
     negativePast: ["过去不想做……", "表示过去不希望自己进行某个动作。"],
   },
   tehoshii: {
-    past: ["过去希望别人做……", "表示过去希望某人进行某个动作，或希望某种情况出现。"],
-    negative: ["不希望别人做……", "表示不希望某人进行某个动作，或不希望某种情况出现。"],
-    negativePast: ["过去不希望别人做……", "表示过去不希望某人进行某个动作，或不希望某种情况出现。"],
+    past: ["过去希望别人做……／过去希望……发生", "表示过去希望某人进行某个动作，或希望某种情况出现。"],
+    negative: ["不希望别人做……／不希望……发生", "表示不希望某人进行某个动作，或不希望某种情况出现。"],
+    negativePast: ["过去不希望别人做……／过去不希望……发生", "表示过去不希望某人进行某个动作，或不希望某种情况出现。"],
   },
   youtosuru: {
     past: ["当时正要……／曾试图……", "表示过去某时动作即将发生，或主体当时试图实施某个动作。"],

@@ -1,0 +1,6214 @@
+{
+  "sourceCommit": "e34975d",
+  "summary": {
+    "courses": 43,
+    "forms": 134,
+    "components": 215,
+    "gating": 119,
+    "facets": 89,
+    "exercises": 18221,
+    "retestPaths": 845
+  },
+  "components": [
+    {
+      "id": "class.godan",
+      "gating": true,
+      "firstCourseId": "classify",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "heuristic.ru-ie",
+      "gating": true,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "class.godan",
+        "class.ichidan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "exception.ru-godan",
+      "gating": true,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "heuristic.ru-ie"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "lexeme.ru-godan.切る",
+      "gating": false,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "exception.ru-godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "lexeme.ru-godan.帰る",
+      "gating": false,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "exception.ru-godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "heuristic.ru-other",
+      "gating": true,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "lexeme.ru-godan.走る",
+      "gating": false,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "exception.ru-godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "lexeme.ru-godan.知る",
+      "gating": false,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "exception.ru-godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "lexeme.ru-godan.入る",
+      "gating": false,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "exception.ru-godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "lexeme.ru-godan.喋る",
+      "gating": false,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "exception.ru-godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "lexeme.ru-godan.要る",
+      "gating": false,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "exception.ru-godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "class.ichidan",
+      "gating": true,
+      "firstCourseId": "classify",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "class.irregular",
+      "gating": true,
+      "firstCourseId": "classify",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.class.irregular.suru",
+        "facet.class.irregular.kuru"
+      ]
+    },
+    {
+      "id": "facet.class.irregular.suru",
+      "gating": false,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.class.irregular.kuru",
+      "gating": false,
+      "firstCourseId": "classify",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.class.i",
+      "gating": true,
+      "firstCourseId": "adjectiveClassify",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.class.na",
+      "gating": true,
+      "firstCourseId": "adjectiveClassify",
+      "prerequisites": [
+        "adj.class.i"
+      ],
+      "coverageKcIds": [
+        "facet.adj.class.na.regular",
+        "facet.adj.class.na.i-ending"
+      ]
+    },
+    {
+      "id": "facet.adj.class.na.regular",
+      "gating": false,
+      "firstCourseId": "adjectiveClassify",
+      "prerequisites": [
+        "adj.class.na"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.adj.class.na.i-ending",
+      "gating": false,
+      "firstCourseId": "adjectiveClassify",
+      "prerequisites": [
+        "adj.class.na"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "stem.ichidan.drop-ru",
+      "gating": true,
+      "firstCourseId": "masu",
+      "prerequisites": [
+        "class.ichidan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "stem.godan.i",
+      "gating": true,
+      "firstCourseId": "masu",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.masu",
+      "gating": true,
+      "firstCourseId": "masu",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.masu.suru",
+        "facet.form.masu.kuru"
+      ]
+    },
+    {
+      "id": "facet.form.masu.suru",
+      "gating": false,
+      "firstCourseId": "masu",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.masu.kuru",
+      "gating": false,
+      "firstCourseId": "masu",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.stem.connective.kuru",
+      "gating": false,
+      "firstCourseId": "masu",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.stem.connective.suru",
+      "gating": false,
+      "firstCourseId": "masu",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "stem.irregular.connective",
+      "gating": true,
+      "firstCourseId": "masu",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": [
+        "facet.stem.connective.suru",
+        "facet.stem.connective.kuru"
+      ]
+    },
+    {
+      "id": "adj.stem.i-ku",
+      "gating": true,
+      "firstCourseId": "adjectiveIBase",
+      "prerequisites": [
+        "adj.class.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.i-negative",
+      "gating": true,
+      "firstCourseId": "adjectiveIBase",
+      "prerequisites": [
+        "adj.class.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.i-past",
+      "gating": true,
+      "firstCourseId": "adjectiveIBase",
+      "prerequisites": [
+        "adj.class.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.compound.i-negative-past",
+      "gating": true,
+      "firstCourseId": "adjectiveIBase",
+      "prerequisites": [
+        "adj.suffix.i-negative",
+        "adj.suffix.i-past"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.exception.ii-yo",
+      "gating": true,
+      "firstCourseId": "adjectiveIBase",
+      "prerequisites": [
+        "adj.class.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.na-attributive",
+      "gating": true,
+      "firstCourseId": "adjectiveNaBase",
+      "prerequisites": [
+        "adj.class.na"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.na-predicative",
+      "gating": true,
+      "firstCourseId": "adjectiveNaBase",
+      "prerequisites": [
+        "adj.class.na"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.na-negative",
+      "gating": true,
+      "firstCourseId": "adjectiveNaBase",
+      "prerequisites": [
+        "adj.class.na"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.na-past",
+      "gating": true,
+      "firstCourseId": "adjectiveNaBase",
+      "prerequisites": [
+        "adj.class.na"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.compound.na-negative-past",
+      "gating": true,
+      "firstCourseId": "adjectiveNaBase",
+      "prerequisites": [
+        "adj.suffix.na-negative",
+        "adj.suffix.i-past"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.na-te",
+      "gating": true,
+      "firstCourseId": "adjectiveNaBase",
+      "prerequisites": [
+        "adj.class.na"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.i-adverb",
+      "gating": true,
+      "firstCourseId": "adjectiveAdverb",
+      "prerequisites": [
+        "adj.class.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.na-adverb",
+      "gating": true,
+      "firstCourseId": "adjectiveAdverb",
+      "prerequisites": [
+        "adj.class.na"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "stem.godan.a",
+      "gating": true,
+      "firstCourseId": "negative",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.negative",
+      "gating": true,
+      "firstCourseId": "negative",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.negative.suru",
+        "facet.form.negative.kuru"
+      ]
+    },
+    {
+      "id": "stem.godan.u-wa",
+      "gating": true,
+      "firstCourseId": "negative",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.negative.suru",
+      "gating": false,
+      "firstCourseId": "negative",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.negative.kuru",
+      "gating": false,
+      "firstCourseId": "negative",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "onbin.i",
+      "gating": true,
+      "firstCourseId": "past",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.past",
+      "gating": true,
+      "firstCourseId": "past",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.past.suru",
+        "facet.form.past.kuru"
+      ]
+    },
+    {
+      "id": "stem.godan.shi-connective",
+      "gating": true,
+      "firstCourseId": "past",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "onbin.sokuon",
+      "gating": true,
+      "firstCourseId": "past",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": [
+        "facet.onbin.sokuon.iku"
+      ]
+    },
+    {
+      "id": "onbin.hatsuon",
+      "gating": true,
+      "firstCourseId": "past",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "onbin.voicing",
+      "gating": true,
+      "firstCourseId": "past",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.onbin.sokuon.iku",
+      "gating": false,
+      "firstCourseId": "past",
+      "prerequisites": [
+        "onbin.sokuon"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.past.suru",
+      "gating": false,
+      "firstCourseId": "past",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.past.kuru",
+      "gating": false,
+      "firstCourseId": "past",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.negative-past",
+      "gating": true,
+      "firstCourseId": "basicCompound",
+      "prerequisites": [
+        "suffix.negative",
+        "adj.suffix.i-past"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.polite-past",
+      "gating": true,
+      "firstCourseId": "basicCompound",
+      "prerequisites": [
+        "suffix.masu"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.polite-negative",
+      "gating": true,
+      "firstCourseId": "basicCompound",
+      "prerequisites": [
+        "suffix.masu"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.polite-negative-past",
+      "gating": true,
+      "firstCourseId": "basicCompound",
+      "prerequisites": [
+        "suffix.masu"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.te",
+      "gating": true,
+      "firstCourseId": "te",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.te.suru",
+        "facet.form.te.kuru"
+      ]
+    },
+    {
+      "id": "facet.form.te.suru",
+      "gating": false,
+      "firstCourseId": "te",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.te.kuru",
+      "gating": false,
+      "firstCourseId": "te",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.i-te",
+      "gating": true,
+      "firstCourseId": "adjectiveITe",
+      "prerequisites": [
+        "adj.class.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "stem.godan.e",
+      "gating": true,
+      "firstCourseId": "potential",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.potential",
+      "gating": true,
+      "firstCourseId": "potential",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.potential.suru",
+        "facet.form.potential.kuru"
+      ]
+    },
+    {
+      "id": "facet.form.potential.suru",
+      "gating": false,
+      "firstCourseId": "potential",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.potential.kuru",
+      "gating": false,
+      "firstCourseId": "potential",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.passive",
+      "gating": true,
+      "firstCourseId": "passive",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.passive.suru",
+        "facet.form.passive.kuru"
+      ]
+    },
+    {
+      "id": "facet.form.passive.suru",
+      "gating": false,
+      "firstCourseId": "passive",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.passive.kuru",
+      "gating": false,
+      "firstCourseId": "passive",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.causative",
+      "gating": true,
+      "firstCourseId": "causative",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.causative.suru",
+        "facet.form.causative.kuru"
+      ]
+    },
+    {
+      "id": "facet.form.causative.suru",
+      "gating": false,
+      "firstCourseId": "causative",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.causative.kuru",
+      "gating": false,
+      "firstCourseId": "causative",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.causativePassive",
+      "gating": true,
+      "firstCourseId": "causativePassive",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.causativePassive.suru",
+        "facet.form.causativePassive.kuru"
+      ]
+    },
+    {
+      "id": "facet.form.causativePassive.suru",
+      "gating": false,
+      "firstCourseId": "causativePassive",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.causativePassive.kuru",
+      "gating": false,
+      "firstCourseId": "causativePassive",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "contraction.causative-passive",
+      "gating": true,
+      "firstCourseId": "causativePassive",
+      "prerequisites": [
+        "suffix.causativePassive"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.causative.continuation",
+      "gating": true,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.causative",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "stem.godan.u-wa",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.causative.past",
+        "facet.apply.causative.negative",
+        "facet.apply.causative.negativePast"
+      ]
+    },
+    {
+      "id": "apply.causativePassive.continuation",
+      "gating": true,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.causativePassive",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "stem.godan.u-wa",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.causativePassive.past",
+        "facet.apply.causativePassive.negative",
+        "facet.apply.causativePassive.negativePast"
+      ]
+    },
+    {
+      "id": "apply.passive.continuation",
+      "gating": true,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.passive",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "stem.godan.u-wa",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.passive.past",
+        "facet.apply.passive.negative",
+        "facet.apply.passive.negativePast"
+      ]
+    },
+    {
+      "id": "apply.potential.continuation",
+      "gating": true,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.e",
+        "suffix.potential",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.potential.past",
+        "facet.apply.potential.negative",
+        "facet.apply.potential.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.causative.negative",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.causative.negativePast",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.causative.past",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.causativePassive.negative",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.causativePassive.negativePast",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.causativePassive.past",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.passive.negative",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.passive.negativePast",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.passive.past",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.potential.negative",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.potential.negativePast",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.potential.past",
+      "gating": false,
+      "firstCourseId": "voiceCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.nakute",
+      "gating": true,
+      "firstCourseId": "nakuteNaide",
+      "prerequisites": [
+        "suffix.negative",
+        "adj.stem.i-ku",
+        "adj.suffix.i-te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.naide",
+      "gating": true,
+      "firstCourseId": "nakuteNaide",
+      "prerequisites": [
+        "suffix.negative"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.zu",
+      "gating": true,
+      "firstCourseId": "zuZuni",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.zuni",
+      "gating": true,
+      "firstCourseId": "zuZuni",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.ba",
+      "gating": true,
+      "firstCourseId": "ba",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.ba.suru",
+        "facet.form.ba.kuru"
+      ]
+    },
+    {
+      "id": "facet.form.ba.suru",
+      "gating": false,
+      "firstCourseId": "ba",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.ba.kuru",
+      "gating": false,
+      "firstCourseId": "ba",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.i-ba",
+      "gating": true,
+      "firstCourseId": "adjectiveConditional",
+      "prerequisites": [
+        "adj.class.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "adj.suffix.na-conditional",
+      "gating": true,
+      "firstCourseId": "adjectiveConditional",
+      "prerequisites": [
+        "adj.class.na"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tara",
+      "gating": true,
+      "firstCourseId": "tara",
+      "prerequisites": [
+        "suffix.past"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.temo",
+      "gating": true,
+      "firstCourseId": "temo",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tatte",
+      "gating": true,
+      "firstCourseId": "tatte",
+      "prerequisites": [
+        "suffix.past"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.nagara",
+      "gating": true,
+      "firstCourseId": "concurrent",
+      "prerequisites": [
+        "stem.godan.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tsutsu",
+      "gating": true,
+      "firstCourseId": "concurrent",
+      "prerequisites": [
+        "stem.godan.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tari",
+      "gating": true,
+      "firstCourseId": "listing",
+      "prerequisites": [
+        "suffix.past"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tewa",
+      "gating": true,
+      "firstCourseId": "listing",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tai",
+      "gating": true,
+      "firstCourseId": "desire",
+      "prerequisites": [
+        "stem.godan.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tehoshii",
+      "gating": true,
+      "firstCourseId": "desire",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.tai.continuation",
+      "gating": true,
+      "firstCourseId": "desire",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.i",
+        "construction.tai",
+        "adj.suffix.i-past",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "stem.irregular.connective",
+        "adj.stem.i-ku",
+        "adj.suffix.i-negative",
+        "adj.compound.i-negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.tai.past",
+        "facet.apply.tai.negative",
+        "facet.apply.tai.negativePast"
+      ]
+    },
+    {
+      "id": "apply.tehoshii.continuation",
+      "gating": true,
+      "firstCourseId": "desire",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.tehoshii",
+        "adj.suffix.i-past",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "adj.stem.i-ku",
+        "adj.suffix.i-negative",
+        "adj.compound.i-negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.tehoshii.past",
+        "facet.apply.tehoshii.negative",
+        "facet.apply.tehoshii.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.tai.negative",
+      "gating": false,
+      "firstCourseId": "desire",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tai.negativePast",
+      "gating": false,
+      "firstCourseId": "desire",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tai.past",
+      "gating": false,
+      "firstCourseId": "desire",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tehoshii.negative",
+      "gating": false,
+      "firstCourseId": "desire",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tehoshii.negativePast",
+      "gating": false,
+      "firstCourseId": "desire",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tehoshii.past",
+      "gating": false,
+      "firstCourseId": "desire",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tagaru",
+      "gating": true,
+      "firstCourseId": "tagaru",
+      "prerequisites": [
+        "stem.godan.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.tagaru.continuation",
+      "gating": true,
+      "firstCourseId": "tagaru",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.i",
+        "construction.tagaru",
+        "onbin.sokuon",
+        "suffix.past",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "stem.irregular.connective",
+        "stem.godan.a",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.tagaru.past",
+        "facet.apply.tagaru.negative",
+        "facet.apply.tagaru.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.tagaru.negative",
+      "gating": false,
+      "firstCourseId": "tagaru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tagaru.negativePast",
+      "gating": false,
+      "firstCourseId": "tagaru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tagaru.past",
+      "gating": false,
+      "firstCourseId": "tagaru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "stem.godan.o",
+      "gating": true,
+      "firstCourseId": "volitional",
+      "prerequisites": [
+        "class.godan"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.volitional",
+      "gating": true,
+      "firstCourseId": "volitional",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.volitional.suru",
+        "facet.form.volitional.kuru"
+      ]
+    },
+    {
+      "id": "facet.form.volitional.suru",
+      "gating": false,
+      "firstCourseId": "volitional",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.volitional.kuru",
+      "gating": false,
+      "firstCourseId": "volitional",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.youtosuru",
+      "gating": true,
+      "firstCourseId": "youtosuru",
+      "prerequisites": [
+        "suffix.volitional"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.youtosuru.continuation",
+      "gating": true,
+      "firstCourseId": "youtosuru",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.o",
+        "suffix.volitional",
+        "construction.youtosuru",
+        "suffix.past",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.youtosuru.past",
+        "facet.apply.youtosuru.negative",
+        "facet.apply.youtosuru.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.youtosuru.negative",
+      "gating": false,
+      "firstCourseId": "youtosuru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.youtosuru.negativePast",
+      "gating": false,
+      "firstCourseId": "youtosuru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.youtosuru.past",
+      "gating": false,
+      "firstCourseId": "youtosuru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tekudasai",
+      "gating": true,
+      "firstCourseId": "request",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.naideKudasai",
+      "gating": true,
+      "firstCourseId": "request",
+      "prerequisites": [
+        "suffix.negative",
+        "construction.naide"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.imperative",
+      "gating": true,
+      "firstCourseId": "imperative",
+      "prerequisites": [],
+      "coverageKcIds": [
+        "facet.form.imperative.suru",
+        "facet.form.imperative.kuru"
+      ]
+    },
+    {
+      "id": "facet.form.imperative.suru",
+      "gating": false,
+      "firstCourseId": "imperative",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.form.imperative.kuru",
+      "gating": false,
+      "firstCourseId": "imperative",
+      "prerequisites": [
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.nasai",
+      "gating": true,
+      "firstCourseId": "nasai",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "suffix.prohibitive",
+      "gating": true,
+      "firstCourseId": "prohibitive",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.temoIi",
+      "gating": true,
+      "firstCourseId": "permission",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.nakutemoIi",
+      "gating": true,
+      "firstCourseId": "permission",
+      "prerequisites": [
+        "suffix.negative",
+        "adj.stem.i-ku",
+        "adj.suffix.i-te",
+        "construction.nakute"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.masenka",
+      "gating": true,
+      "firstCourseId": "permission",
+      "prerequisites": [
+        "suffix.masu"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.nakerebaNaranai",
+      "gating": true,
+      "firstCourseId": "obligation",
+      "prerequisites": [
+        "suffix.negative",
+        "adj.suffix.i-ba"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.nakutewaIkenai",
+      "gating": true,
+      "firstCourseId": "obligation",
+      "prerequisites": [
+        "suffix.negative",
+        "adj.stem.i-ku",
+        "adj.suffix.i-te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.naitoIkenai",
+      "gating": true,
+      "firstCourseId": "obligation",
+      "prerequisites": [
+        "suffix.negative"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.teiru",
+      "gating": true,
+      "firstCourseId": "aspect",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.teru",
+      "gating": true,
+      "firstCourseId": "aspect",
+      "prerequisites": [
+        "construction.teiru",
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tearu",
+      "gating": true,
+      "firstCourseId": "aspect",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.teoru",
+      "gating": true,
+      "firstCourseId": "aspect",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.toru",
+      "gating": true,
+      "firstCourseId": "aspect",
+      "prerequisites": [
+        "construction.teoru",
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.tearu.continuation",
+      "gating": true,
+      "firstCourseId": "aspect",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.tearu",
+        "onbin.sokuon",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "exception.aru-negative",
+        "adj.suffix.i-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.tearu.past",
+        "facet.apply.tearu.negative",
+        "facet.apply.tearu.negativePast"
+      ]
+    },
+    {
+      "id": "apply.teiru.continuation",
+      "gating": true,
+      "firstCourseId": "aspect",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.teiru",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.teiru.past",
+        "facet.apply.teiru.negative",
+        "facet.apply.teiru.negativePast"
+      ]
+    },
+    {
+      "id": "apply.teoru.continuation",
+      "gating": true,
+      "firstCourseId": "aspect",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.teoru",
+        "onbin.sokuon",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "stem.godan.a",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.teoru.past",
+        "facet.apply.teoru.negative",
+        "facet.apply.teoru.negativePast"
+      ]
+    },
+    {
+      "id": "exception.aru-negative",
+      "gating": true,
+      "firstCourseId": "aspect",
+      "prerequisites": [
+        "construction.tearu"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tearu.negative",
+      "gating": false,
+      "firstCourseId": "aspect",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tearu.negativePast",
+      "gating": false,
+      "firstCourseId": "aspect",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tearu.past",
+      "gating": false,
+      "firstCourseId": "aspect",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teiru.negative",
+      "gating": false,
+      "firstCourseId": "aspect",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teiru.negativePast",
+      "gating": false,
+      "firstCourseId": "aspect",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teiru.past",
+      "gating": false,
+      "firstCourseId": "aspect",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teoru.negative",
+      "gating": false,
+      "firstCourseId": "aspect",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teoru.negativePast",
+      "gating": false,
+      "firstCourseId": "aspect",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teoru.past",
+      "gating": false,
+      "firstCourseId": "aspect",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.teageru",
+      "gating": true,
+      "firstCourseId": "giving",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.temorau",
+      "gating": true,
+      "firstCourseId": "giving",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tekureru",
+      "gating": true,
+      "firstCourseId": "giving",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.teageru.continuation",
+      "gating": true,
+      "firstCourseId": "giving",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.teageru",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.teageru.past",
+        "facet.apply.teageru.negative",
+        "facet.apply.teageru.negativePast"
+      ]
+    },
+    {
+      "id": "apply.tekureru.continuation",
+      "gating": true,
+      "firstCourseId": "giving",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.tekureru",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.tekureru.past",
+        "facet.apply.tekureru.negative",
+        "facet.apply.tekureru.negativePast"
+      ]
+    },
+    {
+      "id": "apply.temorau.continuation",
+      "gating": true,
+      "firstCourseId": "giving",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.temorau",
+        "onbin.sokuon",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "stem.godan.a",
+        "suffix.negative",
+        "stem.godan.u-wa",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.temorau.past",
+        "facet.apply.temorau.negative",
+        "facet.apply.temorau.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.teageru.negative",
+      "gating": false,
+      "firstCourseId": "giving",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teageru.negativePast",
+      "gating": false,
+      "firstCourseId": "giving",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teageru.past",
+      "gating": false,
+      "firstCourseId": "giving",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tekureru.negative",
+      "gating": false,
+      "firstCourseId": "giving",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tekureru.negativePast",
+      "gating": false,
+      "firstCourseId": "giving",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tekureru.past",
+      "gating": false,
+      "firstCourseId": "giving",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.temorau.negative",
+      "gating": false,
+      "firstCourseId": "giving",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.temorau.negativePast",
+      "gating": false,
+      "firstCourseId": "giving",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.temorau.past",
+      "gating": false,
+      "firstCourseId": "giving",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.temiru",
+      "gating": true,
+      "firstCourseId": "temiru",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.temiru.continuation",
+      "gating": true,
+      "firstCourseId": "temiru",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.temiru",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.temiru.past",
+        "facet.apply.temiru.negative",
+        "facet.apply.temiru.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.temiru.negative",
+      "gating": false,
+      "firstCourseId": "temiru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.temiru.negativePast",
+      "gating": false,
+      "firstCourseId": "temiru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.temiru.past",
+      "gating": false,
+      "firstCourseId": "temiru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.teshimau",
+      "gating": true,
+      "firstCourseId": "teshimauChau",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.chau",
+      "gating": true,
+      "firstCourseId": "teshimauChau",
+      "prerequisites": [
+        "construction.teshimau",
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.teshimau.continuation",
+      "gating": true,
+      "firstCourseId": "teshimauChau",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.teshimau",
+        "onbin.sokuon",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "stem.godan.a",
+        "suffix.negative",
+        "stem.godan.u-wa",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.teshimau.past",
+        "facet.apply.teshimau.negative",
+        "facet.apply.teshimau.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.teshimau.negative",
+      "gating": false,
+      "firstCourseId": "teshimauChau",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teshimau.negativePast",
+      "gating": false,
+      "firstCourseId": "teshimauChau",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teshimau.past",
+      "gating": false,
+      "firstCourseId": "teshimauChau",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.teoku",
+      "gating": true,
+      "firstCourseId": "teokuToku",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.toku",
+      "gating": true,
+      "firstCourseId": "teokuToku",
+      "prerequisites": [
+        "construction.teoku",
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.teoku.continuation",
+      "gating": true,
+      "firstCourseId": "teokuToku",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.teoku",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "stem.godan.a",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.teoku.past",
+        "facet.apply.teoku.negative",
+        "facet.apply.teoku.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.teoku.negative",
+      "gating": false,
+      "firstCourseId": "teokuToku",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teoku.negativePast",
+      "gating": false,
+      "firstCourseId": "teokuToku",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teoku.past",
+      "gating": false,
+      "firstCourseId": "teokuToku",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.teiku",
+      "gating": true,
+      "firstCourseId": "direction",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.teku",
+      "gating": true,
+      "firstCourseId": "direction",
+      "prerequisites": [
+        "construction.teiku",
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.tekuru",
+      "gating": true,
+      "firstCourseId": "direction",
+      "prerequisites": [
+        "suffix.te"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.teiku.continuation",
+      "gating": true,
+      "firstCourseId": "direction",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.teiku",
+        "onbin.sokuon",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "stem.godan.a",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.teiku.past",
+        "facet.apply.teiku.negative",
+        "facet.apply.teiku.negativePast"
+      ]
+    },
+    {
+      "id": "apply.tekuru.continuation",
+      "gating": true,
+      "firstCourseId": "direction",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.tekuru",
+        "suffix.past",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.tekuru.past",
+        "facet.apply.tekuru.negative",
+        "facet.apply.tekuru.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.teiku.negative",
+      "gating": false,
+      "firstCourseId": "direction",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teiku.negativePast",
+      "gating": false,
+      "firstCourseId": "direction",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.teiku.past",
+      "gating": false,
+      "firstCourseId": "direction",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tekuru.negative",
+      "gating": false,
+      "firstCourseId": "direction",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tekuru.negativePast",
+      "gating": false,
+      "firstCourseId": "direction",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.tekuru.past",
+      "gating": false,
+      "firstCourseId": "direction",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "construction.sugiru",
+      "gating": true,
+      "firstCourseId": "sugiru",
+      "prerequisites": [
+        "stem.godan.i"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "apply.sugiru.continuation",
+      "gating": true,
+      "firstCourseId": "sugiru",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.i",
+        "construction.sugiru",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "stem.irregular.connective",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.apply.sugiru.past",
+        "facet.apply.sugiru.negative",
+        "facet.apply.sugiru.negativePast"
+      ]
+    },
+    {
+      "id": "facet.apply.sugiru.negative",
+      "gating": false,
+      "firstCourseId": "sugiru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.sugiru.negativePast",
+      "gating": false,
+      "firstCourseId": "sugiru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.apply.sugiru.past",
+      "gating": false,
+      "firstCourseId": "sugiru",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.multi-step",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "suffix.passive",
+        "apply.tai.continuation"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.temiru-desire-past",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.temiru",
+        "stem.ichidan.drop-ru",
+        "construction.tai",
+        "adj.suffix.i-past",
+        "apply.tai.continuation",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.passive-progressive-past",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.passive",
+        "stem.ichidan.drop-ru",
+        "suffix.te",
+        "construction.teiru",
+        "suffix.past",
+        "apply.teiru.continuation",
+        "stem.godan.u-wa",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "heuristic.ru-ie"
+      ],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.causative-receive-past",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.causative",
+        "stem.ichidan.drop-ru",
+        "suffix.te",
+        "construction.temorau",
+        "onbin.sokuon",
+        "suffix.past",
+        "apply.temorau.continuation",
+        "stem.godan.u-wa",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular"
+      ],
+      "coverageKcIds": []
+    }
+  ],
+  "courseForms": {
+    "adjectiveAdverb:adjectiveAdverb": {
+      "exercises": 91,
+      "distinctWords": 88
+    },
+    "adjectiveClassify:classify": {
+      "exercises": 91,
+      "distinctWords": 88
+    },
+    "adjectiveConditional:adjectiveBa": {
+      "exercises": 91,
+      "distinctWords": 88
+    },
+    "adjectiveIBase:adjectiveNegative": {
+      "exercises": 51,
+      "distinctWords": 48
+    },
+    "adjectiveIBase:adjectiveNegativePast": {
+      "exercises": 51,
+      "distinctWords": 48
+    },
+    "adjectiveIBase:adjectivePast": {
+      "exercises": 51,
+      "distinctWords": 48
+    },
+    "adjectiveITe:adjectiveTe": {
+      "exercises": 51,
+      "distinctWords": 48
+    },
+    "adjectiveNaBase:adjectiveAttributive": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "adjectiveNaBase:adjectiveNaNegative": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "adjectiveNaBase:adjectiveNaNegativePast": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "adjectiveNaBase:adjectiveNaPast": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "adjectiveNaBase:adjectiveNaTe": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "adjectiveNaBase:adjectivePredicative": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "aspect:tearu": {
+      "exercises": 77,
+      "distinctWords": 77
+    },
+    "aspect:tearuNegative": {
+      "exercises": 77,
+      "distinctWords": 77
+    },
+    "aspect:tearuNegativePast": {
+      "exercises": 77,
+      "distinctWords": 77
+    },
+    "aspect:tearuPast": {
+      "exercises": 77,
+      "distinctWords": 77
+    },
+    "aspect:teiru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "aspect:teiruNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "aspect:teiruNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "aspect:teiruPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "aspect:teoru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "aspect:teoruNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "aspect:teoruNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "aspect:teoruPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "aspect:teru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "aspect:toru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "ba:ba": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "basicCompound:masuNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "basicCompound:masuNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "basicCompound:masuPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "basicCompound:negativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "causative:causative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "causativePassive:causativePassive": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "causativePassive:causativePassiveContracted": {
+      "exercises": 88,
+      "distinctWords": 88
+    },
+    "classify:classify": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "concurrent:nagara": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "concurrent:tsutsu": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "desire:tai": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "desire:taiNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "desire:taiNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "desire:taiPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "desire:tehoshii": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "desire:tehoshiiNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "desire:tehoshiiNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "desire:tehoshiiPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "direction:teiku": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "direction:teikuNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "direction:teikuNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "direction:teikuPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "direction:teku": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "direction:tekuru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "direction:tekuruNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "direction:tekuruNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "direction:tekuruPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:teageru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:teageruNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:teageruNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:teageruPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:tekureru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:tekureruNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:tekureruNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:tekureruPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:temorau": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:temorauNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:temorauNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "giving:temorauPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "imperative:imperative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "listing:tari": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "listing:tewa": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "masu:masu": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "multiStepCompound:causativeReceivePast": {
+      "exercises": 36,
+      "distinctWords": 36
+    },
+    "multiStepCompound:passiveDesireNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "multiStepCompound:passiveProgressivePast": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "multiStepCompound:temiruDesirePast": {
+      "exercises": 36,
+      "distinctWords": 36
+    },
+    "nakuteNaide:naide": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "nakuteNaide:nakute": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "nasai:nasai": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "negative:negative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "obligation:naitoIkenai": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "obligation:nakerebaNaranai": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "obligation:nakutewaIkenai": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "passive:passive": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "past:past": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "permission:masenka": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "permission:nakutemoIi": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "permission:temoIi": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "potential:potential": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "prohibitive:prohibitive": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "request:naideKudasai": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "request:tekudasai": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "sugiru:sugiru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "sugiru:sugiruNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "sugiru:sugiruNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "sugiru:sugiruPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "tagaru:tagaru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "tagaru:tagaruNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "tagaru:tagaruNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "tagaru:tagaruPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "tara:tara": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "tatte:tatte": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "te:te": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "temiru:temiru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "temiru:temiruNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "temiru:temiruNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "temiru:temiruPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "temo:temo": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teokuToku:teoku": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teokuToku:teokuNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teokuToku:teokuNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teokuToku:teokuPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teokuToku:toku": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teshimauChau:chau": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teshimauChau:teshimau": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teshimauChau:teshimauNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teshimauChau:teshimauNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "teshimauChau:teshimauPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:causativeNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:causativeNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:causativePassiveNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:causativePassiveNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:causativePassivePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:causativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:passiveNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:passiveNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:passivePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:potentialNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:potentialNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "voiceCompound:potentialPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "volitional:volitional": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "youtosuru:youtosuru": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "youtosuru:youtosuruNegative": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "youtosuru:youtosuruNegativePast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "youtosuru:youtosuruPast": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "zuZuni:zu": {
+      "exercises": 148,
+      "distinctWords": 148
+    },
+    "zuZuni:zuni": {
+      "exercises": 148,
+      "distinctWords": 148
+    }
+  },
+  "targets": {
+    "v1:adjective:adjectiveAdverb:29189f5246adce76": {
+      "exercises": 2,
+      "distinctWords": 2
+    },
+    "v1:adjective:adjectiveAdverb:802f8cac9e3c5b40": {
+      "exercises": 49,
+      "distinctWords": 46
+    },
+    "v1:adjective:adjectiveAdverb:b75202c4628d9e82": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "v1:adjective:adjectiveAttributive:80398bb0504c3d82": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "v1:adjective:adjectiveBa:01cb7dfe513f7b20": {
+      "exercises": 49,
+      "distinctWords": 46
+    },
+    "v1:adjective:adjectiveBa:38df5f5d70486bdf": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "v1:adjective:adjectiveBa:6b0d9f725fef55f6": {
+      "exercises": 2,
+      "distinctWords": 2
+    },
+    "v1:adjective:adjectiveNaNegative:96ab4e1b4eaf5bcd": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "v1:adjective:adjectiveNaNegativePast:5341d64c7af40944": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "v1:adjective:adjectiveNaPast:85a0f439d1ffefad": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "v1:adjective:adjectiveNaTe:4629ced74749a44d": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "v1:adjective:adjectiveNegative:556a37d1a38fb57b": {
+      "exercises": 2,
+      "distinctWords": 2
+    },
+    "v1:adjective:adjectiveNegative:6a40ca95dc857a6d": {
+      "exercises": 49,
+      "distinctWords": 46
+    },
+    "v1:adjective:adjectiveNegativePast:07fd753ef47f0432": {
+      "exercises": 2,
+      "distinctWords": 2
+    },
+    "v1:adjective:adjectiveNegativePast:b2a788a27af2e0a4": {
+      "exercises": 49,
+      "distinctWords": 46
+    },
+    "v1:adjective:adjectivePast:088464e2e04b4e36": {
+      "exercises": 2,
+      "distinctWords": 2
+    },
+    "v1:adjective:adjectivePast:a3a6d1cc19418d80": {
+      "exercises": 49,
+      "distinctWords": 46
+    },
+    "v1:adjective:adjectivePredicative:b47f5ff0fc637e02": {
+      "exercises": 40,
+      "distinctWords": 40
+    },
+    "v1:adjective:adjectiveTe:04cc147130d9b43b": {
+      "exercises": 2,
+      "distinctWords": 2
+    },
+    "v1:adjective:adjectiveTe:8de14225aef62fad": {
+      "exercises": 49,
+      "distinctWords": 46
+    },
+    "v1:adjective:classify:1f546e12c3ddc79e": {
+      "exercises": 2,
+      "distinctWords": 2
+    },
+    "v1:adjective:classify:b080f7d23472f38a": {
+      "exercises": 51,
+      "distinctWords": 48
+    },
+    "v1:adjective:classify:de99e8540e9bf46c": {
+      "exercises": 38,
+      "distinctWords": 38
+    },
+    "v1:verb:ba:0870135d747e1ca5": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:ba:2aee1cf57fa7f5bd": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:ba:540990b898e668b8": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:ba:9de362e215e02a1e": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:causative:822b46b60d9d4158": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:causative:8d26672bd1943705": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causative:ac8467f22080095a": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:causative:e28fae3cf3643794": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:causative:f91892b3dcbe101d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativeNegative:2d24b3b21aa857a6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativeNegative:42091b46c6366426": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:causativeNegative:718de316ef3d2426": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:causativeNegative:a34e3f9a6f5ec366": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:causativeNegative:ee3e64f2319215a6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativeNegativePast:2443767291c4aff0": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:causativeNegativePast:27f9c998c73c1210": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativeNegativePast:3e6d3204b764b950": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:causativeNegativePast:67598d6a2552beb0": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:causativeNegativePast:7c6d78980bdebf10": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePassive:1031e3ab614b6b9d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePassive:60051cc0a6eaf638": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:causativePassive:7c240f3356219285": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePassive:8f78635285b43874": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:causativePassive:eaf2cdece84b007a": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:causativePassiveContracted:15463d4d221df69b": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:causativePassiveContracted:33645c8f6581e4d5": {
+      "exercises": 72,
+      "distinctWords": 72
+    },
+    "v1:verb:causativePassiveNegative:1e5640ba2650b246": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:causativePassiveNegative:3a938aedf28dbc97": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePassiveNegative:75ad83bc7adf4088": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:causativePassiveNegative:a1a980650aa1f88f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePassiveNegative:a6639d6eaf7a4faa": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:causativePassiveNegativePast:3ad3ea26628f2e86": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePassiveNegativePast:45a5d90b23ed172f": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:causativePassiveNegativePast:4ed5b48566757a21": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:causativePassiveNegativePast:7ed0b40f0b82c483": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:causativePassiveNegativePast:f699c7ee86b7c99e": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePassivePast:062b60e623bec646": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:causativePassivePast:15a588416ad00d0f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePassivePast:18dd81591a2ed717": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePassivePast:44849c640df15808": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:causativePassivePast:6a85c49034a1da4a": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:causativePast:1084bc7061ebb6a4": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:causativePast:13568db251815884": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:causativePast:36ef671ab6081904": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:causativePast:569e5c4207719dc4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativePast:f3802cb231e715c4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativeReceivePast:16a8135e3b712d8c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativeReceivePast:2f003d56d17ee18c": {
+      "exercises": 8,
+      "distinctWords": 8
+    },
+    "v1:verb:causativeReceivePast:419db43463502eac": {
+      "exercises": 21,
+      "distinctWords": 21
+    },
+    "v1:verb:causativeReceivePast:c1079cee7a433a8c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:causativeReceivePast:fbf853802f2ee96c": {
+      "exercises": 5,
+      "distinctWords": 5
+    },
+    "v1:verb:chau:18cacefe4da1f768": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:chau:1ee56bd89bb060a4": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:chau:2b5e41d689950692": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:chau:2c2592b59f47e96f": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:chau:36c080d8393b7c6e": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:chau:491be62e6888738a": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:chau:50b2440b293b3d7b": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:chau:a591b676d59af7da": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:chau:d58ef124107de388": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:classify:08af622e94db49d2": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:classify:1b6515b228837bf8": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:classify:302e9bba0b1621e0": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:classify:4c7622efcb656223": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:classify:da767d7c6e5e4c00": {
+      "exercises": 93,
+      "distinctWords": 93
+    },
+    "v1:verb:imperative:193a637c74a6c252": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:imperative:3e62b7db60572a1d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:imperative:58648320340e3978": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:imperative:eb537e03552d5105": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masenka:82ab8dbe6a9fc88c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masenka:8cd4a45499e6ab90": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:masenka:e2a97df6cf5a2794": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masenka:fb374f5de0754859": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:masu:1b9dedf044f9e832": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:masu:803a275ca1934c8e": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masu:b9653ee4f44ec296": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masu:bff9e2f0a70a2bb8": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:masuNegative:4eedef72353f0c84": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masuNegative:8972065a406b4920": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:masuNegative:d20dda950ae30c49": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:masuNegative:dd761f9a4217fb9c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masuNegativePast:41c9d1a9cecc5089": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masuNegativePast:49a2744e08577b84": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:masuNegativePast:b5578b0112c0ec91": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masuNegativePast:cdc4e4f5792cacad": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:masuPast:09f6fad891b52dfc": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:masuPast:2e61711290ae0aa0": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:masuPast:384e6f8fa8906e29": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:masuPast:b23fd1c0c46c28e4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nagara:29912a88a5926c92": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:nagara:79ac8ebc9d3c0fd8": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:nagara:995ee2309bbf9c7c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nagara:9f2d8dc8d384bc64": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:naide:06f7f718becd63b2": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:naide:1282cf058e49525d": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:naide:4f3a3c5332067353": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:naide:78d6a2625c56cf14": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:naide:f366ba0ad6d0840c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:naideKudasai:1ee64a1c9d492cb0": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:naideKudasai:313117d734cfdbe1": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:naideKudasai:9aad65da6b07d43c": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:naideKudasai:bdc5a17fd2bce5f9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:naideKudasai:ecdbbd866506547e": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:naitoIkenai:4cf72e7c0c1a61ac": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:naitoIkenai:664d0d57b2f471bd": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:naitoIkenai:7ed65a24c1e18272": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:naitoIkenai:acfa58e4368af8b4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:naitoIkenai:c29f5a7dc81f0e33": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:nakerebaNaranai:251ce2e8582791be": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nakerebaNaranai:329cc1f1cc5f3f97": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:nakerebaNaranai:46ca69b0621b1fa6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nakerebaNaranai:93808a4fcb70bad9": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:nakerebaNaranai:a19fdf0471715cb8": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:nakute:00ac1d1d519c3dab": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nakute:515417257babd9b3": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nakute:96f77384d2f5e9ac": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:nakute:a80e38d08b88486e": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:nakute:b7f07b1a2f3cfce2": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:nakutemoIi:62f83e493a805661": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nakutemoIi:c3a4a8d15e81aee7": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:nakutemoIi:e260c67c81fe6766": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:nakutemoIi:fb58cd12745578e8": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:nakutemoIi:feb8cfb1aef3b379": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nakutewaIkenai:2b189c89551e7627": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:nakutewaIkenai:47cd427082f24b88": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:nakutewaIkenai:4c6672170634b0d9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nakutewaIkenai:adbe8c7faee4ddc1": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nakutewaIkenai:f7edb166d0c34806": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:nasai:366af7ac9244e978": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:nasai:993fc466f512752e": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nasai:b5aa5cbeafff5036": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:nasai:d2d3f036555d5b52": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:negative:4336d3c0e438bb94": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:negative:9faf28a038b767b8": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:negative:c367c0dee7daab1a": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:negative:ef4ca28d595fd1fd": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:negative:f9fb48854e35f8e5": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:negativePast:590263abf9e68873": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:negativePast:aabcc7ed2a7c48d1": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:negativePast:b66788c2f557d46c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:negativePast:ca5eb38df764b6bd": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:negativePast:dfa528aa3e52c674": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passive:007980ecff512694": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:passive:5270838aaf44745a": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:passive:7d9ad9abbd1d631d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passive:8d8496fe262d9858": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:passive:e98d0533b1f38a05": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passiveDesireNegativePast:6a4925e16f8c427f": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:passiveDesireNegativePast:912cde387ad186e0": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passiveDesireNegativePast:db58bc30ca2687f8": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passiveDesireNegativePast:f3d086b3591fdf31": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:passiveDesireNegativePast:f436db4346a9479d": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:passiveNegative:11557a4f4b959a2f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passiveNegative:1735b54733815e37": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passiveNegative:6163d05410b46f88": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:passiveNegative:b0c60e9a89e4d56a": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:passiveNegative:e72e75c6f3bcce86": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:passiveNegativePast:5703d43bb833e8c3": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:passiveNegativePast:6af1b6e04fed52fe": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passiveNegativePast:9248da9d22d26921": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:passiveNegativePast:c39dac982bc4b7e6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passiveNegativePast:c820af07d266fc6f": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:passivePast:128305c6f8e79fa8": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:passivePast:6b5e136cacf8fb26": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:passivePast:7e17a60173c5eb8f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passivePast:97e7fe192324b597": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:passivePast:9c83cf72d92f4eaa": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:passiveProgressivePast:21b94d6c2d424998": {
+      "exercises": 4,
+      "distinctWords": 4
+    },
+    "v1:verb:passiveProgressivePast:3336eeea6a7450fa": {
+      "exercises": 10,
+      "distinctWords": 10
+    },
+    "v1:verb:passiveProgressivePast:e5e15f4c1520cb34": {
+      "exercises": 2,
+      "distinctWords": 2
+    },
+    "v1:verb:past:2b807f827b9d692c": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:past:3ae8f3c755e1a75d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:past:75c4ca5b6ae2e013": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:past:7a4050af95258dff": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:past:b94b6a7f4ab7ce45": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:past:c2482ca4e5c64ef8": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:past:c5a8a27125094d1f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:past:d667e1b78e06b70d": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:past:f4012719cd7905f9": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:potential:0455827b268be29d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:potential:1edf46a31b620985": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:potential:506567fa161572de": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:potential:c6b98b608aa26d78": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:potentialNegative:50698c6f6e80f5af": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:potentialNegative:81748778bb91fc8a": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:potentialNegative:8b7333e7566cb9b7": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:potentialNegative:cdf40f9c9224168c": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:potentialNegativePast:3a9c7a0081107abe": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:potentialNegativePast:3d2b590decb51765": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:potentialNegativePast:76722e385ce7dfa6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:potentialNegativePast:f316a309e07db3e3": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:potentialPast:2e139be068ea3f4a": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:potentialPast:8ca3f49e1398a26c": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:potentialPast:f915ccc1f9c91e4f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:potentialPast:fc4dc5d9a927e857": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:prohibitive:859928ae1710cdaa": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:prohibitive:b38ae8a8ea8ca30a": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:prohibitive:c7352b534ceb6fa9": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:prohibitive:eac9c450b9d34612": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:sugiru:4a1cbdca039e0138": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:sugiru:6bdc620899367cbc": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:sugiru:784f7f9c69932692": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:sugiru:cd065a607a6842a4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:sugiruNegative:0d7748fabbb8db00": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:sugiruNegative:6f0f6f7ec57aca2e": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:sugiruNegative:a9902a166a208d36": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:sugiruNegative:e36d73ca7539328a": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:sugiruNegativePast:1c1fd88bf371b769": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:sugiruNegativePast:667061671f048807": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:sugiruNegativePast:7f1cf4436b3bd963": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:sugiruNegativePast:c6a261afd4e9c61f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:sugiruPast:67d34b3c8af0fa20": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:sugiruPast:9d489ee8b71185d6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:sugiruPast:c4c86c7630cb010a": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:sugiruPast:fd92fcf01a3038ce": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tagaru:0a6d3ee46b81a718": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:tagaru:4e4e8790a0364464": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tagaru:7caf8cb0828bc112": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tagaru:ea63a4d83b772c7c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tagaruNegative:48414614d9297d22": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tagaruNegative:a276556eea989288": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:tagaruNegative:ceac28b4a5172c14": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tagaruNegative:cf5c94ec7f2f540c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tagaruNegativePast:442ed10dfed1b98b": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tagaruNegativePast:4f45edb565dc41fd": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tagaruNegativePast:5d143e4ff2990721": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:tagaruNegativePast:a18cf37df5eedae5": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tagaruPast:546b310f5a55b3fd": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tagaruPast:910ac2633421a301": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:tagaruPast:c5288047a652b90b": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tagaruPast:f4255147392c1ee5": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tai:0615a240ad512812": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tai:28d3483e8ad9bdb8": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:tai:3d8e4236db72badc": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tai:69b8f8ee172eabc4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:taiNegative:1cf846e62da7f7d8": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:taiNegative:4a4703ae891299c0": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:taiNegative:73cd21741d25505c": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:taiNegative:94dd15e05bcb9916": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:taiNegativePast:207455bfe6a7d9e9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:taiNegativePast:9542b4b591030335": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:taiNegativePast:a536b759b112837f": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:taiNegativePast:b5858947de8fa4f1": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:taiPast:23c6c2cf8cdb2935": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:taiPast:8489f401e55a3f3b": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:taiPast:aaa34147d07dbf11": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:taiPast:ff2ca5b732aa712d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tara:5640c0f799d1806f": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tara:6762d49f7eb88ac3": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tara:68a2f623b8afd6a7": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tara:7ab2f011f0a0b4c1": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tara:84db681c02ddb430": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tara:966c49092bc2aad9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tara:9e00e1b1d17b0905": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tara:bc313a2b1f2d88f1": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tara:ff707aadcaa51823": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tari:0fc063ddc60e0023": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tari:1ce196cb906760f1": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tari:2f988e2f1ae35cc3": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tari:38525001e14f8105": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tari:6fedb5576e3f5f6f": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tari:7eef7eec75b42a30": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tari:ac0e4f41520f0ac1": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tari:bec5b3d3a1ce2ba7": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tari:dff14ad96c9c66d9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tatte:1abe7dd34f824671": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tatte:2138ad09dc00ffc1": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tatte:2399547fb1d207ef": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tatte:40f7296179ce1287": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tatte:42b1e6fd26ae1b63": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tatte:61aef8a97b72cd45": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tatte:7f377d3e178bc550": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tatte:b74f7f4772488cc3": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tatte:cb42e221f7b008d9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:te:05a87f0d9a334d65": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:te:0b105ff49a904ab8": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:te:10572505a55d267d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:te:3bdc67eb0243553f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:te:60250ab3487f9893": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:te:742336d944f79bed": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:te:a4c115a362c8cf19": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:te:c0bbd64d2499731f": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:te:e84ec3c00f939fcc": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teageru:399ecb262aeeb4e2": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teageru:5c879d803a121456": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teageru:60e53c9d44d77177": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teageru:75c9e13c37a5e364": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teageru:7e0c9ca60f6a7ba6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageru:a14976368dfb65a8": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teageru:a35fab7eb64c3384": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageru:a407656efe79a2be": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageru:fdc3f2fcba524b00": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teageruNegative:06e852765d2f4bcc": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageruNegative:07bf486e42694d92": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teageruNegative:1f277cecdf1a2e64": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teageruNegative:2bfcc3582f926f3a": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teageruNegative:4114bf248a6449d6": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teageruNegative:545c2caa4c72c1b6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageruNegative:5713133386d3e965": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teageruNegative:bce800cead5f01d4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageruNegative:f722c032949b4810": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teageruNegativePast:0136e64ba24285a5": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageruNegativePast:11a923bd35b18053": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teageruNegativePast:49166b817436810d": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teageruNegativePast:ad94be93ff867abd": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageruNegativePast:b91965773d3c8f79": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teageruNegativePast:bb76150f6ac4ca9f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageruNegativePast:bb9102e0964e96ac": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teageruNegativePast:df779cb9ca3bf57f": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teageruNegativePast:e3b00643211eef7b": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teageruPast:257e29ee02322976": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageruPast:27ac6cfea716f48c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageruPast:40fea42b1108dba5": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teageruPast:438002b8f708df16": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teageruPast:69ab83d62a0c911a": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teageruPast:69c776a698e95894": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teageruPast:88c61ef86e7209b2": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teageruPast:c5dd42a6a7a7ba50": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teageruPast:cd6ce7fc096cdf64": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tearu:0c42376805d438a4": {
+      "exercises": 8,
+      "distinctWords": 8
+    },
+    "v1:verb:tearu:19a20f76be218322": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tearu:1fa0158240ed18e6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tearu:7f73c6914b6f5c77": {
+      "exercises": 4,
+      "distinctWords": 4
+    },
+    "v1:verb:tearu:a8a27560ef343f80": {
+      "exercises": 28,
+      "distinctWords": 28
+    },
+    "v1:verb:tearu:ca084886a8fb26e8": {
+      "exercises": 17,
+      "distinctWords": 17
+    },
+    "v1:verb:tearu:fb5cfdbc8a2ca796": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tearuNegative:017c6e46f45a1f96": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tearuNegative:24d70a6e2610a2d2": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tearuNegative:5b33170c53bef922": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tearuNegative:76efee055d570e43": {
+      "exercises": 4,
+      "distinctWords": 4
+    },
+    "v1:verb:tearuNegative:8a00e5541a848e90": {
+      "exercises": 8,
+      "distinctWords": 8
+    },
+    "v1:verb:tearuNegative:8c2478280d873cbc": {
+      "exercises": 17,
+      "distinctWords": 17
+    },
+    "v1:verb:tearuNegative:953cf52a2d318914": {
+      "exercises": 28,
+      "distinctWords": 28
+    },
+    "v1:verb:tearuNegativePast:19f3919bb63f2cbf": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tearuNegativePast:1a2b6df91a261679": {
+      "exercises": 8,
+      "distinctWords": 8
+    },
+    "v1:verb:tearuNegativePast:61e07f71cc21e40b": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tearuNegativePast:63fe9b8a08af428a": {
+      "exercises": 4,
+      "distinctWords": 4
+    },
+    "v1:verb:tearuNegativePast:b79200afb57ce03d": {
+      "exercises": 28,
+      "distinctWords": 28
+    },
+    "v1:verb:tearuNegativePast:e0584023faeb9afb": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tearuNegativePast:feebe29dd8499595": {
+      "exercises": 17,
+      "distinctWords": 17
+    },
+    "v1:verb:tearuPast:11d47e5d4aaecbbf": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tearuPast:1c539488a5c75b4e": {
+      "exercises": 4,
+      "distinctWords": 4
+    },
+    "v1:verb:tearuPast:7ccff4cb7d420c3d": {
+      "exercises": 8,
+      "distinctWords": 8
+    },
+    "v1:verb:tearuPast:9707854355c50f19": {
+      "exercises": 28,
+      "distinctWords": 28
+    },
+    "v1:verb:tearuPast:ce8b64010c842931": {
+      "exercises": 17,
+      "distinctWords": 17
+    },
+    "v1:verb:tearuPast:dfa480ff2d11410f": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tearuPast:dfea13510072127b": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tehoshii:1ee2c48cb7bef816": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tehoshii:3d5e531681fb8384": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshii:50f33b2e3447b3a8": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tehoshii:545ce69e5125b762": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tehoshii:70cb244fc408e257": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tehoshii:a4172bda573fb9e6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshii:aefe7292a2bc15fe": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshii:f8e877c071ac38a4": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tehoshii:ff3ab0aae61663e0": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tehoshiiNegative:01367ad8bd6711da": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshiiNegative:1f8ff5a26284fdc0": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tehoshiiNegative:2d42e17099054246": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tehoshiiNegative:48e347aa10fa2a72": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tehoshiiNegative:7adb3540bde846c2": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshiiNegative:a5f3bba8bbffbbe0": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshiiNegative:e8f48106a60a96ac": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tehoshiiNegative:ede9a48f56bcbb13": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tehoshiiNegative:f5dc5846e5773464": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tehoshiiNegativePast:3c70e015346cd9ef": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tehoshiiNegativePast:732f863b63c6044d": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tehoshiiNegativePast:94e749ac4c5d0cda": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tehoshiiNegativePast:9d7c80c70dcb2029": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tehoshiiNegativePast:b759b7ed36e097f3": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshiiNegativePast:ba7a360d7bbb0e09": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshiiNegativePast:f55db70b5308a285": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tehoshiiNegativePast:fbb5ea8521f35beb": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshiiNegativePast:ff5013efa7f3c9db": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tehoshiiPast:04135ff497a3c85e": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tehoshiiPast:1380c7c3131fcdad": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshiiPast:2a5b26e7ac7f0a8f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshiiPast:507f694b4e033b8b": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tehoshiiPast:5b779ca9321aafff": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tehoshiiPast:6142dd5feafd9397": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tehoshiiPast:898943b74542aa09": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tehoshiiPast:a8a3f3ed3043318d": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tehoshiiPast:d13a1fdb7cc5d4c1": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teiku:148ae8b41b89f0c6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiku:3af26abcf533ebde": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiku:53e7c10eb608d1c4": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teiku:7171bb10590bafc0": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teiku:99718e0cdc57b6e4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiku:a60458008e87c7c2": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teiku:b780d0678bc6d917": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teiku:c01543dab17d0af6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teiku:cfaf88f62d95b468": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teikuNegative:2b9cd1262c33a6ce": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teikuNegative:35ce1638e265faa6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teikuNegative:3e06fdcecb8a9e98": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teikuNegative:a129803eed0e6bd6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teikuNegative:aaa90a5086738630": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teikuNegative:b288734ef590c2d2": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teikuNegative:b4c02ac28d433474": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teikuNegative:c940354569496247": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teikuNegative:f3fc1c404fddd454": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teikuNegativePast:37c844d3a9f837dd": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teikuNegativePast:4bc0a6b9d427a5cf": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teikuNegativePast:82e19997ad3913bb": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teikuNegativePast:846c6e668f37bcce": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teikuNegativePast:86c8a9b17f67f759": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teikuNegativePast:9555f48f062f0271": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teikuNegativePast:9b788341619f1afd": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teikuNegativePast:c690445f40adc7bf": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teikuNegativePast:ef249687c56027a7": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teikuPast:0a3ebdfd9df4f217": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teikuPast:2420d7917ec7beb1": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teikuPast:3ca67d2fa02e107d": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teikuPast:631822f76d6f4891": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teikuPast:94032ed9cc4ba393": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teikuPast:d417b622ba956682": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teikuPast:dde2bb718ca5628b": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teikuPast:ea5a2655ee8a8755": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teikuPast:fea16023ace8a3a3": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teiru:288f5bb89dce09a4": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teiru:3ec9b85677bdba22": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teiru:8680314a0c751afe": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiru:9b73c5a66bc0e2e8": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teiru:c0321862185669e6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiru:de74b54c6eedbe96": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teiru:e17f2ebeb1651dc4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiru:e910fb4174c1d177": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teiru:ed2f2e00a6483380": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teiruNegative:000d865495705724": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teiruNegative:1458d17056d7f9fa": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teiruNegative:1761d9361410c314": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiruNegative:23ffd2fcf25d5c96": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teiruNegative:441378b350f46ce5": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teiruNegative:5e38087e7e58d70c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiruNegative:aefd28d6b704a576": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiruNegative:caf0cb8e24481a50": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teiruNegative:f4027fb251b20592": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teiruNegativePast:0703712b0cabe9bd": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiruNegativePast:070d77656265dd53": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teiruNegativePast:3d961ec17b9fab7f": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teiruNegativePast:5256dc831faa6ef9": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teiruNegativePast:528c2d301a086aec": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teiruNegativePast:663c838b04feca9f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiruNegativePast:a199a2d9c1d01e0d": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teiruNegativePast:e321ae37cab39cbb": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teiruNegativePast:e49afa630882f6a5": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiruPast:0e95b43ce9127a72": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teiruPast:1d2f6b84459dd896": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teiruPast:1e6f9ca845ee02e4": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teiruPast:634b45e6587d149a": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teiruPast:7ea33b36060658d0": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teiruPast:a96dd61f19e76365": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teiruPast:b6328bd25078d294": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiruPast:c24757ca89e2b08c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teiruPast:d2a997eed89152f6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teku:5667840cd73f4164": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teku:7ffdb75e6cad84e8": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teku:9d3d014e853a6abe": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teku:a40ccd26cdcee760": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teku:bcf10f1631fdc8a6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teku:c33d567b3fa22fd7": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teku:da43614660b65e44": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teku:dd6630e882c8dad6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teku:de33538ebd52c022": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekudasai:3ce2caa4ce55d164": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tekudasai:56759dae2a728ee2": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekudasai:71191f86251bb9a8": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tekudasai:8dcedefe92171784": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekudasai:8e473b44cdaee500": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tekudasai:b4f1f1cee9058826": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekudasai:e3bb8bbdb98dfdf7": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tekudasai:e99353b0c84a9256": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tekudasai:f39c3d56dbce093e": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureru:0aeabbd8b2deb6d6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tekureru:156d315e6da2c244": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureru:1ea0605e95443d60": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tekureru:4aefe09e2b1746be": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureru:59edcc761501d4a6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureru:9203be6e82794c22": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekureru:bcd72d86d43a71e8": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tekureru:f0c825f31f774ed7": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tekureru:fe55ffcc268d7464": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tekureruNegative:23ddb5aed3ee5304": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tekureruNegative:34bfd13e20150152": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tekureruNegative:39726c66068b88f6": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tekureruNegative:3b1fcbfcc4a35916": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureruNegative:5e325b881bc178ec": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureruNegative:92960ff2f239295a": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tekureruNegative:cd2300e3c4588865": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tekureruNegative:e385837cb54ee470": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekureruNegative:f77e8240b08503f4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureruNegativePast:050969e539cdadc5": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureruNegativePast:1a3b70fd1bc65bdd": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureruNegativePast:404e5baffb34e9f3": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tekureruNegativePast:44d11b0bfaba52ad": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tekureruNegativePast:526420a8ce8f3aec": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tekureruNegativePast:628e956949a03759": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekureruNegativePast:829197a3a8f7551f": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tekureruNegativePast:97b9f0e94cb686ff": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureruNegativePast:fd716ddb61ca34fb": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tekureruPast:04192240e2432dd6": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tekureruPast:0f5daefc8ef03324": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tekureruPast:39c741f6fd63e450": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekureruPast:573972aea53384d4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureruPast:5b906cb62a18c7cc": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureruPast:6e4655266f207476": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekureruPast:c7e58f8d3396cf85": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tekureruPast:e553e8fe7b36bb9a": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tekureruPast:f55c5816bf026d12": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tekuru:460d80b058a66a00": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tekuru:76aacb0eb3af7804": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuru:775a1d4ef990d9a6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuru:864bcd526b417fe2": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekuru:a8ea7d161d18ddbe": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuru:b04b33dcc22068d6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tekuru:d72f4660751b0324": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tekuru:dc10b0685ad3c448": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tekuru:e6190dc77e9b8797": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tekuruNegative:31a3705532bb0eed": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekuruNegative:52c93e33c9aeb399": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tekuruNegative:55e17a2b32d8e3ab": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tekuruNegative:631f59647ccc9a18": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tekuruNegative:8011edf5649f0f27": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tekuruNegative:9bc26db13159ccef": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tekuruNegative:b4663ae118dadd8b": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuruNegative:b55aedbdd56f05b1": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuruNegative:be6f38c504b077a9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuruNegativePast:17c2edf61ab520a4": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekuruNegativePast:2e57350d57ec65f1": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tekuruNegativePast:4b3f0cdc1bce9ba2": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tekuruNegativePast:9f8a776e9a24d7e0": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuruNegativePast:a1b0d91a25227fc2": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuruNegativePast:d854d63a786837a6": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tekuruNegativePast:db077624fff7d810": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tekuruNegativePast:e2221326db07f4f8": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuruNegativePast:f872025e001a1b6e": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tekuruPast:0e1e6ed96ce54669": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuruPast:200f04d98a78d14b": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuruPast:4e6cb8ef54e50619": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tekuruPast:74db1e639a9ca9eb": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tekuruPast:7d2855536afef20f": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tekuruPast:b882d2810640c271": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tekuruPast:b9ce0778196d0358": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tekuruPast:d3c38005bbb7c62d": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tekuruPast:d4716bab0cd2e347": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temiru:006910460bc6c6e2": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temiru:047dbd58bf6b8008": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temiru:34f4a2bca72e2324": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temiru:4d024f7007bfc6c0": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temiru:54d47f846bc2d156": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temiru:7856ce26508d9326": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiru:7cc5c54e8b46393e": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiru:8f461ebe2e597a04": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiru:f92b062fa6223197": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temiruDesirePast:01ef7e5f5bd28585": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruDesirePast:0c3d15dd2f676381": {
+      "exercises": 8,
+      "distinctWords": 8
+    },
+    "v1:verb:temiruDesirePast:0d9a81331c636027": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruDesirePast:1bc5269d03fbac65": {
+      "exercises": 6,
+      "distinctWords": 6
+    },
+    "v1:verb:temiruDesirePast:2bdda8d81a7f6ab6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruDesirePast:388475356a5867c9": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temiruDesirePast:bd4e6ecb338be33f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruDesirePast:ce35a8c126ac2197": {
+      "exercises": 2,
+      "distinctWords": 2
+    },
+    "v1:verb:temiruDesirePast:cfadc4abc7a9fce3": {
+      "exercises": 4,
+      "distinctWords": 4
+    },
+    "v1:verb:temiruNegative:006b6b8a15e6d204": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temiruNegative:178ee6a482edeab0": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temiruNegative:569303a0d40913ec": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruNegative:58169cb44e045efa": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temiruNegative:82cb9c085224eaf4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruNegative:8d1bc79cecdfd656": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruNegative:a6a05c0e49ad1536": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temiruNegative:dfc84627d5da81a5": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temiruNegative:f1013228cbcd8732": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temiruNegativePast:21d5fcd92e88473f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruNegativePast:330ee25107f06ad3": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temiruNegativePast:4bdaa3ed5f84bb45": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruNegativePast:7d62e5b5162dc79b": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temiruNegativePast:7d743f5be100a85f": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temiruNegativePast:946a0d95f1ccb55d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruNegativePast:acb0a581d03c8799": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temiruNegativePast:b7b7902c6d5b862c": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temiruNegativePast:f810d037b3a1c42d": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temiruPast:47d94ba08e02a596": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temiruPast:4f649f6c6fd2b57a": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temiruPast:6a9aab4eb0db37d4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruPast:a299193960544745": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temiruPast:afc4395607554b36": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temiruPast:c7c9e64498beb7b2": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temiruPast:d28540188225c224": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temiruPast:da1681aeadc5a510": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temiruPast:ed3111764461aecc": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temo:1efc7fe6e37bb768": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temo:41c4fbb66d864b22": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temo:4f9f8d2ff48e13d7": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temo:5f5b513efd718fc4": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temo:6cc3f0a2e4e60ee0": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temo:773d9126f0bdbc3e": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temo:8254596829839cd6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temo:acdb5e1eaee0f826": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temo:e56fb224d04b49e4": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temoIi:27f226fafaacbc22": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temoIi:3af959c796442ad7": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temoIi:7759a6a2d72b18e6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temoIi:792d0a36fe5c8620": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temoIi:84c6fc7ad93478fe": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temoIi:9a3e4e6ed6bb4684": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temoIi:bea768148d94b0e4": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temoIi:bfbfc6faea412f68": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temoIi:c6db349c0d5fab96": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temorau:02e9781a926db3e8": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temorau:1c119e7e539f3a84": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorau:20185f1a90cbbebe": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorau:8d3ea7dc09ca4400": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temorau:a560316cb5aa71d6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temorau:bc761f91bf091f37": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temorau:bd058402a7d818e2": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temorau:cf034014d0221d64": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temorau:d26f3322343d15a6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauNegative:0dc45aa235e6295a": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauNegative:15c33886526955fe": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temorauNegative:568c0bf052109cba": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temorauNegative:56c065a6779cb5bc": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temorauNegative:7a003aa4dab5f048": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temorauNegative:85fc2aaa806b4ae0": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauNegative:d2f692b22a4c77f8": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauNegative:dc5df389e04ee129": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temorauNegative:f95cf3f8367fd096": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temorauNegativePast:021de449444ab693": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temorauNegativePast:03171de712c20a55": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temorauNegativePast:09605373d5612489": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauNegativePast:41e5053b0e81e6f3": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauNegativePast:652563418030de7f": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:temorauNegativePast:77f1d06b8ebb3a91": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauNegativePast:b5d0d07d61746da1": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temorauNegativePast:c5759f52f873e360": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temorauNegativePast:eb60a8ffa13cd517": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temorauPast:0084bbe1b078933b": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:temorauPast:1a4f97cbba432519": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:temorauPast:768561753a94825d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauPast:895e9d146a66d40e": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:temorauPast:8cbc497964d51c7f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauPast:9d63a1d1a5426467": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:temorauPast:9ddb78f37e66e1fd": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:temorauPast:cbdd45abc8bf184f": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:temorauPast:f9f30521643ccdb1": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teoku:2b516e6c645a7c70": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoku:458666ccac847a70": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoku:5aacff0423f70d30": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teoku:65fd69a408e6b170": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teoku:8ed7ca0ceb558270": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teoku:b411c6b013c750b0": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teoku:ba540a00bf574530": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoku:da7fc88c66870170": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teoku:f1d3cb0c1e80cab0": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teokuNegative:0d5e5763250637f3": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teokuNegative:2ea1086fd1a9d0b3": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teokuNegative:3aa463ddc56e0fd3": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teokuNegative:4654e82726d24af3": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teokuNegative:553aacbf38bf7573": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teokuNegative:7e45da33a5121df3": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teokuNegative:9ff1c1ef81085c73": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teokuNegative:d704cf97fcabe273": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teokuNegative:e62669319d4e5ad3": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teokuNegativePast:08208087116125e5": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teokuNegativePast:0f6bc4c719d93a65": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teokuNegativePast:1dc37543015e6ea5": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teokuNegativePast:51da99638b614125": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teokuNegativePast:5815cda5333b0585": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teokuNegativePast:84f3b83f9606f525": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teokuNegativePast:8e1771ab2cf0a425": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teokuNegativePast:ade7628b6c2df8a5": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teokuNegativePast:affe0ed340f5ba25": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teokuPast:1b4a5e3c9566a4e6": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teokuPast:44fabf24b38a74a6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teokuPast:4d3bc2b0d9e43e66": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teokuPast:7222df22052a2c06": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teokuPast:889b1350eccef8e6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teokuPast:94c3585463ba0fe6": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teokuPast:9b15f4b0116d9066": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teokuPast:c443af10b7de6ae6": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teokuPast:ed770c4a93938286": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teoru:1698df95aadf9c09": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoru:2a3d8ee3e12ff7e9": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teoru:336beac5272409c9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoru:5e25534373821069": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teoru:64c14901ac208449": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teoru:8d7397cdc17ab5c9": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teoru:bc1a57ad0f828c09": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teoru:c3f5d209f5b64bc9": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teoru:c850e675fd5341c9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruNegative:0358e68ea129354a": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teoruNegative:1b55e7a282d8a64a": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teoruNegative:26d8ca620281774a": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teoruNegative:2f9f537ed37066ca": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruNegative:304b0df29708098a": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teoruNegative:48b86c3235d9268a": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teoruNegative:5822e01e1ea76a0a": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruNegative:5b88331e7058aaca": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teoruNegative:d899bb2e7de582ca": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruNegativePast:02cf11ca8187fa5c": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teoruNegativePast:158970342423b8bc": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teoruNegativePast:217025a8cf6bf47c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruNegativePast:22948fda736b38dc": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teoruNegativePast:8854efc60425979c": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teoruNegativePast:bfd6efac916bc27c": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teoruNegativePast:e05584f07eefa6bc": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruNegativePast:f0cf35c819930b7c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruNegativePast:f8b19930722d413c": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teoruPast:0381bff920c1165f": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teoruPast:2ef0d8658240105f": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teoruPast:3831f0817b272adf": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruPast:5222ca9d1c38d09f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruPast:63152a31202e81df": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teoruPast:9e01971f69ee7c7f": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teoruPast:a0ab9dd15192975f": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teoruPast:c3c28ac1b5d1a8df": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teoruPast:f77a20a993f88b9f": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teru:0baa7e48df1b5cc8": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teru:29374e4300a5df57": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teru:34ec928ad23f8084": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teru:63e8eef629878226": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teru:63ffaa90ce70ef40": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teru:6c5685aea4138c3e": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teru:6cf0438446168ed6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teru:a6b5045686a55a62": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teru:d16d6990b2711ca4": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teshimau:121c3974053168ea": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teshimau:13d273903c6116aa": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teshimau:199a4408e7fad5aa": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teshimau:21217c5084f2acaa": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimau:588604185ad23caa": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teshimau:7f5c34d05e56cdaa": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimau:a303f0faec36780a": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teshimau:bb8a8b84b1c15b6a": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teshimau:e3d09e90edca546a": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimauNegative:04aded790505bf09": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teshimauNegative:0594ebcf63968429": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teshimauNegative:5c84fff9dc8d3ec9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimauNegative:5ca571d9a74701c9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimauNegative:5faf9f0ffbc05be9": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teshimauNegative:90c7e04d2539adc9": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teshimauNegative:9d11b8afe411b829": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teshimauNegative:f8f07be99a4eaa89": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimauNegative:fb5e3c8df5f02b09": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teshimauNegativePast:39e5d00ff61136bf": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teshimauNegativePast:5d350c0fa9ef9cff": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teshimauNegativePast:8614d86fc626703f": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teshimauNegativePast:a34d69d76d42dd7f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimauNegativePast:b87e1593a3ad927f": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teshimauNegativePast:bead7973d934dcff": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teshimauNegativePast:c487deff7c5b15bf": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimauNegativePast:f5c02127da386b7f": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimauNegativePast:f984db57ee54bdff": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teshimauPast:43d0a31088d523fc": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:teshimauPast:441612249f836f3c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimauPast:50296c227e27b15c": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:teshimauPast:631e38f0ff4e917c": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:teshimauPast:7a8dcf82eca6271c": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:teshimauPast:b7c6b9705e43abfc": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:teshimauPast:c76ea5d4a3bab5fc": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:teshimauPast:ee1308e02371297c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:teshimauPast:fd45c110c683c77c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tewa:24460a66cdbc7944": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tewa:24d7cd5ed3088c22": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:tewa:4976e9830682d8d7": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:tewa:7128c62eca7cbbe8": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:tewa:b02e2784a9daf264": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:tewa:bc6bfc5051dd41d6": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:tewa:c091a876a6ff8fbe": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tewa:cfca126e4c4be660": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tewa:ea6ffdfe6bdd99a6": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:toku:37fe028c2763e07e": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:toku:41739ac2f530af50": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:toku:50d70f4468ab06f4": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:toku:757b006ee2a82000": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:toku:8aebca95d7056941": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:toku:c365c2a08c01b812": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:toku:d11b7e46788e0e32": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:toku:ea1e3bdf9980f055": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:toku:fecf8b6a36764748": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:toru:24d789c32fce8b67": {
+      "exercises": 47,
+      "distinctWords": 47
+    },
+    "v1:verb:toru:29fa0de73c16ec0b": {
+      "exercises": 18,
+      "distinctWords": 18
+    },
+    "v1:verb:toru:31e0fa39a9f1ebcd": {
+      "exercises": 15,
+      "distinctWords": 15
+    },
+    "v1:verb:toru:336e124b6e779fa9": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:toru:811752193c06b36b": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:toru:901c8b10fd4be238": {
+      "exercises": 7,
+      "distinctWords": 7
+    },
+    "v1:verb:toru:97a157cfb5746d39": {
+      "exercises": 12,
+      "distinctWords": 12
+    },
+    "v1:verb:toru:db96cbcc83df278c": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:toru:efb2b483af7f41b1": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tsutsu:4e05448c8f238f52": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:tsutsu:58c2324ce1564bd8": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:tsutsu:5f1a395c4af85864": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:tsutsu:86898a94c2fa307c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:volitional:272a36bd231c31fd": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:volitional:313dfb5c036ecdb8": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:volitional:68b409d517f258e5": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:volitional:9698a53c5ee8ca54": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:youtosuru:30f83a7a4ed2c122": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:youtosuru:35ba8fd1047939f3": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:youtosuru:76919ea2eb30743a": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:youtosuru:776e07b44a150f9c": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:youtosuruNegative:0c6b40c93c67758d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:youtosuruNegative:1146c4e5477a18cb": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:youtosuruNegative:57347664d7125624": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:youtosuruNegative:5d50cb013b48d595": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:youtosuruNegativePast:321feb91bd95c24d": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:youtosuruNegativePast:4e04f512827fd942": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:youtosuruNegativePast:6210eb0e811d6f1c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:youtosuruNegativePast:b0528836801f5804": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:youtosuruPast:3a8f40ff6ce88b35": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:youtosuruPast:8995ca27f2513d2d": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:youtosuruPast:8c85e7de71311c44": {
+      "exercises": 100,
+      "distinctWords": 100
+    },
+    "v1:verb:youtosuruPast:a5cda0e530c8d1cb": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:zu:0eb51d1ddacb2517": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:zu:6cd6a5f6066bf08c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:zu:b6ee2a5497283992": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:zu:e0d6c50c1ffafdbe": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:zu:e25372722e9703b0": {
+      "exercises": 84,
+      "distinctWords": 84
+    },
+    "v1:verb:zuni:1ed89c7ec3e3570c": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:zuni:66ac24ff695a0eb7": {
+      "exercises": 1,
+      "distinctWords": 1
+    },
+    "v1:verb:zuni:b602190c2cb2edd2": {
+      "exercises": 46,
+      "distinctWords": 46
+    },
+    "v1:verb:zuni:bae05d8e39c4e35e": {
+      "exercises": 16,
+      "distinctWords": 16
+    },
+    "v1:verb:zuni:ff85ed2027314a50": {
+      "exercises": 84,
+      "distinctWords": 84
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { emptySkillStats } from './adaptive.mjs';
 import { parsePracticeLog } from './practice-log.mjs';
-import { assessmentTarget, emptyAssessment, recordAssessmentExposure, recordAssistedAttempt, recordHintExposure, recordIndependentAttempt, retestStatus } from './learning-assessment.mjs';
+import { assessmentTarget, emptyAssessment, recordAssessmentExposure, recordAssistedAttempt, recordHintExposure, recordIndependentAttempt, retestStatus, reconcileAssessmentCatalog } from './learning-assessment.mjs';
+import { USAGE_REVIEW_VERSION } from './form-eligibility.mjs';
 import { evidenceCondition, isLocalPracticeRule, scoreLearningEvidence } from './learning-evidence.mjs';
 import { isFalseNaraClassification } from './score-corrections.mjs';
 
@@ -97,7 +98,9 @@ function validateMigration(value, allowed) {
 // replays the retained historical log (which may predate a completed retest).
 function restoreVersioned(source, allowed) {
   const assessment = object(source.assessment), byKc = statsMap(source.byKc, allowed);
-  if (assessment.version !== 1) invalid();
+  if (![1, 2].includes(assessment.version)) invalid();
+  if (assessment.version === 1 && assessment.suspendedPending !== undefined) invalid();
+  const suspended = assessment.version === 2 ? object(assessment.suspendedPending) : {};
   count(assessment.originalCount);
   uniqueStrings(assessment.seenQuestionIds); uniqueStrings(assessment.seenAssistedIds); uniqueStrings(assessment.seenExposureIds);
   if (assessment.seenQuestionIds.length !== assessment.originalCount) invalid();
@@ -131,14 +134,21 @@ function restoreVersioned(source, allowed) {
   const unverifiedQuestionIds = assessment.migration?.unverifiedQuestionIds ?? [];
   if (unverifiedQuestionIds.some(id => !assessment.seenQuestionIds.includes(id))
     || originals + unverifiedQuestionIds.length !== assessment.originalCount || assisted !== assessment.seenAssistedIds.length) invalid();
-  const pendingDefaults = {};
-  for (const [key, entry] of Object.entries(object(assessment.pending))) {
+  const pendingDefaults = {}, suspendedDefaults = {};
+  const pending = object(assessment.pending);
+  for (const [key, entry] of [...Object.entries(pending), ...Object.entries(suspended)]) {
     object(entry);
+    const paused = Object.hasOwn(suspended, key);
+    if (paused && Object.hasOwn(pending, key)) invalid();
+    if (paused) {
+      const suspension = object(entry.suspension);
+      if (suspension.reason !== 'no-eligible-exercise' || !Number.isSafeInteger(suspension.catalogVersion) || suspension.catalogVersion < 1) invalid();
+    } else if (entry.suspension !== undefined) invalid();
     const target = readTarget(entry.target, allowed), known = assessment.byTarget[key];
     if (entry.key !== key || target.key !== key || !known || target.ruleSignature !== known.target.ruleSignature) invalid();
     text(entry.courseId); text(entry.reason, true); text(entry.lastWordKey, true); text(entry.lastQuestionId, true);
     text(entry.lastPresentedWordKey === undefined ? entry.lastWordKey : entry.lastPresentedWordKey, true);
-    if (entry.lastPresentedWordKey === undefined) pendingDefaults[key] = { ...entry, lastPresentedWordKey: entry.lastWordKey };
+    if (entry.lastPresentedWordKey === undefined) (paused ? suspendedDefaults : pendingDefaults)[key] = { ...entry, lastPresentedWordKey: entry.lastWordKey };
     uniqueStrings(entry.kcIds, allowed); uniqueStrings(entry.failedKcIds, new Set(entry.kcIds));
     for (const field of ['createdOrdinal', 'lastPresentedOrdinal', 'failures']) count(entry[field]);
     timestamp(entry.createdAt); timestamp(entry.lastPresentedAt);
@@ -154,7 +164,8 @@ function restoreVersioned(source, allowed) {
         || !assessment.seenQuestionIds.includes(entry.lastQuestionId) || Date.parse(entry.lastPresentedAt) < Date.parse(entry.lastFailureAt)) invalid();
     }
   }
-  return { byKc: clone(byKc), assessment: clone({ ...assessment, pending: { ...assessment.pending, ...pendingDefaults } }) };
+  return { byKc: clone(byKc), assessment: clone({ ...assessment, version: 2,
+    pending: { ...pending, ...pendingDefaults }, suspendedPending: { ...suspended, ...suspendedDefaults } }) };
 }
 
 function catalogIndex(exercises) {
@@ -225,15 +236,17 @@ function withRecordedSpeed(previous, next, event, assessed) {
 }
 
 /**
- * Restore version 1 exactly, or reconcile the auditable suffix of a legacy
+ * Restore versioned evidence without replay, or reconcile the auditable suffix of a legacy
  * log. The log is evidence of what was assessed at the time: this migration
  * never runs a newer answer analyzer against old text to invent a diagnosis.
  * Untouched history and any KC whose snapshot chain cannot be reconciled are
  * retained as unverified baseline, rather than cleared or guessed backwards.
  */
-export function restoreLearningAssessment(sourceProfile, { components, exercises, at = new Date().toISOString() }) {
+export function restoreLearningAssessment(sourceProfile, { components, exercises, at = new Date().toISOString(), catalogVersion = USAGE_REVIEW_VERSION }) {
   const source = object(sourceProfile), allowed = new Set(components.map(component => component.id));
-  if (source.assessment !== undefined) return restoreVersioned(source, allowed);
+  const reconcile = restored => Array.isArray(exercises)
+    ? { ...restored, assessment: reconcileAssessmentCatalog(restored.assessment, exercises, catalogVersion) } : restored;
+  if (source.assessment !== undefined) return reconcile(restoreVersioned(source, allowed));
   const originalByKc = clone(statsMap(source.byKc, allowed)), log = parsePracticeLog(source.practiceLog);
   const catalog = catalogIndex(exercises), resolved = new Map(), histories = new Map(), uncertain = [], rejected = new Set();
   const note = entry => uncertain.push(entry);
@@ -332,5 +345,5 @@ export function restoreLearningAssessment(sourceProfile, { components, exercises
     originalLog: { totalEvents: log.totalEvents, droppedEntries: log.droppedEntries }, baselineByKc,
     verifiedKcIds: [...reliable], unverifiedKcIds: [...new Set([...Object.keys(originalByKc).filter(id => !reliable.has(id)), ...rejected])],
     changes, knownIndependentEvents, knownAssistedEvents, unknownEvents, unverifiedQuestionIds, uncertain, events: replayEvents };
-  return { byKc, assessment };
+  return reconcile({ byKc, assessment });
 }

@@ -1,4 +1,5 @@
 import { createServer } from "vite";
+import { createPracticePlanner } from '../app/lib/practice-planning.mjs';
 import { assignPracticeExercises, exerciseKey } from "../app/lib/exercise-selection.mjs";
 
 const server = await createServer({
@@ -42,12 +43,13 @@ try {
       }
     }
     const gating = model.components.filter((component) => component.gating);
+    const practicePlanner = domain === "unified" ? createPracticePlanner(model) : null;
     for (const focus of gating) {
       const prior = domain === "unified" ? Object.fromEntries(model.components.map(k => [k.id, { attempts: 5, correct: 5, filteredAccuracy: 1, confidence: 1 }])) : {};
       if (domain === "unified") for (const id of [focus.id, ...focus.coverageKcIds]) prior[id] = { attempts: 0, correct: 0, filteredAccuracy: null, confidence: 0 };
       const balanced = adaptive.balanceComponentsForCourse(focus, gating, model.courseKcIds[focus.firstCourseId] ?? []);
       const plan = adaptive.makeRoundPlan(focus, balanced, 12, 0);
-      const assignments = assignPracticeExercises(plan, {
+      let assignments = assignPracticeExercises(plan, {
         byKc: prior,
         alternativesFor: (preferred, index) => {
           const others = balanced.filter((component) => component.id !== preferred.id);
@@ -59,8 +61,19 @@ try {
         },
         seed: 17,
       });
+      if (domain === "unified") {
+        const planner = practicePlanner;
+        const profile = { byKc: prior, introducedKcIds: gating.map(k => k.id), rotation: 0 };
+        const planned = planner.plan(focus.firstCourseId, profile, 12);
+        assignments = planner.assign(planned, profile, { seed: 17 });
+        const used = new Set(assignments.map(({ candidate }) => exerciseKey(candidate)));
+        if (assignments.length < 12 && planned.available.some(kc => planner.candidatesFor(kc, profile, focus.firstCourseId)
+          .some(e => !used.has(exerciseKey(e)) && planner.hasLearningOpportunity(e, profile)))) {
+          issues.push({ domain, code: "premature-short-round", id: focus.id });
+        }
+      }
       const assigned = assignments.map(({ candidate }) => candidate).filter(Boolean);
-      if (assigned.length !== 12) issues.push({ domain, code: "incomplete-round", id: focus.id, assigned: assigned.length });
+      if (!assigned.length || (domain !== "unified" && assigned.length !== 12)) issues.push({ domain, code: "incomplete-round", id: focus.id, assigned: assigned.length });
       if (assigned.some((exercise) => exercise.courseIndex !== focus.firstCourseIndex)) issues.push({ domain, code: "cross-course-round", id: focus.id });
       if (new Set(assigned.map(exerciseKey)).size !== assigned.length) issues.push({ domain, code: "duplicate-round-exercise", id: focus.id });
       for (const facetId of focus.coverageKcIds) {

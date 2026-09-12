@@ -1,3 +1,4 @@
+import { assessFormUsage } from "./form-eligibility.mjs";
 import { CHAIN_FORM_SPECS, chainOutputClass } from './multi-step-forms.mjs';
 import { deriveExercise, diagnoseConjugation, diagnoseCommonConjugationError, classificationKcIds } from './knowledge-model.mjs';
 import { deriveAdjectiveExercise } from './adjective-knowledge-model.mjs';
@@ -586,7 +587,7 @@ export function diagnoseUnifiedStepReview(item, step, answer, normalize = value 
 export function buildUnifiedKnowledge(verbModel, adjectiveModel, verbs, adjectives, eligibleFor) {
   const legacy = new Map([...verbModel.components, ...adjectiveModel.components].map(kc => [kc.id, kc]));
   const components = new Map();
-  const exerciseList = [];
+  const registryExercises = [];
   const baseOwners = new Map();
   for (const c of UNIFIED_COURSES) for (const f of c.forms) if (!baseOwners.has(f)) baseOwners.set(f, c.id);
   // Ownership is declared from the original registry, with explicit changes.
@@ -614,19 +615,19 @@ export function buildUnifiedKnowledge(verbModel, adjectiveModel, verbs, adjectiv
       if (course.domain === 'adjective' && !adjectiveModel.exercises.some(e => e.form === form && e.item.surface === item.surface)) continue;
       const derived = deriveUnified(item, form);
       for (const id of derived.requiredKcIds) register(id);
-      exerciseList.push({ id: `${course.id}:${form ?? 'classify'}:${item.surface}`, courseId: course.id, courseIndex: course.order, form, item,
+      registryExercises.push({ id: `${course.id}:${form ?? 'classify'}:${item.surface}`, courseId: course.id, courseIndex: course.order, form, item,
         kcIds: derived.requiredKcIds, prerequisites: derived.prerequisiteIds ?? [], sourceUrl: sourceForForm(item.domain, form)?.url ?? course.url });
     }
   }
   for (const component of components.values()) {
     const app = component.id.match(/^apply\.(.+)\.continuation$/);
     if (app) {
-      const examples = exerciseList.filter(e => familyFor(e.form)?.form === app[1]);
+      const examples = registryExercises.filter(e => familyFor(e.form)?.form === app[1]);
       component.prerequisites = unique(examples.flatMap(e => e.prerequisites)).filter(id => components.get(id)?.gating);
       component.coverageKcIds = ['past', 'negative', 'negativePast'].map(ending => applicationFacet(app[1], ending));
     }
     const chain=Object.values(CHAIN_FORM_SPECS).find(spec=>spec.kcId===component.id);
-    if(chain)component.prerequisites=unique(exerciseList.filter(e=>e.kcIds.includes(chain.kcId)).flatMap(e=>e.prerequisites)).filter(id=>components.get(id)?.gating);
+    if(chain)component.prerequisites=unique(registryExercises.filter(e=>e.kcIds.includes(chain.kcId)).flatMap(e=>e.prerequisites)).filter(id=>components.get(id)?.gating);
     if (component.id === 'stem.irregular.connective') { component.coverageOnly = true; component.prerequisites = ['class.irregular']; component.coverageKcIds = ['facet.stem.connective.suru', 'facet.stem.connective.kuru']; }
     if (component.id === 'exception.aru-negative') component.prerequisites = ['construction.tearu'];
     if (component.id === 'compound.negative-past') component.prerequisites = ['suffix.negative', 'adj.suffix.i-past'];
@@ -635,9 +636,11 @@ export function buildUnifiedKnowledge(verbModel, adjectiveModel, verbs, adjectiv
     if (component.id === 'compound.multi-step') component.prerequisites = ['suffix.passive', applicationId('tai')];
     if (component.id.startsWith('construction.')) {
       const form = component.id.slice(13);
-      const sample = exerciseList.find(e => e.form === form);
+      const sample = registryExercises.find(e => e.form === form);
       component.prerequisites = unique([...component.prerequisites, ...(sample?.prerequisites ?? [])]);
     }
+    // The unified stem decomposition supersedes legacy per-form irregular
+    // aliases. Resolve those against the complete registry before usage filters.
     component.coverageKcIds = component.coverageKcIds.filter(id => components.has(id));
     for (const id of component.prerequisites) if (!components.has(id)) throw new Error(`Missing prerequisite ${id} for ${component.id}`);
   }
@@ -651,5 +654,12 @@ export function buildUnifiedKnowledge(verbModel, adjectiveModel, verbs, adjectiv
   const localOrder = kc => kc.id === 'adj.exception.ii-yo' ? 9999 : legacy.get(kc.id)?.order ?? 10000;
   const ordered = [...components.values()].sort((a,b) => a.firstCourseIndex - b.firstCourseIndex || localOrder(a) - localOrder(b) || a.id.localeCompare(b.id));
   ordered.forEach((kc, order) => { kc.order = order; if (kc.gating && kc.family === 'compound') kc.masteryPrerequisites = kc.prerequisites.map(id => components.get(id)); });
-  return { unified: true, components: ordered, exercises: exerciseList, courseKcIds: Object.fromEntries(UNIFIED_COURSES.map(c => [c.id, unique(exerciseList.filter(e => e.courseId === c.id).flatMap(e => e.kcIds))])) };
+  // Register the entire declared knowledge graph first. A policy change may
+  // remove examples, but must never silently remove the required knowledge.
+  const exerciseList = registryExercises.flatMap(exercise => {
+    const usage = assessFormUsage(exercise.item, exercise.form);
+    if (usage.status === 'blocked' || (usage.status === 'context-required' && !usage.context)) return [];
+    return [{ ...exercise, usage, usageReviewVersion: usage.reviewVersion, ...(usage.context ? { context: usage.context } : {}) }];
+  });
+  return { unified: true, components: ordered, exercises: exerciseList, registryExercises, courseKcIds: Object.fromEntries(UNIFIED_COURSES.map(c => [c.id, unique(registryExercises.filter(e => e.courseId === c.id).flatMap(e => e.kcIds))])) };
 }

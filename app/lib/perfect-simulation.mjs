@@ -24,6 +24,8 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
   const targetReached = () => Boolean(stopWhen?.(state()));
   let questionCount = 0;
   let redundantFocusQuestions = 0;
+  let masteredOnlyQuestions = 0;
+  const masteredOnlyByFocus = new Map();
   let preMasteredIntroductions = 0;
   const focusRounds = new Map();
   const redundantByFocus = new Map();
@@ -42,6 +44,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     let answered = 0;
     let coverageQuestions = 0;
     let roundRedundantFocusQuestions = 0;
+    let roundMasteredOnlyQuestions = 0;
 
     while (answered < sessionLength) {
       introduced = introducedKcIds.map((id) => byId.get(id)).filter(Boolean);
@@ -54,6 +57,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
       if (previousFocus && !canContinueRound(previousFocus, next, byKc, false)) break;
       roundFocusIds.add(focus.id);
       const assignments = planner.assign(next, state(), { seed: rounds.length + 1, usedKeys: [...usedKeys], usedWordKeys });
+      if (!assignments.length && answered > 0) break;
       if (!assignments.length || assignments.some(({ candidate }) => !candidate)) {
         return { completed: false, reason: "incomplete-round", focusId: focus.id, rounds, byKc, introducedKcIds };
       }
@@ -65,6 +69,11 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
         usedKeys.add(key);
         usedWordKeys.push(wordKey(candidate));
         recentWordKeys = recordRecentWord(recentWordKeys, candidate);
+        if (!planner.hasLearningOpportunity(candidate, state())) {
+          masteredOnlyQuestions += 1;
+          roundMasteredOnlyQuestions += 1;
+          masteredOnlyByFocus.set(item.id, (masteredOnlyByFocus.get(item.id) ?? 0) + 1);
+        }
         if (item.id === focus.id && isComponentMastered(focus, byKc)) {
           redundantFocusQuestions += 1;
           roundRedundantFocusQuestions += 1;
@@ -96,7 +105,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     if (answered === 0) return { completed: false, reason: "no-progress", rounds, byKc, introducedKcIds };
     for (const id of roundFocusIds) focusRounds.set(id, (focusRounds.get(id) ?? 0) + 1);
     courseRounds.set(roundCourseId, (courseRounds.get(roundCourseId) ?? 0) + 1);
-    rounds.push({ index: rounds.length + 1, courseId: roundCourseId, questionCount: answered, focusIds: [...roundFocusIds], coverageQuestions, redundantFocusQuestions: roundRedundantFocusQuestions, wordKeys: usedWordKeys });
+    rounds.push({ index: rounds.length + 1, courseId: roundCourseId, questionCount: answered, focusIds: [...roundFocusIds], coverageQuestions, redundantFocusQuestions: roundRedundantFocusQuestions, masteredOnlyQuestions: roundMasteredOnlyQuestions, wordKeys: usedWordKeys });
     rotation += 1;
   }
 
@@ -114,6 +123,8 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     introducedCount: introducedKcIds.length,
     masteredCount: gating.filter((component) => isComponentMastered(component, byKc)).length,
     redundantFocusQuestions,
+    masteredOnlyQuestions,
+    masteredOnlyByFocus: Object.fromEntries(masteredOnlyByFocus),
     redundantByFocus: Object.fromEntries(redundantByFocus),
     preMasteredIntroductions,
     longestFocusRun,

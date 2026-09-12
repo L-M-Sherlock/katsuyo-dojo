@@ -310,7 +310,7 @@ test('explicit negative evidence on an assisted step leaves independent mastery 
 test('malformed v1 assessment cannot be silently replayed as legacy history or normalize away a completed state', () => {
   const { old } = latestNoru(), valid = restoreLearningAssessment(old, options);
   const mutations = [
-    state => { state.assessment.version = 2; },
+    state => { state.assessment.version = 3; },
     state => { state.assessment.originalCount = 99; },
     state => { state.assessment.originalCount++; state.assessment.seenQuestionIds.push('invented-question'); },
     state => { state.assessment.seenQuestionIds.push(state.assessment.seenQuestionIds[0]); },

@@ -1,7 +1,7 @@
 /** @typedef {import('./adaptive.mjs').SkillStats} SkillStats */
 /** @typedef {{date: string, attempted: number, correct: number, streak: number}} Totals */
 /** @typedef {{surface: string, reading: string, form: string | null, label: string, kind: string, kcIds: string[], answers: string[], readings: string[], stepIndex: number | null, totalSteps: number, nextTotalSteps: number}} LogTarget */
-/** @typedef {{id: string, courseId: string, form: string | null, surface: string, reading: string, wordClass: string, domain: string}} LogExercise */
+/** @typedef {{id: string, courseId: string, form: string | null, surface: string, reading: string, wordClass: string, domain: string, context?: {id: string, text: string, reviewVersion: number}}} LogExercise */
 /** @typedef {{kcId: string, label: string, before: SkillStats | null, after: SkillStats | null}} KnowledgeChange */
 /** @typedef {{independent: boolean, source: string, provided: string[]}} EvidenceSupport */
 /** @typedef {{pending: boolean, independentAttempts: number, independentCorrect: number, assistedOriginalAttempts: number, assistedOriginalCorrect: number, assistedStepAttempts: number, assistedStepCorrect: number, eligibleRetestCorrect: number, pendingReason: string | null, lastFailureAt: string | null, lastPresentedAt: string | null}} AssessmentSnapshot */
@@ -26,6 +26,12 @@ function object(value) { if (!value || typeof value !== 'object' || Array.isArra
 function string(value, max = 256, nonempty = false) {
   if (typeof value !== 'string' || Array.from(value).length > max || (nonempty && !value.length)) invalid();
   return value;
+}
+function readQuestionContext(value) {
+  const context = object(value);
+  const result = { id: string(context.id, 256, true), text: string(context.text, 1000, true), reviewVersion: integer(context.reviewVersion) };
+  if (!result.reviewVersion) invalid();
+  return result;
 }
 function nullableString(value) { return value === null ? null : string(value); }
 function integer(value) { if (!Number.isSafeInteger(value) || value < 0) invalid(); return value; }
@@ -124,7 +130,8 @@ function readEvent(value) {
     id: string(s.id, 128, true), sequence: integer(s.sequence), questionId: string(s.questionId, 128, true), at: timestamp(s.at),
     type: string(s.type), outcome: string(s.outcome),
     exercise: { id: string(exercise.id), courseId: string(exercise.courseId), form: nullableString(exercise.form), surface: string(exercise.surface),
-      reading: string(exercise.reading), wordClass: string(exercise.wordClass), domain: string(exercise.domain) },
+      reading: string(exercise.reading), wordClass: string(exercise.wordClass), domain: string(exercise.domain),
+      ...(exercise.context === undefined ? {} : { context: readQuestionContext(exercise.context) }) },
     target: { surface: string(target.surface), reading: string(target.reading), form: nullableString(target.form), label: string(target.label), kind: string(target.kind),
       kcIds: strings(target.kcIds), answers: list(target.answers, v => string(v), 32), readings: list(target.readings, v => string(v), 32),
       stepIndex: target.stepIndex === null ? null : integer(target.stepIndex), totalSteps: integer(target.totalSteps), nextTotalSteps: integer(target.nextTotalSteps) },

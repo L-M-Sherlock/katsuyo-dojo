@@ -36,10 +36,10 @@ function seededOrder(key, seed) {
  * @template {{id: string, coverageKcIds?: string[]}} C
  * @template {{item: {domain?: string, surface: string}, form?: string | null, kcIds: string[]}} E
  * @param {C[]} preferredItems
- * @param {{alternativesFor: (item: C, index: number) => C[], candidatesFor: (item: C) => E[], byKc?: Record<string, {confidence?: number, correct?: number}>, seed?: number, usedKeys?: string[], usedWordKeys?: string[], recentWordKeys?: string[]}} options
+ * @param {{alternativesFor: (item: C, index: number) => C[], candidatesFor: (item: C) => E[], byKc?: Record<string, {confidence?: number, correct?: number}>, seed?: number, usedKeys?: string[], usedWordKeys?: string[], recentWordKeys?: string[], isUseful?: (exercise: E) => boolean, allowReview?: (item: C) => boolean}} options
  */
 export function assignPracticeExercises(preferredItems, options) {
-  const { alternativesFor, candidatesFor, byKc = {}, seed = 0, usedKeys = [], usedWordKeys = [], recentWordKeys = [] } = options;
+  const { alternativesFor, candidatesFor, byKc = {}, seed = 0, usedKeys = [], usedWordKeys = [], recentWordKeys = [], isUseful, allowReview } = options;
   const used = new Set(usedKeys);
   const wordCounts = new Map();
   // Keep per-round word counts across replans; a different form is the same word.
@@ -88,23 +88,33 @@ export function assignPracticeExercises(preferredItems, options) {
     return ranked[0].candidate;
   }
 
-  return preferredItems.map((preferred, index) => {
+  const assigned = [];
+  for (const [index, preferred] of preferredItems.entries()) {
     const choices = [preferred, ...alternativesFor(preferred, index)].filter((item, i, items) => items.findIndex(other => other.id === item.id) === i);
+    // Learning rounds end when their remaining distinct examples cannot advance
+    // any unmastered rule. A planned balance slot is allowed only while useful
+    // examples remain; exhausting a tiny focus pool must not create filler.
+    if (isUseful && !choices.some(item => poolFor(item).some(exercise => !used.has(exerciseKey(exercise)) && isUseful(exercise)))) break;
     const assign = (item, candidate) => {
       used.add(exerciseKey(candidate));
       const word = wordKey(candidate);
       wordCounts.set(word, (wordCounts.get(word) ?? 0) + 1);
       return { item, candidate };
     };
+    let selected;
     for (const item of choices) {
-      const candidate = select(item, poolFor(item), index);
-      if (candidate) return assign(item, candidate);
+      const pool = isUseful && (item.id !== preferred.id || !allowReview?.(item)) ? poolFor(item).filter(isUseful) : poolFor(item);
+      const candidate = select(item, pool, index);
+      if (candidate) { selected = assign(item, candidate); break; }
     }
-    // Only repeat an exact question when every eligible alternative is exhausted.
-    for (const item of choices) {
+    // Open-ended review and legacy callers retain their repetition policy.
+    // Learning callers never repeat an exact question to meet a round quota.
+    if (!selected && !isUseful) for (const item of choices) {
       const candidate = select(item, poolFor(item), index, true);
-      if (candidate) return assign(item, candidate);
+      if (candidate) { selected = assign(item, candidate); break; }
     }
-    return { item: preferred, candidate: undefined };
-  });
+    if (!selected && isUseful) break;
+    assigned.push(selected ?? { item: preferred, candidate: undefined });
+  }
+  return assigned;
 }

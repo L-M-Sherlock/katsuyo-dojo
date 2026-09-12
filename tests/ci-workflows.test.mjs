@@ -22,18 +22,20 @@ test('ordinary CI runs parallel regression suites and builds without large gener
   const ci=load('ci');
   assert.deepEqual(ci.jobs.tests.strategy.matrix.suite,TEST_SUITES);
   assert.equal(ci.jobs.tests.needs,undefined);assert.equal(ci.jobs.build.needs,undefined);
+  assert.equal(ci.jobs.catalog.needs,undefined);
+  assert.ok(ci.jobs.catalog.steps.some(step=>step.run==='npm run audit:eligibility -- --output eligibility-audit.json'));
   const runs=Object.values(ci.jobs).flatMap(job=>(job.steps??[]).map(step=>step.run??'')).join('\n');
   assert.doesNotMatch(runs,/audit:diagnosis|audit:paths|audit-diagnosis\.mjs|audit-diagnostic-paths\.mjs|--representatives/);
   for(const command of ['audit','simulate:perfect','simulate:mixed','typecheck','lint','build'])assert.ok(ci.jobs.build.steps.some(step=>step.run===`npm run ${command}`));
 });
 test('deployment requires all tests and the same-run build, and rejects failed, cancelled or skipped jobs',()=>{
   const ci=load('ci'),pages=load('pages');
-  assert.deepEqual(ci.jobs.verify.needs,['tests','build']);
+  assert.deepEqual(ci.jobs.verify.needs,['tests','build','catalog']);
   assert.equal(ci.jobs.verify.if,'always()');
   const gate=ci.jobs.verify.steps[0];
-  for(const tests of ['success','failure','cancelled','skipped'])for(const build of ['success','failure','cancelled','skipped']) {
-    const result=spawnSync('bash',['-c',gate.run],{env:{TEST_RESULT:tests,BUILD_RESULT:build},stdio:'ignore'});
-    assert.equal(result.status===0,tests==='success'&&build==='success',`${tests}/${build}`);
+  for(const tests of ['success','failure','cancelled','skipped'])for(const build of ['success','failure','cancelled','skipped'])for(const catalog of ['success','failure','cancelled','skipped']) {
+    const result=spawnSync('bash',['-c',gate.run],{env:{TEST_RESULT:tests,BUILD_RESULT:build,CATALOG_RESULT:catalog},stdio:'ignore'});
+    assert.equal(result.status===0,tests==='success'&&build==='success'&&catalog==='success',`${tests}/${build}/${catalog}`);
   }
   assert.equal(ci.jobs.deploy.needs,'verify');assert.match(ci.jobs.deploy.if,/push.*refs\/heads\/main/);
   assert.equal(ci.jobs.deploy.uses,'./.github/workflows/pages.yml');

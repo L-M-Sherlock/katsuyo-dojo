@@ -5,6 +5,7 @@ import { emptyPracticeLog, parsePracticeLog, appendPracticeEvent } from './pract
 import { restoreLearningAssessment } from './assessment-transfer.mjs';
 import { correctNaraClassification } from './score-corrections.mjs';
 import { CURRICULUM_VERSION, SOURCE_COURSES, UNIFIED_COURSES, VOICE_BASE_FORMS, VOICE_CONTINUATION_FORMS } from './unified-curriculum.mjs';
+import { USAGE_REVIEW_VERSION } from './form-eligibility.mjs';
 
 export const UNIFIED_STORAGE_KEY = 'katsuyo-practice-profile-v7';
 export const LEGACY_STORAGE_KEY = 'katsuyo-practice-profile-v6';
@@ -30,7 +31,7 @@ export function parseUnifiedImport(value, { today, components, legacyComponents,
     .map(([id, stats]) => [id, current ? stats : { ...stats, confidence: confidenceOf(stats.filteredAccuracy, stats.attempts) }]));
   // Versioned independent assessment is authoritative. Validate its original
   // statistics rather than silently clamping them through the legacy reader.
-  const restored = restoreLearningAssessment({ ...source, byKc: source.assessment === undefined ? rawByKc : source.byKc }, { components, exercises, at });
+  const restored = restoreLearningAssessment({ ...source, byKc: source.assessment === undefined ? rawByKc : source.byKc }, { components, exercises, at, catalogVersion: USAGE_REVIEW_VERSION });
   // Move only live course metadata. Stable KC/target keys and all historical
   // scores, logs, attempt counts and pending anchors remain unchanged.
   if ((source.curriculumVersion ?? 1) < 4) {
@@ -39,6 +40,10 @@ export function parseUnifiedImport(value, { today, components, legacyComponents,
     restored.assessment = { ...restored.assessment,
       byTarget: Object.fromEntries(Object.entries(restored.assessment.byTarget).map(([key, entry]) => [key, { ...entry, target: moveTarget(entry.target) }])),
       pending: Object.fromEntries(Object.entries(restored.assessment.pending).map(([key, entry]) => {
+        const target = moveTarget(entry.target);
+        return [key, { ...entry, target, courseId: target.courseId }];
+      })),
+      suspendedPending: Object.fromEntries(Object.entries(restored.assessment.suspendedPending).map(([key, entry]) => {
         const target = moveTarget(entry.target);
         return [key, { ...entry, target, courseId: target.courseId }];
       })),

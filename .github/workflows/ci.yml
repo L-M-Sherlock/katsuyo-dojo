@@ -28,6 +28,22 @@ jobs:
           cache: npm
       - run: npm ci
       - run: node scripts/ci-tests.mjs ${{ matrix.suite }}
+  catalog:
+    name: Eligibility catalog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run audit:eligibility -- --output eligibility-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eligibility-audit
+          path: eligibility-audit.json
   build:
     runs-on: ubuntu-latest
     steps:
@@ -49,14 +65,15 @@ jobs:
           path: dist
   verify:
     if: always()
-    needs: [tests, build]
+    needs: [tests, build, catalog]
     runs-on: ubuntu-latest
     steps:
       - name: Require all checks
         env:
           TEST_RESULT: ${{ needs.tests.result }}
           BUILD_RESULT: ${{ needs.build.result }}
-        run: test "$TEST_RESULT" = success && test "$BUILD_RESULT" = success
+          CATALOG_RESULT: ${{ needs.catalog.result }}
+        run: test "$TEST_RESULT" = success && test "$BUILD_RESULT" = success && test "$CATALOG_RESULT" = success
   deploy:
     needs: verify
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

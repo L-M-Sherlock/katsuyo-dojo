@@ -242,3 +242,20 @@ test('v2 retention counts assistance and assessment fields toward the size limit
   assert.deepEqual(parsed.events, entries.slice(parsed.droppedEntries));
   assert.deepEqual(parsePracticeLog(parsed), parsed);
 });
+
+
+test('reviewed question context survives export parsing without counting as a hint', () => {
+  const context = { id: 'verb:降る:passive:v1', text: '有人外出时遇上降雨，描述这件事对他的影响。', reviewVersion: 1 };
+  const before = profile();
+  const after = appendPracticeEvent(before, before, detail({ exercise: { ...exercise, context },
+    support: { independent: true, source: 'independent', provided: [] } }));
+  const restored = parsePracticeLog(JSON.parse(JSON.stringify(after.practiceLog)));
+  assert.deepEqual(restored.events[0].exercise.context, context);
+  assert.equal(restored.events[0].hintUsed, false);
+  assert.equal(restored.events[0].support.independent, true);
+  context.text = '后续修改';
+  assert.notEqual(restored.events[0].exercise.context.text, context.text);
+  const invalid = structuredClone(after.practiceLog);
+  invalid.events[0].exercise.context.reviewVersion = 0;
+  assert.throws(() => parsePracticeLog(invalid));
+});

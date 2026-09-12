@@ -8,6 +8,7 @@ import { createProfileStore } from '../app/lib/profile-store.mjs';
 import { assessmentTarget, emptyAssessment, recordIndependentAttempt } from '../app/lib/learning-assessment.mjs';
 import { appendPracticeEvent, emptyPracticeLog, parsePracticeLog } from '../app/lib/practice-log.mjs';
 import { applyLearningObservation } from '../app/lib/learning-profile.mjs';
+import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
 let page;
@@ -34,7 +35,7 @@ test('v6 real-log suffix migrates to v7 with one correction event and intact his
   const migrated = parseUnifiedImport({ format: 'katsuyo-dojo-profile', formatVersion: 4, profile: old }, options);
   assert.deepEqual(old, before);
   assert.equal(migrated.version, 7);
-  assert.equal(migrated.assessment.version, 1);
+  assert.equal(migrated.assessment.version, 2);
   assert.equal(migrated.practiceLog.version, 2);
   assert.equal(migrated.practiceLog.totalEvents, 21);
   assert.equal(migrated.practiceLog.droppedEntries, 16);
@@ -95,7 +96,7 @@ test('v7 strict restore rejects damaged authoritative scores instead of clamping
   const migrated = parseUnifiedImport(legacyNoru(), options);
   const invalids = [
     value => { delete value.assessment; },
-    value => { value.assessment.version = 2; },
+    value => { value.assessment.version = 3; },
     value => { value.byKc['apply.teiru.continuation'].confidence = 3; },
     value => { value.byKc['apply.teiru.continuation'].correct = 99; },
     value => { value.byKc['unknown-kc'] = value.byKc['apply.teiru.continuation']; },
@@ -117,6 +118,30 @@ test('old cumulative-only profiles retain their history and explicitly log the l
   assert.equal(migrated.practiceLog.events.length, 1);
   assert.equal(migrated.practiceLog.events[0].changes.length, 0);
   assert.deepEqual(parseUnifiedImport(createUnifiedExport(migrated), options), migrated);
+});
+
+test('actual removed する passive-desire path suspends on import without losing history or other pending targets', () => {
+  const item = { domain: 'verb', surface: 'する', reading: 'する', class: 'irregular' };
+  const removed = { id: 'multiStepCompound:passiveDesireNegativePast:する', courseId: 'multiStepCompound',
+    item, form: 'passiveDesireNegativePast', kcIds: deriveUnified(item, 'passiveDesireNegativePast').requiredKcIds };
+  const key = assessmentTarget(removed).key;
+  assert.equal(options.exercises.some(e => assessmentTarget(e).key === key), false, 'the revised catalog has no regular practice context for this actual old target');
+  const source = parseUnifiedImport(legacyNoru(), options);
+  source.assessment = recordIndependentAttempt(source.assessment, { exercise: removed, questionId: 'removed-actual-target', correct: false, at: options.at });
+  source.assessment.version = 1; delete source.assessment.suspendedPending;
+  const before = structuredClone(source), restored = parseUnifiedImport(createUnifiedExport(source), options);
+  assert.deepEqual(source, before);
+  assert.deepEqual(restored.byKc, source.byKc);
+  assert.deepEqual(restored.practiceLog, source.practiceLog);
+  assert.equal(restored.assessment.originalCount, source.assessment.originalCount);
+  assert.deepEqual(restored.assessment.byTarget, source.assessment.byTarget);
+  assert.equal(restored.assessment.pending[key], undefined);
+  assert.equal(restored.assessment.suspendedPending[key].suspension.reason, 'no-eligible-exercise');
+  assert.ok(restored.assessment.pending[assessmentTarget(find('乗る', 'teiruNegative')).key]);
+  assert.deepEqual(parseUnifiedImport(createUnifiedExport(restored), options), restored);
+  const resumed = parseUnifiedImport(createUnifiedExport(restored), { ...options, exercises: [...options.exercises, removed] });
+  assert.deepEqual(resumed.assessment.pending[key], source.assessment.pending[key]);
+  assert.equal(resumed.assessment.suspendedPending[key], undefined);
 });
 
 test('legacy v4 and v5 remain importable without claiming unseen independent observations', () => {

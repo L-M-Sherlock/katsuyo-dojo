@@ -1,4 +1,5 @@
-import { assessmentTarget, selectRetest, retestStatus } from './learning-assessment.mjs';
+import { assessmentTarget, selectRetest, retestStatus, reconcileAssessmentCatalog } from './learning-assessment.mjs';
+import { USAGE_REVIEW_VERSION } from './form-eligibility.mjs';
 import { isComponentMastered } from './adaptive.mjs';
 import { assignPracticeExercises, wordKey } from './exercise-selection.mjs';
 import { summarizeUnifiedCourse } from './unified-progress.mjs';
@@ -9,8 +10,9 @@ import { summarizeUnifiedCourse } from './unified-progress.mjs';
  * is frozen until that question is finished; score changes must not replace it
  * while its feedback or diagnostic steps are on screen. */
 export function planRetestQuestion(profile, mode, { exercises, components, courses, courseKcIds, seed = 0, at = new Date().toISOString() }) {
-  const assessment = profile.assessment;
-  if (!assessment || !Object.keys(assessment.pending).length) return null;
+  if (!profile.assessment) return null;
+  const assessment = reconcileAssessmentCatalog(profile.assessment, exercises, USAGE_REVIEW_VERSION);
+  if (!Object.keys(assessment.pending).length) return null;
   const byId = new Map(components.map(kc => [kc.id, kc]));
   const open = new Set(courses.filter(course => summarizeUnifiedCourse(course,
     (courseKcIds[course.id] ?? []).map(id => byId.get(id)).filter(Boolean), profile.introducedKcIds, profile).unlocked).map(course => course.id));

@@ -28,6 +28,8 @@ try {
       completedCoverageFacets: report.completedFacetCount,
       preMasteredIntroductions: report.preMasteredIntroductions,
       redundantFocusQuestions: report.redundantFocusQuestions,
+      masteredOnlyQuestions: report.masteredOnlyQuestions,
+      masteredOnlyByFocus: report.masteredOnlyByFocus,
       redundantFocusRatio: Number((report.redundantFocusQuestions / report.questionCount).toFixed(3)),
       topRedundantFocus,
       longestFocusRun: report.longestFocusRun,
