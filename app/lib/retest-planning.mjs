@@ -2,6 +2,7 @@ import { assessmentTarget, selectRetest, retestStatus, reconcileAssessmentCatalo
 import { USAGE_REVIEW_VERSION } from './form-eligibility.mjs';
 import { isComponentMastered } from './adaptive.mjs';
 import { assignPracticeExercises, wordKey } from './exercise-selection.mjs';
+import { exerciseHasLearningOpportunity } from './practice-planning.mjs';
 import { summarizeUnifiedCourse } from './unified-progress.mjs';
 
 /** exercises must be the complete current catalog; mode/readiness filters are
@@ -55,8 +56,26 @@ export function planRetestQuestion(profile, mode, { exercises, components, cours
   let fillers = eligiblePool.filter(e => assessmentTarget(e).key !== waiting.key && ready(e));
   if (!fillers.length && mode !== 'adaptive') fillers = exercises.filter(e => open.has(e.courseId) && e.form === null && assessmentTarget(e).key !== waiting.key && ready(e));
   if (!fillers.length) return { kind: 'waiting', pending: waiting, exercise: null, status: null };
+  // Use another pending target only when every otherwise suitable target is
+  // pending. This fallback prevents deadlock without needlessly exposing and
+  // restarting a second target's interval when safe alternatives exist.
+  let safe = fillers.filter(e => !assessment.pending[assessmentTarget(e).key]);
+  // Specialty practice already permits open basic classification as a spacing
+  // fallback. Prefer that safe option to restarting another local obligation.
+  if (!safe.length && mode !== 'adaptive') safe = exercises.filter(e => open.has(e.courseId) && e.form === null
+    && ready(e) && !assessment.pending[assessmentTarget(e).key]);
+  let spacingPurpose = 'pending-fallback';
+  if (safe.length) {
+    const introduced = new Set(profile.introducedKcIds ?? []);
+    const activeLearning = safe.filter(e => exerciseHasLearningOpportunity(e, profile.byKc, byId, introduced));
+    const readyLearning = activeLearning.length ? activeLearning
+      : safe.filter(e => exerciseHasLearningOpportunity(e, profile.byKc, byId));
+    fillers = readyLearning.length ? readyLearning : safe;
+    spacingPurpose = readyLearning.length ? 'learning' : 'review';
+  }
+
   const marker = { id: 'retest-spacing' };
   const selected = assignPracticeExercises([marker], { candidatesFor: () => fillers, alternativesFor: () => [],
     byKc: profile.byKc, seed: seed + assessment.originalCount + (profile.rotation ?? 0), recentWordKeys: profile.recentWordKeys ?? [] })[0];
-  return { kind: 'spacing', pending: waiting, exercise: selected.candidate, status: null };
+  return { kind: 'spacing', pending: waiting, exercise: selected.candidate, status: null, spacingPurpose };
 }

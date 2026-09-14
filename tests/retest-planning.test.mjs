@@ -230,3 +230,55 @@ test('filler prerequisite gates apply even inside an open course', () => {
   assert.equal(choice.kind, 'spacing');
   assert.equal(choice.exercise, classification);
 });
+
+
+test('spacing avoids every pending target when safe alternatives are available', () => {
+  const a = get('立つ', null, 'classify'), b = get('出る', null, 'classify');
+  const p = record(record(fresh(true), a, 'first'), b, 'second');
+  const snapshot = structuredClone(p);
+  const selected = plan(p);
+  assert.equal(selected.kind, 'spacing');
+  assert.equal(selected.spacingPurpose, 'learning');
+  assert.equal(p.assessment.pending[assessmentTarget(selected.exercise).key], undefined);
+  const observed = applyLearningObservation(p, selected.exercise, { type: 'question', outcome: 'correct', questionId: 'safe-spacing', eventId: 'safe-spacing:event', at }, catalog);
+  assert.equal(observed.support.independent, true);
+  for (const [key, pending] of Object.entries(p.assessment.pending)) assert.equal(observed.profile.assessment.pending[key].lastPresentedOrdinal, pending.lastPresentedOrdinal);
+  assert.deepEqual(p, snapshot);
+});
+
+test('safe spacing prioritizes unfinished learning over mastered content and recency', async () => {
+  const { createPracticePlanner } = await import('../app/lib/practice-planning.mjs');
+  const failed = get('書く', 'past');
+  const p = applyLearningObservation(fresh(), failed, { type: 'question', outcome: 'incorrect', questionId: 'past-failure', eventId: 'past-failure:event', failedKcId: 'suffix.past', at }, catalog).profile;
+  p.recentWordKeys = model.exercises.filter(e => e.form === 'past').map(e => `verb:${e.item.surface}`).slice(-36);
+  const snapshot = structuredClone(p), planner = createPracticePlanner(model);
+  for (const seed of [0, 1, 19, 77]) {
+    const selected = plan(p, 'adaptive', { seed });
+    assert.equal(selected.kind, 'spacing');
+    assert.equal(selected.spacingPurpose, 'learning');
+    assert.equal(p.assessment.pending[assessmentTarget(selected.exercise).key], undefined);
+    assert.equal(planner.hasLearningOpportunity(selected.exercise, p), true);
+    assert.ok(selected.exercise.kcIds.includes('suffix.past'));
+  }
+  assert.deepEqual(p, snapshot);
+});
+
+test('mastered safe spacing wins over an ineligible pending learning target', () => {
+  const a = get('乗る', 'teiruNegative'), b = get('読む', 'teiruNegative'), known = get('書く', null, 'classify');
+  const p = record(record(fresh(), a, 'a'), b, 'b');
+  p.byKc['apply.teiru.continuation'] = { attempts: 1, correct: 0, filteredAccuracy: 0, confidence: 0 };
+  const selected = plan(p, 'adaptive', { exercises: [a, b, known] });
+  assert.equal(selected.kind, 'spacing');
+  assert.equal(selected.exercise.id, known.id);
+  assert.equal(selected.spacingPurpose, 'review');
+});
+
+
+test('specialty spacing uses a safe open classification fallback before touching another pending target', () => {
+  const a = get('乗る', 'teiruNegative'), b = get('読む', 'teiruNegative'), basic = get('書く', null, 'classify');
+  const p = record(record(fresh(), a, 'a'), b, 'b');
+  const selected = plan(p, 'aspect', { exercises: [a, b, basic] });
+  assert.equal(selected.kind, 'spacing');
+  assert.equal(selected.exercise.id, basic.id);
+  assert.equal(selected.spacingPurpose, 'review');
+});

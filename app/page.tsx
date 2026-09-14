@@ -652,11 +652,26 @@ export default function Home() {
       finishRound();
       return;
     }
+    if (PRACTICE_PLANNER.needsRefreshAfterAnswer(roundState, planningProfile, current, roundQuestions, questionIndex)) {
+      const next = makePlan(mode, current, SESSION_LENGTH - answeredCount, goalCourseId);
+      if (mode === "adaptive" && next.goalCourseId !== goalCourseId) return finishRound();
+      // Retain the existing 3:1 cadence when the main focus is unchanged.
+      // Reassign only questions the learner has not yet seen, using fresh scores.
+      const refreshed = next.focus?.id === focusKc?.id
+        ? { ...next, plan: roundState.plan.slice(questionIndex + 1) } : next;
+      const consumed = [...new Set([...usedQuestionKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => exerciseKey(candidate))])];
+      const consumedWords = [...usedWordKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => wordKey(candidate))];
+      if (!PRACTICE_PLANNER.assign(refreshed, current, { seed: seed + 1, usedKeys: consumed, usedWordKeys: consumedWords }).length) return finishRound();
+      setPlanningProfile(current); setRoundState(refreshed); setRoundOffset(answeredCount);
+      setUsedQuestionKeys(consumed); setUsedWordKeys(consumedWords); setQuestionIndex(0);
+      setVerification(null); setSeed(value => value + 1); resetQuestion();
+      return;
+    }
     if (questionIndex + 1 >= roundQuestions.length) return finishRound();
     setQuestionIndex((value) => value + 1);
     setVerification(null);
     resetQuestion();
-  }, [finishRound, focusKc, goalCourseId, mode, probing, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, save, usedQuestionKeys, usedWordKeys, verification, seed]);
+  }, [finishRound, focusKc, goalCourseId, mode, probing, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, roundState, planningProfile, save, usedQuestionKeys, usedWordKeys, verification, seed]);
   const classChoices = useMemo(() => practiceDomain === "verb" ? ["ichidan", "godan", "irregular"] as PracticeClass[] : ["i", "na"] as PracticeClass[], [practiceDomain]);
   useLayoutEffect(() => {
     // Commit the new question/feedback state before it can receive input. The

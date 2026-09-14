@@ -3,6 +3,26 @@ import { assignPracticeExercises } from './exercise-selection.mjs';
 import { isSourceClassification } from './learning-evidence.mjs';
 import { planPractice } from './practice-session.mjs';
 
+// An independent correct answer must improve performance or supply a missing
+// coverage facet; source classification is assessed only by classification.
+/** @param {any} exercise @param {any} byKc @param {Map<string, any>} byId @param {Set<string> | null} introduced */
+export function exerciseHasLearningOpportunity(exercise, byKc, byId, introduced = null) {
+  return exercise.kcIds.some(id => {
+    if (introduced && !introduced.has(id)) return false;
+    const kc = byId.get(id);
+    if (!kc?.gating || isComponentMastered(kc, byKc)
+      || (exercise.form != null && isSourceClassification(id))) return false;
+    const stats = byKc[id];
+    const missingCoverage = (kc.coverageKcIds ?? []).some(facet => exercise.kcIds.includes(facet) && !(byKc[facet]?.correct >= 1));
+    // A parent waiting only for a particular facet cannot be advanced by
+    // ordinary examples that omit that facet, even though it is not mastered.
+    const needsPerformance = kc.coverageOnly
+      ? stats?.filteredAccuracy != null && stats.filteredAccuracy < adaptiveConstants.accuracyTarget
+      : (stats?.confidence ?? 0) < 1;
+    return needsPerformance || missingCoverage;
+  });
+}
+
 /** Page and simulations share the same eligibility and assignment rules.
  * @template {import('./adaptive.mjs').Component} C
  * @template {{id: string, courseId: string, courseIndex: number, form?: string | null, item: {surface: string, domain?: string}, kcIds: string[], prerequisites?: string[]}} E
@@ -20,22 +40,17 @@ export function createPracticePlanner(model) {
     if (!pools.has(key)) pools.set(key, []);
     pools.get(key).push(exercise);
   }
-  // Match the evidence that an independent correct answer can actually supply:
-  // conjugating a word does not independently demonstrate source classification.
-  function hasLearningOpportunity(exercise, profile) {
-    return exercise.kcIds.some(id => {
-      const kc = byId.get(id);
-      if (!kc?.gating || isComponentMastered(kc, profile.byKc)
-        || (exercise.form != null && isSourceClassification(id))) return false;
-      const stats = profile.byKc[id];
-      const missingCoverage = (kc.coverageKcIds ?? []).some(facet => exercise.kcIds.includes(facet) && !(profile.byKc[facet]?.correct >= 1));
-      // A parent waiting only for a particular facet cannot be advanced by
-      // ordinary examples that omit that facet, even though it is not mastered.
-      const needsPerformance = kc.coverageOnly
-        ? stats?.filteredAccuracy != null && stats.filteredAccuracy < adaptiveConstants.accuracyTarget
-        : (stats?.confidence ?? 0) < 1;
-      return needsPerformance || missingCoverage;
-    });
+  const hasLearningOpportunity = (exercise, profile) => exerciseHasLearningOpportunity(exercise, profile.byKc, byId);
+  function needsRefreshAfterAnswer(planned, plannedProfile, currentProfile, assignments, answeredIndex) {
+    if (planned.review) return false;
+    const remaining = assignments.slice(answeredIndex + 1);
+    const next = remaining[0]?.candidate;
+    if (!next) return true;
+    if (hasLearningOpportunity(next, currentProfile)) return false;
+    // Preserve deliberate balancing while useful questions remain, but do not
+    // consume a queued learning substitute after its rule has already recovered.
+    return hasLearningOpportunity(next, plannedProfile)
+      || !remaining.some(({ candidate }) => hasLearningOpportunity(candidate, currentProfile));
   }
   const courseComponents = id => (model.courseKcIds[id] ?? []).map(id => byId.get(id)).filter(kc => kc !== undefined);
   function candidatesFor(kc, profile, goalCourseId = kc.firstCourseId) {
@@ -66,5 +81,5 @@ export function createPracticePlanner(model) {
       },
       candidatesFor: kc => candidatesFor(kc, profile, planned.goalCourseId) });
   }
-  return { plan, assign, candidatesFor, courseComponents, hasLearningOpportunity };
+  return { plan, assign, candidatesFor, courseComponents, hasLearningOpportunity, needsRefreshAfterAnswer };
 }

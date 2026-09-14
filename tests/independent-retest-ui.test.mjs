@@ -925,3 +925,31 @@ test('a hint in a short recovery still schedules two real intervening originals 
   await answerCorrect(view);
   assert.equal(saved().assessment.pending[key], undefined);
 });
+
+
+test('mid-round mastery refreshes unseen substitutes while preserving the displayed feedback', async () => {
+  const initial = profile({ practiceGoalCourseId: 'adjectiveIBase' });
+  initial.byKc['adj.exception.ii-yo'] = { ...stats, attempts: 1, correct: 0, filteredAccuracy: 0, confidence: 0, bestConfidence: 0 };
+  initial.byKc['adj.suffix.i-past'] = { ...stats, attempts: 8, correct: 7, filteredAccuracy: 1 - 0.8 ** 7, confidence: (1 - 0.8 ** 7) / 0.85, bestConfidence: (1 - 0.8 ** 7) / 0.85 };
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  let afterPastMastered = 0;
+  for (let i = 0; i < 20; i++) {
+    const current = currentExercise(view);
+    if (saved().byKc['adj.suffix.i-past'].confidence >= 1) {
+      afterPastMastered++;
+      assert.ok(['いい', 'かっこいい'].includes(current.item.surface), 'unseen ordinary adjective substitutes must disappear after the past rule recovers');
+    }
+    await answerCorrect(view);
+    assert.equal(currentExercise(view).id, current.id, 'score changes cannot replace the question during its feedback');
+    if (saved().byKc['adj.exception.ii-yo'].confidence >= 1) break;
+    await next(view);
+    if (view.container.querySelector('.completion-card')) {
+      fireEvent.click(view.container.querySelector('.restart-button'));
+      await waitFor(() => assert.ok(view.container.querySelector('.exercise-card')));
+    }
+  }
+  assert.ok(afterPastMastered >= 2);
+  assert.equal(saved().byKc['adj.exception.ii-yo'].confidence, 1);
+  assert.equal(saved().byKc['adj.suffix.i-past'].confidence, 1);
+});

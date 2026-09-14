@@ -41,6 +41,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     const usedWordKeys = [];
     let roundCourseId = null;
     let previousFocus = null;
+    let remainingPlan = null;
     let answered = 0;
     let coverageQuestions = 0;
     let roundRedundantFocusQuestions = 0;
@@ -50,20 +51,24 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
       introduced = introducedKcIds.map((id) => byId.get(id)).filter(Boolean);
       const next = planner.plan(mode, state(), sessionLength - answered, heldCourseId);
       heldCourseId = next.goalCourseId;
+      if (remainingPlan?.focusId === next.focus?.id) next.plan = remainingPlan.plan;
+      remainingPlan = null;
       const { focus } = next;
       if (!focus || isComponentMastered(focus, byKc)) break;
       if (roundCourseId == null) roundCourseId = next.goalCourseId;
       if (next.goalCourseId !== roundCourseId) break;
       if (previousFocus && !canContinueRound(previousFocus, next, byKc, false)) break;
       roundFocusIds.add(focus.id);
-      const assignments = planner.assign(next, state(), { seed: rounds.length + 1, usedKeys: [...usedKeys], usedWordKeys });
+      const plannedProfile = state();
+      const assignments = planner.assign(next, plannedProfile, { seed: rounds.length + 1, usedKeys: [...usedKeys], usedWordKeys });
       if (!assignments.length && answered > 0) break;
       if (!assignments.length || assignments.some(({ candidate }) => !candidate)) {
         return { completed: false, reason: "incomplete-round", focusId: focus.id, rounds, byKc, introducedKcIds };
       }
 
       let mastered = false;
-      for (const { item, candidate } of assignments) {
+      let refresh = false;
+      for (const [assignmentIndex, { item, candidate }] of assignments.entries()) {
         const key = exerciseKey(candidate);
         if (usedKeys.has(key)) return { completed: false, reason: "duplicate-round-exercise", focusId: focus.id, rounds, byKc, introducedKcIds };
         usedKeys.add(key);
@@ -90,7 +95,13 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
           break;
         }
         if (answered >= sessionLength) break;
+        if (planner.needsRefreshAfterAnswer(next, plannedProfile, state(), assignments, assignmentIndex)) {
+          remainingPlan = { focusId: focus.id, plan: next.plan.slice(assignmentIndex + 1) };
+          refresh = true;
+          break;
+        }
       }
+      if (refresh) continue;
       if (!mastered || targetReached()) break;
       previousFocus = focus;
 

@@ -102,3 +102,16 @@ test('the real mixed learner no longer pads the final masu recovery with mastere
     assert.ok(tail.every(row => ['する', '来る'].includes(row.surface)), 'no mastered ordinary forms after only the irregular rule remains');
   } finally { await server.close(); }
 });
+
+
+test('queued substitutes are refreshed when their rule is mastered mid-round', () => {
+  const planner = createPracticePlanner(model), planned = { focus: components[0], review: false };
+  const previous = profile(); previous.byKc.known = { ...failed };
+  const current = profile();
+  const assignments = [{ item: components[0], candidate: small[0] }, { item: components[1], candidate: fillers[0] }, { item: components[0], candidate: small[1] }];
+  assert.equal(planner.needsRefreshAfterAnswer(planned, previous, current, assignments, 0), true);
+  assert.equal(planner.needsRefreshAfterAnswer(planned, current, current, assignments, 0), false, 'deliberate balancing stays while a useful queued example remains');
+  assert.equal(planner.needsRefreshAfterAnswer(planned, current, current, assignments.slice(0, 2), 0), true, 'a review-only remainder cannot pad the round');
+  assert.equal(planner.needsRefreshAfterAnswer({ ...planned, review: true }, previous, current, assignments, 0), false, 'explicit review remains intentional');
+  assert.equal(planner.needsRefreshAfterAnswer(planned, previous, previous, assignments, 0), false, 'keep a useful planned question');
+});
