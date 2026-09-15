@@ -1867,3 +1867,90 @@ test('a mixed class error uses two diagnostic questions and preserves the origin
   assert.ok(events[1].assistedChanges.some(c=>c.kcId==='suffix.past'));
   assert.ok(events[1].assistedChanges.every(c=>!c.kcId.startsWith('class.')));
 });
+
+async function openChallenge(view,courseId=null) {
+  fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
+  assert.ok(view.getByRole('dialog',{name:'自由挑战'}));
+  if(courseId){
+    fireEvent.change(view.getByLabelText('或自选课程'),{target:{value:courseId}});
+    fireEvent.click(view.getByRole('button',{name:'开始挑战所选课程'}));
+  }else fireEvent.click(view.getByRole('button',{name:/挑战最高难度/}));
+  await waitFor(()=>assert.equal(Boolean(view.queryByRole('dialog',{name:'自由挑战'})),false));
+  assert.ok(view.container.querySelector('.challenge-notice'));
+}
+
+test('a new learner can challenge the highest course, with real evidence and no fabricated unlocks',async()=>{
+  const view=await mount();
+  assert.equal(view.container.querySelector('.mode-list button:last-child').disabled,true);
+  await openChallenge(view);
+  const start=JSON.parse(storage.getItem(KEY)),exercise=displayedExercise(view);
+  assert.equal(exercise.courseId,'multiStepCompound');
+  assert.deepEqual(start.byKc,{});assert.deepEqual(start.accessibleCourseIds,[]);
+  assert.equal(start.assessment.originalCount,0);
+  assert.equal(start.practiceGoalCourseId,undefined);
+  await answerDisplayedCorrectly(view);
+  const scored=JSON.parse(storage.getItem(KEY));
+  assert.equal(scored.assessment.originalCount,1);
+  assert.equal(scored.statistics.courses.multiStepCompound.questions,1);
+  assert.ok(Object.keys(scored.assessment.independentByKc).length>0);
+  assert.ok(Object.keys(scored.byKc).every(id=>!id.startsWith('class.')&&!id.startsWith('heuristic.')));
+  assert.deepEqual(scored.introducedKcIds,start.introducedKcIds);
+  assert.deepEqual(scored.accessibleCourseIds,[]);assert.equal(scored.practiceGoalCourseId,undefined);
+  await next(view);assert.equal(displayedExercise(view).courseId,'multiStepCompound');
+  fireEvent.change(view.getByLabelText('你的答案'),{target:{value:'xyz'}});
+  fireEvent.click(view.getByRole('button',{name:'检查答案'}));
+  await waitFor(()=>assert.ok(view.getByRole('region',{name:'拆步练习'})));
+  fireEvent.click(view.getByRole('button',{name:'跳过剩余拆步，查看解析'}));
+  await waitFor(()=>assert.equal(Boolean(view.queryByRole('region',{name:'拆步练习'})),false));
+  fireEvent.click(view.container.querySelector('.next-button'));
+  await waitFor(()=>assert.equal(Boolean(view.queryByText('差一点')),false));
+  assert.equal(displayedExercise(view).courseId,'multiStepCompound','a mistake cannot reroute a challenge to a prerequisite');
+  assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount,2);
+  assert.ok(Object.keys(JSON.parse(storage.getItem(KEY)).assessment.pending).length>0);
+  fireEvent.click(view.getByRole('button',{name:'结束本轮'}));
+  await waitFor(()=>assert.ok(view.getByText('本轮挑战完成')));
+  fireEvent.click(view.getByRole('button',{name:/继续挑战本课/}));
+  await waitFor(()=>assert.equal(Boolean(view.queryByText('本轮挑战完成')),false));
+  assert.equal(displayedExercise(view).courseId,'multiStepCompound');
+});
+
+test('challenge selection preserves drafts, isolates shortcuts, and permits locked adjective courses',async()=>{
+  const view=await mount();
+  const before=storage.getItem(KEY);
+  const trigger=view.getByRole('button',{name:'自由挑战',exact:true});trigger.focus();fireEvent.click(trigger);
+  fireEvent.keyDown(window,{key:'1'});fireEvent.keyDown(window,{key:'Enter'});
+  assert.equal(storage.getItem(KEY),before);
+  fireEvent.keyDown(window,{key:'Escape'});
+  assert.equal(Boolean(view.queryByRole('dialog',{name:'自由挑战'})),false);
+  assert.equal(document.activeElement,trigger);
+  await openChallenge(view,'adjectiveIBase');
+  assert.equal(displayedExercise(view).item.domain,'adjective');
+  const word=displayedExercise(view).item.surface;
+  fireEvent.change(view.getByLabelText('你的答案'),{target:{value:'入力途中'}});
+  fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
+  fireEvent.keyDown(window,{key:'Escape'});
+  assert.equal(view.getByLabelText('你的答案').value,'入力途中');
+  assert.equal(displayedExercise(view).item.surface,word);
+  await answerDisplayedCorrectly(view);
+  assert.equal(JSON.parse(storage.getItem(KEY)).statistics.courses.adjectiveIBase.questions,1);
+  cleanup();const reloaded=await mount();
+  assert.equal(displayedExercise(reloaded).courseId,'adjectiveIBase');
+  assert.ok(reloaded.container.querySelector('.challenge-notice'));
+  fireEvent.click(reloaded.getByRole('button',{name:'返回自适应',exact:true}));
+  await waitFor(()=>assert.equal(Boolean(reloaded.container.querySelector('.challenge-notice')),false));
+  assert.equal(storage.getItem('katsuyo-practice-challenge-v1'),null);
+  assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount,1);
+});
+
+test('every real course has a finite challenge round without prerequisite fallback',async t=>{
+  const {createChallengePlanner}=await import('../app/lib/challenge-planning.mjs');
+  const planner=createChallengePlanner(KNOWLEDGE),fresh=profile();
+  for(const courseId of Object.keys(KNOWLEDGE.courseKcIds)) {
+    const pool=KNOWLEDGE.exercises.filter(e=>e.courseId===courseId);
+    const round=planner.questions(courseId,fresh);
+    assert.ok(round.length>0&&round.length<=12,courseId);
+    assert.ok(round.every(q=>q.candidate.courseId===courseId&&pool.includes(q.candidate)&&q.item),courseId);
+    assert.equal(new Set(round.map(q=>exerciseKey(q.candidate))).size,round.length,courseId);
+  }
+  t.diagnostic('All 43 courses have non-empty, distinct-question challenge rounds from a fresh profile.');
+});
