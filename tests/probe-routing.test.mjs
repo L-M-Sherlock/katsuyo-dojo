@@ -61,7 +61,7 @@ test('a skipped base cannot suppress a shared rule actually required by the new 
   }
 });
 
-test('another complete expression, lexical damage, and unsupported tails do not bypass the base', () => {
+test('complete expressions and lexical damage retain guards while bounded class errors use the shared path', () => {
   for (const [item, form, input, first] of [
     [write, 'teiruPast', 'かいていった', 'teiru'],
     [late, 'tagaruPast', 'おこれたがた', 'tagaru'],
@@ -71,8 +71,16 @@ test('another complete expression, lexical damage, and unsupported tails do not 
     [late, 'tagaruNegativePast', 'おくれたがなかった', 'tagaru'],
   ]) {
     const result = analyze(item, form, input);
-    assert.notEqual(result.feedback.resolution, 'stage-priority', input);
-    assert.equal(result.steps[0].form, first, input);
+    const promoted = ['おくれたがだ', 'おくれたがたた', 'おくれたがない', 'おくれたがなかった'].includes(input);
+    if (promoted) {
+      assert.equal(result.steps[0].probeSelection.strategy, 'conjugation-path', input);
+      assert.equal(result.steps[0].expectedClass, 'godan');
+      assert.equal(result.steps[1].form, form === 'tagaruPast' ? 'past' : 'negative');
+      assert.equal(result.diagnosis, null);
+    } else {
+      assert.notEqual(result.feedback.resolution, 'stage-priority', input);
+      assert.equal(result.steps[0].form, first, input);
+    }
   }
   assert.equal(analyze(late, 'tagaruPast', 'おくれりたがった').diagnosis?.kcId, 'class.ichidan');
 });

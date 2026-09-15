@@ -141,7 +141,7 @@ function DiagnosticPractice({ item, steps, onEvidence, onDone, active = true }: 
   return <section className="diagnostic-practice" aria-label="拆步练习">
     <h3>拆步练习 · 第 {index + 1} / {practiceSteps.length} 步</h3>
     <p>拆步用于诊断和练习，结果单独记录。原题仍计为错误；独立掌握度和复测资格由后续无提示整题确认。</p>
-    <p>{step.kind === "classification" ? "请选择这个中间形式继续活用时所属的" : step.continuation ? "已提供正确的中间形式，请继续变为" : "请先变为"}<strong>{step.kind === "classification" ? "动词类别" : step.targetLabel ?? FORM_LABELS[step.form]}</strong></p>
+    <p>{step.kind === "classification" ? "请选择下面形式继续活用时所属的" : step.continuation ? "已提供正确的中间形式，请继续变为" : "请先变为"}<strong>{step.kind === "classification" ? "动词类别" : step.targetLabel ?? FORM_LABELS[step.form]}</strong></p>
     <p className="diagnostic-word"><FuriganaText surface={step.surface} reading={step.reading} /></p>
     {step.providedClass && <p>已提供词类：<strong>{classLabelFor(step.providedClass)}</strong>。</p>}
     {step.note && <p>{step.note}</p>}

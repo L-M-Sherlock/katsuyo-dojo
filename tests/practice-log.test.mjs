@@ -23,8 +23,8 @@ test('logs the supplied 増える example with exact per-step writes and unchang
   current = appendPracticeEvent(current, { ...current, attempted: 1 }, detail({ id: 'original' }));
   assert.deepEqual(current.practiceLog.events[0].changes, []);
   let steps = original.steps, evaluated = [], examined = [];
-  const inputs = ['ふえたがる', 'ふせたがれない', 'ふえたがら', 'ふえたがらない'];
-  const expected = [['class.ichidan', 'heuristic.ru-ie', 'stem.ichidan.drop-ru', 'construction.tagaru'], [], ['stem.godan.a'], ['suffix.negative']];
+  const inputs = ['godan', 'ふせたがれない', 'ふえたがら', 'ふえたがらない'];
+  const expected = [[], [], ['stem.godan.a'], ['suffix.negative']];
   for (const [index, answer] of inputs.entries()) {
     const step = steps[index], analysis = createAnswerAnalyzer(item, exercise.form, { step })(answer);
     const transition = planDiagnosticTransition(steps, index, analysis, evaluated, examined);

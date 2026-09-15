@@ -185,7 +185,14 @@ test('mixed reviews stay separate from strict class collisions and retain unsupp
     const parent = unifiedDiagnosticSteps(write, form).at(-1);
     const result = analyze(write, form, input, parent);
     const mixed = ['さきたがた', 'かきたがだ', 'さいてあげった', 'かいてあげっだ'].includes(input);
-    if(mixed)assert.equal(result.steps.length,2,input);else assertGenericOrTerminal(result,parent.kcIds);
+    const promoted = ['かきたがたた','かきたがない','かきたがなかった','かいてくた'].includes(input);
+    if (promoted) {
+      assert.equal(result.steps[0].probeSelection.strategy,'conjugation-path',input);
+      assert.equal(result.steps[0].expectedClass,form==='tekuruPast'?'irregular':'godan');
+      assert.deepEqual(result.steps[0].kcIds,[]);
+      assert.equal(result.steps[1].form,['tagaruPast','tekuruPast'].includes(form)?'past':'negative');
+      assert.equal(result.diagnosis,null);
+    } else if(mixed)assert.equal(result.steps.length,2,input);else assertGenericOrTerminal(result,parent.kcIds);
     assert.equal(result.diagnosis?.stage, undefined, input);
     if (mixed) {
       assert.equal(result.diagnosis.review.kind, 'mixed-past', input);

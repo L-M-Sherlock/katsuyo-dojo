@@ -1,16 +1,24 @@
 import { updateKnowledgeStats, emptySkillStats } from '../../app/lib/adaptive.mjs';
 import { auditGuidance } from './diagnostic-contracts.mjs';
 import { auditLearningCase } from './learning-evidence-contracts.mjs';
+import { referenceStages } from './diagnostic-oracle.mjs';
 
 const sameIds=(a,b)=>JSON.stringify([...new Set(a)].sort())===JSON.stringify([...new Set(b)].sort());
 function diagnosticClassification(step) {
   return step?.kind==='classification'&&step.diagnosticOnly===true
-    &&['godan','ichidan'].includes(step.expectedClass)&&Array.isArray(step.kcIds)&&step.kcIds.length===0
+    &&['godan','ichidan','irregular'].includes(step.expectedClass)&&Array.isArray(step.kcIds)&&step.kcIds.length===0
     &&step.focusId===null&&Array.isArray(step.answers)&&Array.isArray(step.readings)
     &&sameIds(step.answers,[step.expectedClass])&&sameIds(step.readings,[step.expectedClass])
-    &&Array.isArray(step.classChoices)&&step.classChoices.length===2
-    &&sameIds(step.classChoices.map(choice=>choice.value),['godan','ichidan'])
+    &&Array.isArray(step.classChoices)&&[2,3].includes(step.classChoices.length)
+    &&sameIds(step.classChoices.map(choice=>choice.value),step.classChoices.length===3?['godan','ichidan','irregular']:['godan','ichidan'])
+    &&step.classChoices.some(choice=>choice.value===step.expectedClass)
     &&step.classChoices.every(choice=>typeof choice.label==='string'&&choice.label.length>0);
+}
+function providedRules(step) {
+  if(!step.pathClassGiven)return ['stem.ichidan.drop-ru','onbin.sokuon','suffix.past'];
+  if(step.kind!=='conjugation'||step.analysisItem?.class!==step.providedClass)return [];
+  try{return referenceStages(step.analysisItem,step.form).flatMap(stage=>stage.ids);}
+  catch{return [];}
 }
 export function auditGeneratedCase(testCase, analyze, options = {}) {
   try { return evaluateGeneratedCase(testCase, analyze(testCase.input), options); }
@@ -57,7 +65,7 @@ export function evaluateGeneratedCase(testCase, analysis, options = {}) {
   if(testCase.step&&!testCase.kcIds.length&&!diagnosticClassification(testCase.step))problem('empty-probe','拆步没有可评估的知识点');
   if(testCase.step?.kind==='classification'&&!diagnosticClassification(testCase.step))problem('invalid-classification-probe','不计分分类必须明确类别、选项和空知识点集合');
   if(testCase.sourceKcIds&&testCase.kcIds.some(id=>!testCase.sourceKcIds.includes(id)))problem('unsafe-followup','后续探针引入原步骤之外的知识点');
-  if(testCase.step?.providedClass&&testCase.kcIds.some(id=>!['stem.ichidan.drop-ru','onbin.sokuon','suffix.past'].includes(id)))problem('unsafe-provided-class','已给定类别的过去探针只能评估当前共享变化');
+  if(testCase.step?.providedClass&&testCase.kcIds.some(id=>!providedRules(testCase.step).includes(id)))problem('unsafe-provided-class','已给定类别的探针只能评估对应构形的局部规则');
   if(testCase.completedKcIds?.some(id=>required.has(id)))problem('repeated-evidence','当前拆步重复评估原题已确认的知识点');
   if(testCase.semanticTargets) {
     const normalize=value=>value.normalize('NFKC').replace(/[\s。．.！!？?]/g,'');
@@ -66,7 +74,7 @@ export function evaluateGeneratedCase(testCase, analysis, options = {}) {
   for(const step of analysis.steps) {
     if(!step.kcIds?.length&&!diagnosticClassification(step))problem('empty-probe','后续拆步没有可评估的知识点');
     if(step.kind==='classification'&&!diagnosticClassification(step))problem('invalid-classification-probe','不计分分类必须明确类别、选项和空知识点集合');
-    if(step.providedClass&&step.kcIds?.some(id=>!['stem.ichidan.drop-ru','onbin.sokuon','suffix.past'].includes(id)))problem('unsafe-provided-class','已给定类别的过去探针不能重复分类或评估应用原子');
+    if(step.providedClass&&step.kcIds?.some(id=>!providedRules(step).includes(id)))problem('unsafe-provided-class','已给定类别的探针不能重复分类或评估应用原子');
     if(step.kcIds?.some(id=>!required.has(id)))problem('unsafe-probe','后续拆步引入本题以外的知识点');
     if(step.kcIds?.some(id=>actual.confirmed.includes(id)))problem('repeated-evidence','后续拆步重复评估本题已经确认的知识点');
   }

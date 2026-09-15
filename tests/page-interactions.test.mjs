@@ -1839,3 +1839,31 @@ test('an original submission waits for a pending timing write without losing eit
     if (timerDescriptor) Object.defineProperty(performance, 'now', timerDescriptor); else delete performance.now;
   }
 });
+
+test('a mixed class error uses two diagnostic questions and preserves the original independent outcome',async()=>{
+  const {view,item,form}=await mountCompoundPast('past','verb','teageru');
+  const base=conjugate(item.reading,item.class,'teageru');
+  fireEvent.change(view.getByLabelText('你的答案'),{target:{value:base.slice(0,-1)+'っだ'}});
+  fireEvent.click(view.getByRole('button',{name:'检查答案'}));
+  await waitFor(()=>assert.ok(view.getByText('拆步练习 · 第 1 / 2 步')));
+  assert.match(view.container.querySelector('.feedback-summary').textContent,/词类判断或构形/);
+  const before=JSON.parse(storage.getItem(KEY));
+  fireEvent.click(view.getByRole('button',{name:'五段动词',exact:true}));
+  await waitFor(()=>assert.ok(view.getByText(/词类判断有误/)));
+  fireEvent.click(view.getByRole('button',{name:/练习下一步/}));
+  await waitFor(()=>assert.ok(view.getByText('拆步练习 · 第 2 / 2 步')));
+  fireEvent.change(view.getByLabelText('本步答案'),{target:{value:conjugate(item.reading,item.class,form)}});
+  fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
+  await waitFor(()=>assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
+  fireEvent.click(view.getByRole('button',{name:/完成拆步/}));
+  await waitFor(()=>assert.equal(Boolean(view.queryByRole('region',{name:'拆步练习'})),false));
+  const saved=JSON.parse(storage.getItem(KEY));
+  assert.deepEqual(saved.byKc,before.byKc);
+  assert.equal(saved.assessment.originalCount,1);
+  assert.deepEqual(Object.keys(saved.assessment.pending),Object.keys(before.assessment.pending));
+  const events=saved.practiceLog.events.filter(e=>e.type==='step');
+  assert.equal(events.length,2);assert.equal(events[0].target.kind,'classification');
+  assert.deepEqual(events[0].changes,[]);assert.deepEqual(events[0].assistedChanges,[]);
+  assert.ok(events[1].assistedChanges.some(c=>c.kcId==='suffix.past'));
+  assert.ok(events[1].assistedChanges.every(c=>!c.kcId.startsWith('class.')));
+});

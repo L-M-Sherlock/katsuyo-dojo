@@ -21,7 +21,7 @@ const OTHER_APPEND_BASES = {
   naide:'negative', naideKudasai:'naide', nakutemoIi:'nakute', nakutewaIkenai:'nakute',
   nakerebaNaranai:'conditionalNegative', naitoIkenai:'negative',
   tara:'past', tari:'past', tatte:'past', youtosuru:'volitional',
-  zuni:'zuStem', masenka:'masuStem', masuPast:'masuStem', masuNegative:'masuStem', masuNegativePast:'masuStem',
+  zu:'zuStem', zuni:'zuStem', masenka:'masuStem', masuPast:'masuStem', masuNegative:'masuStem', masuNegativePast:'masuStem',
 };
 const POLITE_KCS = {masuPast:'compound.polite-past',masuNegative:'compound.polite-negative',masuNegativePast:'compound.polite-negative-past'};
 const VOICING = new Map();
@@ -200,6 +200,12 @@ export function commonVerbErrorKcIds(verb, form, answer, normalize = value => va
   const actual = normalize(answer);
   return [...new Set(candidatesFor(verb, form)
     .filter(candidate => normalize(candidate.answer) === actual).map(candidate => candidate.kcId))];
+}
+
+// Shared finite grammar errors, including their local rule identity. A caller
+// propagating them through a correct path must still check competing classes.
+export function commonVerbErrorCandidates(verb, form) {
+  return candidatesFor(verb, form);
 }
 
 export function diagnoseCommonVerbError(verb,form,answer,normalize=value=>value,allowedKcIds=[]) {

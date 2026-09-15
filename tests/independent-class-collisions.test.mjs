@@ -22,7 +22,12 @@ test('a supported local error cannot be shadowed by a classification candidate',
     assert.equal(result.diagnosis?.kcId ?? null, null, input);
     assert.deepEqual(result.diagnosis?.confirmedKcIds ?? [], [], input);
     assert.ok(result.steps.some(step => step.kcIds.includes(rule)), input);
-    assert.ok(result.steps.every(step => step.kind === 'atomic'), input);
+    if(reading.endsWith('る')) {
+      assert.equal(result.steps[0].kind,'classification',input);
+      assert.equal(result.steps[0].expectedClass,cls,input);
+      assert.equal(result.steps[0].diagnosticOnly,true,input);
+      assert.equal(result.steps[1].providedClass,cls,input);
+    } else assert.ok(result.steps.every(step => step.kind === 'atomic'), input);
     const kcIds = deriveUnified(item, form).requiredKcIds;
     const before = Object.fromEntries(kcIds.map(id => [id, emptySkillStats()]));
     assert.deepEqual(updateKnowledgeStats(before, { kcIds, correct: false,

@@ -1,4 +1,4 @@
-import { completeFormExpectation } from './complete-form-oracle.mjs';
+import { completeFormExpectation, hasCompleteAlternative } from './complete-form-oracle.mjs';
 import { createHash } from 'node:crypto';
 import { acceptedConjugations } from '../../app/lib/conjugation.mjs';
 import { acceptedAdjectiveConjugations } from '../../app/lib/adjective-conjugation.mjs';
@@ -7,6 +7,7 @@ import { COMPOUND_FORM_SPECS } from '../../app/lib/compound-forms.mjs';
 import { atomicSteps, planForContext } from '../../app/lib/diagnostic-plan.mjs';
 import { COMMON_ERROR_PATTERNS, commonLexicalExpectation, generateCommonErrorCases, suppliedNegativeIntermediateCases } from './common-error-patterns.mjs';
 import { generateProbeRoutingCases } from './probe-routing-cases.mjs';
+import { generateConjugationPathCases } from './conjugation-path-cases.mjs';
 
 // Independent test policy. Never import the diagnoser or its candidate lists.
 // Conjugators supply valid forms; explicit transformations supply wrong inputs.
@@ -37,6 +38,7 @@ export const PATTERNS = [
   ['passive-stage-probe', '已提供受身构造条件后的词干与接续单独判分', 'contract'],
   ['continuation-classification', '派生词类别的诊断性选择不计分', 'contract'],
   ['priority-stage', '原题精确匹配后直接检查派生词类与过去变化', 'contract'],
+  ['conjugation-path', '词类与接续混合错误沿变化链传播后的独立诊断约定', 'contract'],
   ['priority-guard', '前部损坏或其他合法表达保留完整检查', 'contract'],
   ['priority-form-switch', '完整同表达后续形式混淆只检查尚未确认的尾部', 'contract'],
   ['priority-form-switch-guard', '不同表达或前部损坏不跳过表达构成', 'contract'],
@@ -548,6 +550,14 @@ export function generateErrorCases(exercise) {
     });
   }
   emitCommon();
+  if(item.domain==='verb')for(const c of generateConjugationPathCases(item,[form])) {
+    if(hasCompleteAlternative(item,form,c.input))continue;
+    emit('conjugation-path',c.input,{...unknown,priority:true,steps:2,
+      probes:[{kind:'classification',diagnosticOnly:true,expectedClass:c.expectedClass},
+        {kind:'conjugation',providedClass:c.expectedClass,form:c.native}],
+      probeKcIds:[[],[c.expectedClass==='godan'?'onbin.sokuon':'stem.ichidan.drop-ru',`suffix.${c.native}`]],
+    },'mixed');
+  }
   // Freeze the routing expectation independently, then test both the root
   // decision and the real supplied contexts it creates before any base score.
   const seenPriorityContexts = new Set();

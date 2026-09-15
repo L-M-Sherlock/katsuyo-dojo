@@ -22,7 +22,7 @@ export const DIAGNOSTIC_FORMS = unique([...primitives,...stemAppends,...teAppend
 const formSet = new Set(DIAGNOSTIC_FORMS);
 export const diagnosticFamily = form => COMPOUND_FORM_SPECS[form] ?? voiceForms[form] ?? null;
 const className = cls => ({godan:'五段动词',ichidan:'一段动词',irregular:'不规则动词',i:'い形容词',na:'な形容词'})[cls];
-const constructionNames = {tai:'たい',tagaru:'たがる',sugiru:'すぎる',nagara:'ながら',tsutsu:'つつ',teageru:'てあげる',temorau:'てもらう',tekureru:'てくれる',tekudasai:'てください',teiru:'ている',teru:'てる',tearu:'てある',teoru:'ておる',tehoshii:'てほしい',temo:'ても',tewa:'ては',temoIi:'てもいい',temiru:'てみる',teiku:'ていく',teku:'てく',tekuru:'てくる',teshimau:'てしまう',teoku:'ておく',naide:'ないで',naideKudasai:'ないでください',tara:'たら',tari:'たり',tatte:'たって',nakutemoIi:'なくてもいい',youtosuru:'ようとする',naitoIkenai:'ないといけない'};
+const constructionNames = {zu:'ず',zuni:'ずに',tai:'たい',tagaru:'たがる',sugiru:'すぎる',nagara:'ながら',tsutsu:'つつ',teageru:'てあげる',temorau:'てもらう',tekureru:'てくれる',tekudasai:'てください',teiru:'ている',teru:'てる',tearu:'てある',teoru:'ておる',tehoshii:'てほしい',temo:'ても',tewa:'ては',temoIi:'てもいい',temiru:'てみる',teiku:'ていく',teku:'てく',tekuru:'てくる',teshimau:'てしまう',teoku:'ておく',naide:'ないで',naideKudasai:'ないでください',tara:'たら',tari:'たり',tatte:'たって',nakutemoIi:'なくてもいい',youtosuru:'ようとする',naitoIkenai:'ないといけない'};
 const endingName = form => ({negative:'否定形',past:'过去形',te:'て形',masu:'ます形',nasai:'なさい形',passive:'受身形',potential:'可能形',imperative:'命令形',volitional:'意向形',ba:'ば形',causative:'使役形',causativePassive:'使役受身形'})[form] ?? form;
 const pair = item => ({surface:item.surface,reading:item.reading ?? item.surface});
 const mapPair = (p, fn) => ({surface:fn(p.surface),reading:fn(p.reading)});
@@ -70,6 +70,14 @@ function stem(item, row='i') {
 }
 function terminal(item,input,output,ids,label,operation='append') {
   return node(item,input,output,ids,label,operation,{fixed:input});
+}
+// Keep native conjugations identifiable after composition. Consumers can
+// inspect a past/negative/etc. stage without enumerating enclosing forms.
+function withConjugationStage(item, form, paths) {
+  return paths.map(path => ({...path, nodes:path.nodes.map((n,index) => index ? n : {...n,
+    conjugationStage:{form, source:{...item}, output:pair(path.state), length:path.nodes.length,
+      label:constructionNames[form] ?? endingName(form)},
+  })}));
 }
 function primitivePaths(item, form) {
   const input=pair(item), targets=answerPairs(item,form);
@@ -143,10 +151,10 @@ function pathsFor(item, form) {
   const chain=CHAIN_FORM_SPECS[form];
   if(chain)return compose(pathsFor(item,chain.base),state=>pathsFor({...state,domain:'verb',class:chainOutputClass(chain,state.surface)},chain.tail));
   if(form==='passiveDesireNegativePast')return compose(pathsFor(item,'passive'),state=>pathsFor({...state,class:'ichidan'},'taiNegativePast'));
-  if(primitives.includes(form))return primitivePaths(item,form);
+  if(primitives.includes(form))return withConjugationStage(item,form,primitivePaths(item,form));
   if(stemAppends.includes(form)) {
     const first=stem(item);
-    return answerPairs(item,form).map(output=>({state:{...item,...output},nodes:[first,terminal(item,first.output,output,[`construction.${form}`],`${({tai:'たい',tagaru:'たがる',sugiru:'すぎる',nagara:'ながら',tsutsu:'つつ'})[form]}接续`)]}));
+    return withConjugationStage(item,form,answerPairs(item,form).map(output=>({state:{...item,...output},nodes:[first,terminal(item,first.output,output,[`construction.${form}`],`${({tai:'たい',tagaru:'たがる',sugiru:'すぎる',nagara:'ながら',tsutsu:'つつ'})[form]}接续`)]})));
   }
   if(teAppends.includes(form))return appendTo(item,'te',form,[`construction.${form}`],`${constructionNames[form]}的接续`);
   if(appendBases[form])return appendTo(item,appendBases[form],form,[`construction.${form}`],`${constructionNames[form]}的接续`);
@@ -162,10 +170,10 @@ function pathsFor(item, form) {
   }
   if(['zu','zuni'].includes(form)) {
     // する→せ is special to ず, not evidence about the ordinary しない rule.
-    if(item.surface.endsWith('する'))return answerPairs(item,form).map(output=>({state:{...item,...output},nodes:[node(item,pair(item),output,[`construction.${form}`],'する的ず接续','irregular',{fixed:lexicalPrefix(item)})]}));
+    if(item.surface.endsWith('する'))return withConjugationStage(item,form,answerPairs(item,form).map(output=>({state:{...item,...output},nodes:[node(item,pair(item),output,[`construction.${form}`],'する的ず接续','irregular',{fixed:lexicalPrefix(item)})]})));
     const input=pair(item), middle=mapPair(input,s=>s.endsWith('する')?s.slice(0,-2)+'せ':answers({...item,surface:s},'negative')[0].slice(0,-2));
     const first=item.class==='irregular'?node(item,input,middle,['suffix.negative'],'ず的词干','irregular',{fixed:lexicalPrefix(item)}):stem(item,'a');
-    return answerPairs(item,form).map(output=>({state:{...item,...output},nodes:[first,terminal(item,middle,output,[`construction.${form}`],'ず接续')]}));
+    return withConjugationStage(item,form,answerPairs(item,form).map(output=>({state:{...item,...output},nodes:[first,terminal(item,middle,output,[`construction.${form}`],'ず接续')]})));
   }
   throw new Error(`Unimplemented diagnostic recipe: ${form}`);
 }

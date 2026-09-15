@@ -4,6 +4,7 @@ import { hasLexicalTypo } from './lexical-typo.mjs';
 import { deriveUnified, diagnoseUnified, diagnoseUnifiedStep, unifiedDiagnosticSteps, unifiedStepDiagnosticSteps, diagnoseUnifiedStepReview } from './unified-knowledge.mjs';
 import { planForContext, atomicSteps, diagnoseAtomicStep } from './diagnostic-plan.mjs';
 import { diagnosticFeedback } from './diagnostic-feedback.mjs';
+import { diagnoseConjugationPath, diagnoseProvidedConjugation } from './conjugation-path-diagnosis.mjs';
 
 export function normalizeAnswer(value) {
   return value.normalize('NFKC')
@@ -50,7 +51,8 @@ export function createAnswerAnalyzer(item, form, options = {}) {
       [item.surface,item.reading,...(step?.providedAnswers??[])].filter(Boolean).some(value=>normalize(value)===normalize(answer))
       || (getPlan().paths??[]).some(path=>path.nodes.slice(0,-1).some(node=>[node.output.surface,node.output.reading].some(value=>normalize(value)===normalize(answer))))
     );
-    let diagnosis = step?.kind==='atomic' ? diagnoseAtomicStep(step,answer,normalize) : step ? diagnoseUnifiedStep(item, step, answer, normalize)
+    let diagnosis = step?.pathClassGiven ? (recognizedForms.length && !inPath ? null : diagnoseProvidedConjugation(step,answer,normalize))
+      : step?.kind==='atomic' ? diagnoseAtomicStep(step,answer,normalize) : step ? diagnoseUnifiedStep(item, step, answer, normalize)
       : diagnoseUnified(item, form, answer, normalize) ?? diagnoseUnified(readingItem, form, answer, normalize);
     if (!step && recognizedForms.length && !inPath && /^(class\.|heuristic\.|stem\.|onbin\.|exception\.)/.test(diagnosis?.kcId??'')) diagnosis = null;
     if (!diagnosis && !recognizedForms.length && hasLexicalTypo(item, answer, surface.acceptedVariants, reading.acceptedVariants, normalize)) {
@@ -59,6 +61,11 @@ export function createAnswerAnalyzer(item, form, options = {}) {
     if (!diagnosis && step && step.kind!=='atomic') diagnosis = diagnoseUnifiedStepReview(item, step, answer, normalize);
     let steps = step && (diagnosis?.stage || diagnosis?.review) ? unifiedStepDiagnosticSteps(item, step, { answer, normalize })
       : !step && !diagnosis?.kcId ? unifiedDiagnosticSteps(item, form, { answer, normalize }) : [];
+    if (!recognizedForms.length && !step?.providedClass && !steps[0]?.probeSelection?.strategy
+      && (!diagnosis || /^(class\.|heuristic\.)/.test(diagnosis.kcId??''))) {
+      const routed=diagnoseConjugationPath(getPlan(),answer,{scope:step?.kcIds??surface.requiredKcIds,normalize,step,diagnoseNative:diagnoseUnified});
+      if(routed && (!diagnosis?.kcId || routed.refineClass)) { diagnosis=routed.diagnosis; steps=routed.steps; }
+    }
     let planFallback=false;
     // A supplied-class conjugation can still contain several operations.
     // Only actual primitive leaves (and classification choices) terminate;
