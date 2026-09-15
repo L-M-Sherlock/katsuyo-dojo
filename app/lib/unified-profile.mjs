@@ -1,3 +1,4 @@
+import { initializeStatistics, parseStatistics, statisticsSnapshot } from './statistics.mjs';
 import { parseProfileImport as parseLegacy } from './profile-transfer.mjs';
 import { confidenceOf } from './adaptive.mjs';
 import { normalizeRecentWordKeys } from './exercise-selection.mjs';
@@ -7,7 +8,8 @@ import { correctNaraClassification } from './score-corrections.mjs';
 import { CURRICULUM_VERSION, SOURCE_COURSES, UNIFIED_COURSES, VOICE_BASE_FORMS, VOICE_CONTINUATION_FORMS } from './unified-curriculum.mjs';
 import { USAGE_REVIEW_VERSION } from './form-eligibility.mjs';
 
-export const UNIFIED_STORAGE_KEY = 'katsuyo-practice-profile-v7';
+export const UNIFIED_STORAGE_KEY = 'katsuyo-practice-profile-v8';
+export const LEGACY_V7_STORAGE_KEY = 'katsuyo-practice-profile-v7';
 export const LEGACY_STORAGE_KEY = 'katsuyo-practice-profile-v6';
 export const LEGACY_V5_STORAGE_KEY = 'katsuyo-practice-profile-v5';
 const FORMAT = 'katsuyo-dojo-profile';
@@ -15,13 +17,13 @@ const object = value => value && typeof value === 'object' && !Array.isArray(val
 const strings = value => Array.isArray(value) ? value.filter(id => typeof id === 'string') : [];
 const ambiguous = id => id.startsWith('composition.') || id === 'compound.voice-stack' || id === 'suffix.masu' || id.startsWith('facet.form.masu.');
 export function createUnifiedExport(profile, exportedAt = new Date().toISOString()) {
-  return { format: FORMAT, formatVersion: 5, exportedAt, profile };
+  return { format: FORMAT, formatVersion: 6, exportedAt, profile };
 }
 export function parseUnifiedImport(value, { today, components, legacyComponents, exercises = /** @type {any[] | undefined} */ (undefined), at = new Date().toISOString() }) {
   const envelope = object(value);
-  if (!envelope || ('format' in envelope && (envelope.format !== FORMAT || ![1, 2, 3, 4, 5].includes(envelope.formatVersion)))) throw new Error('这不是受支持的活用道場备份文件。');
+  if (!envelope || ('format' in envelope && (envelope.format !== FORMAT || ![1, 2, 3, 4, 5, 6].includes(envelope.formatVersion)))) throw new Error('这不是受支持的活用道場备份文件。');
   const source = object(envelope.profile) ?? envelope;
-  if (![4, 5, 6, 7].includes(source.version) || (source.version === 7 && !source.assessment)) throw new Error('备份版本不受支持或数据不完整。');
+  if (![4, 5, 6, 7, 8].includes(source.version) || (source.version >= 7 && !source.assessment)) throw new Error('备份版本不受支持或数据不完整。');
   const current = source.version >= 6;
   const definitions = current ? components : legacyComponents;
   const options = { today, kcIds: definitions.map(k => k.id), gatingKcIds: definitions.filter(k => k.gating).map(k => k.id), initialKcIds: [] };
@@ -90,5 +92,12 @@ export function parseUnifiedImport(value, { today, components, legacyComponents,
       diagnosis: { message: `已校正 ${report.changes.length} 个知识点的可核对统计，恢复 ${Object.keys(restored.assessment.pending).length} 项待复测；辅助结果另存。没有可靠日志的历史成绩保留为历史证据。` },
     }, id => byId.get(id)?.label ?? id);
   }
-  return correctNaraClassification(result, {at,ledger:source.scoreCorrections,labelFor:id=>byId.get(id)?.label??id});
+  if (source.version === 8) result.statistics = parseStatistics(source.statistics, { sequence: result.practiceLog.totalEvents, ordinal: result.assessment.originalCount });
+  result = correctNaraClassification(result, {at,ledger:source.scoreCorrections,labelFor:id=>byId.get(id)?.label??id});
+  const context = { components, courses: UNIFIED_COURSES, courseKcIds: Object.fromEntries(UNIFIED_COURSES.map(course => [course.id,
+    [...new Set((exercises ?? []).filter(e => e.courseId === course.id).flatMap(e => e.kcIds))]])) };
+  const statistics = source.version === 8
+    ? result.statistics
+    : initializeStatistics(result, at, statisticsSnapshot(result, context));
+  return { ...result, version: 8, statistics };
 }

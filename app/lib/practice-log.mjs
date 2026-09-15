@@ -1,3 +1,4 @@
+import { recordStatisticsEvent } from './statistics.mjs';
 /** @typedef {import('./adaptive.mjs').SkillStats} SkillStats */
 /** @typedef {{date: string, attempted: number, correct: number, streak: number}} Totals */
 /** @typedef {{surface: string, reading: string, form: string | null, label: string, kind: string, kcIds: string[], answers: string[], readings: string[], stepIndex: number | null, totalSteps: number, nextTotalSteps: number}} LogTarget */
@@ -199,7 +200,7 @@ export function parsePracticeLog(value) {
 /** Append to the same profile snapshot as the score change. The caller commits
  * both with one storage write, or retains both in its existing unsaved buffer.
  * @param {any} before @param {any} after
- * @param {{questionId: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer?: string, hintUsed?: boolean, support?: EvidenceSupport, assessmentKey?: string, eligibility?: AssessmentChange['eligibility'], diagnosis?: {kcId?: string | null, confirmedKcIds?: string[], resolution?: string, message?: string}, id?: string, at?: string}} detail
+ * @param {{questionId: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer?: string, hintUsed?: boolean, support?: EvidenceSupport, assessmentKey?: string, eligibility?: AssessmentChange['eligibility'], diagnosis?: {kcId?: string | null, confirmedKcIds?: string[], resolution?: string, message?: string}, id?: string, at?: string, statistics?: {ordinal?: number|null, day?: string, answerMs?: number|null, progress?: import('./statistics.mjs').Snapshot|null, retestAttempt?: boolean}}} detail
  * @param {(id: string) => string} labelFor */
 export function appendPracticeEvent(before, after, detail, labelFor = id => id) {
   const log = before.practiceLog ?? emptyPracticeLog(), id = detail.id ?? practiceEventId();
@@ -223,5 +224,5 @@ export function appendPracticeEvent(before, after, detail, labelFor = id => id) 
     ...(detail.assessmentKey ? { assessment: { targetKey: detail.assessmentKey, before: assessmentSnapshot(before.assessment, detail.assessmentKey),
       after: assessmentSnapshot(after.assessment, detail.assessmentKey), eligibility: detail.eligibility ?? null } } : {}), totals: { before, after },
   });
-  return { ...after, practiceLog: retain({ version: 2, totalEvents: event.sequence, droppedEntries: log.droppedEntries, events: [...log.events, event] }) };
+  return { ...after, ...(after.statistics ? { statistics: recordStatisticsEvent(after.statistics, event, detail.statistics) } : {}), practiceLog: retain({ version: 2, totalEvents: event.sequence, droppedEntries: log.droppedEntries, events: [...log.events, event] }) };
 }

@@ -100,7 +100,7 @@ test('versioned exports and imports preserve logs as history without replaying t
   const logged = { ...appendPracticeEvent(initial, { ...initial, byKc }, detail()), version: 7, assessment: emptyAssessment() };
   const options = { today: initial.date, components: [{ id: 'stem.godan.a', prerequisites: [] }], legacyComponents: [] };
   const exported = createUnifiedExport(logged);
-  assert.equal(exported.formatVersion, 5);
+  assert.equal(exported.formatVersion, 6);
   const restored = parseUnifiedImport(exported, options);
   assert.deepEqual(restored.practiceLog, logged.practiceLog);
   assert.equal(restored.byKc['stem.godan.a'].attempts, 1);

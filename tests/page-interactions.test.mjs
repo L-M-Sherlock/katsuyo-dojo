@@ -34,7 +34,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 const { createElement, StrictMode } = await import('react');
 const { render, cleanup, fireEvent, waitFor, act, configure } = await import('@testing-library/react');
 configure({ asyncUtilTimeout: 5000 });
-const KEY = 'katsuyo-practice-profile-v7';
+const KEY = 'katsuyo-practice-profile-v8';
 const DOMAIN = 'katsuyo-practice-domain-v1';
 const storage = dom.window.localStorage;
 const originalGet = dom.window.Storage.prototype.getItem;
@@ -63,6 +63,8 @@ function profile(overrides = {}) {
 function progressWithoutLog(value) {
   const result = typeof value === 'string' ? JSON.parse(value) : structuredClone(value);
   delete result.practiceLog;
+  delete result.statistics; // independent-score invariance excludes descriptive aggregates
+  result.version = 8;
   // Finish/skip actions legitimately record when guidance was exposed. They
   // must preserve scores, attempts and the pending task itself.
   delete result.assessment.seenExposureIds;
@@ -156,7 +158,7 @@ async function exportedProfile(view, name = '导出数据') {
   dom.window.HTMLAnchorElement.prototype.click = () => {};
   try {
     fireEvent.click(view.getByRole('button', { name }));
-    assert.ok(captured);
+    await waitFor(() => assert.ok(captured));
     return JSON.parse(await captured.text()).profile;
   } finally { URL.createObjectURL = create; URL.revokeObjectURL = revoke; dom.window.HTMLAnchorElement.prototype.click = click; }
 }
@@ -1101,7 +1103,7 @@ for (const legacyVersion of [5, 6]) test(`v${legacyVersion} automatically migrat
   assert.match(view.container.textContent, /独立评估已启用/);
   await classifyCorrect(view);
   const saved = JSON.parse(storage.getItem(KEY));
-  assert.equal(saved.version, 7);
+  assert.equal(saved.version, 8);
   assert.equal(saved.attempted, 8);
   if (legacyVersion === 5) assert.deepEqual(saved.legacy.profile, legacy);
   else assert.deepEqual(saved.legacy, legacy.legacy);
@@ -1678,7 +1680,7 @@ test('v7 export and UI import preserve assisted records, pending retests and log
   fireEvent.click(view.getByRole('tab', { name: /待复测 1/ }));
   assert.match(view.getByRole('region', { name: '待独立复测' }).textContent, /先完成 2 道其他整题/);
   const backup = await exportedProfile(view);
-  assert.equal(backup.version, 7); assert.deepEqual(backup.assessment, saved.assessment);
+  assert.equal(backup.version, 8); assert.deepEqual(backup.assessment, saved.assessment);
   cleanup(); storage.clear();
   const fresh = await mount();
   fireEvent.click(fresh.getByRole('button', { name: /知识进度 全部课程/ }));
@@ -1747,5 +1749,93 @@ for (const offscreen of [true,false]) test(`feedback is brought into view only w
   } finally {
     dom.window.HTMLElement.prototype.getBoundingClientRect=rect;
     if(scroll)dom.window.HTMLElement.prototype.scrollIntoView=scroll;else delete dom.window.HTMLElement.prototype.scrollIntoView;
+  }
+});
+
+// These UI checks use generated profiles only, never personal progress backups.
+test('statistics navigation preserves the original draft, diagnostic draft and recorded outcomes', async () => {
+  const { view, item, form } = await mountCompoundPast('past', 'i-adjective');
+  const base = conjugate(item.reading, item.class, COMPOUND_FORM_SPECS[form].form);
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: base } });
+  fireEvent.click(view.getByRole('button', { name: '统计', exact: true }));
+  assert.equal(window.location.hash, '#/stats');
+  assert.ok(view.getByRole('heading', { name: '学习统计', exact: true }));
+  fireEvent.keyDown(document.activeElement, { key: 'Enter' });
+  fireEvent.keyDown(window, { key: '1' });
+  assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount, 0);
+  fireEvent.click(view.getByRole('button', { name: '返回练习' }));
+  assert.equal(view.getByLabelText('你的答案').value, base);
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 1 / 1 步')));
+  const original = JSON.parse(storage.getItem(KEY));
+  const input = view.getByLabelText('本步答案');
+  fireEvent.change(input, { target: { value: conjugate(item.reading, item.class, form) } });
+  fireEvent.click(view.getByRole('button', { name: '统计', exact: true }));
+  fireEvent.keyDown(document.activeElement, { key: 'Enter' });
+  assert.equal(JSON.parse(storage.getItem(KEY)).statistics.totals.steps, 0);
+  fireEvent.click(view.getByRole('button', { name: '返回练习' }));
+  assert.equal(view.getByLabelText('本步答案'), input, 'the diagnostic component remains mounted');
+  assert.equal(input.value, conjugate(item.reading, item.class, form));
+  fireEvent.submit(input.closest('form'));
+  await waitFor(() => assert.ok(view.getByText(/本步正确，已记录辅助练习/)));
+  const saved = JSON.parse(storage.getItem(KEY));
+  assert.equal(saved.statistics.totals.questions, 1); assert.equal(saved.statistics.totals.steps, 1);
+  assert.deepEqual(saved.byKc, original.byKc);
+  fireEvent.click(view.getByRole('button', { name: '统计', exact: true }));
+  fireEvent.change(view.getByLabelText('横轴'), { target: { value: 'ordinal' } });
+  fireEvent.change(view.getByLabelText('范围'), { target: { value: 'all' } });
+  assert.equal(view.getByLabelText('范围').value, 'all');
+  fireEvent.click(view.getByRole('button', { name: '返回练习' }));
+  assert.ok(view.getByRole('button', { name: /完成拆步/ }));
+});
+
+test('statistics direct links and browser navigation isolate practice keyboard shortcuts', async () => {
+  window.history.replaceState(null, '', '/katsuyo-dojo/#/stats');
+  storage.setItem(KEY, JSON.stringify(profile()));
+  try {
+    const view = await mount();
+    assert.ok(view.getByRole('heading', { name: '学习统计' }));
+    fireEvent.keyDown(window, { key: '1' });
+    assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount, 0);
+    fireEvent.click(view.getByRole('button', { name: '返回练习' }));
+    assert.equal(window.location.hash, '');
+    window.history.replaceState(null, '', '/katsuyo-dojo/#/stats');
+    fireEvent(window, new window.PopStateEvent('popstate'));
+    assert.ok(view.getByRole('heading', { name: '学习统计' }));
+    const trigger = view.getByRole('button', { name: '查看知识进度' });
+    trigger.focus(); fireEvent.click(trigger);
+    assert.ok(view.getByRole('dialog', { name: '知识进度' }));
+    fireEvent.keyDown(window, { key: 'Escape' });
+    assert.equal(document.activeElement, trigger);
+  } finally { window.history.replaceState(null, '', '/katsuyo-dojo/'); }
+});
+
+test('an original submission waits for a pending timing write without losing either change', async () => {
+  const focus = document.hasFocus, timerDescriptor = Object.getOwnPropertyDescriptor(performance, 'now');
+  let now = 0, focused = true, release;
+  Object.defineProperty(performance, 'now', { configurable: true, value: () => now });
+  document.hasFocus = () => focused;
+  try {
+    const view = await mount();
+    let held = true;
+    navigator.locks.request = async (_key, callback) => {
+      if (held) { held = false; await new Promise(resolve => { release = resolve; }); }
+      return callback();
+    };
+    now = 1200; focused = false;
+    fireEvent.blur(window);
+    await waitFor(() => assert.equal(typeof release, 'function'));
+    const submission = classifyCorrect(view);
+    await act(async () => { release(); });
+    await submission;
+    const saved = JSON.parse(storage.getItem(KEY));
+    assert.equal(saved.assessment.originalCount, 1);
+    assert.equal(saved.statistics.totals.questions, 1);
+    assert.equal(saved.statistics.totals.independentCorrect, 1);
+    assert.equal(saved.statistics.totals.activeMs, 1200);
+    assert.equal(saved.statistics.totals.answerMs, 1200);
+  } finally {
+    release?.(); document.hasFocus = focus;
+    if (timerDescriptor) Object.defineProperty(performance, 'now', timerDescriptor); else delete performance.now;
   }
 });

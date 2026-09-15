@@ -30,7 +30,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 const { createElement, StrictMode } = await import('react');
 const { render, cleanup, fireEvent, waitFor, configure, act } = await import('@testing-library/react');
 configure({ asyncUtilTimeout: 8000 });
-const KEY = 'katsuyo-practice-profile-v7';
+const KEY = 'katsuyo-practice-profile-v8';
 const storage = window.localStorage;
 const originalGet = dom.window.Storage.prototype.getItem;
 const originalSet = dom.window.Storage.prototype.setItem;
@@ -139,7 +139,7 @@ async function exportThroughUI(view) {
   dom.window.HTMLAnchorElement.prototype.click = () => {};
   try {
     fireEvent.click(view.getByRole('button', { name: '导出数据', exact: true }));
-    assert.ok(blob);
+    await waitFor(() => assert.ok(blob));
     return JSON.parse(await blob.text());
   } finally { URL.createObjectURL = create; URL.revokeObjectURL = revoke; dom.window.HTMLAnchorElement.prototype.click = click; }
 }
@@ -445,7 +445,7 @@ test('independent page reads legacy storage once and never lets an old tab overw
   assert.equal(exercise.form, null);
   const wrongIndex = ['ichidan', 'godan', 'irregular'].findIndex(choice => choice !== exercise.item.class);
   fireEvent.click(view.container.querySelector(`[data-class-shortcut="${wrongIndex + 1}"]`));
-  await waitFor(() => assert.equal(saved()?.version, 7));
+  await waitFor(() => assert.equal(saved()?.version, 8));
   assert.equal(storage.getItem(legacyKey), raw);
   const current = saved();
   assert.ok(current.assessment.pending[assessmentTarget(exercise).key]);

@@ -212,7 +212,7 @@ test('diagnostic steps credit only newly performed work and do not guess whole-a
 test('v5 migration preserves equal semantics, archives compound and contaminated polite statistics without duplicating evidence', () => {
   const old=profile({byKc:{'class.godan':mastered,'suffix.masu':mastered,'composition.i-adjective.past':mastered,'adj.suffix.i-past':mastered}});
   const migrated=parseUnifiedImport(old,options);
-  assert.equal(migrated.version,7);
+  assert.equal(migrated.version,8);
   assert.deepEqual(migrated.byKc['class.godan'],mastered);
   assert.deepEqual(migrated.byKc['adj.suffix.i-past'],mastered);
   assert.equal(migrated.byKc['suffix.masu'],undefined);
@@ -239,7 +239,7 @@ test('v7 restores safe bounded course evidence and rejects unsupported formats o
   const restored=parseUnifiedImport({...migrated,coursePractice:{voiceCompound:['a','a','b'],bogus:['x']}},options);
   assert.deepEqual(restored.coursePractice,{voiceCompound:['a','b']});
   assert.throws(()=>parseUnifiedImport({format:'x',formatVersion:3,profile:migrated},options));
-  assert.throws(()=>parseUnifiedImport({...migrated,version:8},options));
+  assert.throws(()=>parseUnifiedImport({...migrated,version:9},options));
   const incomplete = {...migrated}; delete incomplete.assessment;
   assert.throws(()=>parseUnifiedImport(incomplete,options));
 });
@@ -459,6 +459,7 @@ test('revision 3 voice scores survive relocation and pending targets move withou
   const assessment=recordIndependentAttempt(emptyAssessment(),{exercise:old,correct:false,questionId:'old-voice',at:'2026-09-10T00:00:00Z'});
   const source={...parseUnifiedImport(profile(),options),curriculumVersion:3,assessment,
     introducedKcIds:['apply.potential.continuation'],byKc:{'apply.potential.continuation':{...mastered}},coursePractice:{voiceCompound:['old-review']}};
+  source.version=7; delete source.statistics;
   const restored=parseUnifiedImport(source,options),key=assessmentTarget(old).key;
   assert.deepEqual(restored.byKc,source.byKc);
   assert.deepEqual(restored.practiceLog,source.practiceLog);

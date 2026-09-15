@@ -30,11 +30,11 @@ function legacyNoru() {
     practiceLog: { version: 1, totalEvents: 20, droppedEntries: 16, events }, legacy: null, migration: null };
 }
 
-test('v6 real-log suffix migrates to v7 with one correction event and intact historical rows', () => {
+test('v6 real-log suffix migrates to v8 with one correction event and intact historical rows', () => {
   const old = legacyNoru(), before = structuredClone(old);
   const migrated = parseUnifiedImport({ format: 'katsuyo-dojo-profile', formatVersion: 4, profile: old }, options);
   assert.deepEqual(old, before);
-  assert.equal(migrated.version, 7);
+  assert.equal(migrated.version, 8);
   assert.equal(migrated.assessment.version, 2);
   assert.equal(migrated.practiceLog.version, 2);
   assert.equal(migrated.practiceLog.totalEvents, 21);
@@ -57,10 +57,10 @@ test('v6 real-log suffix migrates to v7 with one correction event and intact his
   assert.equal(migrated.attempted, 9); assert.equal(migrated.correct, 7);
 });
 
-test('export format v5 roundtrips v7 exactly and does not append or replay another migration event', () => {
+test('export format v6 roundtrips v8 exactly and does not append or replay another migration event', () => {
   const migrated = parseUnifiedImport(legacyNoru(), options);
   const exported = createUnifiedExport(migrated, options.at);
-  assert.equal(exported.formatVersion, 5);
+  assert.equal(exported.formatVersion, 6);
   for (let count = 0; count < 3; count++) {
     const restored = parseUnifiedImport(exported, options);
     assert.deepEqual(restored, migrated);
@@ -75,10 +75,13 @@ test('a completed versioned retest stays completed despite the retained original
   for (const [index, exercise] of [find('食べる', 'masu'), find('高い', 'adjectivePast'), find('待つ', 'teiruNegative')].entries()) {
     assessment = recordIndependentAttempt(assessment, { exercise, questionId: `later-${index}`, correct: true, at: options.at });
   }
-  migrated = { ...migrated, assessment };
+  // This fixture models an old v7 client updating its authoritative ledger
+  // without new statistics. A native v8 writer must update both atomically.
+  migrated = { ...migrated, version: 7, assessment }; delete migrated.statistics;
   assert.deepEqual(assessment.pending, {});
   const restored = parseUnifiedImport(createUnifiedExport(migrated), options);
-  assert.deepEqual(restored, migrated);
+  assert.deepEqual(restored.assessment, migrated.assessment);
+  assert.deepEqual(restored.byKc, migrated.byKc);
   assert.equal(restored.practiceLog.totalEvents, 21);
 });
 
@@ -105,7 +108,7 @@ test('v7 strict restore rejects damaged authoritative scores instead of clamping
     const invalid = structuredClone(migrated); mutate(invalid);
     assert.throws(() => parseUnifiedImport(createUnifiedExport(invalid), options));
   }
-  assert.throws(() => parseUnifiedImport({ format: 'katsuyo-dojo-profile', formatVersion: 6, profile: migrated }, options));
+  assert.throws(() => parseUnifiedImport({ format: 'katsuyo-dojo-profile', formatVersion: 7, profile: migrated }, options));
 });
 
 test('old cumulative-only profiles retain their history and explicitly log the limits of reconstruction', () => {
@@ -128,6 +131,7 @@ test('actual removed する passive-desire path suspends on import without losin
   assert.equal(options.exercises.some(e => assessmentTarget(e).key === key), false, 'the revised catalog has no regular practice context for this actual old target');
   const source = parseUnifiedImport(legacyNoru(), options);
   source.assessment = recordIndependentAttempt(source.assessment, { exercise: removed, questionId: 'removed-actual-target', correct: false, at: options.at });
+  source.version = 7; delete source.statistics;
   source.assessment.version = 1; delete source.assessment.suspendedPending;
   const before = structuredClone(source), restored = parseUnifiedImport(createUnifiedExport(source), options);
   assert.deepEqual(source, before);
@@ -148,7 +152,7 @@ test('legacy v4 and v5 remain importable without claiming unseen independent obs
   const old = { version: 4, date: options.today, attempted: 4, correct: 3, streak: 0, rotation: 2, bySkill: {} };
   for (const source of [old, { ...old, version: 5, byKc: {}, introducedKcIds: [] }]) {
     const migrated = parseUnifiedImport(source, options);
-    assert.equal(migrated.version, 7);
+    assert.equal(migrated.version, 8);
     assert.equal(migrated.attempted, 4);
     assert.deepEqual(migrated.assessment.independentByKc, {});
     assert.equal(migrated.assessment.originalCount, 0);
@@ -157,11 +161,11 @@ test('legacy v4 and v5 remain importable without claiming unseen independent obs
   }
 });
 
-test('saving a migrated v7 profile uses its new key and leaves both v6 and v5 stored snapshots intact', async () => {
+test('saving a migrated v8 profile uses its new key and leaves both v6 and v5 stored snapshots intact', async () => {
   const source = legacyNoru(), raw = JSON.stringify(source), oldV5 = JSON.stringify({ version: 5 });
   const values = new Map([[LEGACY_STORAGE_KEY, raw], [LEGACY_V5_STORAGE_KEY, oldV5]]), writes = [];
   const storage = { getItem: key => values.get(key) ?? null, setItem: (key, value) => { writes.push(key); values.set(key, value); } };
-  assert.equal(UNIFIED_STORAGE_KEY, 'katsuyo-practice-profile-v7');
+  assert.equal(UNIFIED_STORAGE_KEY, 'katsuyo-practice-profile-v8');
   assert.equal(LEGACY_STORAGE_KEY, 'katsuyo-practice-profile-v6');
   const store = createProfileStore(() => storage, UNIFIED_STORAGE_KEY, callback => callback());
   assert.equal(store.read().raw, null);
@@ -202,16 +206,19 @@ test('a displayed hint is persisted before submission and remains pending throug
   assert.equal(event.assessment.after.independentAttempts, 0);
   assert.deepEqual(event.totals.before, event.totals.after);
   let restored = parseUnifiedImport(createUnifiedExport(hinted), options);
-  assert.deepEqual(restored, hinted);
+  assert.deepEqual(restored.assessment, hinted.assessment);
+  assert.deepEqual(restored.practiceLog, hinted.practiceLog);
+  const native = structuredClone(restored);
   restored = parseUnifiedImport(createUnifiedExport(restored), options);
-  assert.deepEqual(restored, hinted);
+  assert.deepEqual(restored, native);
   assert.equal(restored.assessment.pending[key].failures, 0);
   const afterRefresh = applyLearningObservation(restored, exercise, { type: 'question', outcome: 'correct', questionId: 'after-refresh', eventId: 'answer', at: options.at });
   assert.equal(afterRefresh.support.source, 'rehearsal');
   assert.equal(afterRefresh.profile.assessment.byTarget[key].independentCorrect, 0);
   assert.ok(afterRefresh.profile.assessment.pending[key]);
   assert.deepEqual(afterRefresh.profile.byKc, {});
-  assert.deepEqual(parseUnifiedImport(createUnifiedExport(afterRefresh.profile), options), afterRefresh.profile);
+  const oldWriter = { ...afterRefresh.profile, version: 7 }; delete oldWriter.statistics;
+  assert.deepEqual(parseUnifiedImport(createUnifiedExport(oldWriter), options).assessment, afterRefresh.profile.assessment);
 });
 
 test('hint log validation rejects invented scoring, missing help conditions and fabricated failures', () => {

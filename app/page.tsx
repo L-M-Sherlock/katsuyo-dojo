@@ -1,5 +1,9 @@
 "use client";
 
+import StatisticsPage from "./lib/statistics-page.mjs";
+import { emptyStatistics, recordActiveTime, statisticsSnapshot, localDay } from "./lib/statistics.mjs";
+import type { Statistics } from "./lib/statistics.mjs";
+import { createStatisticsClock, STATISTICS_FLUSH_MS } from "./lib/statistics-clock.mjs";
 import { FORM_LABELS } from "./lib/form-labels.mjs";
 
 import { recognizedFormsIdentification } from "./lib/form-recognition.mjs";
@@ -30,7 +34,7 @@ import { planRetestQuestion } from "./lib/retest-planning.mjs";
 import { createPracticePlanner } from "./lib/practice-planning.mjs";
 import { createProfileStore, readPreference, writePreference } from "./lib/profile-store.mjs";
 import { canContinueRound, emptyHintState, planPractice, shouldReplan, toggleHint } from "./lib/practice-session.mjs";
-import { createUnifiedExport as createProfileExport, parseUnifiedImport as parseProfileImport, UNIFIED_STORAGE_KEY, LEGACY_STORAGE_KEY, LEGACY_V5_STORAGE_KEY } from "./lib/unified-profile.mjs";
+import { createUnifiedExport as createProfileExport, parseUnifiedImport as parseProfileImport, UNIFIED_STORAGE_KEY, LEGACY_STORAGE_KEY, LEGACY_V7_STORAGE_KEY, LEGACY_V5_STORAGE_KEY } from "./lib/unified-profile.mjs";
 import { COURSE_STAGES, CURRICULUM_VERSION, UNIFIED_COURSES, sourceForForm } from "./lib/unified-curriculum.mjs";
 import { buildUnifiedKnowledge, deriveUnified } from "./lib/unified-knowledge.mjs";
 
@@ -53,7 +57,7 @@ type KnowledgeComponent = { id: string; order: number; label: string; family: ke
 type Exercise = { id: string; courseId: ModeId; courseIndex: number; form: Form | null; item: PracticeItem; kcIds: string[]; sourceUrl?: string; prerequisites?: string[]; context?: { id: string; text: string }; usageReviewVersion?: number };
 type SkillStats = ReturnType<typeof emptySkillStats>;
 type AssessmentState = LearningAssessment & { migration?: { at: string; changes: { kcId: string; before: SkillStats | null; after: SkillStats | null }[]; unverifiedKcIds: string[]; baselineByKc: Record<string, SkillStats> } };
-type Profile = { practiceGoalCourseId?: ModeId; version: 7; curriculumVersion: number; date: string; attempted: number; correct: number; streak: number; introducedKcIds: string[]; rotation: number; byKc: Record<string, SkillStats>; assessment: AssessmentState; accessibleCourseIds: string[]; coursePractice: Record<string, string[]>; recentWordKeys: string[]; practiceLog: PracticeLog; legacy: object | null; migration: { message?: string; preserved?: number; archived?: number } | null };
+type Profile = { practiceGoalCourseId?: ModeId; version: 8; statistics: Statistics; curriculumVersion: number; date: string; attempted: number; correct: number; streak: number; introducedKcIds: string[]; rotation: number; byKc: Record<string, SkillStats>; assessment: AssessmentState; accessibleCourseIds: string[]; coursePractice: Record<string, string[]>; recentWordKeys: string[]; practiceLog: PracticeLog; legacy: object | null; migration: { message?: string; preserved?: number; archived?: number } | null };
 type VerbForm = Parameters<typeof conjugate>[2];
 type AnswerVariant = { surface: string; reading: string; note: string };
 type FormSemantics = { concise: string; coreMeaning: string; register?: string; usageNote?: string; contrast?: string };
@@ -67,8 +71,8 @@ type DiagnosticStep = { surface: string; reading: string; form: Form; answers: s
 type DiagnosticStepResult = { correct: boolean; updatedKcIds: string[]; practicedKcIds: string[] };
 type DiagnosticAttempt = { answer: string; outcome: string; message: string; resolution: string; index: number; total: number; nextTotal: number };
 
-function DiagnosticPractice({ item, steps, onEvidence, onDone }: {
-  item: PracticeItem; steps: DiagnosticStep[];
+function DiagnosticPractice({ item, steps, onEvidence, onDone, active = true }: {
+  item: PracticeItem; steps: DiagnosticStep[]; active?: boolean;
   onEvidence: (step: DiagnosticStep, correct: boolean, failedKcId: string | null, confirmed: string[], totalChange: number, attempt: DiagnosticAttempt) => Promise<boolean>;
   onDone: (outcome: "completed" | "skipped", answered: number, total: number) => Promise<boolean>;
 }) {
@@ -86,8 +90,8 @@ function DiagnosticPractice({ item, steps, onEvidence, onDone }: {
   const firstChoice = useRef<HTMLButtonElement>(null);
   const nextButton = useRef<HTMLButtonElement>(null);
   const step = practiceSteps[index];
-  useEffect(() => { (firstChoice.current ?? input.current)?.focus(); }, []);
-  useEffect(() => { if (feedback && !busy) nextButton.current?.focus(); }, [feedback, busy]);
+  useEffect(() => { if (active) (firstChoice.current ?? input.current)?.focus(); }, [active]);
+  useEffect(() => { if (feedback && !busy && active) nextButton.current?.focus(); }, [feedback, busy, active]);
   async function submit(event: FormEvent) {
     event.preventDefault();
     return checkAnswer(answer);
@@ -260,7 +264,13 @@ const ASSESSMENT_CATALOG = assessmentCatalog(KNOWLEDGE.exercises);
 const importOptions = () => ({ today: todayKey(), components: ALL_KCS, legacyComponents: [...VERB_KNOWLEDGE.components, ...ADJECTIVE_KNOWLEDGE.components], exercises: KNOWLEDGE.exercises });
 const kcsOf = (courseId: ModeId) => (KNOWLEDGE.courseKcIds[courseId] ?? []).map(id => KC_BY_ID.get(id)).filter((kc): kc is KnowledgeComponent => Boolean(kc));
 const PRACTICE_PLANNER = createPracticePlanner(KNOWLEDGE);
-function emptyProfile(): Profile { return { version: 7, curriculumVersion: CURRICULUM_VERSION, date: todayKey(), attempted: 0, correct: 0, streak: 0, introducedKcIds: [...INITIAL_KC_IDS], rotation: 0, byKc: {}, assessment: emptyAssessment(), accessibleCourseIds: [], coursePractice: {}, recentWordKeys: [], practiceLog: emptyPracticeLog(), legacy: null, migration: null }; }
+function emptyProfile(): Profile {
+  const profile = { version: 8 as const, curriculumVersion: CURRICULUM_VERSION, date: todayKey(), attempted: 0, correct: 0, streak: 0,
+    introducedKcIds: [...INITIAL_KC_IDS], rotation: 0, byKc: {}, assessment: emptyAssessment(), accessibleCourseIds: [],
+    coursePractice: {}, recentWordKeys: [], practiceLog: emptyPracticeLog(), legacy: null, migration: null, statistics: emptyStatistics() };
+  profile.statistics.progressStart = statisticsSnapshot(profile, { ...KNOWLEDGE, courses: COURSES });
+  return profile;
+}
 function activateReadyKcs(profile: Profile) {
   const advanced = advanceIntroductions(ALL_KCS, profile.introducedKcIds, profile.byKc);
   return { ...profile, introducedKcIds: advanced.introducedKcIds };
@@ -292,7 +302,7 @@ function loadProfile(raw: string | null): { profile: Profile; migrated: boolean;
   const fresh = activateReadyKcs(emptyProfile());
   let original = raw;
   try {
-    const legacyV4 = raw ? null : readPreference(browserStorage, LEGACY_STORAGE_KEY) ?? readPreference(browserStorage, LEGACY_V5_STORAGE_KEY) ?? readPreference(browserStorage, LEGACY_PROFILE_KEY_V4);
+    const legacyV4 = raw ? null : readPreference(browserStorage, LEGACY_V7_STORAGE_KEY) ?? readPreference(browserStorage, LEGACY_STORAGE_KEY) ?? readPreference(browserStorage, LEGACY_V5_STORAGE_KEY) ?? readPreference(browserStorage, LEGACY_PROFILE_KEY_V4);
     const saved = raw ?? legacyV4;
     original = saved;
     if (saved) {
@@ -363,6 +373,7 @@ export default function Home() {
   const [independentResult, setIndependentResult] = useState(true);
   const [migrationNotice, setMigrationNotice] = useState(false);
   const [correctionNotice, setCorrectionNotice] = useState<string | null>(null);
+  const [showStatistics, setShowStatistics] = useState(() => typeof window !== "undefined" && window.location.hash === "#/stats");
   const [progressOpen, setProgressOpen] = useState(false);
   const [progressView, setProgressView] = useState<"course" | "atomic" | "pending" | "log">("course");
   const [transferNotice, setTransferNotice] = useState<{ kind: "success" | "error"; text: string } | null>(null);
@@ -373,6 +384,9 @@ export default function Home() {
   const progressTriggerRef = useRef<HTMLButtonElement>(null);
   const progressCloseRef = useRef<HTMLButtonElement>(null);
   const startedAt = useRef(0);
+  const [statisticsClock] = useState(() => createStatisticsClock());
+  const timingWrite = useRef<Promise<boolean> | null>(null);
+  const waitForTiming = useCallback(async () => { if (timingWrite.current) await timingWrite.current; }, []);
   const loggedQuestionId = useRef<string | null>(null);
   const lexicalRetry = useRef(false);
   const keyboardHandler = useRef<((event: KeyboardEvent) => void) | null>(null);
@@ -417,7 +431,7 @@ export default function Home() {
   const originalFormIdentification = recognizedFormsIdentification(item, recognizedForms, targetLabel);
   const probing = diagnosticSteps.length > 0 && !probesDone;
   useEffect(() => {
-    if (!result || finished || progressOpen) return;
+    if (!result || finished || progressOpen || showStatistics) return;
     const frame = requestAnimationFrame(() => {
       const target = probing ? feedbackRef.current?.querySelector<HTMLElement>('.diagnostic-practice') : feedbackRef.current;
       if (!target) return;
@@ -428,17 +442,17 @@ export default function Home() {
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [result, probing, finished, progressOpen]);
+  }, [result, probing, finished, progressOpen, showStatistics]);
 
   useEffect(() => {
-    if (loading) return;
+    if (loading || showStatistics || progressOpen) return;
     const frame = requestAnimationFrame(() => {
       const card = questionCardRef.current;
       if (card && card.getBoundingClientRect().top < 12) card.scrollIntoView?.({block:'start',behavior:'auto'});
       inputRef.current?.focus({preventScroll:true});
     });
     return () => cancelAnimationFrame(frame);
-  }, [exercise.id, questionIndex, seed, loading]);
+  }, [exercise.id, questionIndex, seed, loading, showStatistics, progressOpen]);
 
   const detail = derivation.detail;
   const detailSteps = form ? derivation.operations.map((step: { output: string }) => step.output) : null;
@@ -464,7 +478,7 @@ export default function Home() {
       }
     });
     const externalChange = (event: StorageEvent) => {
-      if (event.key === LEGACY_STORAGE_KEY || event.key === LEGACY_V5_STORAGE_KEY) { setStorageNotice("旧版标签页仍在更新旧进度。新版独立评估记录未被覆盖，请先在旧页面导出备份再关闭旧页面。"); }
+      if (event.key === LEGACY_V7_STORAGE_KEY || event.key === LEGACY_STORAGE_KEY || event.key === LEGACY_V5_STORAGE_KEY) { setStorageNotice("旧版标签页仍在更新旧进度。新版独立评估记录未被覆盖，请先在旧页面导出备份再关闭旧页面。"); }
       if ((event.key === STORAGE_KEY || event.key === null) && store.isExternalChange(event.key === null ? null : event.newValue)) {
         blockedRef.current = true; setBlocked(true); setProgressOpen(false);
         setStorageNotice("另一个标签页已更新学习进度，本页已暂停。可先导出本页记录，再重新加载最新进度。");
@@ -473,23 +487,68 @@ export default function Home() {
     addEventListener("storage", externalChange);
     return () => { cancelAnimationFrame(frame); removeEventListener("storage", externalChange); };
   }, [store]);
-  useEffect(() => { if (!progressOpen) return; const oldOverflow = document.body.style.overflow; const progressTrigger = progressTriggerRef.current; document.body.style.overflow = "hidden"; progressCloseRef.current?.focus(); const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setProgressOpen(false); }; addEventListener("keydown", closeOnEscape); return () => { document.body.style.overflow = oldOverflow; removeEventListener("keydown", closeOnEscape); progressTrigger?.focus(); }; }, [progressOpen]);
-  const save = useCallback(async (next: Profile) => {
+  useEffect(() => { if (!progressOpen) return; const oldOverflow = document.body.style.overflow; const progressTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : progressTriggerRef.current; document.body.style.overflow = "hidden"; progressCloseRef.current?.focus(); const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setProgressOpen(false); }; addEventListener("keydown", closeOnEscape); return () => { document.body.style.overflow = oldOverflow; removeEventListener("keydown", closeOnEscape); progressTrigger?.focus(); }; }, [progressOpen]);
+  const save = useCallback(async (next: Profile, { quiet = false, replace = false } = {}) => {
+    if (!quiet) await waitForTiming();
     if (blockedRef.current || savingRef.current) return false;
-    savingRef.current = true; setSaving(true);
+    if (!quiet) { savingRef.current = true; setSaving(true); }
+    const fragments = replace ? [] : statisticsClock.drain();
+    next = { ...next, statistics: recordActiveTime(next.statistics, fragments) };
     try {
       const status = await store.save(next);
       if (status === "conflict" || blockedRef.current) {
+        statisticsClock.restore(fragments);
         blockedRef.current = true; setBlocked(true); setProgressOpen(false);
         setStorageNotice("另一个标签页已更新学习进度，本次操作未保存。可先导出本页记录，再重新加载最新进度。");
         return false;
       }
+      if (replace) statisticsClock.reset();
       profileRef.current = next; setProfile(next);
       setStorageNotice(status === "unsaved" ? "无法保存到浏览器，练习记录暂存在本页。请在关闭或重新加载前导出备份。" : null);
       return true;
-    } finally { savingRef.current = false; setSaving(false); }
-  }, [store]);
-  const resetQuestion = useCallback(() => { gradedRef.current = false; loggedQuestionId.current = null; lexicalRetry.current = false; setIndependentResult(true); setAnswer(""); setProbesDone(false); setProbeResults([]); setProbeExtraCount(0); setTypoNotice(false); setInputNotice(null); setSelectedClass(null); setResult(null); setHint(emptyHintState()); setDiagnosticMessage(null); setDiagnosticKcId(null); setConfirmedKcIds([]); setAcceptedVariant(null); startedAt.current = clockNow(); }, [setAnswer, setAcceptedVariant, setDiagnosticKcId, setDiagnosticMessage, setHint, setResult, setSelectedClass]);
+    } finally { if (!quiet) { savingRef.current = false; setSaving(false); } }
+  }, [store, statisticsClock, waitForTiming]);
+  const flushTiming = useCallback(async () => {
+    if (loading || blockedRef.current || savingRef.current || timingWrite.current || statisticsClock.pending() < 1) return;
+    const job = save(profileRef.current, { quiet: true }); timingWrite.current = job;
+    try { await job; } finally { timingWrite.current = null; }
+  }, [loading, save, statisticsClock]);
+  useEffect(() => {
+    const update = () => statisticsClock.setContext({ enabled: !loading && !blocked && !finished && !showStatistics && !progressOpen && !document.hidden && document.hasFocus(), answering: !result && !gradedRef.current, domain: item.domain, courseId: course.id });
+    const presence = () => { update(); if (document.hidden || !document.hasFocus()) void flushTiming(); };
+    const hide = () => { statisticsClock.setContext({ enabled: false }); void flushTiming(); };
+    const interaction = () => statisticsClock.touch();
+    update();
+    for (const event of ['keydown', 'pointerdown', 'pointermove', 'scroll']) window.addEventListener(event, interaction, { passive: true });
+    for (const event of ['focus', 'blur', 'pageshow']) window.addEventListener(event, presence);
+    window.addEventListener('pagehide', hide);
+    document.addEventListener('visibilitychange', presence);
+    const interval = window.setInterval(() => void flushTiming(), STATISTICS_FLUSH_MS);
+    return () => {
+      window.clearInterval(interval);
+      for (const event of ['keydown', 'pointerdown', 'pointermove', 'scroll']) window.removeEventListener(event, interaction);
+      for (const event of ['focus', 'blur', 'pageshow']) window.removeEventListener(event, presence);
+      window.removeEventListener('pagehide', hide);
+      document.removeEventListener('visibilitychange', presence);
+    };
+  }, [loading, blocked, finished, showStatistics, progressOpen, result, item.domain, course.id, statisticsClock, flushTiming]);
+  useEffect(() => {
+    const changed = () => { if (window.location.hash === '#/stats') statisticsClock.setContext({ enabled: false }); void flushTiming(); setShowStatistics(window.location.hash === '#/stats'); };
+    window.addEventListener('hashchange', changed); window.addEventListener('popstate', changed);
+    return () => { window.removeEventListener('hashchange', changed); window.removeEventListener('popstate', changed); };
+  }, [flushTiming, statisticsClock]);
+  useEffect(() => {
+    document.title = showStatistics ? '学习统计 · 活用道場' : '活用道場 · 日语动词与形容词活用练习';
+    if (!showStatistics || loading) return;
+    document.getElementById('statistics-title')?.focus();
+  }, [showStatistics, loading]);
+  function navigateStatistics(show: boolean) {
+    if (show) statisticsClock.setContext({ enabled: false });
+    void flushTiming();
+    window.history.pushState(null, '', `${window.location.pathname}${window.location.search}${show ? '#/stats' : ''}`);
+    setShowStatistics(show);
+  }
+  const resetQuestion = useCallback(() => { statisticsClock.resetAnswer(); gradedRef.current = false; loggedQuestionId.current = null; lexicalRetry.current = false; setIndependentResult(true); setAnswer(""); setProbesDone(false); setProbeResults([]); setProbeExtraCount(0); setTypoNotice(false); setInputNotice(null); setSelectedClass(null); setResult(null); setHint(emptyHintState()); setDiagnosticMessage(null); setDiagnosticKcId(null); setConfirmedKcIds([]); setAcceptedVariant(null); startedAt.current = clockNow(); }, [statisticsClock, setAnswer, setAcceptedVariant, setDiagnosticKcId, setDiagnosticMessage, setHint, setResult, setSelectedClass]);
 
   function logTarget(step?: DiagnosticStep, attempt?: DiagnosticAttempt): LogTarget {
     return { surface: step?.surface ?? item.surface, reading: step?.reading ?? item.reading, form: step?.form ?? form,
@@ -502,10 +561,13 @@ export default function Home() {
     loggedQuestionId.current ??= practiceEventId();
     const progress = ["typo", "invalid"].includes(event.outcome) ? after : { ...after, practiceGoalCourseId: goalCourseId ?? course.id };
     return appendPracticeEvent(before, progress, { ...event, questionId: loggedQuestionId.current, hintUsed: event.type === "hint" || hint.used,
+      statistics: { ordinal: after.assessment.originalCount, day: localDay(), answerMs: event.type === "question" && ["correct", "incorrect", "revealed"].includes(event.outcome) ? statisticsClock.answerDuration() : null,
+        progress: statisticsSnapshot(after, { ...KNOWLEDGE, courses: COURSES }), retestAttempt: Boolean(activeVerification && ["retest", "rehearsal"].includes(activeVerification.kind)) },
       exercise: { id: exercise.id, courseId: course.id, form, surface: item.surface, reading: item.reading, wordClass: item.class, domain: item.domain, ...(exercise.context ? { context: { ...exercise.context, reviewVersion: exercise.usageReviewVersion ?? 1 } } : {}) } },
     id => KC_BY_ID.get(id)?.label ?? id) as Profile;
   }
   async function recordQuestionRetry(outcome: string, message: string) {
+    await waitForTiming();
     const current = profileRef.current;
     if (outcome === "typo") lexicalRetry.current = true;
     return save(withPracticeEvent(current, current, { type: "question", outcome, answer, target: logTarget(),
@@ -513,6 +575,7 @@ export default function Home() {
   }
 
   async function showHint() {
+    await waitForTiming();
     if (hint.shown) { setHint(toggleHint); return; }
     if (result || gradedRef.current || blockedRef.current || savingRef.current) return;
     const current = profileRef.current, id = practiceEventId(), at = new Date().toISOString();
@@ -526,8 +589,10 @@ export default function Home() {
   }
 
   async function grade(correct: boolean, revealed = false, failedKcId: string | null = null, message: string | null = null, extraKcIds: string[] = [], confirmed: string[] = [], attempt: { answer?: string; resolution?: string; nextTotal?: number } = {}) {
+    await waitForTiming();
     if (result || gradedRef.current || blockedRef.current || savingRef.current) return;
     gradedRef.current = true;
+    statisticsClock.setContext({ answering: false });
     setTypoNotice(false);
     if (!correct && !revealed && !form) failedKcId ??= targetKc.id;
     if (revealed) { failedKcId = null; confirmed = []; }
@@ -580,6 +645,7 @@ export default function Home() {
     return grade(false, false, diagnosed?.kcId ?? null, analysis.feedback?.message ?? diagnosed?.message?.replace(item.reading, item.surface) ?? null, [], diagnosed?.confirmedKcIds ?? [], { resolution: analysis.feedback?.resolution, nextTotal: analysis.steps.length });
   }
   async function saveStepEvidence(step: DiagnosticStep, correct: boolean, failedKcId: string | null, confirmed: string[], totalChange: number, attempt: DiagnosticAttempt) {
+    await waitForTiming();
     const current = profileRef.current;
     const retry = attempt.outcome === "typo" || attempt.outcome === "invalid";
     const id = practiceEventId(), at = new Date().toISOString();
@@ -605,11 +671,13 @@ export default function Home() {
   function chooseClass(choice: PracticeClass) { if (!result) { setSelectedClass(choice); grade(choice === item.class, false, null, null, [], [], { answer: choice }); } }
 
   const finishRound = useCallback(async () => {
+    await waitForTiming();
     if (blockedRef.current || savingRef.current) return;
     if (mode === "adaptive") { const current = profileRef.current; const advanced = advanceIntroductions(ALL_KCS, current.introducedKcIds, current.byKc) as { introducedKcIds: string[]; added: KnowledgeComponent[] }; if (advanced.added.length) { if (!await save({ ...current, introducedKcIds: advanced.introducedKcIds })) return; const next = advanced.added.at(-1)!; setUnlocked(`${COURSES[next.firstCourseIndex].title} · ${next.label}`); } }
     setFinished(true);
-  }, [mode, save]);
+  }, [mode, save, waitForTiming]);
   const nextQuestion = useCallback(async () => {
+    await waitForTiming();
     if (!gradedRef.current || blockedRef.current || savingRef.current || probing) return;
     const answeredCount = roundOffset + questionIndex + 1;
     if (answeredCount >= SESSION_LENGTH) return finishRound();
@@ -671,14 +739,14 @@ export default function Home() {
     setQuestionIndex((value) => value + 1);
     setVerification(null);
     resetQuestion();
-  }, [finishRound, focusKc, goalCourseId, mode, probing, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, roundState, planningProfile, save, usedQuestionKeys, usedWordKeys, verification, seed]);
+  }, [finishRound, focusKc, goalCourseId, mode, probing, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, roundState, planningProfile, save, usedQuestionKeys, usedWordKeys, verification, seed, waitForTiming]);
   const classChoices = useMemo(() => practiceDomain === "verb" ? ["ichidan", "godan", "irregular"] as PracticeClass[] : ["i", "na"] as PracticeClass[], [practiceDomain]);
   useLayoutEffect(() => {
     // Commit the new question/feedback state before it can receive input. The
     // native listener stays mounted instead of briefly retaining an old result
     // while passive effects catch up with a freshly rendered next button.
     keyboardHandler.current = (event: KeyboardEvent) => {
-      if (progressOpen || blocked || loading) return;
+      if (progressOpen || blocked || loading || showStatistics) return;
       const target = event.target as HTMLElement | null;
       const advanceButton = target?.closest("[data-diagnostic-next],.next-button");
       // Keep the listener installed across async saves. Reinstalling it after
@@ -706,13 +774,14 @@ export default function Home() {
       if (probing) document.querySelector<HTMLButtonElement>("[data-diagnostic-next]")?.click();
       else nextQuestion();
     };
-  }, [blocked, classChoices, finished, form, loading, nextQuestion, probing, progressOpen, result]);
+  }, [blocked, classChoices, finished, form, loading, nextQuestion, probing, progressOpen, result, showStatistics]);
   useEffect(() => {
     const handler = (event: KeyboardEvent) => keyboardHandler.current?.(event);
     addEventListener("keydown", handler);
     return () => removeEventListener("keydown", handler);
   }, []);
   async function finishDiagnosticPractice(outcome: "completed" | "skipped", answered: number, total: number) {
+    await waitForTiming();
     const current = profileRef.current;
     const id = practiceEventId(), at = new Date().toISOString();
     loggedQuestionId.current ??= practiceEventId();
@@ -735,6 +804,7 @@ export default function Home() {
     setSeed((value) => value + 1); resetQuestion();
   }
   async function start(nextMode: PracticeMode) {
+    await waitForTiming();
     if (nextMode !== "adaptive" && !summarizeUnifiedCourse(COURSES.find(c => c.id === nextMode)!, kcsOf(nextMode), profileRef.current.introducedKcIds, profileRef.current).unlocked) return;
     const current = activateReadyKcs({ ...profileRef.current, rotation: profileRef.current.rotation + 1 });
     if (await save(current)) applyRound(nextMode, current, nextMode === mode ? goalCourseId : null);
@@ -743,17 +813,19 @@ export default function Home() {
     setCourseFilter(value); writePreference(browserStorage, PRACTICE_DOMAIN_KEY, value);
   }
   async function resetProgress() {
+    await waitForTiming();
     if (!window.confirm("确定清除这台设备上的全部练习进度和作答日志吗？")) return;
     const fresh = activateReadyKcs(emptyProfile());
-    if (!await save(fresh)) return;
-    for (const key of [LEGACY_STORAGE_KEY, LEGACY_V5_STORAGE_KEY, LEGACY_PROFILE_KEY_V4, LEGACY_PROFILE_KEY_V3, LEGACY_PROFILE_KEY_V2, "katsuyo-practice-stats-v1"]) writePreference(browserStorage, key, null);
+    if (!await save(fresh, { replace: true })) return;
+    for (const key of [LEGACY_V7_STORAGE_KEY, LEGACY_STORAGE_KEY, LEGACY_V5_STORAGE_KEY, LEGACY_PROFILE_KEY_V4, LEGACY_PROFILE_KEY_V3, LEGACY_PROFILE_KEY_V2, "katsuyo-practice-stats-v1"]) writePreference(browserStorage, key, null);
     applyRound("adaptive", fresh);
   }
   async function resetInvalidProgress() {
+    await waitForTiming();
     if (!window.confirm("确定清除无法解析的本地记录并重新开始吗？建议先导出原始记录。")) return;
     blockedRef.current = false;
     const fresh = activateReadyKcs(emptyProfile());
-    if (!await save(fresh)) return;
+    if (!await save(fresh, { replace: true })) return;
     setBlocked(false); setInvalidRaw(null);
     applyRound("adaptive", fresh);
   }
@@ -768,7 +840,9 @@ export default function Home() {
     link.remove();
     URL.revokeObjectURL(url);
   }
-  function exportProgress() {
+  async function exportProgress() {
+    await waitForTiming();
+    await flushTiming();
     downloadProgress(JSON.stringify(createProfileExport(profileRef.current), null, 2), `katsuyo-dojo-progress-${todayKey()}.json`);
     setTransferNotice({ kind: "success", text: "练习进度和作答日志已导出，可以在另一台设备上导入。" });
   }
@@ -779,7 +853,7 @@ export default function Home() {
     try {
       const imported = activateReadyKcs(parseProfileImport(JSON.parse(await file.text()), importOptions()) as Profile);
       if (!window.confirm("导入会覆盖这台设备当前的练习进度。确定继续吗？")) return;
-      if (!await save(imported)) return;
+      if (!await save(imported, { replace: true })) return;
       applyRound("adaptive", imported);
       setTransferNotice({ kind: "success", text: "导入成功，练习进度已经恢复。" });
     } catch (error) {
@@ -875,8 +949,9 @@ export default function Home() {
     {storageNotice && <div className="storage-notice" role="alert"><p>{storageNotice}</p><button type="button" onClick={exportProgress}>导出本页记录</button>{invalidRaw !== null && <><button type="button" onClick={() => downloadProgress(invalidRaw, `katsuyo-dojo-original-${todayKey()}.json`)}>导出原始记录</button><button type="button" disabled={saving} onClick={resetInvalidProgress}>清除损坏记录并重新开始</button></>}{blocked && <button type="button" onClick={() => window.location.reload()}>重新加载最新进度</button>}</div>}
     {loading && <p role="status">正在加载学习进度……</p>}
     <fieldset className="practice-controls" disabled={loading || saving || blocked} aria-busy={loading || saving}>
-    <header className="topbar"><button className="brand" type="button" onClick={() => start("adaptive")}><span className="brand-mark">活</span><span><strong>活用道場</strong><small>KATSUYŌ PRACTICE</small></span></button><div className="topbar-actions"><div className="daily-summary"><div><span>今日</span><strong>{profile.correct} / {profile.attempted}</strong></div><div><span>连续答对</span><strong>{profile.streak}</strong></div></div><a className="github-link" href="https://github.com/L-M-Sherlock/katsuyo-dojo" target="_blank" rel="noopener noreferrer" aria-label="GitHub 源代码（新标签页打开）">GitHub <span aria-hidden="true">↗</span></a></div></header>
-    <section className="practice-layout"><aside className="lesson-rail"><p className="eyebrow">YOKUBI 活用路线</p><h1>拆开规律，<br />逐项练会。</h1><p className="intro">先掌握动词与形容词的基本词形，再按表达目标学习，最后综合运用。</p>
+    <header className="topbar"><button className="brand" type="button" onClick={() => showStatistics ? navigateStatistics(false) : start("adaptive")}><span className="brand-mark">活</span><span><strong>活用道場</strong><small>KATSUYŌ PRACTICE</small></span></button><div className="topbar-actions"><nav className="main-view-nav" aria-label="页面"><button type="button" aria-current={!showStatistics ? "page" : undefined} onClick={() => navigateStatistics(false)}>练习</button><button type="button" aria-current={showStatistics ? "page" : undefined} onClick={() => navigateStatistics(true)}>统计</button></nav><div className="daily-summary"><div><span>今日</span><strong>{profile.correct} / {profile.attempted}</strong></div><div><span>连续答对</span><strong>{profile.streak}</strong></div></div><a className="github-link" href="https://github.com/L-M-Sherlock/katsuyo-dojo" target="_blank" rel="noopener noreferrer" aria-label="GitHub 源代码（新标签页打开）">GitHub <span aria-hidden="true">↗</span></a></div></header>
+    {showStatistics && !loading && <StatisticsPage profile={profile} model={KNOWLEDGE} courses={COURSES} onBack={() => navigateStatistics(false)} onKnowledge={() => { setProgressView("course"); setProgressOpen(true); }} />}
+    <div hidden={showStatistics} inert={showStatistics}><section className="practice-layout"><aside className="lesson-rail"><p className="eyebrow">YOKUBI 活用路线</p><h1>拆开规律，<br />逐项练会。</h1><p className="intro">先掌握动词与形容词的基本词形，再按表达目标学习，最后综合运用。</p>
       <div className="domain-switch" role="tablist" aria-label="专项课程筛选">{(["all", "verb", "adjective"] as const).map(value => <button type="button" role="tab" key={value} aria-selected={courseFilter === value} className={courseFilter === value ? "active" : ""} onClick={() => changeCourseFilter(value)}>{value === "all" ? "全部课程" : value === "verb" ? "动词专项" : "形容词专项"}</button>)}</div>
       <p className="answer-note">筛选专项课程，共用同一份学习进度。</p>
       <button type="button" className={`adaptive-entry ${mode === "adaptive" ? "active" : ""}`} onClick={() => start("adaptive")}><span className="adaptive-icon">自</span><span><strong>自适应训练</strong><small>{mode === "adaptive" ? "当前课程" : "当前专项"} · <span className="current-course-name">{focusDisplayLabel}</span></small><small>{pendingInMode.length ? `待独立复测 ${pendingInMode.length} 项` : "本轮重点掌握度"}</small></span><b>{focusPercent}%</b></button>
@@ -892,9 +967,9 @@ export default function Home() {
       <article ref={questionCardRef} className={`exercise-card${result ? " has-result" : ""}`} data-form={form ?? ""} key={`${exercise.id}-${questionIndex}-${seed}`}><div className="question-kicker"><span>Yokubi · L{sourceCourse?.lesson ?? course.lesson}</span><span>{targetLabel}</span>{result && <span>{KC_FAMILY_LABELS[targetKc.family]} · {targetKc.label}</span>}</div><p className="instruction">{form ? <>请把下面的{practiceDomain === "verb" ? "动词" : "形容词"}变为<strong>{targetLabel}</strong></> : `请选择这个${practiceDomain === "verb" ? "动词" : "形容词"}所属的类别`}</p>{formSemantics && <p className="semantic-brief"><span>表达作用</span><span>{formSemantics.concise}</span></p>}{exercise.context && <p className="exercise-context"><span>语境</span>{exercise.context.text}</p>}<div className="word-display"><ruby>{item.surface}<rt>{item.reading}</rt></ruby><span>{item.meaning}</span></div>
       {!form ? <div className={`class-options ${classChoices.length === 2 ? "two-options" : ""}`}>{classChoices.map((choice, index) => <button type="button" key={choice} disabled={Boolean(result)} data-class-shortcut={String(index + 1)} aria-keyshortcuts={String(index + 1)} className={`${selectedClass === choice ? "selected" : ""} ${result && choice === item.class ? "choice-correct" : ""} ${selectedClass === choice && result === "incorrect" ? "choice-wrong" : ""}`} onClick={() => chooseClass(choice)}><small>{choice === "ichidan" ? "る脱落" : choice === "godan" ? "词尾移动" : choice === "irregular" ? "固定变化" : choice === "i" ? "词尾い变化" : "な／だ接续"}</small><strong>{classLabelFor(choice)}</strong><kbd aria-hidden="true">{index + 1}</kbd></button>)}</div> : <form onSubmit={submit}><label htmlFor="answer">你的答案</label><div className={`answer-row ${result ?? ""}`}><input ref={inputRef} id="answer" lang="ja" onKeyDown={(event) => { if (event.key === "Enter" && (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229)) event.preventDefault(); }} autoComplete="off" disabled={Boolean(result)} value={answer} aria-describedby={typoNotice ? "typo-notice" : undefined} onChange={(e) => { setAnswer(e.target.value); setTypoNotice(false); setInputNotice(null); }} placeholder="输入日语……" /><button type="submit" disabled={!answer.trim() || Boolean(result)}>检查答案</button></div><p className="answer-note">汉字或全假名答案均可</p>{inputNotice && <p className="hint-box" role="status">{inputNotice}</p>}{typoNotice && <p id="typo-notice" className="hint-box" role="status">不需要变化的部分与原词不一致，可能是输入笔误。请对照原词修改后重新提交；本次未计入作答或知识点统计。</p>}</form>}
       {!result && <div className="assist-row"><button type="button" className="text-button" onClick={showHint}>{hintShown ? "收起提示" : "看一条提示"}</button><button type="button" className="text-button" onClick={() => grade(false, true)}>不知道</button></div>}{hintShown && !result && <p className="hint-box">{hintFor(item, form)}</p>}
-      {result && <div ref={feedbackRef} className={`feedback ${result}`} role="status"><div className="feedback-copy"><strong>{feedbackTitle}</strong>{probeSummary && originalFormIdentification && <p className="original-form-identification">{originalFormIdentification}</p>}<p className="feedback-summary">{feedbackMessage}</p></div><div className="knowledge-tags" aria-label="本题涉及的知识点">{derivation.requiredKcIds.map((id: string) => KC_BY_ID.get(id)).filter((kc: KnowledgeComponent | undefined): kc is KnowledgeComponent => Boolean(kc)).map((kc: KnowledgeComponent) => <span className={kc.id === evidenceKcId ? "target" : confirmedKcIds.includes(kc.id) ? "confirmed" : ""} key={kc.id}>{confirmedKcIds.includes(kc.id) && "✓ 已确认 · "}{KC_FAMILY_LABELS[kc.family]} · {kc.label}</span>)}</div>{confirmedKcIds.length > 0 && <p className="partial-evidence-note">{independentResult ? "原题中可确认的局部规则单独记录；未确认的知识点不扣分。整题仍计为错误，保留待复测。" : "本次有帮助或未满足复测条件，可确认的局部规则只记录为辅助练习。独立掌握度保持不变。"}</p>}{probing && <DiagnosticPractice key={`${exercise.id}-${questionIndex}-${seed}`} item={item} steps={diagnosticSteps} onEvidence={saveStepEvidence} onDone={finishDiagnosticPractice} />}<div hidden={probing}><div className="rule-line"><span><FuriganaText surface={item.surface} reading={item.reading} /></span><b>→</b>{!form ? <span className="answer-emphasis">{classLabelFor(item.class)}</span> : acceptedVariant ? <span className="answer-emphasis"><FuriganaText surface={acceptedVariant.surface} reading={acceptedVariant.reading} /></span> : detailSteps ? detailSteps.map((step: string, i: number) => <Fragment key={`${step}-${i}`}><span className={i === detailSteps.length - 1 ? "answer-emphasis" : ""}><FuriganaText surface={step} reading={readingSteps?.[i] ?? step} /></span>{i < detailSteps.length - 1 && <b>→</b>}</Fragment>) : detail.parts.map((part: string, i: number) => <span className={i === detail.parts.length - 1 ? "answer-emphasis" : ""} key={`${part}-${i}`}><FuriganaText surface={part} reading={readingParts[i] ?? part} />{i < detail.parts.length - 1 && <b className="joiner">＋</b>}</span>)}</div>{acceptedVariant && form && <p className="accepted-variant-note">{acceptedVariant.note && <span>{acceptedVariant.note}</span>}<span>{form === "causativePassive" || form.startsWith("causativePassive") ? "完整形式：" : "本站默认展示："}<FuriganaText surface={detail.answer} reading={readingDetail?.answer ?? detail.answer} /></span></p>}{result === "incorrect" && form && <p className="your-answer">你的答案：{answer || "—"}</p>}<SemanticDetails semantics={formSemantics} /></div><div className="feedback-meta"><span>{feedbackMeta}</span><a href={exercise.sourceUrl ?? course.url} target="_blank" rel="noreferrer">查看本题参考课程 ↗</a></div><button type="button" className="next-button" disabled={probing} onClick={nextQuestion}>{probing ? "请完成或跳过拆步" : questionNumber === roundQuestionLimit && !focusComplete ? "查看本轮结果" : focusComplete ? "继续" : "下一题"}{!probing && <span><kbd>Enter</kbd> →</span>}</button></div>}{!result && <p className="keyboard-hint">{!form ? <>{classChoices.map((_, index) => <Fragment key={index}><kbd>{index + 1}</kbd>{" "}</Fragment>)}选择答案</> : <><kbd>Enter</kbd> 检查答案</>}</p>}</article></> :
+      {result && <div ref={feedbackRef} className={`feedback ${result}`} role="status"><div className="feedback-copy"><strong>{feedbackTitle}</strong>{probeSummary && originalFormIdentification && <p className="original-form-identification">{originalFormIdentification}</p>}<p className="feedback-summary">{feedbackMessage}</p></div><div className="knowledge-tags" aria-label="本题涉及的知识点">{derivation.requiredKcIds.map((id: string) => KC_BY_ID.get(id)).filter((kc: KnowledgeComponent | undefined): kc is KnowledgeComponent => Boolean(kc)).map((kc: KnowledgeComponent) => <span className={kc.id === evidenceKcId ? "target" : confirmedKcIds.includes(kc.id) ? "confirmed" : ""} key={kc.id}>{confirmedKcIds.includes(kc.id) && "✓ 已确认 · "}{KC_FAMILY_LABELS[kc.family]} · {kc.label}</span>)}</div>{confirmedKcIds.length > 0 && <p className="partial-evidence-note">{independentResult ? "原题中可确认的局部规则单独记录；未确认的知识点不扣分。整题仍计为错误，保留待复测。" : "本次有帮助或未满足复测条件，可确认的局部规则只记录为辅助练习。独立掌握度保持不变。"}</p>}{probing && <DiagnosticPractice key={`${exercise.id}-${questionIndex}-${seed}`} item={item} active={!showStatistics} steps={diagnosticSteps} onEvidence={saveStepEvidence} onDone={finishDiagnosticPractice} />}<div hidden={probing}><div className="rule-line"><span><FuriganaText surface={item.surface} reading={item.reading} /></span><b>→</b>{!form ? <span className="answer-emphasis">{classLabelFor(item.class)}</span> : acceptedVariant ? <span className="answer-emphasis"><FuriganaText surface={acceptedVariant.surface} reading={acceptedVariant.reading} /></span> : detailSteps ? detailSteps.map((step: string, i: number) => <Fragment key={`${step}-${i}`}><span className={i === detailSteps.length - 1 ? "answer-emphasis" : ""}><FuriganaText surface={step} reading={readingSteps?.[i] ?? step} /></span>{i < detailSteps.length - 1 && <b>→</b>}</Fragment>) : detail.parts.map((part: string, i: number) => <span className={i === detail.parts.length - 1 ? "answer-emphasis" : ""} key={`${part}-${i}`}><FuriganaText surface={part} reading={readingParts[i] ?? part} />{i < detail.parts.length - 1 && <b className="joiner">＋</b>}</span>)}</div>{acceptedVariant && form && <p className="accepted-variant-note">{acceptedVariant.note && <span>{acceptedVariant.note}</span>}<span>{form === "causativePassive" || form.startsWith("causativePassive") ? "完整形式：" : "本站默认展示："}<FuriganaText surface={detail.answer} reading={readingDetail?.answer ?? detail.answer} /></span></p>}{result === "incorrect" && form && <p className="your-answer">你的答案：{answer || "—"}</p>}<SemanticDetails semantics={formSemantics} /></div><div className="feedback-meta"><span>{feedbackMeta}</span><a href={exercise.sourceUrl ?? course.url} target="_blank" rel="noreferrer">查看本题参考课程 ↗</a></div><button type="button" className="next-button" disabled={probing} onClick={nextQuestion}>{probing ? "请完成或跳过拆步" : questionNumber === roundQuestionLimit && !focusComplete ? "查看本轮结果" : focusComplete ? "继续" : "下一题"}{!probing && <span><kbd>Enter</kbd> →</span>}</button></div>}{!result && <p className="keyboard-hint">{!form ? <>{classChoices.map((_, index) => <Fragment key={index}><kbd>{index + 1}</kbd>{" "}</Fragment>)}选择答案</> : <><kbd>Enter</kbd> 检查答案</>}</p>}</article></> :
       <article className="completion-card"><p className="completion-jp">おつかれさま</p><span className="completion-label">本轮完成</span>{answeredInRound > 0 && <div className="score"><strong>{sessionCorrect}</strong><span>/ {answeredInRound}</span></div>}<p>{pendingInMode.length ? `还有 ${pendingInMode.length} 项待独立复测。下一轮先安排符合条件的复测，间隔不足时穿插其他目标。` : unlocked ? `新知识点已解锁：${unlocked}` : mode === "adaptive" && activeRouteComplete ? unfinishedReview ? `全部知识点已达标，下一轮优先完成「${unfinishedReview.title}」的综合复习。` : "全部课程已完成，接下来按课程轮换巩固。" : mode === "adaptive" ? "下一轮会继续聚焦当前置信度最低的知识点。" : "专项模式只练当前课程，不会推进自适应路线的解锁。"}</p><div className="completion-focus"><span>{pendingInMode.length ? "待独立复测" : mode === "adaptive" ? "当前薄弱点" : "本专项薄弱点"}</span><strong>{pendingInMode.length ? pendingInMode[0].target.form ? FORM_LABELS[pendingInMode[0].target.form as Form] : "词类判断" : weakestKc?.label ?? unfinishedReview?.title ?? "全部已达标"}</strong>{weakestMissingCoverage.length > 0 && <small>待覆盖：{weakestMissingCoverage.join("、")}</small>}</div><button type="button" className="restart-button" onClick={() => start(mode)}>{mode === "adaptive" ? "继续下一轮" : "继续本专项"}<span><kbd>Enter</kbd> →</span></button>{mode !== "adaptive" && <button type="button" className="back-adaptive" onClick={() => start("adaptive")}>返回自适应训练</button>}</article>}
-      <footer className="source-note">课程编排参考 <a href={CHINESE_YOKUBI_URL} target="_blank" rel="noreferrer">Yokubi 中文版</a>，自适应学习思路参考 <a href="https://kanabr.vercel.app/" target="_blank" rel="noopener noreferrer">kanabr</a> · 本地学习记录 · CC BY 4.0</footer></section></section>
+      <footer className="source-note">课程编排参考 <a href={CHINESE_YOKUBI_URL} target="_blank" rel="noreferrer">Yokubi 中文版</a>，自适应学习思路参考 <a href="https://l-m-sherlock.github.io/kanabr/" target="_blank" rel="noopener noreferrer">kanabr</a> · 本地学习记录 · CC BY 4.0</footer></section></section></div>
     {progressOpen && <div className="progress-overlay"><button type="button" className="progress-backdrop" onClick={() => setProgressOpen(false)} aria-label="关闭知识进度" /><section className="progress-drawer" role="dialog" aria-modal="true" aria-labelledby="progress-title"><header><div><p>LEARNING PROFILE · {"UNIFIED"}</p><h2 id="progress-title">知识进度</h2></div><button ref={progressCloseRef} type="button" onClick={() => setProgressOpen(false)} aria-label="关闭知识进度">关闭 <kbd>Esc</kbd></button></header><div className="progress-summary"><div><span>已掌握知识点</span><strong>{masteredKcCount}</strong></div><div><span>已解锁知识点</span><strong>{introducedKcs.length}</strong></div><p>动词与形容词共用基础规则记录。辅助练习不改变独立掌握度，待复测不会因拆步答对而解除。当前待独立复测 {pendingRetests.length} 项。</p>{profile.assessment.migration && <p>旧版记录已按可核验日志修正 {profile.assessment.migration.changes.length} 个知识点；更早或无法核验来源的统计保留，不能据此还原历史独立作答。</p>}</div><section className="profile-transfer" aria-labelledby="profile-transfer-title"><div><h3 id="profile-transfer-title">更换设备</h3><p>导出一个 JSON 备份，保存知识点进度、辅助练习、待复测任务和作答日志，也可以在其他浏览器中恢复。</p></div><div className="transfer-actions"><button type="button" onClick={exportProgress}>导出数据</button><button type="button" onClick={() => importInputRef.current?.click()}>导入数据</button><input ref={importInputRef} type="file" accept="application/json,.json" hidden onChange={importProgress} /></div>{transferNotice && <p className={`transfer-notice ${transferNotice.kind}`} role="status">{transferNotice.text}</p>}</section><details className="curriculum-guide"><summary>课程如何安排</summary><p><strong>分组：</strong>按主要学习目标说明每门课学什么。</p><p><strong>排序：</strong>先学所需规则，再练它们的应用；条件相同时，优先复用和对照已学词形，主题相邻作为补充。可能与态接在基础变化之后，复用词干变化和基本时态。</p><p><strong>解锁：</strong>按知识点的先修条件开放。排在前面的课程并不都是后课的先修，同一主题也不必连续学习。</p><ol>{COURSE_STAGES.map((stage) => <li key={stage.id}><strong>{stage.label}</strong><span>{stage.objective}</span></li>)}</ol><p>同一课程先练新形式，再练它的后续变化。课程列表使用本站学习序号，题目上的 Yokubi 课号标明内容来源。</p></details><div className="progress-view-tabs" role="tablist" aria-label="进度查看方式"><button type="button" role="tab" aria-selected={progressView === "course"} className={progressView === "course" ? "active" : ""} onClick={() => setProgressView("course")}>按课程</button><button type="button" role="tab" aria-selected={progressView === "atomic"} className={progressView === "atomic" ? "active" : ""} onClick={() => setProgressView("atomic")}>按知识点</button><button type="button" role="tab" aria-selected={progressView === "pending"} className={progressView === "pending" ? "active" : ""} onClick={() => setProgressView("pending")}>待复测 {pendingRetests.length}</button><button type="button" role="tab" aria-selected={progressView === "log"} className={progressView === "log" ? "active" : ""} onClick={() => setProgressView("log")}>作答日志</button></div>
       {progressView === "pending" ? <PendingRetests assessment={profile.assessment} /> : progressView === "log" ? <PracticeLogView log={profile.practiceLog} /> : progressView === "course" ? <div className="course-progress-list">{visibleCourses.map((item) => { const summary = courseSummary(item); const isFocusCourse = focusKc?.firstCourseId === item.id; return <details key={item.id} open={isFocusCourse}><summary><span><small>{item.order !== undefined ? item.order + 1 : item.lesson}</small><b>{item.title}</b></span><span>{summary.status}<i aria-hidden="true">⌄</i></span></summary><p className="course-objective"><strong>{item.stageLabel}</strong> · {item.description ?? item.stageObjective}</p><div className="skill-progress-list">{groupKnowledgeCoverage(summary.required, ALL_KCS).map(group => renderCoverageGroup(group, item.id))}</div></details>; })}</div> : <div className="course-progress-list atomic-progress-list">{Object.entries(KC_FAMILY_LABELS).map(([family, label]) => { const groups = knowledgeGroups.filter(group => group.component.family === family); const components = groups.flatMap(group => [group.component, ...group.coverage]); if (!components.length) return null; return <details key={family} open={components.some((kc) => kc.id === focusKc?.id)}><summary><span><small>{components.filter((kc) => kc.gating && introducedSet.has(kc.id)).length}/{components.filter((kc) => kc.gating).length}</small><b>{label}</b></span><span>{components.length} 项<i aria-hidden="true">⌄</i></span></summary><div className="skill-progress-list">{groups.map(group => renderCoverageGroup(group))}</div></details>; })}</div>}
       </section></div>}
