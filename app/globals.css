@@ -600,3 +600,6 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
   .challenge-bulk button { font-size: 12px; }
   .challenge-selection-footer { padding-top: 12px; gap: 10px; }
 }
+
+.practice-layout.challenge-layout { display: block; width: min(1040px, calc(100% - 32px)); }
+.practice-layout.challenge-layout .exercise-stage { padding: 20px 0 24px; }
