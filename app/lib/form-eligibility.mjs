@@ -149,6 +149,9 @@ function outcome(status, category, reason, context) {
 }
 const allowed = reason => outcome('allowed', 'semantic', reason);
 const blocked = (category, reason, reasonCode) => ({ ...outcome('blocked', category, reason), ...(reasonCode ? { reasonCode } : {}) });
+// `context` is an internal applicability note (内部适用性说明), not a learner-facing
+// scenario, example sentence, or hint. Keep the field for eligibility audits and
+// historical log/export compatibility; never render its text in the practice UI.
 function contextual(sense, family, reason, text) {
   return outcome('context-required', 'context', reason, text ? { id: `${sense.id}:${family}:v${LEXICAL_REVIEW_VERSION}`, text } : undefined);
 }

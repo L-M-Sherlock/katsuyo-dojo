@@ -29,6 +29,8 @@ function string(value, max = 256, nonempty = false) {
   if (typeof value !== 'string' || Array.from(value).length > max || (nonempty && !value.length)) invalid();
   return value;
 }
+// Legacy field name: this is an internal applicability note, retained in raw
+// logs/exports for auditing. It is not displayed in the learner's log view.
 function readQuestionContext(value) {
   const context = object(value);
   const result = { id: string(context.id, 256, true), text: string(context.text, 1000, true), reviewVersion: integer(context.reviewVersion) };

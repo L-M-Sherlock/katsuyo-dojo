@@ -311,9 +311,9 @@ test('a legacy adjective preference does not create a separate adaptive route', 
   assert.ok(JSON.parse(storage.getItem(KEY)).introducedKcIds.includes('class.godan'));
 });
 
-test('reviewed question context is visible before hints and remains independent evidence in the saved log', async () => {
+test('internal applicability notes stay out of question and log views while preserving audit metadata', async () => {
   const exercise = KNOWLEDGE.exercises.find(candidate => candidate.item.surface === '来る' && candidate.form === 'passive');
-  assert.ok(exercise?.context, 'the visitor situation must accompany the intransitive passive');
+  assert.ok(exercise?.context, 'the applicability note must remain available for internal auditing');
   const initial = masteredProfile();
   initial.assessment = recordIndependentAttempt(initial.assessment, { exercise, questionId: 'context-failure', correct: false });
   const fillers = KNOWLEDGE.exercises.filter(candidate => candidate.form === null).slice(0, 2);
@@ -325,7 +325,7 @@ test('reviewed question context is visible before hints and remains independent 
   const view = await mount();
   const shown = displayedExercise(view);
   assert.equal(shown.id, exercise.id);
-  assert.equal(view.container.querySelector('.exercise-context').textContent, `语境${exercise.context.text}`);
+  assert.equal(view.container.textContent.includes(exercise.context.text), false);
   assert.ok(view.getByRole('button', { name: '看一条提示' }));
   assert.equal(JSON.parse(storage.getItem(KEY)).practiceLog.events.length, 0, 'rendering the question is not hint exposure');
 
@@ -341,6 +341,12 @@ test('reviewed question context is visible before hints and remains independent 
   assert.equal(event.assessment.after.pending, false);
   assert.equal(event.assessment.after.eligibleRetestCorrect, 1);
   assert.equal(saved.assessment.originalCount, 4);
+  fireEvent.click(view.getByRole('button', { name: /知识进度 全部课程/ }));
+  fireEvent.click(view.getByRole('tab', { name: '作答日志' }));
+  const history = view.getByRole('region', { name: '作答日志' });
+  assert.ok(history.querySelector('details'), 'the saved answer must still be visible in the log');
+  assert.equal(history.textContent.includes(exercise.context.text), false);
+  assert.doesNotMatch(history.textContent, /题目语境/);
 });
 
 test('corrupt progress is preserved and recovery controls stay usable', async () => {
