@@ -44,3 +44,34 @@ test('conjugation challenges balance verb classes as well as forms',()=>{
     assert.deepEqual(new Set(group.map(q=>q.candidate.item.class)),new Set(['godan','ichidan','irregular']));
   }
 });
+
+test('mixed rounds balance courses before forms, and redistribute exhausted course slots',()=>{
+  const courses=[['small',1],['second',20],['third',20]];
+  const m={...model,exercises:courses.flatMap(([courseId,n])=>Array.from({length:n},(_,i)=>({id:`${courseId}:${i}`,courseId,form:'past',item:{domain:'verb',surface:`${courseId}-${i}`,class:'godan'},kcIds:['advanced']})))};
+  const planner=createChallengePlanner(m),round=planner.questions(courses.map(([id])=>id),profile);
+  assert.equal(round.length,12);assert.equal(new Set(round.map(q=>exerciseKey(q.candidate))).size,12);
+  const counts=Object.fromEntries(courses.map(([id])=>[id,round.filter(q=>q.candidate.courseId===id).length]));
+  assert.equal(counts.small,1);assert.equal(counts.second+counts.third,11);assert.ok(Math.abs(counts.second-counts.third)<=1);
+  assert.ok(round.every(q=>courses.some(([id])=>id===q.candidate.courseId)));
+});
+
+test('selecting more than twelve courses rotates through every course over subsequent rounds',()=>{
+  const ids=Array.from({length:43},(_,i)=>`course-${i}`);
+  const m={...model,exercises:ids.flatMap(courseId=>Array.from({length:3},(_,i)=>({id:`${courseId}:${i}`,courseId,form:'past',item:{domain:'verb',surface:`${courseId}-${i}`,class:'godan'},kcIds:['advanced']})))};
+  const planner=createChallengePlanner(m),seen=new Set();
+  for(let rotation=1;rotation<=4;rotation++){
+    const round=planner.questions(ids,{...profile,rotation});
+    assert.equal(round.length,12);assert.equal(new Set(round.map(q=>q.candidate.courseId)).size,12);
+    round.forEach(q=>seen.add(q.candidate.courseId));
+  }
+  assert.equal(seen.size,43);
+});
+
+test('selection normalization supports old preferences and rejects unknown or malformed choices',async()=>{
+  const {normalizeChallengeCourses}=await import('../app/lib/challenge-planning.mjs');
+  const ids=['first','second'];
+  assert.deepEqual(normalizeChallengeCourses('first',ids),['first']);
+  assert.deepEqual(normalizeChallengeCourses('["second","first","first","unknown"]',ids),ids);
+  assert.deepEqual(normalizeChallengeCourses(['second',null,4,'second'],ids),['second']);
+  for(const value of [null,{},'[]','[bad','unknown','x'.repeat(8193)])assert.deepEqual(normalizeChallengeCourses(value,ids),[]);
+});

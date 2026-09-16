@@ -11,7 +11,7 @@ import { unifiedDiagnosticSteps as buildDiagnosticSteps } from '../app/lib/unifi
 import { emptySkillStats } from '../app/lib/adaptive.mjs';
 import { emptyPracticeLog } from '../app/lib/practice-log.mjs';
 import { assessmentTarget, emptyAssessment, recordIndependentAttempt } from '../app/lib/learning-assessment.mjs';
-import { CURRICULUM_VERSION } from '../app/lib/unified-curriculum.mjs';
+import { CURRICULUM_VERSION, UNIFIED_COURSES } from '../app/lib/unified-curriculum.mjs';
 import { wordKey } from '../app/lib/exercise-selection.mjs';
 
 // Compile the actual page without starting Vite's development server in tests.
@@ -43,6 +43,7 @@ let lockTail;
 
 beforeEach(() => {
   storage.clear();
+  window.history.replaceState(null, '', '/katsuyo-dojo/');
   lockTail = Promise.resolve();
   Object.defineProperty(navigator, 'locks', { configurable: true, value: { request: (_key, callback) => {
     const job = lockTail.then(callback); lockTail = job.catch(() => {}); return job;
@@ -1870,12 +1871,15 @@ test('a mixed class error uses two diagnostic questions and preserves the origin
 
 async function openChallenge(view,courseId=null) {
   fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
-  assert.ok(view.getByRole('dialog',{name:'自由挑战'}));
+  assert.ok(view.getByRole('heading',{name:'自由挑战',exact:true}));
+  assert.equal(window.location.hash,'#/challenge');
   if(courseId){
-    fireEvent.change(view.getByLabelText('或自选课程'),{target:{value:courseId}});
+    const clear=view.getByRole('button',{name:'清空选择'});if(!clear.disabled)fireEvent.click(clear);
+    for(const id of Array.isArray(courseId)?courseId:[courseId])fireEvent.click(view.getByRole('checkbox',{name:UNIFIED_COURSES.find(c=>c.id===id).title,exact:true}));
     fireEvent.click(view.getByRole('button',{name:'开始挑战所选课程'}));
   }else fireEvent.click(view.getByRole('button',{name:/挑战最高难度/}));
-  await waitFor(()=>assert.equal(Boolean(view.queryByRole('dialog',{name:'自由挑战'})),false));
+  await waitFor(()=>assert.equal(Boolean(view.queryByRole('heading',{name:'自由挑战',exact:true})),false));
+  assert.equal(window.location.hash,'#/challenge/play');
   assert.ok(view.container.querySelector('.challenge-notice'));
 }
 
@@ -1920,15 +1924,15 @@ test('challenge selection preserves drafts, isolates shortcuts, and permits lock
   const trigger=view.getByRole('button',{name:'自由挑战',exact:true});trigger.focus();fireEvent.click(trigger);
   fireEvent.keyDown(window,{key:'1'});fireEvent.keyDown(window,{key:'Enter'});
   assert.equal(storage.getItem(KEY),before);
-  fireEvent.keyDown(window,{key:'Escape'});
-  assert.equal(Boolean(view.queryByRole('dialog',{name:'自由挑战'})),false);
-  assert.equal(document.activeElement,trigger);
+  fireEvent.click(view.getByRole('button',{name:'返回当前练习'}));
+  assert.equal(Boolean(view.queryByRole('heading',{name:'自由挑战',exact:true})),false);
+  assert.equal(window.location.hash,'');
   await openChallenge(view,'adjectiveIBase');
   assert.equal(displayedExercise(view).item.domain,'adjective');
   const word=displayedExercise(view).item.surface;
   fireEvent.change(view.getByLabelText('你的答案'),{target:{value:'入力途中'}});
   fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
-  fireEvent.keyDown(window,{key:'Escape'});
+  fireEvent.click(view.getByRole('button',{name:'返回当前挑战'}));
   assert.equal(view.getByLabelText('你的答案').value,'入力途中');
   assert.equal(displayedExercise(view).item.surface,word);
   await answerDisplayedCorrectly(view);
@@ -1939,6 +1943,7 @@ test('challenge selection preserves drafts, isolates shortcuts, and permits lock
   fireEvent.click(reloaded.getByRole('button',{name:'返回自适应',exact:true}));
   await waitFor(()=>assert.equal(Boolean(reloaded.container.querySelector('.challenge-notice')),false));
   assert.equal(storage.getItem('katsuyo-practice-challenge-v1'),null);
+  assert.equal(storage.getItem('katsuyo-practice-challenge-v2'),null);
   assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount,1);
 });
 
@@ -1953,4 +1958,89 @@ test('every real course has a finite challenge round without prerequisite fallba
     assert.equal(new Set(round.map(q=>exerciseKey(q.candidate))).size,round.length,courseId);
   }
   t.diagnostic('All 43 courses have non-empty, distinct-question challenge rounds from a fresh profile.');
+});
+
+test('multiple selected courses rotate in one round and keep scoring in each actual course',async()=>{
+  const view=await mount();
+  await openChallenge(view,['past','adjectiveIBase']);
+  const ids=['adjectiveIBase','past'],seen=new Map();
+  assert.equal(view.getByRole('button',{name:'自由挑战',exact:true}).getAttribute('aria-current'),'page');
+  assert.equal(view.getByRole('button',{name:'练习',exact:true}).getAttribute('aria-current'),null);
+  assert.deepEqual(JSON.parse(storage.getItem('katsuyo-practice-challenge-v2')),ids);
+  for(let i=0;i<12;i++){
+    const exercise=displayedExercise(view);assert.ok(ids.includes(exercise.courseId));
+    seen.set(exercise.courseId,(seen.get(exercise.courseId)??0)+1);
+    await answerDisplayedCorrectly(view);
+    if(i<11)await next(view);
+  }
+  assert.deepEqual(Object.fromEntries(seen),{adjectiveIBase:6,past:6});
+  const scored=JSON.parse(storage.getItem(KEY));assert.equal(scored.assessment.originalCount,12);
+  for(const id of ids)assert.equal(scored.statistics.courses[id].questions,6);
+  assert.deepEqual(scored.accessibleCourseIds,[]);assert.equal(scored.practiceGoalCourseId,undefined);
+  fireEvent.click(view.container.querySelector('.next-button'));
+  await waitFor(()=>assert.ok(view.getByText('本轮挑战完成')));
+  fireEvent.click(view.getByRole('button',{name:/继续挑战所选课程/}));
+  await waitFor(()=>assert.equal(Boolean(view.queryByText('本轮挑战完成')),false));
+  assert.ok(ids.includes(displayedExercise(view).courseId));
+  cleanup();const restored=await mount();
+  assert.equal(window.location.hash,'#/challenge/play');
+  fireEvent.click(restored.getByRole('button',{name:'自由挑战',exact:true}));
+  assert.equal(restored.getByRole('checkbox',{name:'动词过去形',exact:true}).checked,true);
+  assert.equal(restored.getByRole('checkbox',{name:'い形容词基础活用',exact:true}).checked,true);
+});
+
+test('the challenge page filters checkbox cards, retains hidden selections, and has accurate navigation',async()=>{
+  const view=await mount(),before=storage.getItem(KEY);
+  fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
+  assert.equal(window.location.hash,'#/challenge');
+  assert.ok(view.getByRole('heading',{name:'自由挑战',exact:true}));
+  assert.equal(view.queryByRole('dialog'),null);assert.equal(view.queryByRole('combobox'),null);
+  assert.equal(view.getByRole('button',{name:'自由挑战',exact:true}).getAttribute('aria-current'),'page');
+  assert.equal(view.getByRole('button',{name:'练习',exact:true}).getAttribute('aria-current'),null);
+  assert.equal(view.getByRole('button',{name:'开始挑战所选课程'}).disabled,true);
+  fireEvent.click(view.getByRole('checkbox',{name:'动词过去形',exact:true}));
+  fireEvent.click(view.getByRole('button',{name:'形容词',exact:true}));
+  assert.equal(view.getAllByRole('checkbox').length,6);
+  fireEvent.click(view.getByRole('button',{name:'全选当前结果'}));assert.ok(view.getByText('已选 7 门课程'));
+  fireEvent.change(view.getByRole('searchbox',{name:'搜索挑战课程'}),{target:{value:'不存在的课程'}});
+  assert.ok(view.getByText(/没有找到匹配的课程/));assert.ok(view.getByText('已选 7 门课程'));
+  fireEvent.click(view.getByRole('button',{name:'清空选择'}));assert.equal(view.getByRole('button',{name:'开始挑战所选课程'}).disabled,true);
+  fireEvent.keyDown(window,{key:'1'});assert.equal(storage.getItem(KEY),before);
+  fireEvent.click(view.getByRole('button',{name:'返回当前练习'}));assert.equal(window.location.hash,'');
+  assert.equal(view.getByRole('button',{name:'练习',exact:true}).getAttribute('aria-current'),'page');
+});
+
+test('legacy challenge selection and history navigation keep the current page and draft consistent',async()=>{
+  storage.setItem('katsuyo-practice-challenge-v1','adjectiveIBase');
+  const view=await mount();assert.equal(window.location.hash,'#/challenge/play');
+  assert.equal(displayedExercise(view).courseId,'adjectiveIBase');
+  fireEvent.change(view.getByLabelText('你的答案'),{target:{value:'途中'}});
+  fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
+  assert.equal(window.location.hash,'#/challenge');
+  assert.equal(view.getByRole('checkbox',{name:'い形容词基础活用',exact:true}).checked,true);
+  window.history.replaceState(null,'','/katsuyo-dojo/#/challenge/play');fireEvent(window,new window.PopStateEvent('popstate'));
+  assert.equal(view.getByLabelText('你的答案').value,'途中');
+  assert.equal(view.getByRole('button',{name:'自由挑战',exact:true}).getAttribute('aria-current'),'page');
+  fireEvent.click(view.getByRole('button',{name:'统计',exact:true}));
+  assert.equal(view.getByRole('button',{name:'统计',exact:true}).getAttribute('aria-current'),'page');
+  fireEvent.click(view.getByRole('button',{name:'返回当前挑战',exact:true}));
+  assert.equal(window.location.hash,'#/challenge/play');assert.equal(view.getByLabelText('你的答案').value,'途中');
+  fireEvent.click(view.getByRole('button',{name:'练习',exact:true}));
+  await waitFor(()=>assert.equal(Boolean(view.container.querySelector('.challenge-notice')),false));
+  assert.equal(window.location.hash,'');assert.equal(storage.getItem('katsuyo-practice-challenge-v1'),null);
+  window.history.replaceState(null,'','/katsuyo-dojo/#/challenge/play');fireEvent(window,new window.PopStateEvent('popstate'));
+  assert.equal(window.location.hash,'#/challenge');assert.ok(view.getByRole('heading',{name:'自由挑战',exact:true}));
+});
+
+test('a storage conflict blocks interaction without changing the challenge page or active navigation',async()=>{
+  const view=await mount();
+  fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
+  const external=JSON.stringify(profile({rotation:7}));storage.setItem(KEY,external);
+  fireEvent(window,new StorageEvent('storage',{key:KEY,newValue:external}));
+  await waitFor(()=>assert.ok(view.getByText(/另一个标签页已更新学习进度，本页已暂停/)));
+  assert.ok(view.getByRole('heading',{name:'自由挑战',exact:true}));
+  assert.equal(window.location.hash,'#/challenge');
+  assert.equal(view.getByRole('button',{name:'自由挑战',exact:true}).getAttribute('aria-current'),'page');
+  assert.equal(view.container.querySelector('.practice-controls').disabled,true);
+  assert.equal(view.getByRole('button',{name:'导出本页记录'}).disabled,false);
 });

@@ -36,8 +36,8 @@ function Table({ headers, rows, empty = '暂无记录' }) {
     h('table', { className: 'statistics-table' }, h('thead', null, h('tr', null, headers.map(label => h('th', { key: label, scope: 'col' }, label)))),
       h('tbody', null, rows.length ? rows.map((row, index) => h('tr', { key: index }, row.map((cell, column) => h(column ? 'td' : 'th', { key: column, ...(column ? {} : { scope: 'row' }) }, cell)))) : h('tr', null, h('td', { colSpan: headers.length }, empty)))));
 }
-/** @param {{profile:any, model:any, courses:any[], onBack:()=>void, onKnowledge:()=>void}} props */
-export default function StatisticsPage({ profile, model, courses, onBack, onKnowledge }) {
+/** @param {{profile:any, model:any, courses:any[], onBack:()=>void, onKnowledge:()=>void, backLabel?:string}} props */
+export default function StatisticsPage({ profile, model, courses, onBack, onKnowledge, backLabel = '返回练习' }) {
   const [domain, setDomain] = useState('all'), [axis, setAxis] = useState('date'), [range, setRange] = useState('30');
   const s = profile.statistics;
   const points = useMemo(() => statisticsSeries(s, axis, range, domain), [s, axis, range, domain]);
@@ -62,7 +62,7 @@ export default function StatisticsPage({ profile, model, courses, onBack, onKnow
   ];
   return h('section', { className: 'statistics-page', 'aria-labelledby': 'statistics-title' },
     h('header', { className: 'statistics-heading' }, h('div', null, h('p', { className: 'eyebrow' }, 'LEARNING STATISTICS'), h('h1', { id: 'statistics-title', tabIndex: -1 }, '学习统计'), h('p', null, '看看练习如何积累成进步。')),
-      h('button', { type: 'button', className: 'statistics-back', onClick: onBack }, '返回练习')),
+      h('button', { type: 'button', className: 'statistics-back', onClick: onBack }, backLabel)),
     h('div', { className: 'statistics-filter', role: 'group', 'aria-label': '统计范围' }, [['all', '全部'], ['verb', '动词'], ['adjective', '形容词']].map(([value, label]) => h('button', { type: 'button', key: value, 'aria-pressed': domain === value, onClick: () => setDomain(value) }, label))),
     h('div', { className: 'statistics-cards' }, cards.map(([label, value, detail]) => h('article', { key: label }, h('span', null, label), h('strong', null, value), h('small', null, detail)))),
     h('p', { className: 'statistics-provenance' }, `用时和掌握趋势从 ${localDay(new Date(s.since))} 开始记录。`, s.partialHistory ? ` 早期历史不完整；趋势从可还原的 ${s.historyFrom ?? '新版记录'} 展示，${s.earlyQuestions} 道早期原题缺少日期分布。` : ' 尚未作答的日期不计算正确率。', ' 统计不影响评分、解锁或选题。'),
