@@ -12,7 +12,9 @@ export function diagnosticFeedback({item,answer,diagnosis,steps,plan,step,normal
     const root=normalize(n.fixed.reading),expected=normalize(n.output.reading).slice(root.length);
     if(actual.startsWith(root)&&root.length&&actual.length>root.length) {
       const written=actual.slice(root.length,root.length+1);
-      if(written!==expected&&/^[ぁ-ゖ]$/u.test(written))observations.push({kind:'stem',text:`词干位置写成了「${written}」，这里需要${n.label}。`});
+      if(written!==expected&&/^[ぁ-ゖ]$/u.test(written))observations.push({kind:'stem',text:steps.some(step=>step.fallbackStage)
+        ? `词尾变化的位置写成了「${written}」，需要先核对这一步的完整形式。`
+        : `词干位置写成了「${written}」，这里需要${n.label}。`});
     }
   }
   if((plan?.nodes??[]).some(n=>n.ruleKcIds.includes('adj.suffix.i-past'))&&actual.endsWith('ない')) {

@@ -98,9 +98,9 @@ function validateMigration(value, allowed) {
 // replays the retained historical log (which may predate a completed retest).
 function restoreVersioned(source, allowed) {
   const assessment = object(source.assessment), byKc = statsMap(source.byKc, allowed);
-  if (![1, 2].includes(assessment.version)) invalid();
+  if (![1, 2, 3].includes(assessment.version)) invalid();
   if (assessment.version === 1 && assessment.suspendedPending !== undefined) invalid();
-  const suspended = assessment.version === 2 ? object(assessment.suspendedPending) : {};
+  const suspended = assessment.version >= 2 ? object(assessment.suspendedPending) : {};
   count(assessment.originalCount);
   uniqueStrings(assessment.seenQuestionIds); uniqueStrings(assessment.seenAssistedIds); uniqueStrings(assessment.seenExposureIds);
   if (assessment.seenQuestionIds.length !== assessment.originalCount) invalid();
@@ -144,6 +144,7 @@ function restoreVersioned(source, allowed) {
       const suspension = object(entry.suspension);
       if (suspension.reason !== 'no-eligible-exercise' || !Number.isSafeInteger(suspension.catalogVersion) || suspension.catalogVersion < 1) invalid();
     } else if (entry.suspension !== undefined) invalid();
+    if (entry.queue !== undefined && !['practice','challenge'].includes(entry.queue)) invalid();
     const target = readTarget(entry.target, allowed), known = assessment.byTarget[key];
     if (entry.key !== key || target.key !== key || !known || target.ruleSignature !== known.target.ruleSignature) invalid();
     text(entry.courseId); text(entry.reason, true); text(entry.lastWordKey, true); text(entry.lastQuestionId, true);
@@ -164,7 +165,7 @@ function restoreVersioned(source, allowed) {
         || !assessment.seenQuestionIds.includes(entry.lastQuestionId) || Date.parse(entry.lastPresentedAt) < Date.parse(entry.lastFailureAt)) invalid();
     }
   }
-  return { byKc: clone(byKc), assessment: clone({ ...assessment, version: 2,
+  return { byKc: clone(byKc), assessment: clone({ ...assessment, version: 3,
     pending: { ...pending, ...pendingDefaults }, suspendedPending: { ...suspended, ...suspendedDefaults } }) };
 }
 

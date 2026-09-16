@@ -2,7 +2,7 @@ import { recognizeForms, recognizedFormLabel, recognizedFormsIdentification } fr
 import { matchAcceptedAnswer } from './answer-variants.mjs';
 import { hasLexicalTypo } from './lexical-typo.mjs';
 import { deriveUnified, diagnoseUnified, diagnoseUnifiedStep, unifiedDiagnosticSteps, unifiedStepDiagnosticSteps, diagnoseUnifiedStepReview } from './unified-knowledge.mjs';
-import { planForContext, atomicSteps, diagnoseAtomicStep } from './diagnostic-plan.mjs';
+import { planForContext, progressiveSteps, diagnoseAtomicStep } from './diagnostic-plan.mjs';
 import { diagnosticFeedback } from './diagnostic-feedback.mjs';
 import { diagnoseConjugationPath, diagnoseProvidedConjugation } from './conjugation-path-diagnosis.mjs';
 
@@ -73,7 +73,7 @@ export function createAnswerAnalyzer(item, form, options = {}) {
     const maySplit=step?.kind==='conjugation'||!step?.kind;
     if(!steps.length&&!diagnosis?.kcId&&maySplit) {
       const scope=step?.kcIds??surface.requiredKcIds;
-      steps=atomicSteps(getPlan(),form,scope,diagnosis?.confirmedKcIds??[],answer,normalize);
+      steps=progressiveSteps(getPlan(),form,scope,diagnosis?.confirmedKcIds??[],answer,normalize);
       planFallback=steps.length>0;
     }
     const feedback=diagnosticFeedback({item,answer,diagnosis,steps,plan:!diagnosis?getPlan():plan,step,normalize});

@@ -603,3 +603,11 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 
 .practice-layout.challenge-layout { display: block; width: min(1040px, calc(100% - 32px)); }
 .practice-layout.challenge-layout .exercise-stage { padding: 20px 0 24px; }
+
+/* Retest location is a separate choice from the recorded learning result. */
+.retest-actions { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-top: 12px; }
+.challenge-retest-action { margin: 16px 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; }
+.challenge-retest-action p { margin: 0 0 8px; font-size: 14px; line-height: 1.7; }
+.challenge-pending { margin: 24px 0; padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+.challenge-pending > summary { cursor: pointer; font-weight: 700; }
+.challenge-pending[open] > summary { margin-bottom: 16px; }

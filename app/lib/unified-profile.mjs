@@ -17,11 +17,11 @@ const object = value => value && typeof value === 'object' && !Array.isArray(val
 const strings = value => Array.isArray(value) ? value.filter(id => typeof id === 'string') : [];
 const ambiguous = id => id.startsWith('composition.') || id === 'compound.voice-stack' || id === 'suffix.masu' || id.startsWith('facet.form.masu.');
 export function createUnifiedExport(profile, exportedAt = new Date().toISOString()) {
-  return { format: FORMAT, formatVersion: 6, exportedAt, profile };
+  return { format: FORMAT, formatVersion: 7, exportedAt, profile };
 }
 export function parseUnifiedImport(value, { today, components, legacyComponents, exercises = /** @type {any[] | undefined} */ (undefined), at = new Date().toISOString() }) {
   const envelope = object(value);
-  if (!envelope || ('format' in envelope && (envelope.format !== FORMAT || ![1, 2, 3, 4, 5, 6].includes(envelope.formatVersion)))) throw new Error('这不是受支持的活用道場备份文件。');
+  if (!envelope || ('format' in envelope && (envelope.format !== FORMAT || ![1, 2, 3, 4, 5, 6, 7].includes(envelope.formatVersion)))) throw new Error('这不是受支持的活用道場备份文件。');
   const source = object(envelope.profile) ?? envelope;
   if (![4, 5, 6, 7, 8].includes(source.version) || (source.version >= 7 && !source.assessment)) throw new Error('备份版本不受支持或数据不完整。');
   const current = source.version >= 6;

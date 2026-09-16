@@ -1,3 +1,4 @@
+import { failureQueue, observationQueue, retestQueue } from './retest-queue.mjs';
 import { buildDiagnosticPlan } from './diagnostic-plan.mjs';
 import { deriveUnified } from './unified-knowledge.mjs';
 import { isRuGodanException } from './knowledge-model.mjs';
@@ -10,9 +11,9 @@ import { isRuGodanException } from './knowledge-model.mjs';
  * @typedef {{item: {domain?: string, surface: string, reading?: string, class: string, iiFamily?: boolean, tailClass?: string}, form?: string | null, courseId?: string, kcIds?: string[]}} AssessmentExercise
  * @typedef {{key: string, form: string | null, courseId: string, domain: string, ruleSignature: string, kcIds: string[], wordKey: string, surface: string, reading: string}} AssessmentTarget
  * @typedef {{target: AssessmentTarget, attempts: number, independentAttempts: number, independentCorrect: number, assistedOriginalAttempts: number, assistedOriginalCorrect: number, assistedStepAttempts: number, assistedStepCorrect: number, eligibleRetestCorrect: number, lastAt: string, lastQuestionId: string, lastWordKey: string, lastOrdinal: number, lastOutcome: string, lastRetestPolicy: string | null}} TargetEvidence
- * @typedef {{key: string, target: AssessmentTarget, courseId: string, kcIds: string[], failedKcIds: string[], reason: string, createdAt: string, createdOrdinal: number, lastFailureAt: string | null, lastFailureOrdinal: number | null, lastWordKey: string, lastQuestionId: string, lastPresentedOrdinal: number, lastPresentedAt: string, lastPresentedWordKey: string, failures: number}} PendingRetest
+ * @typedef {{queue?: "practice" | "challenge", key: string, target: AssessmentTarget, courseId: string, kcIds: string[], failedKcIds: string[], reason: string, createdAt: string, createdOrdinal: number, lastFailureAt: string | null, lastFailureOrdinal: number | null, lastWordKey: string, lastQuestionId: string, lastPresentedOrdinal: number, lastPresentedAt: string, lastPresentedWordKey: string, failures: number}} PendingRetest
  * @typedef {PendingRetest & {suspension: {reason: 'no-eligible-exercise', catalogVersion: number}}} SuspendedPendingRetest
- * @typedef {{version: 2, originalCount: number, byTarget: Record<string, TargetEvidence>, pending: Record<string, PendingRetest>, suspendedPending: Record<string, SuspendedPendingRetest>, independentByKc: Record<string, import('./adaptive.mjs').SkillStats>, assistedByKc: Record<string, import('./adaptive.mjs').SkillStats>, seenQuestionIds: string[], seenAssistedIds: string[], seenExposureIds: string[]}} LearningAssessment
+ * @typedef {{version: 3, originalCount: number, byTarget: Record<string, TargetEvidence>, pending: Record<string, PendingRetest>, suspendedPending: Record<string, SuspendedPendingRetest>, independentByKc: Record<string, import('./adaptive.mjs').SkillStats>, assistedByKc: Record<string, import('./adaptive.mjs').SkillStats>, seenQuestionIds: string[], seenAssistedIds: string[], seenExposureIds: string[]}} LearningAssessment
  * @typedef {{eligible: boolean, reason: string, remainingQuestions: number, availableAt: string | null, policy: string}} RetestStatus
  */
 
@@ -26,7 +27,7 @@ const targetCache = new WeakMap();
 
 /** @returns {LearningAssessment} */
 export function emptyAssessment() {
-  return { version: 2, originalCount: 0, byTarget: {}, pending: {}, suspendedPending: {}, independentByKc: {}, assistedByKc: {}, seenQuestionIds: [], seenAssistedIds: [], seenExposureIds: [] };
+  return { version: 3, originalCount: 0, byTarget: {}, pending: {}, suspendedPending: {}, independentByKc: {}, assistedByKc: {}, seenQuestionIds: [], seenAssistedIds: [], seenExposureIds: [] };
 }
 
 /** Reconcile obligations against the complete practice catalog, never a
@@ -43,8 +44,8 @@ export function reconcileAssessmentCatalog(assessment, exercises, catalogVersion
     throw new Error('Assessment reconciliation requires a complete catalog and its version');
   }
   const obligations = [...Object.values(assessment.pending), ...Object.values(assessment.suspendedPending ?? {})];
-  if (!obligations.length) return assessment.version === 2 && assessment.suspendedPending !== undefined
-    ? assessment : { ...assessment, version: 2, suspendedPending: {} };
+  if (!obligations.length) return assessment.version === 3 && assessment.suspendedPending !== undefined
+    ? assessment : { ...assessment, version: 3, suspendedPending: {} };
   const forms = new Set(obligations.map(entry => `${entry.target.domain}:${entry.target.form ?? 'classify'}`));
   const signatures = new Map();
   for (const exercise of exercises) {
@@ -55,7 +56,7 @@ export function reconcileAssessmentCatalog(assessment, exercises, catalogVersion
   }
   const compatible = entry => signatures.get(entry.key)?.has(entry.target.ruleSignature) ?? false;
   const pending = { ...assessment.pending }, suspendedPending = { ...assessment.suspendedPending };
-  let changed = assessment.version !== 2 || assessment.suspendedPending === undefined;
+  let changed = assessment.version !== 3 || assessment.suspendedPending === undefined;
   for (const [key, entry] of Object.entries(suspendedPending)) {
     if (!compatible(entry)) continue;
     const original = { ...entry };
@@ -72,7 +73,7 @@ export function reconcileAssessmentCatalog(assessment, exercises, catalogVersion
     delete pending[key];
     changed = true;
   }
-  return changed ? { ...assessment, version: 2, pending, suspendedPending } : assessment;
+  return changed ? { ...assessment, version: 3, pending, suspendedPending } : assessment;
 }
 
 function nativeKind(item) {
@@ -189,8 +190,8 @@ function blankTarget(target) {
     lastAt: '', lastQuestionId: '', lastWordKey: '', lastOrdinal: 0, lastOutcome: '', lastRetestPolicy: null };
 }
 
-function unscoredPending(target, questionId, at, ordinal, reason) {
-  return { key: target.key, target, courseId: target.courseId, kcIds: target.kcIds, failedKcIds: [], reason,
+function unscoredPending(target, questionId, at, ordinal, reason, queue = 'practice') {
+  return { queue, key: target.key, target, courseId: target.courseId, kcIds: target.kcIds, failedKcIds: [], reason,
     createdAt: at, createdOrdinal: ordinal, lastFailureAt: null, lastFailureOrdinal: null,
     lastWordKey: target.wordKey, lastQuestionId: questionId, lastPresentedOrdinal: ordinal, lastPresentedAt: at,
     lastPresentedWordKey: target.wordKey, failures: 0 };
@@ -201,14 +202,16 @@ function unscoredPending(target, questionId, at, ordinal, reason) {
  * not consume the question id; a later valid first submission can still count.
  * The caller's independent flag means the raw no-assistance condition, including
  * hints, correct answers, or feedback before that submission. The target's
- * independent counters additionally require a qualified retest if pending;
- * same-word or early originals belong to the assisted rehearsal counters.
+ * independent counters require a qualified retest for a task in this mode.
+ * A task in the other mode must not stall ordinary learning; clearing either
+ * queue still requires a qualified retest, regardless of where it is answered.
  * @param {LearningAssessment} assessment
- * @param {{exercise: AssessmentExercise, questionId: string, at?: string | number, correct: boolean, independent?: boolean, reason?: string, failedKcIds?: string[], singleWord?: boolean}} attempt
+ * @param {{exercise: AssessmentExercise, questionId: string, at?: string | number, correct: boolean, independent?: boolean, reason?: string, mode?: "practice" | "challenge", failedKcIds?: string[], singleWord?: boolean}} attempt
  * @returns {LearningAssessment}
  */
 export function recordIndependentAttempt(assessment, attempt) {
   const { exercise, questionId, correct: answeredCorrectly, reason = answeredCorrectly ? 'correct' : 'incorrect', failedKcIds = [], singleWord = false } = attempt;
+  observationQueue(attempt.mode);
   assertQuestionId(questionId);
   if (ignoredReasons.has(reason) || assessment.seenQuestionIds.includes(questionId)) return assessment;
   const independent = (attempt.independent ?? true) && !assistanceReasons.has(reason);
@@ -217,7 +220,8 @@ export function recordIndependentAttempt(assessment, attempt) {
   const oldPending = assessment.pending[target.key], old = assessment.byTarget[target.key] ?? blankTarget(target);
   if (old.target.ruleSignature !== target.ruleSignature) throw new Error('Assessment target key collision');
   const status = oldPending ? retestStatus(oldPending, exercise, { originalCount: assessment.originalCount, at, singleWord }) : null;
-  const qualifiedIndependent = independent && (!oldPending || status.eligible);
+  const needsQualification = oldPending && retestQueue(oldPending) === observationQueue(attempt.mode);
+  const qualifiedIndependent = independent && (!needsQualification || status.eligible);
   const outcomePrefix = !independent ? 'assisted' : qualifiedIndependent ? 'independent' : 'rehearsal';
   const cleared = Boolean(correct && independent && status?.eligible);
   const nextTarget = { ...old, target, attempts: old.attempts + 1,
@@ -228,14 +232,14 @@ export function recordIndependentAttempt(assessment, attempt) {
     lastRetestPolicy: cleared ? status.policy : null };
   const pending = { ...assessment.pending };
   if (!correct) {
-    pending[target.key] = { key: target.key, target, courseId: target.courseId, kcIds: target.kcIds,
+    pending[target.key] = { queue: failureQueue(oldPending, attempt.mode), key: target.key, target, courseId: target.courseId, kcIds: target.kcIds,
       failedKcIds: unique([...oldPending?.failedKcIds ?? [], ...failedKcIds]).filter(id => target.kcIds.includes(id)),
       reason, createdAt: oldPending?.createdAt ?? at, createdOrdinal: oldPending?.createdOrdinal ?? ordinal,
       lastFailureAt: at, lastFailureOrdinal: ordinal, lastWordKey: target.wordKey, lastQuestionId: questionId,
       lastPresentedOrdinal: ordinal, lastPresentedAt: at, lastPresentedWordKey: target.wordKey, failures: (oldPending?.failures ?? 0) + 1 };
   } else if (cleared) delete pending[target.key];
   else if (oldPending) pending[target.key] = { ...oldPending, lastPresentedOrdinal: ordinal, lastPresentedAt: at, lastPresentedWordKey: target.wordKey };
-  else if (!independent) pending[target.key] = unscoredPending(target, questionId, at, ordinal, reason === 'correct' ? 'assisted' : reason);
+  else if (!independent) pending[target.key] = unscoredPending(target, questionId, at, ordinal, reason === 'correct' ? 'assisted' : reason, observationQueue(attempt.mode));
   return { ...assessment, originalCount: ordinal, byTarget: { ...assessment.byTarget, [target.key]: nextTarget }, pending,
     seenQuestionIds: [...assessment.seenQuestionIds, questionId] };
 }
@@ -265,7 +269,7 @@ export function recordAssistedAttempt(assessment, { exercise, questionId, eventI
  * Call separately from recordAssistedAttempt so statistics and exposure are
  * explicit operations, with their own replay-safe event receipts.
  * @param {LearningAssessment} assessment
- * @param {{exercise: AssessmentExercise, questionId: string, eventId: string, at?: string | number}} exposure
+ * @param {{exercise: AssessmentExercise, questionId: string, eventId: string, at?: string | number, mode?: "practice" | "challenge"}} exposure
  * @returns {LearningAssessment}
  */
 export function recordAssessmentExposure(assessment, { exercise, questionId, eventId, at }) {
@@ -286,16 +290,21 @@ export function recordAssessmentExposure(assessment, { exercise, questionId, eve
  * A hint-only pending record therefore has failures=0 and null failure time /
  * ordinal. Its target row also has zero original and assisted attempts.
  * @param {LearningAssessment} assessment
- * @param {{exercise: AssessmentExercise, questionId: string, eventId: string, at?: string | number}} exposure
+ * @param {{exercise: AssessmentExercise, questionId: string, eventId: string, at?: string | number, mode?: "practice" | "challenge"}} exposure
  * @returns {LearningAssessment}
  */
-export function recordHintExposure(assessment, { exercise, questionId, eventId, at }) {
+export function recordHintExposure(assessment, { exercise, questionId, eventId, at, mode = 'practice' }) {
+  observationQueue(mode);
   assertQuestionId(questionId); assertQuestionId(eventId);
   if (assessment.seenExposureIds.includes(eventId)) return assessment;
   const target = assessmentTarget(exercise);
-  if (assessment.pending[target.key]) return recordAssessmentExposure(assessment, { exercise, questionId, eventId, at });
+  if (assessment.pending[target.key]) {
+    const old=assessment.pending[target.key], queue=failureQueue(old,mode);
+    const updated=queue===(old.queue??'practice') ? assessment : {...assessment,pending:{...assessment.pending,[target.key]:{...old,queue}}};
+    return recordAssessmentExposure(updated, { exercise, questionId, eventId, at });
+  }
   const recordedAt = timestamp(at), ordinal = assessment.originalCount;
-  const pending = unscoredPending(target, questionId, recordedAt, ordinal, 'hinted');
+  const pending = unscoredPending(target, questionId, recordedAt, ordinal, 'hinted', mode);
   return { ...assessment, byTarget: assessment.byTarget[target.key] ? assessment.byTarget : { ...assessment.byTarget, [target.key]: blankTarget(target) },
     pending: { ...assessment.pending, [target.key]: pending }, seenExposureIds: [...assessment.seenExposureIds, eventId] };
 }

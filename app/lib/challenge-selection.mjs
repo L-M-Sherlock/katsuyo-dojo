@@ -1,6 +1,6 @@
 import {createElement as h,useMemo,useState} from 'react';
 
-export default function ChallengeSelection({courses,stages,selected,onChange,onStart,onHighest,onBack,backLabel}) {
+export default function ChallengeSelection({courses,stages,selected,onChange,onStart,onHighest,onBack,backLabel,retests}) {
   const [filter,setFilter]=useState('all'),[search,setSearch]=useState('');
   const visible=useMemo(()=>courses.filter(c=>(filter==='all'||c.domain===filter)
     &&`${c.title} ${c.stageLabel} ${(c.order??0)+1}`.toLowerCase().includes(search.trim().toLowerCase())),[courses,filter,search]);
@@ -14,8 +14,9 @@ export default function ChallengeSelection({courses,stages,selected,onChange,onS
     h('button',{type:'button',className:'challenge-highest',onClick:onHighest},
       h('span',null,h('strong',null,'挑战最高难度'),h('small',null,'直接进入多种表达的组合活用')),
       h('span',{'aria-hidden':true},'→')),
+    retests,
     h('form',{className:'challenge-picker',onSubmit:event=>{event.preventDefault();if(selected.length)onStart();}},
-      h('div',{className:'challenge-picker-heading'},h('div',null,h('h2',null,'自选课程'),h('p',null,'可多选，未解锁课程也能挑战。')),
+      h('div',{className:'challenge-picker-heading'},h('div',null,h('h2',null,'自选课程'),h('p',null,'可多选，未解锁课程也能挑战。成绩共用；挑战错题不会自动加入常规练习。')),
         h('label',{className:'challenge-search'},h('span',{className:'sr-only'},'搜索挑战课程'),
           h('input',{type:'search',placeholder:'搜索课程',value:search,onChange:event=>setSearch(event.target.value),onKeyDown:event=>{if(event.key==='Enter')event.preventDefault();}}))),
       h('div',{className:'challenge-tools'},

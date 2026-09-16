@@ -40,7 +40,7 @@ test('catalog reconciliation suspends only vanished rule paths and preserves sco
   const old = record(fresh(), first, 'failure'), before = structuredClone(old), key = assessmentTarget(first).key;
   const paused = reconcile(old, [other, otherAlternate, ...fillers]);
   assert.deepEqual(old, before);
-  assert.equal(paused.assessment.version, 2);
+  assert.equal(paused.assessment.version, 3);
   assert.deepEqual(paused.assessment.pending, {});
   assert.deepEqual(paused.assessment.suspendedPending[key], { ...old.assessment.pending[key], suspension: { reason: 'no-eligible-exercise', catalogVersion: 7 } });
   for (const field of ['byTarget', 'independentByKc', 'assistedByKc', 'seenQuestionIds', 'seenAssistedIds', 'seenExposureIds', 'originalCount']) {
@@ -58,7 +58,7 @@ test('v1 imports upgrade without replay and v2 suspended entries roundtrip or re
   const profile = record(fresh(), first, 'failure'), v1 = structuredClone(profile);
   v1.assessment.version = 1; delete v1.assessment.suspendedPending;
   const restored = restore(v1);
-  assert.equal(restored.assessment.version, 2);
+  assert.equal(restored.assessment.version, 3);
   assert.deepEqual(restored, { byKc: profile.byKc, assessment: profile.assessment });
   const paused = restore(v1, fillers), key = assessmentTarget(first).key;
   assert.ok(paused.assessment.suspendedPending[key]);

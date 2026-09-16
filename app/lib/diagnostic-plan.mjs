@@ -1,3 +1,5 @@
+import { atomicInstruction, practiceStage } from './diagnostic-instructions.mjs';
+import { FORM_LABELS } from './form-labels.mjs';
 import { CHAIN_FORM_SPECS, chainIntermediate } from './multi-step-forms.mjs';
 import { acceptedConjugations } from './conjugation.mjs';
 import { acceptedAdjectiveConjugations } from './adjective-conjugation.mjs';
@@ -21,7 +23,6 @@ export const DIAGNOSTIC_FORMS = unique([...primitives,...stemAppends,...teAppend
   ...Object.keys(CHAIN_FORM_SPECS),...Object.keys(COMPOUND_FORM_SPECS),...Object.keys(voiceForms),'negativePast','masuPast','masuNegative','masuNegativePast','masenka','nakute','zu','zuni','nakerebaNaranai','nakutewaIkenai','passiveDesireNegativePast']);
 const formSet = new Set(DIAGNOSTIC_FORMS);
 export const diagnosticFamily = form => COMPOUND_FORM_SPECS[form] ?? voiceForms[form] ?? null;
-const className = cls => ({godan:'五段动词',ichidan:'一段动词',irregular:'不规则动词',i:'い形容词',na:'な形容词'})[cls];
 const constructionNames = {zu:'ず',zuni:'ずに',tai:'たい',tagaru:'たがる',sugiru:'すぎる',nagara:'ながら',tsutsu:'つつ',teageru:'てあげる',temorau:'てもらう',tekureru:'てくれる',tekudasai:'てください',teiru:'ている',teru:'てる',tearu:'てある',teoru:'ておる',tehoshii:'てほしい',temo:'ても',tewa:'ては',temoIi:'てもいい',temiru:'てみる',teiku:'ていく',teku:'てく',tekuru:'てくる',teshimau:'てしまう',teoku:'ておく',naide:'ないで',naideKudasai:'ないでください',tara:'たら',tari:'たり',tatte:'たって',nakutemoIi:'なくてもいい',youtosuru:'ようとする',naitoIkenai:'ないといけない'};
 const endingName = form => ({negative:'否定形',past:'过去形',te:'て形',masu:'ます形',nasai:'なさい形',passive:'受身形',potential:'可能形',imperative:'命令形',volitional:'意向形',ba:'ば形',causative:'使役形',causativePassive:'使役受身形'})[form] ?? form;
 const pair = item => ({surface:item.surface,reading:item.reading ?? item.surface});
@@ -136,7 +137,9 @@ function adjectivePaths(item, form) {
 }
 function pathsFor(item, form) {
   if(!formSet.has(form))throw new Error(`Missing diagnostic recipe: ${form}`);
-  if(item.domain==='adjective')return adjectivePaths(item,form);
+  if(item.domain==='adjective')return adjectivePaths(item,form).map(path=>({...path,nodes:path.nodes.map((n,index)=>index?n:{...n,
+    practiceStage:n.practiceStage??{form,source:{...item},output:pair(path.state),length:path.nodes.length,label:FORM_LABELS[form]},
+  })}));
   const family=diagnosticFamily(form);
   if(family) return compose(pathsFor(item,family.form),state=>{
     const cls=family.outputType==='iAdjective'?'i':family.form==='causative'&&state.surface.endsWith('す')?'godan':['aru','iku'].includes(family.outputClass)?'godan':['kuru','irregular'].includes(family.outputClass)?'irregular':family.outputClass;
@@ -213,7 +216,8 @@ export function atomicSteps(plan, form, scope, confirmed=[], inputAnswer='', nor
   const stops=plan.nodes.flatMap((n,i)=>[n.output.surface,n.output.reading].some(value=>normalize(value)===actual)?[i]:[]);
   const start=stops.length===1?stops[0]+1:0;
   const result=[];
-  for(const n of plan.nodes.slice(start)) {
+  for(let index=start;index<plan.nodes.length;index++) {
+    const n=plan.nodes[index];
     const kcIds=n.ruleKcIds.filter(id=>allowed.has(id)&&!used.has(id));
     if(!kcIds.length)continue;
     kcIds.forEach(id=>used.add(id));
@@ -226,7 +230,36 @@ export function atomicSteps(plan, form, scope, confirmed=[], inputAnswer='', nor
         const at = path.nodes.findIndex(other => other.id === n.id && other.input.reading === n.input.reading);
         return at < 0 ? [] : path.nodes.slice(at + 1).flatMap(other => (other.acceptedOutputs ?? [other.output]).flatMap(output => [output.surface, output.reading])).filter(value => [n.output.surface, n.output.reading].some(current => value.length > current.length && value.startsWith(current)));
       })),
-      targetLabel:n.label,note:`已提供正确输入和词类（${className(n.item.class)}），本步只检查${n.label}。`});
+      ...atomicInstruction(plan,index)});
+  }
+  return result;
+}
+
+// Prefer proper, complete subforms before exposing their individual operations.
+// Never repeat the complete form that was just attempted, or bundle a rule
+// already confirmed/provided outside the current scope. A failed subform is
+// strictly smaller and eventually reaches the existing terminal atomic steps.
+export function progressiveSteps(plan, form, scope, confirmed=[], inputAnswer='', normalize=value=>value) {
+  const atoms=atomicSteps(plan,form,scope,confirmed,inputAnswer,normalize);
+  const byNode=new Map(atoms.map(step=>[step.nodeId,step]));
+  const covered=new Set(),result=[];
+  for(const atom of atoms) {
+    if(covered.has(atom.nodeId))continue;
+    const start=plan.nodes.findIndex(node=>node.id===atom.nodeId),stage=practiceStage(plan.nodes[start]);
+    const span=stage?plan.nodes.slice(start,start+stage.length):[];
+    const canGroup=stage&&stage.length>1&&stage.length<plan.nodes.length&&span.length===stage.length
+      && span.every(node=>byNode.has(node.id)&&node.ruleKcIds.every(id=>byNode.get(node.id).kcIds.includes(id)));
+    if(!canGroup){result.push(atom);continue;}
+    const native=buildDiagnosticPlan(stage.source,stage.form);
+    const kcIds=unique(span.flatMap(node=>byNode.get(node.id).kcIds));
+    span.forEach(node=>covered.add(node.id));
+    result.push({kind:'conjugation',fallbackStage:true,nodeId:`subform:${atom.nodeId}`,
+      form:stage.form,analysisItem:stage.source,surface:stage.source.surface,reading:stage.source.reading,
+      answers:native.acceptedVariants,readings:native.readingVariants,
+      kcIds,focusId:kcIds.at(-1),continuation:start>0||plan.form!==form,
+      targetLabel:FORM_LABELS[stage.form]??stage.label,
+      note:'请先填写这个完整形式。',
+    });
   }
   return result;
 }

@@ -1,3 +1,5 @@
+import { assessmentTarget, selectRetest } from './learning-assessment.mjs';
+import { isChallengeRetest } from './retest-queue.mjs';
 import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
 import { assignPracticeExercises, exerciseKey, wordKey } from './exercise-selection.mjs';
 import { isSourceClassification } from './learning-evidence.mjs';
@@ -55,7 +57,9 @@ export function createChallengePlanner(model) {
     if(!courses.length)return [];
     const rotation=profile.rotation??0,offset=(rotation*length)%courses.length;
     const ordered=[...courses.slice(offset),...courses.slice(0,offset)];
-    const counts=new Map(),usedKeys=[],usedWords=[],used=new Set(),assigned=[];
+    const counts=new Map(),usedKeys=[],usedWords=[],used=new Set(),assigned=[],usedRetestKeys=[];
+    const challengeEntries=Object.entries(profile.assessment?.pending??{}).filter(([,entry])=>isChallengeRetest(entry)&&selected.includes(entry.courseId));
+    const challengeAssessment=challengeEntries.length ? {...profile.assessment,pending:Object.fromEntries(challengeEntries)} : null;
     for(let index=0;index<length;index++) {
       // Equal course opportunities first, then forms and word classes. Tiny
       // exhausted pools yield their slots to the remaining selected courses.
@@ -66,7 +70,11 @@ export function createChallengePlanner(model) {
       const turn=previous+(counts.get(course.id)??0),form=course.forms[turn%course.forms.length];
       const target=form[Math.floor(turn/course.forms.length)%form.length];
       const alternatives=[...form,...course.forms.flat()].filter(other=>other.id!==target.id);
-      const [result]=assignPracticeExercises([target],{
+      const retest=challengeAssessment && challengeEntries.some(([key,entry])=>entry.courseId===course.id&&!usedRetestKeys.includes(key)) ? selectRetest(challengeAssessment,pools.get(course.id).filter(e=>!used.has(exerciseKey(e))),{
+        catalogExercises:model.exercises,excludeTargetKeys:usedRetestKeys,
+        excludeWordKeys:assigned.map(({candidate})=>assessmentTarget(candidate).wordKey),
+      }) : null;
+      const [result]=retest ? [{candidate:retest.exercise}] : assignPracticeExercises([target],{
         alternativesFor:()=>alternatives,candidatesFor:t=>groups.get(t.id),byKc:profile.byKc,
         seed:seed+rotation+index,recentWordKeys:profile.recentWordKeys,usedKeys,usedWordKeys:usedWords,
         isUseful:()=>true,
@@ -75,7 +83,8 @@ export function createChallengePlanner(model) {
       const candidate=result.candidate,key=exerciseKey(candidate);
       used.add(key);usedKeys.push(key);usedWords.push(wordKey(candidate));
       counts.set(course.id,(counts.get(course.id)??0)+1);
-      assigned.push({candidate,item:[...candidate.kcIds].reverse().map(id=>byId.get(id))
+      if(retest)usedRetestKeys.push(retest.pending.key);
+      assigned.push({candidate,...(retest?{challengeRetest:true}:{}),item:[...candidate.kcIds].reverse().map(id=>byId.get(id))
         .find(kc=>kc?.gating&&(candidate.form==null||!isSourceClassification(kc.id)))??byId.get(candidate.kcIds[0])});
     }
     return assigned;

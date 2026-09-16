@@ -1,3 +1,4 @@
+import { retestQueue } from './retest-queue.mjs';
 import { recordStatisticsEvent } from './statistics.mjs';
 /** @typedef {import('./adaptive.mjs').SkillStats} SkillStats */
 /** @typedef {{date: string, attempted: number, correct: number, streak: number}} Totals */
@@ -5,10 +6,10 @@ import { recordStatisticsEvent } from './statistics.mjs';
 /** @typedef {{id: string, courseId: string, form: string | null, surface: string, reading: string, wordClass: string, domain: string, context?: {id: string, text: string, reviewVersion: number}}} LogExercise */
 /** @typedef {{kcId: string, label: string, before: SkillStats | null, after: SkillStats | null}} KnowledgeChange */
 /** @typedef {{independent: boolean, source: string, provided: string[]}} EvidenceSupport */
-/** @typedef {{pending: boolean, independentAttempts: number, independentCorrect: number, assistedOriginalAttempts: number, assistedOriginalCorrect: number, assistedStepAttempts: number, assistedStepCorrect: number, eligibleRetestCorrect: number, pendingReason: string | null, lastFailureAt: string | null, lastPresentedAt: string | null}} AssessmentSnapshot */
+/** @typedef {{queue?: "practice" | "challenge" | null, pending: boolean, independentAttempts: number, independentCorrect: number, assistedOriginalAttempts: number, assistedOriginalCorrect: number, assistedStepAttempts: number, assistedStepCorrect: number, eligibleRetestCorrect: number, pendingReason: string | null, lastFailureAt: string | null, lastPresentedAt: string | null}} AssessmentSnapshot */
 /** @typedef {{targetKey: string, before: AssessmentSnapshot, after: AssessmentSnapshot, eligibility: {eligible: boolean, reason: string, remainingQuestions: number, availableAt: string | null, policy: string} | null}} AssessmentChange */
-/** @typedef {{id: string, sequence: number, questionId: string, at: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer: string, answerLength: number, answerTruncated: boolean, hintUsed: boolean, support?: EvidenceSupport, diagnosis: {kcId: string | null, confirmedKcIds: string[], resolution: string, message: string}, changes: KnowledgeChange[], assistedChanges?: KnowledgeChange[], assessment?: AssessmentChange, totals: {before: Totals, after: Totals}} PracticeEvent */
-/** @typedef {{version: 1 | 2, totalEvents: number, droppedEntries: number, events: PracticeEvent[]}} PracticeLog */
+/** @typedef {{mode?: "practice" | "challenge", id: string, sequence: number, questionId: string, at: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer: string, answerLength: number, answerTruncated: boolean, hintUsed: boolean, support?: EvidenceSupport, diagnosis: {kcId: string | null, confirmedKcIds: string[], resolution: string, message: string}, changes: KnowledgeChange[], assistedChanges?: KnowledgeChange[], assessment?: AssessmentChange, totals: {before: Totals, after: Totals}} PracticeEvent */
+/** @typedef {{version: 1 | 2 | 3, totalEvents: number, droppedEntries: number, events: PracticeEvent[]}} PracticeLog */
 
 export const PRACTICE_LOG_LIMIT = 500;
 // Bound the serialized log as well as its count: a complex answer can update
@@ -16,7 +17,7 @@ export const PRACTICE_LOG_LIMIT = 500;
 export const PRACTICE_LOG_MAX_CHARS = 750_000;
 
 /** @returns {PracticeLog} */
-export function emptyPracticeLog() { return { version: 2, totalEvents: 0, droppedEntries: 0, events: [] }; }
+export function emptyPracticeLog() { return { version: 3, totalEvents: 0, droppedEntries: 0, events: [] }; }
 
 export function practiceEventId() {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
@@ -82,13 +83,17 @@ function knowledgeChanges(value) {
 const assessmentCounts = ['independentAttempts', 'independentCorrect', 'assistedOriginalAttempts', 'assistedOriginalCorrect', 'assistedStepAttempts', 'assistedStepCorrect', 'eligibleRetestCorrect'];
 function assessmentSnapshot(state, key) {
   const entry = state?.byTarget?.[key], pending = state?.pending?.[key];
-  return { pending: Boolean(pending), ...Object.fromEntries(assessmentCounts.map(name => [name, entry?.[name] ?? 0])),
+  return { pending: Boolean(pending), queue: pending ? retestQueue(pending) : null, ...Object.fromEntries(assessmentCounts.map(name => [name, entry?.[name] ?? 0])),
     pendingReason: pending?.reason ?? null, lastFailureAt: pending?.lastFailureAt ?? null, lastPresentedAt: pending?.lastPresentedAt ?? null };
 }
 function readAssessmentSnapshot(value) {
   const s = object(value);
   const result = { pending: bool(s.pending), ...Object.fromEntries(assessmentCounts.map(name => [name, integer(s[name])])),
     pendingReason: nullableString(s.pendingReason), lastFailureAt: nullableString(s.lastFailureAt), lastPresentedAt: nullableString(s.lastPresentedAt) };
+  if (s.queue !== undefined) {
+    if (![null,'practice','challenge'].includes(s.queue) || Boolean(s.queue) !== result.pending) invalid();
+    result.queue = s.queue;
+  }
   if (result.independentCorrect > result.independentAttempts || result.assistedOriginalCorrect > result.assistedOriginalAttempts
     || result.assistedStepCorrect > result.assistedStepAttempts || result.eligibleRetestCorrect > result.independentCorrect) invalid();
   if (result.pending) {
@@ -144,20 +149,33 @@ function readEvent(value) {
     ...(s.assessment === undefined ? {} : { assessment: readAssessment(s.assessment) }),
     totals: { before: totals(daily.before), after: totals(daily.after) },
   };
-  if (!['question', 'step', 'diagnostic-end', 'migration', 'hint'].includes(result.type)
-    || !['correct', 'incorrect', 'revealed', 'typo', 'invalid', 'completed', 'skipped', 'migrated', 'shown'].includes(result.outcome)
+  if (s.mode !== undefined) {
+    if (!['practice','challenge'].includes(s.mode)) invalid();
+    result.mode = s.mode;
+  }
+  if (!['question', 'step', 'diagnostic-end', 'migration', 'hint', 'retest-transfer'].includes(result.type)
+    || !['correct', 'incorrect', 'revealed', 'typo', 'invalid', 'completed', 'skipped', 'migrated', 'shown', 'queued'].includes(result.outcome)
     || !result.sequence || result.answerLength < Array.from(result.answer).length
     || result.answerTruncated !== (result.answerLength > Array.from(result.answer).length)
     || new Set(result.changes.map(c => c.kcId)).size !== result.changes.length
     || new Set((result.assistedChanges ?? []).map(c => c.kcId)).size !== (result.assistedChanges ?? []).length
     || (result.type === 'migration') !== (result.outcome === 'migrated')
     || (result.type === 'hint') !== (result.outcome === 'shown')
+    || (result.type === 'retest-transfer') !== (result.outcome === 'queued')
     || (result.type === 'diagnostic-end') !== ['completed', 'skipped'].includes(result.outcome)
     || (result.support?.independent && (result.hintUsed || result.type !== 'question'))
     || (result.support?.source === 'migration' && result.type !== 'migration')
     || (result.support?.source === 'completion' && result.type !== 'diagnostic-end')
     || (result.assessment?.eligibility?.eligible && result.assessment.eligibility.availableAt !== null
       && Date.parse(result.assessment.eligibility.availableAt) > Date.parse(result.at))) invalid();
+  if (result.type === 'retest-transfer') {
+    const change=result.assessment;
+    if (!change || !change.before.pending || !change.after.pending || !change.before.queue || !change.after.queue || change.before.queue === change.after.queue
+      || result.changes.length || result.assistedChanges?.length || result.support || result.hintUsed
+      || assessmentCounts.some(name=>change.before[name]!==change.after[name])
+      || ['pendingReason','lastFailureAt','lastPresentedAt'].some(name=>change.before[name]!==change.after[name])
+      || JSON.stringify(result.totals.before)!==JSON.stringify(result.totals.after)) invalid();
+  }
   if (result.type === 'hint' && (!result.hintUsed || result.support?.source !== 'hinted'
     || !result.support.provided.includes('hint') || result.changes.length || (result.assistedChanges ?? []).length
     || (result.assessment && assessmentCounts.some(name => result.assessment.before[name] !== result.assessment.after[name])))) invalid();
@@ -186,7 +204,7 @@ function retain(log) {
 export function parsePracticeLog(value) {
   if (value === undefined) return emptyPracticeLog();
   const s = object(value);
-  if (![1, 2].includes(s.version) || !Array.isArray(s.events)) invalid();
+  if (![1, 2, 3].includes(s.version) || !Array.isArray(s.events)) invalid();
   const totalEvents = integer(s.totalEvents), droppedEntries = integer(s.droppedEntries);
   if (totalEvents !== droppedEntries + s.events.length) invalid();
   const events = s.events.map(readEvent), ids = new Set();
@@ -200,7 +218,7 @@ export function parsePracticeLog(value) {
 /** Append to the same profile snapshot as the score change. The caller commits
  * both with one storage write, or retains both in its existing unsaved buffer.
  * @param {any} before @param {any} after
- * @param {{questionId: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer?: string, hintUsed?: boolean, support?: EvidenceSupport, assessmentKey?: string, eligibility?: AssessmentChange['eligibility'], diagnosis?: {kcId?: string | null, confirmedKcIds?: string[], resolution?: string, message?: string}, id?: string, at?: string, statistics?: {ordinal?: number|null, day?: string, answerMs?: number|null, progress?: import('./statistics.mjs').Snapshot|null, retestAttempt?: boolean}}} detail
+ * @param {{mode?: "practice" | "challenge", questionId: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer?: string, hintUsed?: boolean, support?: EvidenceSupport, assessmentKey?: string, eligibility?: AssessmentChange['eligibility'], diagnosis?: {kcId?: string | null, confirmedKcIds?: string[], resolution?: string, message?: string}, id?: string, at?: string, statistics?: {ordinal?: number|null, day?: string, answerMs?: number|null, progress?: import('./statistics.mjs').Snapshot|null, retestAttempt?: boolean}}} detail
  * @param {(id: string) => string} labelFor */
 export function appendPracticeEvent(before, after, detail, labelFor = id => id) {
   const log = before.practiceLog ?? emptyPracticeLog(), id = detail.id ?? practiceEventId();
@@ -216,7 +234,7 @@ export function appendPracticeEvent(before, after, detail, labelFor = id => id) 
       : [{ kcId, label: labelFor(kcId), before: beforeAssisted[kcId] ?? null, after: afterAssisted[kcId] ?? null }]);
   const input = Array.from(detail.answer ?? '');
   const event = readEvent({ id, sequence: log.totalEvents + 1, questionId: detail.questionId, at: detail.at ?? new Date().toISOString(),
-    type: detail.type, outcome: detail.outcome, exercise: detail.exercise, target: detail.target,
+    type: detail.type, outcome: detail.outcome, ...(detail.mode ? {mode:detail.mode} : {}), exercise: detail.exercise, target: detail.target,
     answer: input.slice(0, 256).join(''), answerLength: input.length, answerTruncated: input.length > 256, hintUsed: detail.hintUsed ?? false,
     diagnosis: { kcId: detail.diagnosis?.kcId ?? null, confirmedKcIds: detail.diagnosis?.confirmedKcIds ?? [],
       resolution: detail.diagnosis?.resolution ?? detail.outcome, message: detail.diagnosis?.message ?? '' },
@@ -224,5 +242,5 @@ export function appendPracticeEvent(before, after, detail, labelFor = id => id) 
     ...(detail.assessmentKey ? { assessment: { targetKey: detail.assessmentKey, before: assessmentSnapshot(before.assessment, detail.assessmentKey),
       after: assessmentSnapshot(after.assessment, detail.assessmentKey), eligibility: detail.eligibility ?? null } } : {}), totals: { before, after },
   });
-  return { ...after, ...(after.statistics ? { statistics: recordStatisticsEvent(after.statistics, event, detail.statistics) } : {}), practiceLog: retain({ version: 2, totalEvents: event.sequence, droppedEntries: log.droppedEntries, events: [...log.events, event] }) };
+  return { ...after, ...(after.statistics ? { statistics: recordStatisticsEvent(after.statistics, event, detail.statistics) } : {}), practiceLog: retain({ version: 3, totalEvents: event.sequence, droppedEntries: log.droppedEntries, events: [...log.events, event] }) };
 }

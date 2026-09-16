@@ -1,3 +1,4 @@
+import { retestQueue } from './retest-queue.mjs';
 import { emptyAssessment, assessmentTarget, retestStatus, recordIndependentAttempt, recordAssistedAttempt, recordAssessmentExposure, recordHintExposure } from './learning-assessment.mjs';
 import { evidenceCondition, scoreLearningEvidence } from './learning-evidence.mjs';
 
@@ -18,15 +19,17 @@ export function assessmentCatalog(exercises) {
  * profile and log. Question identities and auxiliary event ids are stable. */
 export function applyLearningObservation(profile, exercise, observation, catalog) {
   const assessment = profile.assessment ?? emptyAssessment();
-  const { type = 'question', outcome, questionId, eventId, at, hintUsed = false, step = null } = observation;
+  const { type = 'question', outcome, questionId, eventId, at, hintUsed = false, step = null, mode = 'practice' } = observation;
   const target = assessmentTarget(exercise), pending = assessment.pending[target.key];
   const singleWord = catalog?.get(target.key)?.words.size === 1;
-  const status = pending ? retestStatus(pending, exercise, { originalCount: assessment.originalCount, at, singleWord }) : null;
+  const qualification = pending ? retestStatus(pending, exercise, { originalCount: assessment.originalCount, at, singleWord }) : null;
+  const needsQualification = pending && retestQueue(pending) === mode;
+  const status = needsQualification || qualification?.eligible ? qualification : null;
   if (type === 'hint') {
     if (outcome !== 'shown') throw new Error('A hint observation must describe a shown hint');
     const support = { independent: false, source: 'hinted', provided: ['hint'] };
     if (assessment.seenExposureIds.includes(eventId)) return { profile, support, retest: status, duplicate: true };
-    const next = recordHintExposure(assessment, { exercise, questionId, eventId, at });
+    const next = recordHintExposure(assessment, { exercise, questionId, eventId, at, mode });
     return { profile: { ...profile, assessment: next }, support,
       retest: retestStatus(next.pending[target.key], exercise, { originalCount: next.originalCount, at, singleWord }), duplicate: false };
   }
@@ -49,7 +52,7 @@ export function applyLearningObservation(profile, exercise, observation, catalog
     return { profile, support: { independent: false, source: 'duplicate', provided: [] }, retest: status, duplicate: true };
   }
   const rawSupport = evidenceCondition({ type, hintUsed, revealed: outcome === 'revealed', hadFeedback: observation.hadGrammarFeedback ?? false, step });
-  const support = rawSupport.independent && status && !status.eligible
+  const support = rawSupport.independent && needsQualification && !qualification.eligible
     ? evidenceCondition({ rehearsal: true }) : rawSupport;
   if (observation.lexicalRetry) support.provided = [...new Set([...support.provided, 'lexical-retry'])];
   const correct = outcome === 'correct';
@@ -63,7 +66,7 @@ export function applyLearningObservation(profile, exercise, observation, catalog
   });
   let nextAssessment = { ...assessment, independentByKc: scored.independentByKc, assistedByKc: scored.assistedByKc };
   if (type === 'question') {
-    nextAssessment = recordIndependentAttempt(nextAssessment, { exercise, questionId, at, correct,
+    nextAssessment = recordIndependentAttempt(nextAssessment, { exercise, questionId, at, correct, mode,
       independent: rawSupport.independent, reason: rawSupport.independent ? outcome : rawSupport.source,
       failedKcIds: support.independent && observation.failedKcId ? [observation.failedKcId] : [], singleWord });
   } else {

@@ -532,7 +532,7 @@ for (const localized of [false, true]) test(`passive desire probes show each tar
   // borrowing the diagnostic generator's own KC list as a grading oracle.
   const steps = [
     ...(localized ? [
-      { surface: item.surface, target: /[アaａ]段/i, answer: passiveReading.slice(0, -2), kcIds: ['stem.godan.a', ...(item.reading.endsWith('う') ? ['stem.godan.u-wa'] : [])] },
+      { surface: item.surface, target: /受身形.*只变化词尾/, answer: passiveReading.slice(0, -2), kcIds: ['stem.godan.a', ...(item.reading.endsWith('う') ? ['stem.godan.u-wa'] : [])] },
       { surface: passive.slice(0, -2), target: /受身/, answer: passiveReading, kcIds: ['suffix.passive'] },
     ] : [
       { surface: item.surface, target: /受身/, answer: passiveReading, kcIds: passiveKcIds },
@@ -543,7 +543,7 @@ for (const localized of [false, true]) test(`passive desire probes show each tar
   ];
   for (const [index, step] of steps.entries()) {
     const region = view.getByRole('region', { name: '拆步练习' });
-    assert.match(region.querySelector('p > strong').textContent, step.target);
+    assert.match(region.querySelector('.diagnostic-instruction strong').textContent, step.target);
     assert.ok(region.querySelector('.diagnostic-word').textContent.includes(step.surface));
     assert.equal(view.container.querySelector('.next-button').disabled, true);
     assert.equal(view.container.querySelector('.rule-line').parentElement.hidden, true);
@@ -774,7 +774,7 @@ test('two omissions inside the causative-passive suffix do not add redundant ste
   fireEvent.keyDown(view.container.querySelector('[data-diagnostic-next]'), { key: 'Enter' });
   await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 2 / 2 步')));
   assert.match(view.container.querySelector('.diagnostic-word').textContent, /させられる/);
-  assert.equal(view.getByRole('region', { name: '拆步练习' }).querySelector('strong').textContent, '否定过去形');
+  assert.equal(view.getByRole('region', { name: '拆步练习' }).querySelector('.diagnostic-instruction strong').textContent, '否定过去形');
 });
 
 for (const { baseForm, correctClass, correctPast } of [
@@ -1371,7 +1371,7 @@ for (const outcome of ['success', 'failure', 'unknown', 'skip', 'hint']) test(`r
   await waitFor(() => assert.equal(Boolean(view.queryByText('差一点')), false));
 });
 
-for (const outcome of ['correct','wrong','malformed','skip']) test(`negative-past mixed errors open only the three missing rules and keep truthful summaries (${outcome})`, async () => {
+for (const outcome of ['correct','wrong','malformed','skip']) test(`negative-past mixed errors check the full negative before its local rules and keep truthful summaries (${outcome})`, async () => {
   const {view,item,form}=await mountCompoundPast('negativePast','verb','tagaru');
   const base=conjugate(item.reading,item.class,'tagaru');
   fireEvent.change(view.getByLabelText('你的答案'),{target:{value:base}});
@@ -1381,27 +1381,35 @@ for (const outcome of ['correct','wrong','malformed','skip']) test(`negative-pas
   fireEvent.change(view.getByLabelText('本步答案'),{target:{value:base.slice(0,-1)+'りない'}});
   fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
   fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
-  await waitFor(()=>assert.ok(view.getByText('拆步练习 · 第 1 / 4 步')));
+  await waitFor(()=>assert.ok(view.getByText('拆步练习 · 第 1 / 3 步')));
   assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc,before.byKc);
   const region=view.getByRole('region',{name:'拆步练习'});
   assert.match(region.textContent,/「り」/);assert.match(region.textContent,/仍是「ない」/);
   assert.equal(region.textContent.includes(conjugate(item.reading,item.class,form)),false);
   assert.equal(view.container.querySelector('.rule-line').parentElement.hidden,true);
   fireEvent.click(view.getByRole('button',{name:'练习下一步'}));
-  const targets=[base.slice(0,-1)+'ら',base.slice(0,-1)+'らない',base.slice(0,-1)+'らなかった'];
-  const wrong=[base.slice(0,-1)+'り',targets[0],targets[1]];
-  const ids=['stem.godan.a','suffix.negative','adj.suffix.i-past'];
-  for(let i=0;i<3;i++) {
-    assert.match(region.textContent,/已提供正确输入和词类/);
+  assert.match(region.querySelector('.diagnostic-goal').textContent,/たがる.*否定过去/);
+  assert.match(region.querySelector('.diagnostic-instruction').textContent,/否定形/);
+  assert.doesNotMatch(region.querySelector('.diagnostic-instruction').textContent,/ア段/);
+  const stem=base.slice(0,-1)+'ら',negative=stem+'ない',past=stem+'なかった';
+  const checks=outcome==='malformed'
+    ? Array.from({length:4},()=>({input:'xyz§',ids:[]}))
+    : [{input:outcome==='wrong'?base.slice(0,-1)+'りない':negative,ids:outcome==='wrong'?['stem.godan.a']:['stem.godan.a','suffix.negative']},
+       {input:outcome==='wrong'?negative:past,ids:['adj.suffix.i-past']}];
+  for(const [i,check] of checks.entries()) {
     if(outcome==='skip'&&i===1){fireEvent.click(view.getByRole('button',{name:'跳过剩余拆步，查看解析'}));break;}
-    const input=outcome==='malformed'?'xyz§':outcome==='wrong'?wrong[i]:targets[i];
+    if(outcome==='malformed'&&i===1){
+      assert.match(region.querySelector('.diagnostic-instruction').textContent,/否定形.*只变化词尾.*不要接「ない」/);
+      assert.match(region.querySelector('.diagnostic-goal').textContent,/たがる.*否定过去/);
+    }
+    const input=check.input;
     const prior=JSON.parse(storage.getItem(KEY));
     fireEvent.change(view.getByLabelText('本步答案'),{target:{value:input}});
     fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
     fireEvent.submit(view.getByLabelText('本步答案').closest('form'));
     await waitFor(()=>assert.ok(view.container.querySelector('[data-diagnostic-next]')));
     const after=JSON.parse(storage.getItem(KEY));
-    assertStepChanges(prior, after, outcome === 'malformed' ? [] : [ids[i]], outcome !== 'wrong');
+    assertStepChanges(prior, after, check.ids, outcome !== 'wrong');
     assert.equal(after.attempted,before.attempted);assert.equal(after.correct,before.correct);assert.equal(after.streak,before.streak);
     fireEvent.click(view.container.querySelector('[data-diagnostic-next]'));
   }
@@ -1679,7 +1687,7 @@ test('v7 export and UI import preserve assisted records, pending retests and log
   const saved = JSON.parse(storage.getItem(KEY));
   fireEvent.click(view.getByRole('button', { name: /知识进度 全部课程/ }));
   fireEvent.click(view.getByRole('tab', { name: /待复测 1/ }));
-  assert.match(view.getByRole('region', { name: '待独立复测' }).textContent, /先完成 2 道其他整题/);
+  assert.match(view.getByRole('region', { name: '待独立复测' }).textContent, /先完成 2 道其他目标的整题/);
   const backup = await exportedProfile(view);
   assert.equal(backup.version, 8); assert.deepEqual(backup.assessment, saved.assessment);
   cleanup(); storage.clear();
@@ -2043,4 +2051,75 @@ test('a storage conflict blocks interaction without changing the challenge page 
   assert.equal(view.getByRole('button',{name:'自由挑战',exact:true}).getAttribute('aria-current'),'page');
   assert.equal(view.container.querySelector('.practice-controls').disabled,true);
   assert.equal(view.getByRole('button',{name:'导出本页记录'}).disabled,false);
+});
+
+
+async function makeChallengePending(view,course='negative') {
+  await openChallenge(view,course);
+  const exercise=displayedExercise(view),key=assessmentTarget(exercise).key;
+  fireEvent.change(view.getByLabelText('你的答案'),{target:{value:'xyz'}});
+  fireEvent.submit(view.getByLabelText('你的答案').closest('form'));
+  await waitFor(()=>assert.equal(JSON.parse(storage.getItem(KEY)).assessment.pending[key]?.queue,'challenge'));
+  if(view.queryByRole('region',{name:'拆步练习'})){
+    fireEvent.click(view.getByRole('button',{name:'跳过剩余拆步，查看解析'}));
+    await waitFor(()=>assert.equal(Boolean(view.queryByRole('region',{name:'拆步练习'})),false));
+  }
+  return {exercise,key};
+}
+
+test('challenge failure and completion stay out of adaptive retests and retain mode through reload',async()=>{
+  const view=await mount(),{key}=await makeChallengePending(view,'multiStepCompound');
+  assert.ok(view.getByText('本题保留在挑战复测中，不会自动加入常规练习。'));
+  const before=JSON.parse(storage.getItem(KEY));
+  assert.ok(before.practiceLog.events.filter(e=>e.type==='question'||e.type==='diagnostic-end').every(e=>e.mode==='challenge'));
+  fireEvent.click(view.getByRole('button',{name:'返回自适应',exact:true}));
+  await waitFor(()=>assert.equal(Boolean(view.container.querySelector('.challenge-notice')),false));
+  assert.equal(displayedExercise(view).courseId,'classify');
+  assert.equal(view.queryByText('独立复测',{exact:true}),null);
+  assert.equal(JSON.parse(storage.getItem(KEY)).assessment.pending[key].queue,'challenge');
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc,before.byKc);
+  cleanup();const reloaded=await mount();
+  assert.equal(displayedExercise(reloaded).courseId,'classify');
+  assert.equal(JSON.parse(storage.getItem(KEY)).assessment.pending[key].queue,'challenge');
+});
+
+test('enrollment and moving back are explicit logged actions, not new questions or new scores',async()=>{
+  storage.setItem(KEY,JSON.stringify(masteredProfile()));
+  const view=await mount(),{key}=await makeChallengePending(view);
+  const before=JSON.parse(storage.getItem(KEY)),button=view.getByRole('button',{name:'加入练习复测',exact:true});
+  fireEvent.click(button);fireEvent.click(button);
+  await waitFor(()=>assert.equal(JSON.parse(storage.getItem(KEY)).assessment.pending[key].queue,'practice'));
+  const enrolled=JSON.parse(storage.getItem(KEY));
+  assert.deepEqual(enrolled.byKc,before.byKc);assert.equal(enrolled.assessment.originalCount,before.assessment.originalCount);
+  assert.deepEqual({...enrolled.statistics.totals,activeMs:0},{...before.statistics.totals,activeMs:0});
+  assert.equal(enrolled.practiceLog.events.filter(e=>e.type==='retest-transfer').length,1);
+  assert.equal(enrolled.practiceLog.events.at(-1).assessment.before.queue,'challenge');
+  assert.equal(enrolled.practiceLog.events.at(-1).assessment.after.queue,'practice');
+  assert.ok(view.getByText('本题已在练习待复测列表中。'));
+  fireEvent.click(view.getByRole('button',{name:'返回自适应',exact:true}));
+  await waitFor(()=>assert.equal(Boolean(view.container.querySelector('.challenge-notice')),false));
+  fireEvent.click(view.container.querySelector('.progress-trigger'));
+  fireEvent.click(view.getByRole('tab',{name:/待复测/}));
+  fireEvent.click(view.getByRole('button',{name:'仅在挑战中复测',exact:true}));
+  await waitFor(()=>assert.equal(JSON.parse(storage.getItem(KEY)).assessment.pending[key].queue,'challenge'));
+  const back=JSON.parse(storage.getItem(KEY));
+  assert.deepEqual(back.assessment.pending[key],before.assessment.pending[key]);
+  assert.deepEqual(back.byKc,before.byKc);assert.equal(back.attempted,before.attempted);
+  assert.deepEqual({...back.statistics.totals,activeMs:0},{...before.statistics.totals,activeMs:0});
+  assert.equal(back.practiceLog.events.at(-1).assessment.after.queue,'challenge');
+});
+
+test('challenge pending list offers review and enrollment without exposing the normal sidebar',async()=>{
+  const view=await mount(),{key}=await makeChallengePending(view);
+  fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
+  const details=view.container.querySelector('.challenge-pending');
+  assert.match(details.querySelector('summary').textContent,/挑战待复测 1 项/);
+  fireEvent.click(details.querySelector('summary'));
+  assert.ok(view.getByRole('button',{name:'继续挑战本课',exact:true}));
+  const before=JSON.parse(storage.getItem(KEY));
+  fireEvent.click(view.getByRole('button',{name:'加入练习复测',exact:true}));
+  await waitFor(()=>assert.equal(JSON.parse(storage.getItem(KEY)).assessment.pending[key].queue,'practice'));
+  assert.equal(view.container.querySelector('.challenge-pending'),null);
+  assert.ok(view.getByRole('heading',{name:'自由挑战',exact:true}));
+  assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount,before.assessment.originalCount);
 });

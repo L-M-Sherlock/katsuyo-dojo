@@ -100,7 +100,7 @@ test('versioned exports and imports preserve logs as history without replaying t
   const logged = { ...appendPracticeEvent(initial, { ...initial, byKc }, detail()), version: 7, assessment: emptyAssessment() };
   const options = { today: initial.date, components: [{ id: 'stem.godan.a', prerequisites: [] }], legacyComponents: [] };
   const exported = createUnifiedExport(logged);
-  assert.equal(exported.formatVersion, 6);
+  assert.equal(exported.formatVersion, 7);
   const restored = parseUnifiedImport(exported, options);
   assert.deepEqual(restored.practiceLog, logged.practiceLog);
   assert.equal(restored.byKc['stem.godan.a'].attempts, 1);
@@ -119,7 +119,7 @@ test('versioned exports and imports preserve logs as history without replaying t
 test('malformed history cannot silently discard evidence or be restored as valid events', () => {
   const p = profile(), valid = appendPracticeEvent(p, p, detail()).practiceLog;
   for (const mutate of [
-    x => { x.version = 3; }, x => { x.totalEvents = 2; }, x => { x.events[0].at = 'not-a-date'; },
+    x => { x.version = 4; }, x => { x.totalEvents = 2; }, x => { x.events[0].at = 'not-a-date'; },
     x => { x.events[0].sequence = 7; }, x => { x.events[0].answerLength = 0; },
     x => { x.events[0].outcome = 'invented'; }, x => { x.events[0].changes = [{ kcId: 'a', label: 'a', before: {}, after: {} }]; },
   ]) {
@@ -162,7 +162,7 @@ function guidedLog() {
 
 test('v2 records assistance, local practice changes and pending snapshots without aliasing the live profile', () => {
   const { before, current } = guidedLog(), event = current.practiceLog.events.at(-1);
-  assert.equal(current.practiceLog.version, 2);
+  assert.equal(current.practiceLog.version, 3);
   assert.deepEqual(event.changes, []);
   assert.deepEqual(event.assistedChanges.map(change => change.kcId), ['stem.ichidan.drop-ru', 'construction.tagaru']);
   assert.deepEqual(event.support, { independent: false, source: 'guided', provided: ['subgoal'] });
@@ -187,7 +187,7 @@ test('legacy v1 events remain intact when a new v2 event is appended', () => {
   assert.deepEqual(parsePracticeLog(legacy.practiceLog), legacy.practiceLog);
   const appended = appendPracticeEvent(legacy, legacy, detail({ type: 'diagnostic-end', outcome: 'skipped', id: 'skip',
     support: { independent: false, source: 'completion', provided: ['answer'] } }));
-  assert.equal(appended.practiceLog.version, 2);
+  assert.equal(appended.practiceLog.version, 3);
   assert.deepEqual(appended.practiceLog.events[0], legacy.practiceLog.events[0]);
   assert.equal(appended.practiceLog.events.length, 2);
 });

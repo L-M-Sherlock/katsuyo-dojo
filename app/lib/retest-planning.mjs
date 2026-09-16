@@ -1,3 +1,4 @@
+import { isPracticeRetest } from './retest-queue.mjs';
 import { assessmentTarget, selectRetest, retestStatus, reconcileAssessmentCatalog } from './learning-assessment.mjs';
 import { USAGE_REVIEW_VERSION } from './form-eligibility.mjs';
 import { isComponentMastered } from './adaptive.mjs';
@@ -17,7 +18,7 @@ export function planRetestQuestion(profile, mode, { exercises, components, cours
   const byId = new Map(components.map(kc => [kc.id, kc]));
   const open = new Set(courses.filter(course => summarizeUnifiedCourse(course,
     (courseKcIds[course.id] ?? []).map(id => byId.get(id)).filter(Boolean), profile.introducedKcIds, profile).unlocked).map(course => course.id));
-  const entries = Object.values(assessment.pending).filter(p => mode === 'adaptive' || p.courseId === mode);
+  const entries = Object.values(assessment.pending).filter(p => isPracticeRetest(p) && (mode === 'adaptive' || p.courseId === mode));
   if (!entries.length) return null;
   const active = { ...assessment, pending: Object.fromEntries(entries.map(p => [p.key, p])) };
   const eligiblePool = exercises.filter(e => open.has(e.courseId) && (mode === 'adaptive' || e.courseId === mode));

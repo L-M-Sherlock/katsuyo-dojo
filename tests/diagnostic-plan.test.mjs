@@ -14,7 +14,7 @@ const adjectives=[{domain:'adjective',class:'i',surface:'早い',reading:'はや
   {domain:'adjective',class:'i',surface:'いい',reading:'いい',iiFamily:true},{domain:'adjective',class:'na',surface:'綺麗',reading:'きれい'}];
 const fixture=()=>{
   const form='tagaruNegativePast',step=unifiedDiagnosticSteps(close,form).at(-1),input='しめたがりない';
-  return {item:close,form,step,input,kcIds:step.kcIds,requiredSteps:[['stem.godan.a'],['suffix.negative'],['adj.suffix.i-past']],noEvidence:true};
+  return {item:close,form,step,input,kcIds:step.kcIds,requiredSteps:[['stem.godan.a','suffix.negative'],['adj.suffix.i-past']],noEvidence:true};
 };
 
 test('all 172 forms have declared plans and every representative accepted branch reaches the right answer',()=>{
@@ -35,15 +35,15 @@ test('all 172 forms have declared plans and every representative accepted branch
   assert.throws(()=>buildDiagnosticPlan(close,'newUnsupportedForm'),/Missing diagnostic recipe/);
 });
 
-test('the reported negative-past error has three independent, ordered checks and no original penalty',()=>{
+test('the reported negative-past error checks complete negative then past without an original penalty',()=>{
   const c=fixture(),analyze=createAnswerAnalyzer(c.item,c.form,{step:c.step}),result=analyze(c.input);
   assert.deepEqual(replayCase(c,analyze),[]);
   assert.match(result.feedback.message,/り/);assert.match(result.feedback.message,/ない/);
   assert.doesNotMatch(result.feedback.message,/なかった/);
-  assert.deepEqual(result.steps.map(s=>s.reading),['しめたがる','しめたがら','しめたがらない']);
+  assert.deepEqual(result.steps.map(s=>s.reading),['しめたがる','しめたがらない']);
   const stats=Object.fromEntries(c.kcIds.map(id=>[id,{...emptySkillStats()}]));
   assert.deepEqual(updateKnowledgeStats(stats,{kcIds:c.kcIds,correct:false,failedKcId:result.diagnosis?.kcId}),stats);
-  const bad=['しめたがり','しめたがら','しめたがらない'];
+  const bad=['しめたがりない','しめたがらない'];
   for(const [i,step] of result.steps.entries()) {
     const answer=createAnswerAnalyzer(close,c.form,{step})(bad[i]);
     assert.equal(answer.diagnosis.kcId,c.requiredSteps[i][0]);assert.deepEqual(answer.steps,[]);
@@ -64,8 +64,13 @@ test('native and derived negatives, pasts, adjectives and special tails all have
       const response=createAnswerAnalyzer(item,form,{step})('xyz§');
       assert.ok(response.feedback.message);
       if(step.kind==='atomic')assert.deepEqual(response.steps,[]);
-      else for(const leaf of response.steps) {
-        assert.equal(leaf.kind,'atomic');assert.deepEqual(createAnswerAnalyzer(item,form,{step:leaf})('xyz§').steps,[]);
+      const pending=[...response.steps];let checked=0;
+      while(pending.length){
+        assert.ok(++checked<20,'unknown input must reach finite leaves');
+        const next=pending.shift(),answer=createAnswerAnalyzer(item,next.form,{step:next})('xyz§');
+        assert.deepEqual(auditGuidance({item,form:next.form,step:next,kcIds:next.kcIds},answer),[]);
+        if(next.kind==='atomic')assert.deepEqual(answer.steps,[]);
+        else pending.push(...answer.steps);
       }
     }
   }
@@ -85,7 +90,8 @@ test('empty and excessive inputs ask for re-entry and malformed leaf inputs term
   for(const input of ['', ' 。 ', 'あ'.repeat(257),null,undefined,17]) {
     const r=analyze(input);assert.equal(r.kind,'invalid');assert.equal(r.diagnosis,null);assert.deepEqual(r.steps,[]);assert.ok(r.feedback.message);
   }
-  for(const step of analyze(c.input).steps)for(const answer of ['§','abc','😺','\ud800','別の単語','さまたがりない']) {
+  const leaves=analyze(c.input).steps.flatMap(step=>step.kind==='atomic'?[step]:createAnswerAnalyzer(close,step.form,{step})('xyz§').steps);
+  for(const step of leaves)for(const answer of ['§','abc','😺','\ud800','別の単語','さまたがりない']) {
     const r=createAnswerAnalyzer(close,c.form,{step})(answer);
     assert.equal(r.kind,'incorrect');assert.equal(r.diagnosis,null);assert.deepEqual(r.steps,[]);assert.ok(r.feedback.message);
   }
@@ -96,6 +102,6 @@ test('the independent audit rejects missing probes, wrong rules, missing feedbac
   for(const broken of [{...good,steps:[]},{...good,feedback:null},
     {...good,steps:good.steps.map((s,i)=>i? s : {...s,kcIds:['onbin.sokuon']})},
     {...good,diagnosis:{kcId:'stem.godan.a',confirmedKcIds:[]}}])assert.ok(replayCase(c,()=>broken).length);
-  const leaf=good.steps[0],response=createAnswerAnalyzer(close,c.form,{step:leaf})('§');
+  const leaf=good.steps.find(s=>s.kind==='atomic'),response=createAnswerAnalyzer(close,c.form,{step:leaf})('§');
   assert.ok(auditGuidance({...c,step:leaf,kcIds:leaf.kcIds},{...response,steps:[leaf]}).some(p=>p.code==='recursive-atomic'));
 });

@@ -35,8 +35,8 @@ test('v6 real-log suffix migrates to v8 with one correction event and intact his
   const migrated = parseUnifiedImport({ format: 'katsuyo-dojo-profile', formatVersion: 4, profile: old }, options);
   assert.deepEqual(old, before);
   assert.equal(migrated.version, 8);
-  assert.equal(migrated.assessment.version, 2);
-  assert.equal(migrated.practiceLog.version, 2);
+  assert.equal(migrated.assessment.version, 3);
+  assert.equal(migrated.practiceLog.version, 3);
   assert.equal(migrated.practiceLog.totalEvents, 21);
   assert.equal(migrated.practiceLog.droppedEntries, 16);
   assert.deepEqual(migrated.practiceLog.events.slice(0, 4), old.practiceLog.events);
@@ -60,7 +60,7 @@ test('v6 real-log suffix migrates to v8 with one correction event and intact his
 test('export format v6 roundtrips v8 exactly and does not append or replay another migration event', () => {
   const migrated = parseUnifiedImport(legacyNoru(), options);
   const exported = createUnifiedExport(migrated, options.at);
-  assert.equal(exported.formatVersion, 6);
+  assert.equal(exported.formatVersion, 7);
   for (let count = 0; count < 3; count++) {
     const restored = parseUnifiedImport(exported, options);
     assert.deepEqual(restored, migrated);
@@ -99,7 +99,7 @@ test('v7 strict restore rejects damaged authoritative scores instead of clamping
   const migrated = parseUnifiedImport(legacyNoru(), options);
   const invalids = [
     value => { delete value.assessment; },
-    value => { value.assessment.version = 3; },
+    value => { value.assessment.version = 4; },
     value => { value.byKc['apply.teiru.continuation'].confidence = 3; },
     value => { value.byKc['apply.teiru.continuation'].correct = 99; },
     value => { value.byKc['unknown-kc'] = value.byKc['apply.teiru.continuation']; },
@@ -108,7 +108,7 @@ test('v7 strict restore rejects damaged authoritative scores instead of clamping
     const invalid = structuredClone(migrated); mutate(invalid);
     assert.throws(() => parseUnifiedImport(createUnifiedExport(invalid), options));
   }
-  assert.throws(() => parseUnifiedImport({ format: 'katsuyo-dojo-profile', formatVersion: 7, profile: migrated }, options));
+  assert.throws(() => parseUnifiedImport({ format: 'katsuyo-dojo-profile', formatVersion: 8, profile: migrated }, options));
 });
 
 test('old cumulative-only profiles retain their history and explicitly log the limits of reconstruction', () => {
