@@ -2,6 +2,13 @@ import basics from './usage-cards/basics.mjs';
 import linking from './usage-cards/linking.mjs';
 import actions from './usage-cards/actions.mjs';
 import combinations from './usage-cards/combinations.mjs';
+import classBasics from './usage-cards/class-basics.mjs';
+import classLinking1 from './usage-cards/class-linking-1.mjs';
+import classLinking2 from './usage-cards/class-linking-2.mjs';
+import classActions1 from './usage-cards/class-actions-1.mjs';
+import classActions2 from './usage-cards/class-actions-2.mjs';
+import classCombinations1 from './usage-cards/class-combinations-1.mjs';
+import classCombinations2 from './usage-cards/class-combinations-2.mjs';
 import { REVIEWED_LEXICAL_SENSES, reviewedLexicalSense } from './lexical-usage.mjs';
 import { ADJECTIVES } from './adjective-catalog.mjs';
 import { assessFormUsage } from './form-eligibility.mjs';
@@ -15,7 +22,8 @@ import { deriveUnified } from './unified-knowledge.mjs';
 /** @typedef {UsageCard & {target: {text: string, reading: string}}} ResolvedUsageCard */
 
 /** Separate teaching content: never populate this from eligibility `context`. */
-export const USAGE_CARDS = /** @type {UsageCard[]} */ ([...basics, ...linking, ...actions, ...combinations]);
+export const USAGE_CARDS = /** @type {UsageCard[]} */ ([...basics, ...linking, ...actions, ...combinations,
+  ...classBasics, ...classLinking1, ...classLinking2, ...classActions1, ...classActions2, ...classCombinations1, ...classCombinations2]);
 export const USAGE_CARD_GROUPS = [
   {id: 'basics', stages: ['basics', 'voice']},
   {id: 'linking', stages: ['linking', 'intentions']},
@@ -49,6 +57,20 @@ export function usageCardItem(senseId) {
     ? {...sense, ...ADJECTIVES.find(item => item.surface === sense.surface)} : sense;
 }
 
+let classRequirements;
+/** Actual form/class pairs in the eligible catalog, not a fixed card count. */
+export function usageCardClassRequirements() {
+  if (!classRequirements) {
+    const required = new Set();
+    for (const form of forms) for (const sense of REVIEWED_LEXICAL_SENSES) {
+      const usage = assessFormUsage(usageCardItem(sense.id), form);
+      if (usage.status === 'allowed' || (usage.status === 'context-required' && usage.context)) required.add(`${form}/${sense.class}`);
+    }
+    classRequirements = [...required];
+  }
+  return [...classRequirements];
+}
+
 /** Exactly one slot: before + the generated WHOLE target form + after. */
 export function resolveUsageCard(card) {
   const item = usageCardItem(card.senseId);
@@ -61,8 +83,8 @@ export function resolveUsageCard(card) {
   }};
 }
 
-export function usageCardIssues(cards, {requireCoverage = false} = {}) {
-  const issues = [], ids = new Set(), pairs = new Set(), covered = new Set();
+export function usageCardIssues(cards, {requireCoverage = false, requireClassCoverage = false} = {}) {
+  const issues = [], ids = new Set(), pairs = new Set(), covered = new Set(), coveredClasses = new Set();
   for (const card of cards) {
     if (!card || typeof card !== 'object' || Array.isArray(card)) { issues.push('Card must be an object'); continue; }
     const fail = message => issues.push(`${card.id ?? '(missing id)'}: ${message}`);
@@ -93,9 +115,13 @@ export function usageCardIssues(cards, {requireCoverage = false} = {}) {
     if (!resolved) { fail('unknown/changed sense, unsupported form, or ineligible pairing'); continue; }
     const visible = [card.before, card.after].filter(Array.isArray).flat().filter(Boolean).map(part => `${part.text ?? ''}${part.reading ?? ''}`).join('');
     if ([resolved.target.text, resolved.target.reading].some(answer => length(answer) >= 4 && visible.includes(answer))) fail('the full answer is repeated outside the target slot');
-    if (card.review === 'approved') covered.add(card.form);
+    if (card.review === 'approved') {
+      covered.add(card.form);
+      coveredClasses.add(`${card.form}/${usageCardItem(card.senseId).class}`);
+    }
   }
   if (requireCoverage) for (const form of forms) if (!covered.has(form)) issues.push(`Missing approved card for ${form}`);
+  if (requireClassCoverage) for (const pair of usageCardClassRequirements()) if (!coveredClasses.has(pair)) issues.push(`Missing approved card for form/class ${pair}`);
   return issues;
 }
 

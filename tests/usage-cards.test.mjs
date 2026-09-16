@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import UsageCardView from '../app/lib/usage-card-view.mjs';
-import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts} from '../app/lib/usage-cards.mjs';
+import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements} from '../app/lib/usage-cards.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 
 const card = {id:'test-negative',senseId:'verb:飲む:のむ',meaning:'喝',form:'negative',
@@ -51,12 +51,20 @@ test('usage card audit catches changed identity, missing readings, duplicate cov
   assert.match(usageCardIssues([card,card]).join('\n'),/duplicate/);
 });
 
-test('every curriculum form has one approved, eligible and fully specified usage card', () => {
-  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireCoverage:true}),[]);
+test('every eligible form and word class has one approved and fully specified usage card', () => {
+  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireCoverage:true,requireClassCoverage:true}),[]);
   const forms=new Set(UNIFIED_COURSES.flatMap(course=>course.forms));
-  assert.equal(USAGE_CARDS.length,forms.size);
+  const required=usageCardClassRequirements();
+  assert.equal(USAGE_CARDS.length,required.length);
   assert.equal(new Set(USAGE_CARDS.map(c=>c.form)).size,forms.size);
+  assert.deepEqual(new Set(USAGE_CARDS.map(c=>`${c.form}/${usageCardItem(c.senseId).class}`)),new Set(required));
   assert.ok(USAGE_CARDS.every(c=>c.review==='approved'));
+});
+
+test('form-only coverage cannot hide a missing ichidan representative', () => {
+  const reduced=USAGE_CARDS.filter(c=>!(c.form==='negative'&&usageCardItem(c.senseId).class==='ichidan'));
+  assert.deepEqual(usageCardIssues(reduced,{requireCoverage:true}),[]);
+  assert.ok(usageCardIssues(reduced,{requireClassCoverage:true}).includes('Missing approved card for form/class negative/ichidan'));
 });
 
 test('sentence readings align to kanji while kana and punctuation remain independently wrappable', () => {
