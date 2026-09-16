@@ -2129,3 +2129,99 @@ test('challenge pending list offers review and enrollment without exposing the n
   assert.ok(view.getByRole('heading',{name:'自由挑战',exact:true}));
   assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount,before.assessment.originalCount);
 });
+
+// Synthetic retest history selects a real, exact-match card without changing the planner.
+function usageBaseText(element) {
+  const copy = element.cloneNode(true);
+  for (const rt of copy.querySelectorAll('rt')) rt.remove();
+  return copy.textContent;
+}
+async function mountUsageCardQuestion(form = 'passiveDesireNegativePast') {
+  const {USAGE_CARDS, usageCardFor} = await import('../app/lib/usage-cards.mjs');
+  const {reviewedLexicalSense} = await import('../app/lib/lexical-usage.mjs');
+  const authored = USAGE_CARDS.find(card => card.form === form && card.review === 'approved');
+  assert.ok(authored, `approved card required for ${form}`);
+  const exercise = KNOWLEDGE.exercises.find(e => e.form === form && reviewedLexicalSense(e.item)?.id === authored.senseId);
+  const target = assessmentTarget(exercise);
+  const group = KNOWLEDGE.exercises.filter(e => assessmentTarget(e).key === target.key);
+  const prior = group.find(e => assessmentTarget(e).wordKey !== target.wordKey);
+  assert.ok(prior, 'a different word provides a genuine eligible retest');
+  const initial = masteredProfile();
+  initial.assessment = recordIndependentAttempt(initial.assessment, {exercise: prior, questionId: 'usage-prior-failure', correct: false});
+  for (const [index, filler] of KNOWLEDGE.exercises.filter(e => e.form === null).slice(0, 2).entries()) {
+    initial.assessment = recordIndependentAttempt(initial.assessment, {exercise: filler, questionId: `usage-filler-${index}`, correct: true});
+  }
+  initial.recentWordKeys = [...new Set(group.filter(e => wordKey(e) !== wordKey(exercise)).map(wordKey))];
+  assert.ok(initial.recentWordKeys.length <= 36);
+  initial.attempted = 3; initial.correct = 2; initial.streak = 2;
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  assert.equal(displayedExercise(view).id, exercise.id);
+  return {view, exercise, card: usageCardFor(exercise.item, form)};
+}
+
+for (const outcome of ['correct', 'revealed', 'skip', 'complete']) test(`usage cards hide full examples through diagnostic practice and reveal at the right time (${outcome})`, async () => {
+  const {view, exercise, card} = await mountUsageCardQuestion();
+  assert.ok(view.getByRole('region', {name: '场景与例句'}));
+  assert.equal(Boolean(view.queryByRole('region', {name: '用法例句'})), false);
+  for (const hidden of [card.target.text, card.target.reading, card.translation]) assert.ok(!view.container.textContent.includes(hidden));
+  assert.equal(JSON.parse(storage.getItem(KEY)).practiceLog.events.length, 0);
+  if (outcome === 'correct') await answerDisplayedCorrectly(view);
+  else if (outcome === 'revealed') {
+    fireEvent.click(view.getByRole('button', {name: '不知道'}));
+    await waitFor(() => assert.ok(view.getByRole('region', {name: '用法例句'})));
+  } else {
+    const passive = conjugate(exercise.item.reading, exercise.item.class, 'passive');
+    const partial = conjugate(passive, 'ichidan', 'tai');
+    const diagnosis = createAnswerAnalyzer(exercise.item, exercise.form)(partial);
+    assert.ok(diagnosis.steps.length);
+    fireEvent.change(view.getByLabelText('你的答案'), {target: {value: partial}});
+    fireEvent.click(view.getByRole('button', {name: '检查答案'}));
+    await waitFor(() => assert.ok(view.getByRole('region', {name: '拆步练习'})));
+    assert.equal(Boolean(view.container.querySelector('.usage-card-back')), false, 'do not merely hide a mounted answer');
+    assert.ok(!view.container.textContent.includes(card.translation));
+    if (outcome === 'skip') fireEvent.click(view.getByRole('button', {name: '跳过剩余拆步，查看解析'}));
+    else for (const [index, step] of diagnosis.steps.entries()) {
+      if (step.kind === 'classification') fireEvent.click(view.getByRole('button', {name: step.classChoices.find(c => c.value === step.expectedClass).label, exact: true}));
+      else {
+        fireEvent.change(view.getByLabelText('本步答案'), {target: {value: step.readings[0]}});
+        fireEvent.click(view.getByRole('button', {name: '检查本步'}));
+      }
+      await waitFor(() => assert.ok(view.container.querySelector('[data-diagnostic-next]')));
+      assert.equal(Boolean(view.container.querySelector('.usage-card-back')), false);
+      fireEvent.click(view.container.querySelector('[data-diagnostic-next]'));
+      if (index < diagnosis.steps.length - 1) await waitFor(() => {
+        const heading = view.getByRole('region', {name: '拆步练习'}).querySelector('h3').textContent;
+        assert.ok(heading.includes(`第 ${index + 2} /`), heading);
+      });
+    }
+    await waitFor(() => assert.equal(Boolean(view.queryByRole('region', {name: '拆步练习'})), false));
+  }
+  const back = view.getByRole('region', {name: '用法例句'});
+  assert.ok(usageBaseText(back).includes(card.target.text));
+  assert.ok(back.textContent.includes(card.translation));
+  assert.equal(Boolean(view.queryByRole('region', {name: '场景与例句'})), false);
+  const saved = JSON.parse(storage.getItem(KEY));
+  assert.equal(saved.assessment.originalCount, 4);
+  const original = saved.practiceLog.events.find(e => e.type === 'question');
+  assert.equal(original.hintUsed, false);
+  assert.equal(original.support.independent, outcome !== 'revealed');
+  assert.ok(!saved.practiceLog.events.some(e => e.type === 'hint'));
+  assert.equal(original.exercise.usageCard, undefined, 'static cards are not personal progress');
+});
+
+test('usage examples do not reject an accepted contraction or leak to another word', async () => {
+  const {view, exercise, card} = await mountUsageCardQuestion('teiru');
+  const {deriveUnified} = await import('../app/lib/unified-knowledge.mjs');
+  const derived = deriveUnified(exercise.item, exercise.form);
+  const variant = derived.acceptedVariants.find(answer => answer !== derived.answer);
+  assert.ok(variant);
+  fireEvent.change(view.getByLabelText('你的答案'), {target: {value: variant}});
+  fireEvent.click(view.getByRole('button', {name: '检查答案'}));
+  await waitFor(() => assert.ok(view.getByText('正解！')));
+  assert.ok(usageBaseText(view.getByRole('region', {name: '用法例句'})).includes(card.target.text));
+  await next(view);
+  const {usageCardFor} = await import('../app/lib/usage-cards.mjs');
+  const current = displayedExercise(view);
+  if (!usageCardFor(current.item, current.form)) assert.equal(Boolean(view.container.querySelector('.usage-card')), false);
+});
