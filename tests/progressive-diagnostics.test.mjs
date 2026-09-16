@@ -30,7 +30,7 @@ test('a single complete conjugation is not asked again and its partial instructi
   assert.equal(stem.readings[0],'かか');
   assert.match(stem.prompt,/否定形.*只变化词尾.*不要接「ない」/);
   assert.match(stem.note,/ア段/);assert.match(stem.note,/整个形式/);
-  assert.match(suffix.prompt,/否定形.*接续/);
+  assert.match(suffix.prompt,/接上否定词尾.*完整.*否定形/);
   assert.ok(!stem.prompt.includes('かか'));
 });
 
@@ -101,4 +101,17 @@ test('independent guidance checks reject a repeated whole form or invented group
   const wrong={...good,steps:[{...step,answers:['書く'],readings:['かく']},...good.steps.slice(1)]};
   assert.ok(auditGuidance(context,wrong).some(e=>e.code==='wrong-subform-answer'));
   assert.ok(auditGuidance({...context,step},good).some(e=>e.code==='repeated-whole-form'));
+});
+
+
+test('the supplied 売ら step asks for a passive ending and attributes godan to 売る',()=>{
+  const item={domain:'verb',surface:'売る',reading:'うる',class:'godan'},form='passiveCompletion';
+  const steps=atomicSteps(buildDiagnosticPlan(item,form),form,deriveUnified(item,form).requiredKcIds);
+  const step=steps.find(s=>s.reading==='うら');
+  assert.equal(step.stepTitle,'补上受身词尾');
+  assert.match(step.prompt,/词尾变化已完成.*接上受身词尾.*完整的受身形/);
+  assert.match(step.note,/「売る」按五段动词变化/);
+  assert.doesNotMatch(step.note,/「売ら」.*五段/);
+  assert.deepEqual(step.kcIds,['suffix.passive']);
+  assert.equal(createAnswerAnalyzer(item,form,{step})('うられる').kind,'correct');
 });

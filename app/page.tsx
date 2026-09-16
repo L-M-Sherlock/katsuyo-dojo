@@ -71,7 +71,7 @@ function FuriganaText({ surface, reading }: { surface: string; reading: string }
   return furigana ? <ruby>{surface}<rt>{furigana}</rt></ruby> : <>{surface}</>;
 }
 
-type DiagnosticStep = { surface: string; reading: string; form: Form; answers: string[]; readings: string[]; kcIds: string[]; focusId: string | null; continuation: boolean; targetLabel?: string; prompt?: string; note?: string; kind?: "stem" | "attachment" | "classification" | "conjugation" | "atomic"; nodeId?: string; diagnosticOnly?: boolean; expectedClass?: VerbClass; providedClass?: VerbClass; classChoices?: { value: VerbClass; label: string }[]; classificationExplanation?: string; analysisItem?: PracticeItem };
+type DiagnosticStep = { surface: string; reading: string; form: Form; answers: string[]; readings: string[]; kcIds: string[]; focusId: string | null; continuation: boolean; targetLabel?: string; stepTitle?: string; prompt?: string; note?: string; kind?: "stem" | "attachment" | "classification" | "conjugation" | "atomic"; nodeId?: string; diagnosticOnly?: boolean; expectedClass?: VerbClass; providedClass?: VerbClass; classChoices?: { value: VerbClass; label: string }[]; classificationExplanation?: string; analysisItem?: PracticeItem };
 type DiagnosticStepResult = { correct: boolean; updatedKcIds: string[]; practicedKcIds: string[] };
 type DiagnosticAttempt = { answer: string; outcome: string; message: string; resolution: string; index: number; total: number; nextTotal: number };
 
@@ -94,6 +94,7 @@ function DiagnosticPractice({ item, goalLabel, steps, onEvidence, onDone, active
   const firstChoice = useRef<HTMLButtonElement>(null);
   const nextButton = useRef<HTMLButtonElement>(null);
   const step = practiceSteps[index];
+  const stepTitle = step.stepTitle ?? (step.kind === "classification" ? "判断动词类别" : `变为${step.targetLabel ?? FORM_LABELS[step.form]}`);
   useEffect(() => { if (active) (firstChoice.current ?? input.current)?.focus(); }, [active]);
   useEffect(() => { if (feedback && !busy && active) nextButton.current?.focus(); }, [feedback, busy, active]);
   async function submit(event: FormEvent) {
@@ -144,17 +145,22 @@ function DiagnosticPractice({ item, goalLabel, steps, onEvidence, onDone, active
   }
   return <section className="diagnostic-practice" aria-label="拆步练习">
     <h3>拆步练习 · 第 {index + 1} / {practiceSteps.length} 步</h3>
-    <p>拆步用于诊断和练习，结果单独记录。原题仍计为错误；独立掌握度和复测资格由后续无提示整题确认。</p>
-    <p className="diagnostic-goal">整题目标：<strong>{goalLabel}</strong></p>
+    <p className="diagnostic-step-label">本步目标</p>
+    <h4 className="diagnostic-step-title">{stepTitle}</h4>
     {step.prompt ? <p className="diagnostic-instruction"><strong>{step.prompt}</strong></p> : <p className="diagnostic-instruction">{step.kind === "classification" ? "请选择下面形式继续活用时所属的" : step.continuation ? "已提供正确的中间形式，请继续变为" : "请先变为"}<strong>{step.kind === "classification" ? "动词类别" : step.targetLabel ?? FORM_LABELS[step.form]}</strong></p>}
+    <p className="diagnostic-given-label">给定形式</p>
     <p className="diagnostic-word"><FuriganaText surface={step.surface} reading={step.reading} /></p>
-    {step.providedClass && <p>已提供词类：<strong>{classLabelFor(step.providedClass)}</strong>。</p>}
-    {step.note && <p>{step.note}</p>}
+    {step.providedClass && <p className="diagnostic-note">已提供词类：<strong>{classLabelFor(step.providedClass)}</strong>。</p>}
+    {step.note && <p className="diagnostic-note">{step.note}</p>}
     {step.kind === "classification" ? <div className="class-options two-options">{step.classChoices?.map((choice, choiceIndex) => <button ref={choiceIndex === 0 ? firstChoice : undefined} type="button" key={choice.value} disabled={Boolean(feedback) || busy} className={`${answer === choice.value ? "selected" : ""} ${feedback && choice.value === step.expectedClass ? "choice-correct" : ""} ${feedback && answer === choice.value && choice.value !== step.expectedClass ? "choice-wrong" : ""}`} onClick={() => checkAnswer(choice.value)}>{choice.label}</button>)}</div>
       : <form onSubmit={submit}><label htmlFor="diagnostic-answer">本步答案</label><div className="answer-row"><input ref={input} id="diagnostic-answer" lang="ja" autoComplete="off" value={answer} disabled={Boolean(feedback) || busy} onChange={(event) => { setAnswer(event.target.value); setNotice(null); }} onKeyDown={(event) => { if (event.key === "Enter" && (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229)) event.preventDefault(); }} /><button type="submit" disabled={!answer.trim() || Boolean(feedback) || busy}>检查本步</button></div></form>}
     {notice && <p role="status">{notice}</p>}
     {feedback && <div role="status"><p>{feedback}</p>{!hasFollowups && step.kind !== "classification" && <p>本步正确形式：<FuriganaText surface={step.answers[0]} reading={step.readings[0]} /></p>}<button ref={nextButton} type="button" className="text-button" data-diagnostic-next aria-keyshortcuts="Enter" onClick={next}>{index === practiceSteps.length - 1 ? "完成拆步" : "练习下一步"} <kbd aria-hidden="true">Enter</kbd></button></div>}
     <button type="button" className="text-button" disabled={busy} onClick={() => finish("skipped")}>跳过剩余拆步，查看解析</button>
+    <footer className="diagnostic-meta">
+      <p className="diagnostic-goal">整题参考：{goalLabel}</p>
+      <details className="diagnostic-policy"><summary>拆步如何计分</summary><p>拆步用于诊断和练习，结果单独记录。原题仍计为错误；独立掌握度和复测资格由后续无提示整题确认。</p></details>
+    </footer>
   </section>;
 }
 
@@ -815,7 +821,7 @@ export default function Home() {
       }
       if (event.defaultPrevented) return;
       // Disabled answer fields can retain focus after grading in some browsers.
-      if (target?.closest("input:not(:disabled),textarea,select,[contenteditable='true']")) return;
+      if (target?.closest("input:not(:disabled),textarea,select,summary,[contenteditable='true']")) return;
       if (finished) {
         if (event.key !== "Enter" || target?.closest("a,button")) return;
         event.preventDefault(); document.querySelector<HTMLButtonElement>(".restart-button")?.click(); return;

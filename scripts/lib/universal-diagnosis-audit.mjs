@@ -36,7 +36,7 @@ export function auditUniversalCase(c,analyze,options = {}) {
     // is allowed; the as-yet-unanswered final target must remain hidden.
     if(result.steps.length) {
       const target=c.step?[...c.step.answers,...c.step.readings]:['surface','reading'].flatMap(w=>correctSpellings({...c.item,surface:c.item[w]},c.form));
-      const visible=[result.feedback?.message,...result.steps.flatMap(s=>[s.prompt,s.note,s.classificationExplanation])].filter(Boolean).join(' ');
+      const visible=[result.feedback?.message,...result.steps.flatMap(s=>[s.stepTitle,s.prompt,s.note,s.classificationExplanation])].filter(Boolean).join(' ');
       for(const answer of target.filter(a=>a.length>=4&&!result.steps.some(s=>[s.surface,s.reading].some(given=>given.includes(a)))))if(visible.includes(answer))problem('answer-leak','未作答步骤的完整目标提前出现在提示中');
     }
   }

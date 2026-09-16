@@ -196,7 +196,19 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .hint-box { margin: 15px 0 0; padding: 14px 16px; border-radius: 5px; background: #eeebe2; color: #606760; font-size: 14px; line-height: 1.7; animation: fade-in .18s ease-out both; }
 .diagnostic-practice { margin-top: 20px; padding: 18px; border: 1px solid #cbd8d1; border-radius: 8px; background: #faf9f5; }
 .diagnostic-practice p { line-height: 1.7; }
-.diagnostic-practice .diagnostic-word { font-size: 28px; color: #18251e; }
+.diagnostic-practice h3 { margin: 0; color: var(--muted); font-size: 14px; font-weight: 500; }
+.diagnostic-practice .diagnostic-step-label { margin: 16px 0 4px; color: var(--red); font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.diagnostic-practice .diagnostic-step-title { margin: 0; color: var(--ink); font-size: clamp(22px, 2vw, 26px); line-height: 1.4; font-weight: 700; }
+.diagnostic-practice .diagnostic-instruction { margin: 8px 0 18px; font-size: 16px; }
+.diagnostic-instruction strong { font-weight: 500; }
+.diagnostic-practice .diagnostic-given-label { margin: 0; color: var(--muted); font-size: 13px; }
+.diagnostic-practice .diagnostic-word { margin: 4px 0 10px; font-size: 28px; color: #18251e; }
+.diagnostic-practice .diagnostic-note { margin: 10px 0 20px; color: var(--muted); font-size: 14px; }
+.diagnostic-meta { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+.diagnostic-practice .diagnostic-goal { margin: 0; color: var(--muted); font-size: 13px; font-weight: 400; }
+.diagnostic-policy { margin-top: 8px; }
+.diagnostic-policy summary { cursor: pointer; }
+.diagnostic-practice .diagnostic-policy p { margin: 8px 0 0; font-size: 13px; }
 .diagnostic-practice .text-button { display: block; margin-top: 14px; }
 
 .feedback { margin-top: 20px; padding: 19px 20px 20px; border-left: 3px solid; background: #eeece4; animation: fade-in .2s ease-out both; }
