@@ -7,6 +7,7 @@ import { isSourceClassification } from './learning-evidence.mjs';
 export const CHALLENGE_PREFERENCE_KEY = 'katsuyo-practice-challenge-v2';
 export const LEGACY_CHALLENGE_PREFERENCE_KEY = 'katsuyo-practice-challenge-v1';
 export const HIGHEST_CHALLENGE_COURSE = 'multiStepCompound';
+export const CHALLENGE_RECENT_QUESTION_LIMIT = 36;
 
 // Accept the previous single-course preference as well as a JSON selection.
 // Canonical curriculum order keeps selection order from affecting scheduling.
@@ -29,7 +30,8 @@ export function createChallengePlanner(model) {
     pools.get(exercise.courseId).push(exercise);
   }
   const courseIds=[...pools.keys()];
-  function questions(selection,profile,{length=12,seed=0}={}) {
+  // Bounded batches remain available for audits; the UI uses nextQuestion().
+  function questions(selection,profile,{length=12,seed=0,position=null,recentQuestionKeys=[]}={}) {
     const selected=normalizeChallengeCourses(selection,courseIds);
     const groups=new Map(),courses=selected.map(courseId=>{
       const forms=new Map();
@@ -55,9 +57,9 @@ export function createChallengePlanner(model) {
       return {id:courseId,forms:orderedForms};
     });
     if(!courses.length)return [];
-    const rotation=profile.rotation??0,offset=(rotation*length)%courses.length;
+    const rotation=profile.rotation??0,start=position??rotation*length,offset=start%courses.length;
     const ordered=[...courses.slice(offset),...courses.slice(0,offset)];
-    const counts=new Map(),usedKeys=[],usedWords=[],used=new Set(),assigned=[],usedRetestKeys=[];
+    const counts=new Map(),usedKeys=[...recentQuestionKeys],usedWords=[],used=new Set(),assigned=[],usedRetestKeys=[];
     const challengeEntries=Object.entries(profile.assessment?.pending??{}).filter(([,entry])=>isChallengeRetest(entry)&&selected.includes(entry.courseId));
     const challengeAssessment=challengeEntries.length ? {...profile.assessment,pending:Object.fromEntries(challengeEntries)} : null;
     for(let index=0;index<length;index++) {
@@ -66,7 +68,7 @@ export function createChallengePlanner(model) {
       const available=ordered.filter(c=>pools.get(c.id).some(e=>!used.has(exerciseKey(e))))
         .sort((a,b)=>(counts.get(a.id)??0)-(counts.get(b.id)??0));
       const course=available[0];if(!course)break;
-      const previous=courses.length===1?rotation*length:Math.floor((rotation*length+ordered.indexOf(course))/courses.length);
+      const previous=courses.length===1?start:Math.floor((start+ordered.indexOf(course))/courses.length);
       const turn=previous+(counts.get(course.id)??0),form=course.forms[turn%course.forms.length];
       const target=form[Math.floor(turn/course.forms.length)%form.length];
       const alternatives=[...form,...course.forms.flat()].filter(other=>other.id!==target.id);
@@ -89,6 +91,22 @@ export function createChallengePlanner(model) {
     }
     return assigned;
   }
+  /**
+   * @param {string | string[]} selection
+   * @param {any} profile
+   * @param {{position?: number, seed?: number, recentQuestionKeys?: string[]}} [options]
+   */
+  function nextQuestion(selection,profile,options={}) {
+    const {position=(profile.rotation??0)*12,seed=0,recentQuestionKeys=[]}=options;
+    // Do not retain an ever-growing question list. Once a small pool is used
+    // up, release the oldest exclusion until another real question is possible.
+    const recent=recentQuestionKeys.slice(-CHALLENGE_RECENT_QUESTION_LIMIT);
+    for(let released=0;released<=recent.length;released++) {
+      const [question]=questions(selection,profile,{length:1,position,seed,recentQuestionKeys:recent.slice(released)});
+      if(question)return question;
+    }
+    return null;
+  }
   const hasCourse=id=>(pools.get(id)?.length??0)>0;
-  return {questions,hasCourse};
+  return {questions,nextQuestion,hasCourse};
 }

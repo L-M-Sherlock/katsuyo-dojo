@@ -79,6 +79,12 @@ test('challenge review prioritizes eligible tasks only within the selected cours
   assert.ok(challenge.questions(['past'],p).every(q=>!q.challengeRetest));
   const practiceOnly={...p,assessment:addToPracticeRetests(p.assessment,key)};
   assert.ok(challenge.questions(['negative'],practiceOnly).every(q=>!q.challengeRetest));
+  assert.equal(challenge.nextQuestion(['negative'],p).challengeRetest,true);
+  assert.equal(assessmentTarget(challenge.nextQuestion(['negative'],p).candidate).key,key);
+  assert.ok(!challenge.nextQuestion(['past'],p).challengeRetest);
+  assert.ok(!challenge.nextQuestion(['negative'],practiceOnly).challengeRetest);
+  const unqualified=observe(fresh(),target,{mode:'challenge'});
+  assert.ok(!challenge.nextQuestion(['negative'],unqualified).challengeRetest);
 });
 
 test('either mode can satisfy the same qualified evidence requirement without duplicating retests',()=>{

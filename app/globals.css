@@ -254,11 +254,13 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .usage-sentence { margin: 0; font-size: clamp(16px, 1.5vw, 19px); line-height: 2; overflow-wrap: anywhere; }
 .usage-sentence ruby { ruby-align: center; }
 .usage-sentence rt { color: var(--muted); font-size: 10px; font-weight: 400; }
-.usage-blank { display: inline-block; min-width: 5em; margin: 0 4px; color: var(--muted); }
+.usage-blank { display: inline-block; width: 5em; height: .9em; margin-left: .2em; border-bottom: 1px solid var(--muted); vertical-align: baseline; }
 .usage-target { color: var(--red-dark); }
 .usage-card-back { padding: 11px 0 0; border-top: 1px solid rgba(23,33,28,.1); }
 .usage-translation, .usage-note { margin: 5px 0 0; color: #4f5851; font-size: 13px; line-height: 1.6; }
 .usage-note { color: var(--muted); font-size: 12px; }
+.stage-meta.challenge-stage-meta { grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; }
+.challenge-count { font-size: 12px; }
 .feedback-meta { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(23,33,28,.1); display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 11px; }
 .feedback-meta a { color: var(--red-dark); text-underline-offset: 3px; }
 .next-button { width: 100%; margin-top: 18px; padding: 14px 17px; border: 0; border-radius: 5px; background: var(--ink); color: white; display: flex; justify-content: space-between; cursor: pointer; font-size: 14px; transition: background .18s; }

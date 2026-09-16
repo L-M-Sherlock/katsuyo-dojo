@@ -33,6 +33,6 @@ export default function ChallengeSelection({courses,stages,selected,onChange,onS
       }):h('p',{className:'challenge-no-results'},'没有找到匹配的课程。可以换个关键词，或切换筛选范围。')),
       h('footer',{className:'challenge-selection-footer'},h('div',null,
         h('strong',{'aria-live':'polite'},`已选 ${selected.length} 门课程`),
-        h('p',null,selected.length>12?'每轮最多 12 题，其余课程会在后续轮次继续轮换。':'所选课程轮换出题，独立作答正常记录。')),
+        h('p',null,'所选课程持续轮换，没有题数上限，可随时结束。')),
         h('button',{type:'submit',className:'challenge-start',disabled:!selected.length},'开始挑战所选课程'))));
 }

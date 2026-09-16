@@ -75,3 +75,48 @@ test('selection normalization supports old preferences and rejects unknown or ma
   assert.deepEqual(normalizeChallengeCourses(['second',null,4,'second'],ids),['second']);
   for(const value of [null,{},'[]','[bad','unknown','x'.repeat(8193)])assert.deepEqual(normalizeChallengeCourses(value,ids),[]);
 });
+
+test('continuous challenge crosses former round boundaries and rotates every selected course',()=>{
+  const ids=Array.from({length:43},(_,i)=>`course-${i}`);
+  const m={...model,exercises:ids.flatMap(courseId=>Array.from({length:3},(_,i)=>({id:`${courseId}:${i}`,courseId,form:'past',item:{domain:'verb',surface:`${courseId}-${i}`,class:'godan'},kcIds:['advanced']})))};
+  const planner=createChallengePlanner(m),counts=new Map();let recent=[];
+  for(let position=0;position<172;position++){
+    const next=planner.nextQuestion(ids,profile,{position,recentQuestionKeys:recent});
+    assert.ok(next);
+    assert.equal(next.candidate.courseId,ids[position%ids.length]);
+    counts.set(next.candidate.courseId,(counts.get(next.candidate.courseId)??0)+1);
+    recent=[...recent,exerciseKey(next.candidate)].slice(-36);
+  }
+  assert.ok([...counts.values()].every(count=>count===4));
+  assert.equal(planner.nextQuestion('absent',profile),null);
+});
+
+test('continuous tiny pools recycle only when needed and never impose a question limit',()=>{
+  for(const size of [1,2]){
+    const planner=createChallengePlanner({...model,exercises:model.exercises.slice(0,size)});
+    let recent=[],last=null;
+    for(let position=0;position<150;position++){
+      const before=[...recent],next=planner.nextQuestion('high',profile,{position,recentQuestionKeys:recent});
+      assert.deepEqual(recent,before);
+      assert.ok(next);
+      const key=exerciseKey(next.candidate);
+      if(size===2&&last)assert.notEqual(key,last);
+      last=key;recent=[...recent,key].slice(-36);
+    }
+  }
+});
+
+test('continuous scheduling balances forms and classes and avoids exact repeats across question twelve',()=>{
+  const m={...model,exercises:['a','b','c','d'].flatMap(form=>['godan','ichidan','irregular'].flatMap(cls=>Array.from({length:8},(_,i)=>({id:`${form}:${cls}:${i}`,courseId:'high',form,item:{domain:'verb',surface:`${cls}-${i}`,class:cls},kcIds:['advanced']}))))};
+  const planner=createChallengePlanner(m),seen=[],p=structuredClone(profile);
+  let recent=[];
+  for(let position=0;position<48;position++){
+    const next=planner.nextQuestion('high',p,{position,recentQuestionKeys:recent});
+    assert.ok(next);seen.push(next.candidate);
+    assert.ok(!recent.includes(exerciseKey(next.candidate)));
+    recent=[...recent,exerciseKey(next.candidate)].slice(-36);
+    p.recentWordKeys=[...p.recentWordKeys,`verb:${next.candidate.item.surface}`].slice(-36);
+  }
+  for(const form of ['a','b','c','d'])for(const cls of ['godan','ichidan','irregular'])
+    assert.equal(seen.filter(e=>e.form===form&&e.item.class===cls).length,4);
+});

@@ -1925,10 +1925,10 @@ test('a new learner can challenge the highest course, with real evidence and no 
   assert.equal(displayedExercise(view).courseId,'multiStepCompound','a mistake cannot reroute a challenge to a prerequisite');
   assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount,2);
   assert.ok(Object.keys(JSON.parse(storage.getItem(KEY)).assessment.pending).length>0);
-  fireEvent.click(view.getByRole('button',{name:'结束本轮'}));
-  await waitFor(()=>assert.ok(view.getByText('本轮挑战完成')));
+  fireEvent.click(view.getByRole('button',{name:'结束挑战'}));
+  await waitFor(()=>assert.ok(view.getByText('本次挑战已结束')));
   fireEvent.click(view.getByRole('button',{name:/继续挑战本课/}));
-  await waitFor(()=>assert.equal(Boolean(view.queryByText('本轮挑战完成')),false));
+  await waitFor(()=>assert.equal(Boolean(view.queryByText('本次挑战已结束')),false));
   assert.equal(displayedExercise(view).courseId,'multiStepCompound');
 });
 
@@ -1974,27 +1974,34 @@ test('every real course has a finite challenge round without prerequisite fallba
   t.diagnostic('All 43 courses have non-empty, distinct-question challenge rounds from a fresh profile.');
 });
 
-test('multiple selected courses rotate in one round and keep scoring in each actual course',async()=>{
+test('multiple selected courses continue beyond twelve questions and keep uncapped session totals',async()=>{
   const view=await mount();
   await openChallenge(view,['past','adjectiveIBase']);
   const ids=['adjectiveIBase','past'],seen=new Map();
   assert.equal(view.getByRole('button',{name:'自由挑战',exact:true}).getAttribute('aria-current'),'page');
   assert.equal(view.getByRole('button',{name:'练习',exact:true}).getAttribute('aria-current'),null);
   assert.deepEqual(JSON.parse(storage.getItem('katsuyo-practice-challenge-v2')),ids);
-  for(let i=0;i<12;i++){
+  assert.equal(Boolean(view.container.querySelector('.stage-meta .progress-track')),false);
+  for(let i=0;i<26;i++){
+    assert.match(view.container.querySelector('.stage-meta').textContent,new RegExp(`第 ${i+1} 题`));
+    assert.equal(Boolean(view.queryByText('本次挑战已结束')),false);
     const exercise=displayedExercise(view);assert.ok(ids.includes(exercise.courseId));
     seen.set(exercise.courseId,(seen.get(exercise.courseId)??0)+1);
     await answerDisplayedCorrectly(view);
-    if(i<11)await next(view);
+    assert.equal(view.container.querySelector('.next-button').textContent.includes('查看本轮结果'),false);
+    await next(view);
   }
-  assert.deepEqual(Object.fromEntries(seen),{adjectiveIBase:6,past:6});
-  const scored=JSON.parse(storage.getItem(KEY));assert.equal(scored.assessment.originalCount,12);
-  for(const id of ids)assert.equal(scored.statistics.courses[id].questions,6);
+  assert.deepEqual(Object.fromEntries(seen),{adjectiveIBase:13,past:13});
+  const scored=JSON.parse(storage.getItem(KEY));assert.equal(scored.assessment.originalCount,26);
+  for(const id of ids)assert.equal(scored.statistics.courses[id].questions,13);
   assert.deepEqual(scored.accessibleCourseIds,[]);assert.equal(scored.practiceGoalCourseId,undefined);
-  fireEvent.click(view.container.querySelector('.next-button'));
-  await waitFor(()=>assert.ok(view.getByText('本轮挑战完成')));
+  assert.match(view.container.querySelector('.stage-meta').textContent,/第 27 题/);
+  fireEvent.click(view.getByRole('button',{name:'结束挑战'}));
+  await waitFor(()=>assert.ok(view.getByText('本次挑战已结束')));
+  assert.equal(view.container.querySelector('.score strong').textContent,'26');
+  assert.match(view.container.querySelector('.score span').textContent,/26/);
   fireEvent.click(view.getByRole('button',{name:/继续挑战所选课程/}));
-  await waitFor(()=>assert.equal(Boolean(view.queryByText('本轮挑战完成')),false));
+  await waitFor(()=>assert.equal(Boolean(view.queryByText('本次挑战已结束')),false));
   assert.ok(ids.includes(displayedExercise(view).courseId));
   cleanup();const restored=await mount();
   assert.equal(window.location.hash,'#/challenge/play');

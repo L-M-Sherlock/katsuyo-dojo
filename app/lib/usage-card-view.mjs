@@ -17,7 +17,7 @@ export default function UsageCardView({card, revealed = false}) {
       ...card.before.map((part, i) => h(Part, {part, key: `before-${i}`})),
       revealed
         ? h('strong', {className: 'usage-target'}, h(Part, {part: card.target}))
-        : h('span', {className: 'usage-blank', lang: 'zh-CN', 'aria-label': '填写变化后的完整形式'}, '＿＿＿＿'),
+        : h('span', {className: 'usage-blank', role: 'img', lang: 'zh-CN', 'aria-label': '填写变化后的完整形式'}),
       ...card.after.map((part, i) => h(Part, {part, key: `after-${i}`}))),
     revealed && h('p', {className: 'usage-translation'}, card.translation),
     revealed && card.note && h('p', {className: 'usage-note'}, card.note));
