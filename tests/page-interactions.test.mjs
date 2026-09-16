@@ -1139,7 +1139,7 @@ test('historically accessible compound courses recover new shared prerequisites 
   await waitFor(() => assert.match(view.container.querySelector('.practice-notice').textContent, /补基础/));
   assert.match(view.container.querySelector('.current-course-name').textContent, /多种表达的组合活用/);
   assert.ok(view.container.querySelector('#answer'));
-  for (let i = 0; i < 8 && displayedExercise(view).form !== 'passiveDesireNegativePast'; i++) {
+  for (let i = 0; i < 16 && (JSON.parse(storage.getItem(KEY)).byKc['adj.suffix.i-past'].confidence !== 1 || displayedExercise(view).courseId !== 'multiStepCompound'); i++) {
     if (i === 0) assert.ok(displayedExercise(view).kcIds.includes('adj.suffix.i-past'));
     assert.match(view.container.querySelector('.current-course-name').textContent, /多种表达的组合活用/);
     await answerDisplayedCorrectly(view);
@@ -1150,7 +1150,7 @@ test('historically accessible compound courses recover new shared prerequisites 
     }
   }
   assert.equal(JSON.parse(storage.getItem(KEY)).byKc['adj.suffix.i-past'].confidence, 1);
-  assert.equal(displayedExercise(view).form, 'passiveDesireNegativePast');
+  assert.equal(displayedExercise(view).courseId, 'multiStepCompound');
   assert.equal(Boolean(view.container.querySelector('[data-class-shortcut]')), false);
 });
 

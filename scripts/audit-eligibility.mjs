@@ -1,11 +1,12 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { currentEligibilityBaseline } from './lib/eligibility-baseline.mjs';
+import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createServer } from 'vite';
 import { buildEligibilityReport } from './lib/eligibility-audit.mjs';
 
 const args = process.argv.slice(2);
 if (args.length && (args.length !== 2 || args[0] !== '--output')) throw new Error('Usage: npm run audit:eligibility -- [--output path.json]');
-const baseline = JSON.parse(readFileSync(new URL('../tests/fixtures/eligibility-baseline.json', import.meta.url), 'utf8'));
+const baseline = currentEligibilityBaseline();
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
 try {
   const [{ KNOWLEDGE }, { UNIFIED_COURSES }, { assessFormUsage, USAGE_REVIEW_VERSION }, { reviewedLexicalSense }] = await Promise.all([

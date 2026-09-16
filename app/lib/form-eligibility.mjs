@@ -186,7 +186,8 @@ function assessChain(sense, form) {
   }
   const spec = CHAIN_FORM_SPECS[form];
   if (!spec?.words.includes(sense.surface)) return contextual(sense, form, '整条组合尚未为这个词义审核合适的日常语境。');
-  const text = supplementalChainContexts[form]?.[sense.surface];
+  const shared = Object.keys(CHAIN_FORM_SPECS).find(id => supplementalChainContexts[id] && CHAIN_FORM_SPECS[id].kcId === spec.kcId);
+  const text = supplementalChainContexts[shared]?.[sense.surface] ?? (form === 'causativeReceivePast' ? undefined : spec.context);
   return text ? contextual(sense, form, '这条组合采用已审核的日常对象与参与者关系。', text) : allowed('已按整条组合的参与者关系和含义人工审核。');
 }
 

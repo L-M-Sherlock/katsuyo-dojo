@@ -1,4 +1,4 @@
-import { CHAIN_FORM_SPECS, chainOutputClass } from './multi-step-forms.mjs';
+import { CHAIN_FORM_SPECS, chainIntermediate } from './multi-step-forms.mjs';
 import { acceptedConjugations } from './conjugation.mjs';
 import { acceptedAdjectiveConjugations } from './adjective-conjugation.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
@@ -149,7 +149,7 @@ function pathsFor(item, form) {
   });
   if(form==='negativePast')return compose(pathsFor(item,'negative'),state=>pathsFor({...state,domain:'adjective',class:'i',iiFamily:false,tailClass:undefined},'adjectivePast'));
   const chain=CHAIN_FORM_SPECS[form];
-  if(chain)return compose(pathsFor(item,chain.base),state=>pathsFor({...state,domain:'verb',class:chainOutputClass(chain,state.surface)},chain.tail));
+  if(chain)return compose(pathsFor(item,chain.base),state=>pathsFor(chainIntermediate(chain,state.surface,state.reading),chain.tail));
   if(form==='passiveDesireNegativePast')return compose(pathsFor(item,'passive'),state=>pathsFor({...state,class:'ichidan'},'taiNegativePast'));
   if(primitives.includes(form))return withConjugationStage(item,form,primitivePaths(item,form));
   if(stemAppends.includes(form)) {

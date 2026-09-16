@@ -79,8 +79,8 @@ test('the real mixed learner no longer pads the final masu recovery with mastere
         : n === 2 ? { correct: false, revealed: true, failedKcId: focus.id } : n === 3 ? { correct: false } : { correct: true };
     } });
     assert.equal(report.completed, true);
-    assert.equal(report.masteredCount, 119);
-    assert.equal(report.completedFacetCount, 89);
+    assert.equal(report.masteredCount, 132);
+    assert.equal(report.completedFacetCount, 130);
     assert.ok(rows.length < 60, `previously 97 masu questions; got ${rows.length}`);
     const tail = rows.filter(row => ['stem.ichidan.drop-ru', 'stem.godan.i', 'suffix.masu'].every(id => row.byKc[id]?.confidence >= 1)
       && ['facet.form.masu.suru', 'facet.form.masu.kuru'].every(id => row.byKc[id]?.correct >= 1));

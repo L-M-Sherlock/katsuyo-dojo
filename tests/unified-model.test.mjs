@@ -1,3 +1,4 @@
+import { CHAIN_FORM_SPECS } from '../app/lib/multi-step-forms.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createServer } from 'vite';
@@ -55,15 +56,15 @@ test('all real continuation pools cover missing endings and avoid round and rece
   }
 });
 
-test('the unified curriculum keeps all 43 courses and 134 forms in prerequisite order', () => {
+test('the unified curriculum keeps all 43 courses and 172 forms in prerequisite order', () => {
   assert.equal(UNIFIED_COURSES.length, 43);
   assert.equal(new Set(COURSE_ORDER).size, 43);
   const oldForms = new Set([...COURSES,...ADJECTIVE_COURSES].flatMap(c => c.forms));
-  assert.equal(oldForms.size, 134);
+  assert.equal(oldForms.size, 172);
   assert.deepEqual(new Set(model.exercises.map(e => e.form).filter(Boolean)), oldForms);
   assert.ok(COURSE_ORDER.indexOf('adjectiveIBase') < COURSE_ORDER.indexOf('basicCompound'));
   assert.ok(UNIFIED_COURSES.find(c => c.id === 'desire').forms.includes('taiNegativePast'));
-  assert.deepEqual(UNIFIED_COURSES.at(-1).forms, ['passiveDesireNegativePast','temiruDesirePast','passiveProgressivePast','causativeReceivePast']);
+  assert.deepEqual(UNIFIED_COURSES.at(-1).forms, ['passiveDesireNegativePast',...Object.keys(CHAIN_FORM_SPECS)]);
   assert.deepEqual(auditKnowledgeModel(model), []);
 });
 
@@ -281,7 +282,7 @@ test('v6 course reordering preserves mastered e-row and adverb evidence together
 });
 
 test('revision 1 e-row introductions preserve imperative access without inventing revision 2 ba access', () => {
-  assert.equal(CURRICULUM_VERSION, 5);
+  assert.equal(CURRICULUM_VERSION, 6);
   for (const version of [undefined, 1]) {
     const before = {
       ...parseUnifiedImport(profile({}), options),
@@ -476,7 +477,7 @@ test('revision 3 voice scores survive relocation and pending targets move withou
 test('revision 4 course reorder preserves scores, assessment and the current course goal',()=>{
   const source={...parseUnifiedImport(profile({byKc:{'apply.potential.continuation':{...mastered}}}),options),curriculumVersion:4,practiceGoalCourseId:'voiceCompound'};
   const restored=parseUnifiedImport(createUnifiedExport(source),options);
-  assert.equal(restored.curriculumVersion,5);
+  assert.equal(restored.curriculumVersion,6);
   for(const field of ['byKc','assessment','practiceLog','introducedKcIds','coursePractice','practiceGoalCourseId'])assert.deepEqual(restored[field],source[field],field);
   assert.deepEqual(parseUnifiedImport(createUnifiedExport(restored),options),restored);
 });

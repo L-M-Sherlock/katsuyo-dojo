@@ -56,26 +56,26 @@ export function assignPracticeExercises(preferredItems, options) {
     if (!candidates.length) return undefined;
     const facets = item.coverageKcIds?.length ? item.coverageKcIds
       : item.id === 'class.irregular' ? [...new Set(pool.flatMap(e => e.kcIds.filter(id => id.startsWith('facet.class.irregular.'))))] : [];
-    const facetOf = exercise => exercise.kcIds.find(id => facets.includes(id)) ?? 'other';
+    const facetsOf = exercise => exercise.kcIds.filter(id => facets.includes(id));
     const facetCounts = new Map();
     for (const exercise of pool) {
       if (used.has(exerciseKey(exercise))) {
-        const facet = facetOf(exercise);
-        facetCounts.set(facet, (facetCounts.get(facet) ?? 0) + 1);
+        for (const facet of facetsOf(exercise)) facetCounts.set(facet, (facetCounts.get(facet) ?? 0) + 1);
       }
     }
     const missing = new Set(facets.filter(id => !(byKc[id]?.correct >= 1) && !facetCounts.has(id)));
-    const required = candidates.filter(exercise => missing.has(facetOf(exercise)));
+    const required = candidates.filter(exercise => facetsOf(exercise).some(id => missing.has(id)));
     if (required.length) candidates = required;
 
     const score = exercise => {
       const word = wordKey(exercise);
       const lexicalId = exercise.kcIds.find(id => id.startsWith('lexeme.'));
       return [
+        -facetsOf(exercise).filter(id => missing.has(id)).length,
         item.id === 'exception.ru-godan' ? (lexicalId ? byKc[lexicalId]?.confidence ?? 0 : 1) : 0,
         wordCounts.get(word) ?? 0,
         recent.get(word) ?? -1,
-        facetCounts.get(facetOf(exercise)) ?? 0,
+        Math.min(...facetsOf(exercise).map(id => facetCounts.get(id) ?? 0), facets.length ? Infinity : 0),
         exercise.kcIds.reduce((sum, id) => sum + (id === item.id ? 0 : 1 - (byKc[id]?.confidence ?? 0)), 0),
         seededOrder(`${item.id}:${exerciseKey(exercise)}`, `${seed}:${index}`),
       ];

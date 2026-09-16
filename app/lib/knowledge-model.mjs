@@ -1,4 +1,5 @@
-import { CHAIN_FORM_SPECS, chainOutputClass } from './multi-step-forms.mjs';
+import { deriveAdjectiveExercise } from './adjective-knowledge-model.mjs';
+import { CHAIN_FORM_SPECS, chainIntermediate } from './multi-step-forms.mjs';
 import {
   acceptedConjugations,
   classLabel,
@@ -172,7 +173,9 @@ function formKcIds(verb, form) {
   const chain = CHAIN_FORM_SPECS[form];
   if (chain) {
     const base = conjugate(verb.surface, verb.class, chain.base);
-    return [...formKcIds(verb, chain.base), ...formKcIds({surface:base,reading:base,class:chainOutputClass(chain,base)},chain.tail), chain.kcId];
+    const next = chainIntermediate(chain,base);
+    const tailIds = next.domain === 'adjective' ? deriveAdjectiveExercise(next,chain.tail).requiredKcIds.filter(id=>id!=='adj.class.i') : formKcIds(next,chain.tail);
+    return [...formKcIds(verb, chain.base), ...tailIds, chain.kcId, chain.facetId];
   }
   const compoundSpec = COMPOUND_FORM_SPECS[form];
   if (compoundSpec) {
@@ -230,7 +233,9 @@ function metadataFor(id, formLabels) {
     return { label: `${kind === "suru" ? "する类" : "来る"}在${formLabels[form] ?? form}中的覆盖`, family: "exception", gating: false };
   }
   const chain = Object.values(CHAIN_FORM_SPECS).find(spec => spec.kcId === id);
-  if (chain) return {label:`${chain.title}的组合应用`,family:'compound',gating:true};
+  if (chain) return {label:`${chain.familyTitle}的组合应用`,family:'compound',gating:true};
+  const chainFacet = Object.values(CHAIN_FORM_SPECS).find(spec => spec.facetId === id);
+  if (chainFacet) return {label:`${chainFacet.title}覆盖`,family:'compound',gating:false};
   if (id.startsWith("composition.")) {
     const [, output, ending] = id.split(".");
     const endingLabels = { past: "过去形", negative: "否定形", negativePast: "否定过去形" };
@@ -316,6 +321,7 @@ export function buildKnowledgeModel(courses, verbs, { eligibleFor = (...args) =>
     sokuon.coverageKcIds.push(...components.filter((component) => component.id === "facet.onbin.sokuon.iku").map((component) => component.id));
   }
   for (const component of components) {
+    component.coverageKcIds.push(...Object.values(CHAIN_FORM_SPECS).filter(spec=>spec.kcId===component.id).map(spec=>spec.facetId));
     if (component.id.startsWith("suffix.")) {
       const form = component.id.slice("suffix.".length);
       const facets = components

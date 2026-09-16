@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { readFileSync } from 'node:fs';
+import { currentEligibilityBaseline } from '../scripts/lib/eligibility-baseline.mjs';
 import { createServer } from 'vite';
 import { buildEligibilityReport } from '../scripts/lib/eligibility-audit.mjs';
 import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
@@ -95,13 +95,13 @@ test('all declared courses, forms, gating knowledge and coverage remain trainabl
       server.ssrLoadModule('/app/page.tsx'), server.ssrLoadModule('/app/lib/unified-curriculum.mjs'),
       server.ssrLoadModule('/app/lib/form-eligibility.mjs'), server.ssrLoadModule('/app/lib/lexical-usage.mjs'),
     ]);
-    const baseline = JSON.parse(readFileSync(new URL('./fixtures/eligibility-baseline.json', import.meta.url), 'utf8'));
+    const baseline = currentEligibilityBaseline();
     const report = buildEligibilityReport(KNOWLEDGE, { courses: UNIFIED_COURSES, assessFormUsage: usage.assessFormUsage,
       reviewVersion: usage.USAGE_REVIEW_VERSION, reviewedLexicalSense, baseline });
     assert.deepEqual(report.issues, []);
     for (const field of ['courses', 'forms', 'components', 'gating', 'facets']) assert.equal(report.summary[field], baseline.summary[field], field);
     assert.ok(report.summary.before.exercises >= baseline.summary.exercises, "new words may grow the fixed registry, never shrink it");
-    assert.equal(report.summary.retestPaths.before, 845);
+    assert.equal(report.summary.retestPaths.before, 1035);
     assert.ok(report.summary.removed > 0);
     assert.ok(report.summary.after.contexts > 0);
   } finally { await server.close(); }

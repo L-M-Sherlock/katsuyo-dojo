@@ -1,0 +1,732 @@
+{
+  "description": "Curriculum v6: 38 additional curated chain targets; preserve old rules and extend three application families. Synthetic curriculum requirements, no personal progress.",
+  "summary": {
+    "courses": 43,
+    "forms": 172,
+    "components": 269,
+    "gating": 132,
+    "facets": 130
+  },
+  "components": [
+    {
+      "id": "compound.chain.temiru-desire-past",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.temiru",
+        "stem.ichidan.drop-ru",
+        "construction.tai",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "adj.suffix.i-past",
+        "apply.tai.continuation",
+        "adj.stem.i-ku",
+        "adj.suffix.i-negative",
+        "adj.compound.i-negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.chain.temiruDesire",
+        "facet.chain.temiruDesirePast",
+        "facet.chain.temiruDesireNegative",
+        "facet.chain.temiruDesireNegativePast"
+      ]
+    },
+    {
+      "id": "facet.chain.temiruDesire",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temiruDesirePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temiruDesireNegative",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temiruDesireNegativePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.passive-progressive-past",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.passive",
+        "stem.ichidan.drop-ru",
+        "suffix.te",
+        "construction.teiru",
+        "stem.godan.u-wa",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "heuristic.ru-ie",
+        "suffix.past",
+        "apply.teiru.continuation",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.chain.passiveProgressive",
+        "facet.chain.passiveProgressivePast",
+        "facet.chain.passiveProgressiveNegative",
+        "facet.chain.passiveProgressiveNegativePast"
+      ]
+    },
+    {
+      "id": "facet.chain.passiveProgressive",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.passiveProgressivePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.passiveProgressiveNegative",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.passiveProgressiveNegativePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.causative-receive-past",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.causative",
+        "stem.ichidan.drop-ru",
+        "suffix.te",
+        "construction.temorau",
+        "stem.godan.u-wa",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "onbin.sokuon",
+        "suffix.past",
+        "apply.temorau.continuation"
+      ],
+      "coverageKcIds": [
+        "facet.chain.causativeReceive",
+        "facet.chain.causativeReceivePast"
+      ]
+    },
+    {
+      "id": "facet.chain.causativeReceive",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.causativeReceivePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.try-request",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.temiru",
+        "stem.ichidan.drop-ru",
+        "construction.tekudasai",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular"
+      ],
+      "coverageKcIds": [
+        "facet.chain.temiruRequest"
+      ]
+    },
+    {
+      "id": "facet.chain.temiruRequest",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.try-condition",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.temiru",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "construction.tara",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular"
+      ],
+      "coverageKcIds": [
+        "facet.chain.temiruTara"
+      ]
+    },
+    {
+      "id": "facet.chain.temiruTara",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.prepare-request",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.teoku",
+        "construction.tekudasai",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "onbin.sokuon",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "stem.godan.shi-connective",
+        "class.ichidan",
+        "stem.ichidan.drop-ru"
+      ],
+      "coverageKcIds": [
+        "facet.chain.teokuRequest"
+      ]
+    },
+    {
+      "id": "facet.chain.teokuRequest",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.prepare-condition",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.teoku",
+        "stem.godan.e",
+        "suffix.ba",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "onbin.sokuon",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "stem.godan.shi-connective",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "construction.tara"
+      ],
+      "coverageKcIds": [
+        "facet.chain.teokuBa",
+        "facet.chain.teokuTara"
+      ]
+    },
+    {
+      "id": "facet.chain.teokuBa",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.teokuTara",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.causative-request",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.causative",
+        "stem.ichidan.drop-ru",
+        "suffix.te",
+        "construction.tekudasai",
+        "stem.godan.u-wa",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular"
+      ],
+      "coverageKcIds": [
+        "facet.chain.causativeRequest"
+      ]
+    },
+    {
+      "id": "facet.chain.causativeRequest",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.receive-desire",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.temorau",
+        "stem.godan.i",
+        "construction.tai",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "heuristic.ru-ie",
+        "stem.ichidan.drop-ru",
+        "adj.suffix.i-past",
+        "apply.tai.continuation",
+        "adj.stem.i-ku",
+        "adj.suffix.i-negative",
+        "adj.compound.i-negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.chain.temorauDesire",
+        "facet.chain.temorauDesirePast",
+        "facet.chain.temorauDesireNegative",
+        "facet.chain.temorauDesireNegativePast"
+      ]
+    },
+    {
+      "id": "facet.chain.temorauDesire",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temorauDesirePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temorauDesireNegative",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temorauDesireNegativePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.receive-potential",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "onbin.i",
+        "suffix.te",
+        "construction.temorau",
+        "stem.godan.e",
+        "suffix.potential",
+        "stem.godan.shi-connective",
+        "onbin.sokuon",
+        "onbin.hatsuon",
+        "onbin.voicing",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "heuristic.ru-ie",
+        "stem.ichidan.drop-ru",
+        "suffix.past",
+        "apply.potential.continuation",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past",
+        "suffix.masu",
+        "construction.masenka"
+      ],
+      "coverageKcIds": [
+        "facet.chain.temorauPotential",
+        "facet.chain.temorauPotentialPast",
+        "facet.chain.temorauPotentialNegative",
+        "facet.chain.temorauPotentialNegativePast",
+        "facet.chain.temorauPoliteRequest"
+      ]
+    },
+    {
+      "id": "facet.chain.temorauPotential",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temorauPotentialPast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temorauPotentialNegative",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temorauPotentialNegativePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.temorauPoliteRequest",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.potential-polite",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.e",
+        "suffix.potential",
+        "stem.ichidan.drop-ru",
+        "suffix.masu",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "compound.polite-past",
+        "compound.polite-negative",
+        "compound.polite-negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.chain.potentialPolite",
+        "facet.chain.potentialPolitePast",
+        "facet.chain.potentialPoliteNegative",
+        "facet.chain.potentialPoliteNegativePast"
+      ]
+    },
+    {
+      "id": "facet.chain.potentialPolite",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.potentialPolitePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.potentialPoliteNegative",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.potentialPoliteNegativePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.desire-condition",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.i",
+        "construction.tai",
+        "adj.suffix.i-ba",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "stem.ichidan.drop-ru",
+        "class.irregular",
+        "stem.irregular.connective"
+      ],
+      "coverageKcIds": [
+        "facet.chain.desireBa"
+      ]
+    },
+    {
+      "id": "facet.chain.desireBa",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.excess-request",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.i",
+        "construction.sugiru",
+        "stem.ichidan.drop-ru",
+        "suffix.negative",
+        "construction.naide",
+        "construction.naideKudasai",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "class.ichidan"
+      ],
+      "coverageKcIds": [
+        "facet.chain.sugiruNegativeRequest"
+      ]
+    },
+    {
+      "id": "facet.chain.sugiruNegativeRequest",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.passive-completion",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.passive",
+        "stem.ichidan.drop-ru",
+        "suffix.te",
+        "construction.teshimau",
+        "heuristic.ru-other",
+        "stem.godan.u-wa",
+        "class.ichidan",
+        "heuristic.ru-ie",
+        "onbin.sokuon",
+        "suffix.past",
+        "apply.teshimau.continuation"
+      ],
+      "coverageKcIds": [
+        "facet.chain.passiveCompletion",
+        "facet.chain.passiveCompletionPast"
+      ]
+    },
+    {
+      "id": "facet.chain.passiveCompletion",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.passiveCompletionPast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.permission-potential",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.a",
+        "suffix.causative",
+        "stem.ichidan.drop-ru",
+        "suffix.te",
+        "construction.temorau",
+        "stem.godan.i",
+        "construction.tai",
+        "compound.chain.receive-desire",
+        "stem.godan.u-wa",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "stem.godan.e",
+        "suffix.potential",
+        "compound.chain.receive-potential",
+        "suffix.masu",
+        "construction.masenka",
+        "suffix.past",
+        "apply.potential.continuation",
+        "suffix.negative",
+        "adj.suffix.i-past",
+        "compound.negative-past"
+      ],
+      "coverageKcIds": [
+        "facet.chain.causativeReceiveDesire",
+        "facet.chain.causativeReceivePoliteRequest",
+        "facet.chain.causativeReceivePotential",
+        "facet.chain.causativeReceivePotentialPast",
+        "facet.chain.causativeReceivePotentialNegative",
+        "facet.chain.causativeReceivePotentialNegativePast"
+      ]
+    },
+    {
+      "id": "facet.chain.causativeReceiveDesire",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.causativeReceivePoliteRequest",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.causativeReceivePotential",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.causativeReceivePotentialPast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.causativeReceivePotentialNegative",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.causativeReceivePotentialNegativePast",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "compound.chain.potential-condition",
+      "gating": true,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [
+        "class.godan",
+        "stem.godan.e",
+        "suffix.potential",
+        "stem.ichidan.drop-ru",
+        "suffix.ba",
+        "heuristic.ru-ie",
+        "exception.ru-godan",
+        "heuristic.ru-other",
+        "class.ichidan",
+        "class.irregular",
+        "suffix.past",
+        "construction.tara"
+      ],
+      "coverageKcIds": [
+        "facet.chain.potentialBa",
+        "facet.chain.potentialTara"
+      ]
+    },
+    {
+      "id": "facet.chain.potentialBa",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    },
+    {
+      "id": "facet.chain.potentialTara",
+      "gating": false,
+      "firstCourseId": "multiStepCompound",
+      "prerequisites": [],
+      "coverageKcIds": []
+    }
+  ]
+}

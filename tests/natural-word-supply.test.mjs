@@ -1,3 +1,4 @@
+import { currentEligibilityBaseline } from '../scripts/lib/eligibility-baseline.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
@@ -8,7 +9,6 @@ import { restoreLearningAssessment } from '../app/lib/assessment-transfer.mjs';
 import { emptySkillStats, updateSkillStats } from '../app/lib/adaptive.mjs';
 
 const before = JSON.parse(readFileSync(new URL('./fixtures/natural-word-supply-before.json', import.meta.url), 'utf8'));
-const frozenRequirements = JSON.parse(readFileSync(new URL('./fixtures/eligibility-baseline.json', import.meta.url), 'utf8'));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const identity = item => `${item.domain}:${item.surface}`;
 const originalIdentities = new Set(before.words.map(identity));
@@ -27,7 +27,9 @@ const approvedNewPairs = {
   passiveDesireNegativePast: [...addedWords.keys()],
   passiveProgressivePast: ['扱う', '疑う', '雇う'],
 };
-const deliberateExpansion = exercise => approvedExistingPairs[exercise.form]?.includes(exercise.item.surface) ?? false;
+const originalFormIds = new Set(Object.keys(before.chains));
+const addedChain = exercise => exercise.kcIds.some(id=>id.startsWith('facet.chain.')) && !originalFormIds.has(exercise.form);
+const deliberateExpansion = exercise => addedChain(exercise) || (approvedExistingPairs[exercise.form]?.includes(exercise.item.surface) ?? false);
 
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
 let model, reviewedWords;
@@ -82,18 +84,18 @@ test('reviewed supply additions retain every other original teaching decision an
   }
 });
 
-test('new examples use existing rule signatures and do not add knowledge requirements or reset their ownership', () => {
+test('the historical word expansion retains all original rule signatures and knowledge owners', () => {
   const targets = new Map(model.registryExercises.map(exercise => {
     const target = assessmentTarget(exercise);
     return [target.key, hash(target.ruleSignature)];
   }));
-  assert.deepEqual([...targets.keys()].sort(), before.targets.map(target => target.key).sort());
+  assert.ok(before.targets.every(target => targets.has(target.key)));
   for (const target of before.targets) assert.equal(targets.get(target.key), target.ruleSignatureSha256, target.key);
   const actual = model.components.map(component => ({ id: component.id, gating: component.gating, firstCourseId: component.firstCourseId,
     prerequisites: component.prerequisites, coverageKcIds: component.coverageKcIds }));
-  assert.deepEqual(actual, frozenRequirements.components);
-  assert.equal(model.components.filter(component => component.gating).length, 119);
-  assert.equal(model.components.filter(component => component.id.startsWith('facet.')).length, 89);
+  assert.deepEqual([...actual].sort((a,b)=>a.id.localeCompare(b.id)), [...currentEligibilityBaseline().components].sort((a,b)=>a.id.localeCompare(b.id)));
+  assert.equal(model.components.filter(component => component.gating).length, 132);
+  assert.equal(model.components.filter(component => component.id.startsWith('facet.')).length, 130);
 });
 
 test('the four deliberately expanded small transfer pools contain the reviewed words on the same actual rule paths', () => {

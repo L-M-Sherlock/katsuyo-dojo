@@ -71,7 +71,7 @@ export function rankExercisesForFocus(exercises, focusId, byKc, coverageKcIds = 
   if (coverageKcIds.length) {
     const groups = new Map();
     for (const exercise of [...exercises].sort((a, b) => burden(a) - burden(b) || a.id.localeCompare(b.id))) {
-      const facetId = exercise.kcIds.find((id) => coverageKcIds.includes(id)) ?? "other";
+      const facetId = exercise.kcIds.filter((id) => coverageKcIds.includes(id)).sort((a,b) => Math.min(byKc[a]?.correct ?? 0,1) - Math.min(byKc[b]?.correct ?? 0,1) || a.localeCompare(b))[0] ?? "other";
       if (!groups.has(facetId)) groups.set(facetId, []);
       groups.get(facetId).push(exercise);
     }

@@ -1,4 +1,5 @@
-import { CHAIN_FORM_SPECS, chainOutputClass } from './multi-step-forms.mjs';
+import { conjugateAdjective, acceptedAdjectiveConjugations, explainAdjectiveConjugation } from './adjective-conjugation.mjs';
+import { CHAIN_FORM_SPECS, chainOutputClass, chainIntermediate } from './multi-step-forms.mjs';
 import { COMPOUND_FORM_SPECS } from "./compound-forms.mjs";
 
 const NEGATIVE_ENDINGS = {
@@ -247,7 +248,7 @@ export function conjugate(word, verbClass, form) {
   const chain = CHAIN_FORM_SPECS[form];
   if (chain) {
     const base = conjugate(word, verbClass, chain.base);
-    return conjugate(base, chainOutputClass(chain, base), chain.tail);
+    return chain.outputClass === 'i' ? conjugateAdjective(chainIntermediate(chain,base),chain.tail) : conjugate(base, chainOutputClass(chain, base), chain.tail);
   }
   const compoundSpec = COMPOUND_FORM_SPECS[form];
   if (compoundSpec) return inflectCompoundResult(conjugate(word, verbClass, compoundSpec.form), compoundSpec);
@@ -399,7 +400,7 @@ export function acceptedConjugations(word, verbClass, form) {
   const answers = [conjugate(word, verbClass, form)];
   const chain = CHAIN_FORM_SPECS[form];
   if (chain) return [...new Set(acceptedConjugations(word, verbClass, chain.base).flatMap(base =>
-    acceptedConjugations(base, chainOutputClass(chain, base), chain.tail)))];
+    chain.outputClass === 'i' ? acceptedAdjectiveConjugations(chainIntermediate(chain,base),chain.tail) : acceptedConjugations(base, chainOutputClass(chain, base), chain.tail)))];
   const compoundSpec = COMPOUND_FORM_SPECS[form];
   if (compoundSpec) {
     for (const baseVariant of acceptedConjugations(word, verbClass, compoundSpec.form)) {
@@ -466,8 +467,8 @@ export function explainConjugation(word, verbClass, form) {
   const chain = CHAIN_FORM_SPECS[form];
   if (chain) {
     const base = conjugate(word, verbClass, chain.base);
-    const tail = explainConjugation(base, chainOutputClass(chain, base), chain.tail);
-    return {answer, parts:[answer], steps:[base, ...tail.steps], rule:chain.rule};
+    const tail = chain.outputClass === 'i' ? explainAdjectiveConjugation(chainIntermediate(chain,base),chain.tail) : explainConjugation(base, chainOutputClass(chain, base), chain.tail);
+    return {answer, parts:[answer], steps:[...(CHAIN_FORM_SPECS[chain.base] ? explainConjugation(word,verbClass,chain.base).steps : [base]), ...(tail.steps ?? [tail.answer])], rule:chain.rule};
   }
 
   const compoundSpec = COMPOUND_FORM_SPECS[form];
@@ -806,4 +807,4 @@ export function explainClass(verb) {
   return `${verb.surface} 是五段动词；最后一个假名会随活用在不同元音段之间移动。`;
 }
 /** @typedef {`${"teageru" | "temorau" | "tekureru" | "teiru" | "tearu" | "teoru" | "tai" | "tehoshii" | "youtosuru" | "temiru" | "teshimau" | "teoku" | "teiku" | "tekuru" | "sugiru" | "tagaru"}${"Past" | "Negative" | "NegativePast"}`} CompoundContinuationForm */
-/** @typedef {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "causativePassiveContracted" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru" | "temiruDesirePast" | "passiveProgressivePast" | "causativeReceivePast" | CompoundContinuationForm} ConjugationForm */
+/** @typedef {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "causativePassiveContracted" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru" | "temiruDesirePast" | "passiveProgressivePast" | "causativeReceivePast" | CompoundContinuationForm | import("./multi-step-forms.mjs").ChainForm} ConjugationForm */

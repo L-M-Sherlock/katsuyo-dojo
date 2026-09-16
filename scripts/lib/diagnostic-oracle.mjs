@@ -69,8 +69,27 @@ export function referenceStages(word, form) {
       supplied.domain=type==='i'?'adjective':'verb';
       walk(supplied,type==='i'?{past:'adjectivePast',negative:'adjectiveNegative',negativePast:'adjectiveNegativePast'}[family.ending]:family.ending);return;
     }
-    const chain={temiruDesirePast:['temiru','taiPast'],passiveProgressivePast:['passive','teiruPast'],causativeReceivePast:['causative','temorauPast']}[f];
-    if(chain){walk(w,chain[0]);const intermediate=correctSpellings(w,chain[0])[0];walk(changed(w,intermediate,'ichidan'),chain[1]);return;}
+    const chains = {
+      temiruDesire:['temiru','tai'], temiruDesirePast:['temiru','taiPast'], temiruDesireNegative:['temiru','taiNegative'], temiruDesireNegativePast:['temiru','taiNegativePast'],
+      passiveProgressive:['passive','teiru'], passiveProgressivePast:['passive','teiruPast'], passiveProgressiveNegative:['passive','teiruNegative'], passiveProgressiveNegativePast:['passive','teiruNegativePast'],
+      causativeReceive:['causative','temorau'], causativeReceivePast:['causative','temorauPast'],
+      temiruRequest:['temiru','tekudasai'], temiruTara:['temiru','tara'],
+      teokuRequest:['teoku','tekudasai','godan'], teokuBa:['teoku','ba','godan'], teokuTara:['teoku','tara','godan'], causativeRequest:['causative','tekudasai'],
+      temorauDesire:['temorau','tai','godan'], temorauDesirePast:['temorau','taiPast','godan'], temorauDesireNegative:['temorau','taiNegative','godan'], temorauDesireNegativePast:['temorau','taiNegativePast','godan'],
+      temorauPotential:['temorau','potential','godan'], temorauPotentialPast:['temorau','potentialPast','godan'], temorauPotentialNegative:['temorau','potentialNegative','godan'], temorauPotentialNegativePast:['temorau','potentialNegativePast','godan'],
+      temorauPoliteRequest:['temorauPotential','masenka'],
+      potentialPolite:['potential','masu'], potentialPolitePast:['potential','masuPast'], potentialPoliteNegative:['potential','masuNegative'], potentialPoliteNegativePast:['potential','masuNegativePast'],
+      desireBa:['tai','adjectiveBa','i'], sugiruNegativeRequest:['sugiru','naideKudasai'],
+      passiveCompletion:['passive','teshimau'], passiveCompletionPast:['passive','teshimauPast'],
+      causativeReceiveDesire:['causative','temorauDesire'], causativeReceivePoliteRequest:['causative','temorauPoliteRequest'],
+      causativeReceivePotential:['causative','temorauPotential'], causativeReceivePotentialPast:['causative','temorauPotentialPast'], causativeReceivePotentialNegative:['causative','temorauPotentialNegative'], causativeReceivePotentialNegativePast:['causative','temorauPotentialNegativePast'],
+      potentialBa:['potential','ba'], potentialTara:['potential','tara'],
+    };
+    const chain=chains[f];
+    if(chain){
+      walk(w,chain[0]);const intermediate=correctSpellings(w,chain[0])[0], cls=chain[2]??'ichidan';
+      walk({...changed(w,intermediate,cls),domain:cls==='i'?'adjective':'verb'},chain[1]);return;
+    }
     if(f==='passiveDesireNegativePast') {walk(w,'passive');walk(changed(w,correctSpellings(w,'passive')[0],'ichidan'),'taiNegativePast');return;}
     if(f==='negativePast') {walk(w,'negative');walk({...changed(w,correctSpellings(w,'negative')[0],'i'),domain:'adjective',auxiliary:undefined},'adjectivePast');return;}
     if(/^masu(Past|Negative|NegativePast)$/.test(f)) {join('masu',`compound.polite-${{masuPast:'past',masuNegative:'negative',masuNegativePast:'negative-past'}[f]}`);return;}

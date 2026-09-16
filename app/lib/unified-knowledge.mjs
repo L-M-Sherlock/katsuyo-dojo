@@ -1,5 +1,5 @@
 import { assessFormUsage } from "./form-eligibility.mjs";
-import { CHAIN_FORM_SPECS, chainOutputClass } from './multi-step-forms.mjs';
+import { CHAIN_FORM_SPECS, chainIntermediate } from './multi-step-forms.mjs';
 import { deriveExercise, diagnoseConjugation, diagnoseCommonConjugationError, classificationKcIds } from './knowledge-model.mjs';
 import { deriveAdjectiveExercise } from './adjective-knowledge-model.mjs';
 import { diagnoseAdjective, diagnoseCommonAdjectiveError } from './adjective-conjugation.mjs';
@@ -65,12 +65,12 @@ export function deriveUnified(item, form) {
   const chain = CHAIN_FORM_SPECS[form];
   if (chain) {
     const base = deriveUnified(item, chain.base);
-    const intermediate = {domain:'verb',surface:base.answer,reading:base.answer,class:chainOutputClass(chain,base.answer)};
+    const intermediate = chainIntermediate(chain,base.answer);
     const tail = deriveUnified(intermediate,chain.tail);
-    const relevant = id => !/^(class\.|heuristic\.|lexeme\.|facet\.class\.)/.test(id);
-    const requiredKcIds = unique([...base.requiredKcIds,...tail.requiredKcIds.filter(relevant),chain.kcId]);
+    const relevant = id => !/^(class\.|adj\.class\.|heuristic\.|lexeme\.|facet\.(?:adj\.)?class\.)/.test(id);
+    const requiredKcIds = unique([...base.requiredKcIds,...tail.requiredKcIds.filter(relevant),chain.kcId,chain.facetId]);
     return {...original,requiredKcIds,
-      operations:[...base.operations,...tail.operations.map((op,index)=>({...op,kcIds:unique([...op.kcIds.filter(relevant),...(index===tail.operations.length-1?[chain.kcId]:[])])}))],
+      operations:[...base.operations,...tail.operations.map((op,index)=>({...op,kcIds:unique([...op.kcIds.filter(relevant),...(index===tail.operations.length-1?[chain.kcId,chain.facetId]:[])])}))],
       prerequisiteIds:requiredKcIds.filter(id=>id!==chain.kcId&&!id.startsWith('facet.')&&!id.startsWith('lexeme.'))};
   }
   const family = familyFor(form);
@@ -374,10 +374,14 @@ export function unifiedDiagnosticSteps(item, form, options = {}) {
   const chain = CHAIN_FORM_SPECS[form];
   if (chain) {
     const base=deriveUnified(item,chain.base),kana=deriveUnified(asReading(item),chain.base);
-    const intermediate={domain:'verb',surface:base.answer,reading:kana.answer,class:chainOutputClass(chain,base.answer)};
-    const tailSteps=unifiedDiagnosticSteps(intermediate,chain.tail).map(step=>({...step,
+    const intermediate=chainIntermediate(chain,base.answer,kana.answer);
+    const target=deriveUnified(intermediate,chain.tail),targetKana=deriveUnified(asReading(intermediate),chain.tail);
+    const nativeSteps=unifiedDiagnosticSteps(intermediate,chain.tail);
+    const tailSteps=(nativeSteps.length ? nativeSteps : [{kind:'conjugation',surface:intermediate.surface,reading:intermediate.reading,
+      form:chain.tail,answers:target.acceptedVariants,readings:targetKana.acceptedVariants,kcIds:target.requiredKcIds,
+      focusId:target.requiredKcIds.filter(id=>!id.startsWith('facet.')).at(-1),continuation:true}]).map(step=>({...step,
       analysisItem:step.analysisItem??intermediate,
-      kcIds:step.kcIds.filter(id=>!/^(class\.|heuristic\.|lexeme\.|facet\.class\.)/.test(id)),
+      kcIds:step.kcIds.filter(id=>!/^(class\.|adj\.class\.|heuristic\.|lexeme\.|facet\.(?:adj\.)?class\.)/.test(id)),
     }));
     const first={kind:'conjugation',surface:item.surface,reading:item.reading,form:chain.base,answers:base.acceptedVariants,readings:kana.acceptedVariants,
       kcIds:base.requiredKcIds,focusId:base.requiredKcIds.filter(id=>!id.startsWith('facet.')).at(-1),continuation:false};
@@ -530,8 +534,13 @@ export function diagnoseUnifiedStep(item, step, answer, normalize = value => val
   const diagnosis = diagnoseUnified(item, step.form, answer, normalize) ?? diagnoseUnified(asReading(item), step.form, answer, normalize);
   if (diagnosis?.targetMismatch) return diagnosis;
   if (diagnosis?.stage && !step.continuation) return diagnosis;
-  if (diagnosis && step.kcIds.includes(diagnosis.kcId)) {
-    return { ...diagnosis, confirmedKcIds: diagnosis.confirmedKcIds.filter(id => step.kcIds.includes(id)) };
+  const confirmed = diagnosis?.confirmedKcIds.filter(id => step.kcIds.includes(id)) ?? [];
+  // Partial confirmations must start at this supplied base. A rule used
+  // earlier in the original word's path cannot confirm the same rule in the
+  // continuation (e.g. 食べる→食べ does not establish 食べている→食べてい).
+  const startsAtGivenForm = normalize(step.surface) === normalize(item.surface);
+  if (diagnosis && (step.kcIds.includes(diagnosis.kcId) || (!diagnosis.kcId && confirmed.length && startsAtGivenForm))) {
+    return { ...diagnosis, confirmedKcIds: confirmed };
   }
   if (!step.continuation) return null;
   // Supplied bases remove the uncertainty about applying a rule to a newly
@@ -627,7 +636,10 @@ export function buildUnifiedKnowledge(verbModel, adjectiveModel, verbs, adjectiv
       component.coverageKcIds = ['past', 'negative', 'negativePast'].map(ending => applicationFacet(app[1], ending));
     }
     const chain=Object.values(CHAIN_FORM_SPECS).find(spec=>spec.kcId===component.id);
-    if(chain)component.prerequisites=unique(registryExercises.filter(e=>e.kcIds.includes(chain.kcId)).flatMap(e=>e.prerequisites)).filter(id=>components.get(id)?.gating);
+    if(chain) {
+      component.prerequisites=unique(registryExercises.filter(e=>CHAIN_FORM_SPECS[e.form]?.kcId===chain.kcId).flatMap(e=>e.prerequisites)).filter(id=>id!==component.id&&components.get(id)?.gating);
+      component.coverageKcIds=Object.values(CHAIN_FORM_SPECS).filter(spec=>spec.kcId===component.id).map(spec=>spec.facetId);
+    }
     if (component.id === 'stem.irregular.connective') { component.coverageOnly = true; component.prerequisites = ['class.irregular']; component.coverageKcIds = ['facet.stem.connective.suru', 'facet.stem.connective.kuru']; }
     if (component.id === 'exception.aru-negative') component.prerequisites = ['construction.tearu'];
     if (component.id === 'compound.negative-past') component.prerequisites = ['suffix.negative', 'adj.suffix.i-past'];

@@ -36,5 +36,6 @@
         "apply.causativePassive.continuation"
       ]
     }
-  }
+  },
+  "verb-independent-masu-gu": {"expect":{"kind":"incorrect","failedKcId":null,"needsGuidance":true},"reason":"课程新增可能形的礼貌表达后，およげます已是完整的另一目标形式。应先识别为可能・礼貌形，不能仅凭它断定用户把ます前的词干写错。保留原始输入及其旧期望，通过本条显式审核调整当前诊断要求。"}
 }

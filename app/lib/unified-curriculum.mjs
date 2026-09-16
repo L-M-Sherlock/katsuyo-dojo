@@ -2,7 +2,7 @@ import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
 import { COURSES as VERB_COURSES, ADJECTIVE_COURSES } from './curriculum.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
 
-export const CURRICULUM_VERSION = 5;
+export const CURRICULUM_VERSION = 6;
 
 // Group by the course's primary learning objective, including courses whose
 // later exercises apply past/negative endings to the newly introduced form.
@@ -101,7 +101,7 @@ const COURSE_DESCRIPTIONS = {
   teokuToku: '练习ておく及とく／どく缩约，并学习ておく的否定、过去和否定过去。',
   direction: '练习ていく、てくる及てく缩约，并学习ていく和てくる的否定、过去和否定过去。',
   sugiru: '练习动词接すぎる表示过度，以及整个表达的否定、过去和否定过去。',
-  multiStepCompound: '组合受身与愿望、尝试与愿望、受身与状态、使役与接受允许，并继续完成过去等变化。',
+  multiStepCompound: '组合尝试、愿望、受身、授受和事先准备，练习请求、条件、礼貌表达及常用的肯否时态变化。',
 };
 export const UNIFIED_COURSES = COURSE_ORDER.map((id, index) => {
   const original = originals.find((course) => course.id === id);

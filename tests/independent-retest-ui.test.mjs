@@ -772,6 +772,7 @@ test('after masu completion adaptive resumes partially learned adjectives before
 for(const [form,kc] of [['temiruDesirePast','compound.chain.temiru-desire-past'],['passiveProgressivePast','compound.chain.passive-progressive-past'],['causativeReceivePast','compound.chain.causative-receive-past']])test(`new chain ${form} renders three guided stages without awarding independent application`,async()=>{
   const initial=profile({practiceGoalCourseId:'multiStepCompound'});
   initial.byKc[kc]={...stats,attempts:0,correct:0,filteredAccuracy:null,confidence:0,bestConfidence:0};
+  initial.byKc[`facet.chain.${form}`]={...initial.byKc[kc]};
   storage.setItem(KEY,JSON.stringify(initial));
 
   const view=await mount(),exercise=currentExercise(view);
