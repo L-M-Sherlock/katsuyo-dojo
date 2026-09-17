@@ -1832,6 +1832,9 @@ test('an original submission waits for a pending timing write without losing eit
   document.hasFocus = () => focused;
   try {
     const view = await mount();
+    // The loading DOM can disappear before the passive presence effect runs.
+    // Finish the initial frame/effects at time zero before advancing our clock.
+    await act(async () => { await new Promise(resolve => requestAnimationFrame(resolve)); });
     let held = true;
     navigator.locks.request = async (_key, callback) => {
       if (held) { held = false; await new Promise(resolve => { release = resolve; }); }
