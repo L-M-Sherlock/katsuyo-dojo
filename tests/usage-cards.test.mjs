@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import UsageCardView from '../app/lib/usage-card-view.mjs';
-import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements} from '../app/lib/usage-cards.mjs';
+import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements, basicUsageCardRequirements} from '../app/lib/usage-cards.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 
 const card = {id:'test-negative',senseId:'verb:飲む:のむ',meaning:'喝',form:'negative',
@@ -51,14 +52,30 @@ test('usage card audit catches changed identity, missing readings, duplicate cov
   assert.match(usageCardIssues([card,card]).join('\n'),/duplicate/);
 });
 
-test('every eligible form and word class has one approved and fully specified usage card', () => {
+test('every eligible form and word class retains approved and fully specified usage cards', () => {
   assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireCoverage:true,requireClassCoverage:true}),[]);
   const forms=new Set(UNIFIED_COURSES.flatMap(course=>course.forms));
   const required=usageCardClassRequirements();
-  assert.equal(USAGE_CARDS.length,required.length);
   assert.equal(new Set(USAGE_CARDS.map(c=>c.form)).size,forms.size);
   assert.deepEqual(new Set(USAGE_CARDS.map(c=>`${c.form}/${usageCardItem(c.senseId).class}`)),new Set(required));
   assert.ok(USAGE_CARDS.every(c=>c.review==='approved'));
+});
+
+test('all eligible basic conjugations are covered without adding classification cards or losing existing pairs', () => {
+  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true}),[]);
+  const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
+  const expected=new Set([...seed,...basicUsageCardRequirements()]);
+  const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
+  assert.deepEqual(actual,expected);
+  assert.equal(USAGE_CARDS.length,expected.size);
+  assert.ok(USAGE_CARDS.every(c=>c.form!==null));
+});
+
+test('a basic word gap cannot be hidden by another card for the same form and class', () => {
+  const pair='verb:書く:かく/masu';
+  const reduced=USAGE_CARDS.filter(c=>`${c.senseId}/${c.form}`!==pair);
+  assert.deepEqual(usageCardIssues(reduced,{requireCoverage:true,requireClassCoverage:true}),[]);
+  assert.ok(usageCardIssues(reduced,{requireBasicCoverage:true}).includes(`Missing approved basic card for ${pair}`));
 });
 
 test('form-only coverage cannot hide a missing ichidan representative', () => {
