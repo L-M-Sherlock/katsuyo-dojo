@@ -126,3 +126,38 @@ test('writing review surfaces long kana drafts without forbidding natural kana',
   assert.deepEqual(usageCardIssues([natural]),[]);
   assert.deepEqual(usageCardWritingReview([natural]),[]);
 });
+
+test('reading validation catches stale okurigana and truncated kana without guessing kanji readings', () => {
+  for (const part of [
+    {text:'、舌がしびれました。',reading:'、ぜんぶたべました。'},
+    {text:'、ろうそくをつけました。',reading:'、'},
+  ]) assert.match(usageCardIssues([{...card,after:[part]}]).join('\n'),/reading does not match written kana/);
+  assert.deepEqual(usageCardIssues([{...card,after:[{text:'、舌がしびれました。',reading:'、したがしびれました。'}]}]),[]);
+  // A valid spelling shape cannot establish a homograph's meaning.
+  assert.deepEqual(usageCardIssues([{...card,before:[{text:'表は',reading:'おもては'}]}]),[]);
+});
+
+test('reviewed source readings retain the intended word sense and revised sentence', () => {
+  const cases=[
+    ['usage:adjectiveNaNegativePast:adjective:複雑:ふくざつ','before','まえのひょうはいぜんは'],
+    ['usage:teageruPast:verb:調べる:しらべる','before','どうりょうのかわりにみちじゅんを'],
+    ['usage:adjectiveNegative:adjective:多い:おおい','before','きょうはじむしょにきたひとが'],
+    ['usage:adjectivePast:adjective:優しい:やさしい','before','となりのひとはいつも'],
+    ['usage:adjectiveTe:adjective:多い:おおい','before','えきにひとが'],
+    ['usage:adjectiveTe:adjective:暗い:くらい','after','、ろうそくをつけました。'],
+    ['usage:adjectiveTe:adjective:辛い:からい','after','、したがしびれました。'],
+    ['usage:adjectiveNaTe:adjective:残念:ざんねん','after','、みんなだまりました。'],
+    ['usage:masuNegativePast:verb:脱ぐ:ぬぐ','before','あまぐがひつようだったため、わたしはレインコートを'],
+    ['usage:negative:verb:要る:いる','before','どうぐはじさんしたので、ついかのこうぐは'],
+    ['usage:te:verb:要る:いる','after','、すぐにははじめられません。'],
+    ['usage:masuPast:verb:生まれる:うまれる','before','そふはせんきゅうひゃくごじゅうねんに'],
+  ];
+  const byId=new Map(USAGE_CARDS.map(c=>[c.id,c]));
+  for(const [id,side,expected] of cases) assert.equal(byId.get(id)[side].map(p=>p.reading??p.text).join(''),expected,id);
+});
+
+test('ideographic zero stays inside the year ruby rather than breaking its reading', () => {
+  assert.deepEqual(usageSentenceParts({text:'祖父は一九五〇年に',reading:'そふはせんきゅうひゃくごじゅうねんに'}),[
+    {text:'祖父',reading:'そふ'},{text:'は'},{text:'一九五〇年',reading:'せんきゅうひゃくごじゅうねん'},{text:'に'},
+  ]);
+});

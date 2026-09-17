@@ -34,22 +34,30 @@ export const USAGE_CARD_GROUPS = [
 ];
 const forms = new Set(UNIFIED_COURSES.flatMap(course => course.forms));
 const senses = new Map(REVIEWED_LEXICAL_SENSES.map(sense => [sense.id, sense]));
-const kanji = /[\u3400-\u9fff々]/u;
+const kanji = /[\u3400-\u9fff々〇]/u;
 const length = text => Array.from(text).length;
 
 const readingKey = text => text.normalize('NFKC').replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60))
   .replace(/\s/g, '').replace(/,/g, '、').replace(/\./g, '。');
 const unpunctuatedReading = text => readingKey(text).replace(/[、。!?「」『』()：:；;]/g, '');
+const sentenceGroups = text => text.match(/[\u3400-\u9fff々〇]+|[^\u3400-\u9fff々〇]+/gu) ?? [];
+const escapePattern = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** Checks written kana/okurigana, not the dictionary reading or sense of kanji. */
+function readingMatchesWrittenKana(part) {
+  const pattern = sentenceGroups(part.text).map(group => kanji.test(group) ? '.+?' : escapePattern(unpunctuatedReading(group))).join('');
+  return new RegExp(`^${pattern}$`, 'u').test(unpunctuatedReading(part.reading));
+}
 
 /** Align kana anchors so long authored clauses can wrap between ruby words. */
 export function usageSentenceParts(part) {
   if (!part.reading || !kanji.test(part.text)) return [{text: part.text}];
-  const groups = part.text.match(/[\u3400-\u9fff々]+|[^\u3400-\u9fff々]+/gu) ?? [];
+  const groups = sentenceGroups(part.text);
   const match = key => {
     if (groups.some((group, index) => index > 0 && index < groups.length - 1
       && !kanji.test(group) && !key(group) && kanji.test(groups[index - 1]) && kanji.test(groups[index + 1]))) return null;
     const pattern = capture => groups.map(group => kanji.test(group) ? capture
-      : key(group).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('');
+      : escapePattern(key(group))).join('');
     const reading = key(part.reading);
     const shortest = reading.match(new RegExp(`^${pattern('(.+?)')}$`, 'u'));
     const longest = reading.match(new RegExp(`^${pattern('(.+)')}$`, 'u'));
@@ -153,6 +161,7 @@ export function usageCardIssues(cards, {requireCoverage = false, requireClassCov
         if (typeof part.text !== 'string' || !part.text) { fail(`${key} has an empty part`); continue; }
         if (kanji.test(part.text) && (typeof part.reading !== 'string' || !part.reading.trim())) fail(`${key} needs a reading: ${part.text}`);
         if (part.reading !== undefined && (typeof part.reading !== 'string' || kanji.test(part.reading))) fail(`${key} reading must contain no kanji`);
+        if (typeof part.reading === 'string' && !readingMatchesWrittenKana(part)) fail(`${key} reading does not match written kana: ${part.text}`);
         if (/[{}<>]/.test(part.text)) fail(`${key} must be plain sentence text, with no extra placeholders or markup`);
       }
     }
