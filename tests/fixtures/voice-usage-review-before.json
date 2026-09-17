@@ -1,0 +1,341 @@
+{
+  "basis": "Explicit 2026-09-17 voice review delta against the published catalog; restore these prior entries only when verifying the older frozen baseline.",
+  "sourceCommit": "6ccbad9c44bc22a67a322a3ae8f0bd7360a5f5d7",
+  "reviewVersion": 1,
+  "retired": [
+    {
+      "id": "passive:passive:習う",
+      "context": null
+    },
+    {
+      "id": "causative:causative:動く",
+      "context": {
+        "id": "verb:動く:うごく:causative:v1",
+        "text": "技术人员操作控制器，描述控制器与机器运转的关系。"
+      }
+    },
+    {
+      "id": "causative:causative:開く",
+      "context": {
+        "id": "verb:開く:あく:causative:v1",
+        "text": "技术人员调整装置，描述装置的作用与门自动开启的关系。"
+      }
+    },
+    {
+      "id": "causative:causative:変わる",
+      "context": null
+    },
+    {
+      "id": "causative:causative:壊れる",
+      "context": {
+        "id": "verb:壊れる:こわれる:causative:v1",
+        "text": "测试人员对零件施加负荷，描述零件损坏的变化。"
+      }
+    },
+    {
+      "id": "causative:causative:落ちる",
+      "context": {
+        "id": "verb:落ちる:おちる:causative:v1",
+        "text": "测试装置对物体施加作用，描述物体掉落的变化。"
+      }
+    },
+    {
+      "id": "causativePassive:causativePassive:着く",
+      "context": null
+    },
+    {
+      "id": "causativePassive:causativePassive:動く",
+      "context": null
+    },
+    {
+      "id": "causativePassive:causativePassive:楽しむ",
+      "context": null
+    },
+    {
+      "id": "causativePassive:causativePassive:変わる",
+      "context": null
+    },
+    {
+      "id": "causativePassive:causativePassiveContracted:着く",
+      "context": null
+    },
+    {
+      "id": "causativePassive:causativePassiveContracted:動く",
+      "context": null
+    },
+    {
+      "id": "causativePassive:causativePassiveContracted:楽しむ",
+      "context": null
+    },
+    {
+      "id": "causativePassive:causativePassiveContracted:変わる",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:passivePast:習う",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:passiveNegative:死ぬ",
+      "context": {
+        "id": "verb:死ぬ:しぬ:passive:v1",
+        "text": "谈论亲人离世这件事与家属生活的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:passiveNegative:習う",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:passiveNegative:いる",
+      "context": {
+        "id": "verb:いる:いる:passive:v1",
+        "text": "谈论某人在共用场所停留与其他使用者的处境。"
+      }
+    },
+    {
+      "id": "voiceCompound:passiveNegativePast:死ぬ",
+      "context": {
+        "id": "verb:死ぬ:しぬ:passive:v1",
+        "text": "谈论亲人离世这件事与家属生活的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:passiveNegativePast:習う",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:passiveNegativePast:いる",
+      "context": {
+        "id": "verb:いる:いる:passive:v1",
+        "text": "谈论某人在共用场所停留与其他使用者的处境。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativePast:動く",
+      "context": {
+        "id": "verb:動く:うごく:causative:v1",
+        "text": "技术人员操作控制器，描述控制器与机器运转的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativePast:開く",
+      "context": {
+        "id": "verb:開く:あく:causative:v1",
+        "text": "技术人员调整装置，描述装置的作用与门自动开启的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativePast:変わる",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePast:壊れる",
+      "context": {
+        "id": "verb:壊れる:こわれる:causative:v1",
+        "text": "测试人员对零件施加负荷，描述零件损坏的变化。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativePast:落ちる",
+      "context": {
+        "id": "verb:落ちる:おちる:causative:v1",
+        "text": "测试装置对物体施加作用，描述物体掉落的变化。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegative:動く",
+      "context": {
+        "id": "verb:動く:うごく:causative:v1",
+        "text": "技术人员操作控制器，描述控制器与机器运转的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegative:開く",
+      "context": {
+        "id": "verb:開く:あく:causative:v1",
+        "text": "技术人员调整装置，描述装置的作用与门自动开启的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegative:変わる",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativeNegative:壊れる",
+      "context": {
+        "id": "verb:壊れる:こわれる:causative:v1",
+        "text": "测试人员对零件施加负荷，描述零件损坏的变化。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegative:落ちる",
+      "context": {
+        "id": "verb:落ちる:おちる:causative:v1",
+        "text": "测试装置对物体施加作用，描述物体掉落的变化。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegativePast:動く",
+      "context": {
+        "id": "verb:動く:うごく:causative:v1",
+        "text": "技术人员操作控制器，描述控制器与机器运转的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegativePast:開く",
+      "context": {
+        "id": "verb:開く:あく:causative:v1",
+        "text": "技术人员调整装置，描述装置的作用与门自动开启的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegativePast:変わる",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativeNegativePast:壊れる",
+      "context": {
+        "id": "verb:壊れる:こわれる:causative:v1",
+        "text": "测试人员对零件施加负荷，描述零件损坏的变化。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegativePast:落ちる",
+      "context": {
+        "id": "verb:落ちる:おちる:causative:v1",
+        "text": "测试装置对物体施加作用，描述物体掉落的变化。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativePassivePast:着く",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassivePast:動く",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassivePast:楽しむ",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassivePast:変わる",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegative:着く",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegative:動く",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegative:楽しむ",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegative:変わる",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegativePast:着く",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegativePast:動く",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegativePast:楽しむ",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegativePast:変わる",
+      "context": null
+    }
+  ],
+  "changedContexts": [
+    {
+      "id": "passive:passive:受ける",
+      "context": null
+    },
+    {
+      "id": "causative:causative:届く",
+      "context": {
+        "id": "verb:届く:とどく:causative:v1",
+        "text": "调整信号设备，描述调整与信号到达远处的关系。"
+      }
+    },
+    {
+      "id": "causativePassive:causativePassive:勝つ",
+      "context": null
+    },
+    {
+      "id": "causativePassive:causativePassive:信じる",
+      "context": null
+    },
+    {
+      "id": "causativePassive:causativePassiveContracted:勝つ",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:passivePast:受ける",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:passiveNegative:受ける",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:passiveNegativePast:受ける",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePast:届く",
+      "context": {
+        "id": "verb:届く:とどく:causative:v1",
+        "text": "调整信号设备，描述调整与信号到达远处的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegative:届く",
+      "context": {
+        "id": "verb:届く:とどく:causative:v1",
+        "text": "调整信号设备，描述调整与信号到达远处的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativeNegativePast:届く",
+      "context": {
+        "id": "verb:届く:とどく:causative:v1",
+        "text": "调整信号设备，描述调整与信号到达远处的关系。"
+      }
+    },
+    {
+      "id": "voiceCompound:causativePassivePast:勝つ",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassivePast:信じる",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegative:勝つ",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegative:信じる",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegativePast:勝つ",
+      "context": null
+    },
+    {
+      "id": "voiceCompound:causativePassiveNegativePast:信じる",
+      "context": null
+    }
+  ]
+}

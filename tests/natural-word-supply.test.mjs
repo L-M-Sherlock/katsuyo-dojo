@@ -4,11 +4,12 @@ import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { createServer } from 'vite';
-import { assessmentTarget, emptyAssessment, recordIndependentAttempt, retestStatus } from '../app/lib/learning-assessment.mjs';
+import { assessmentTarget, emptyAssessment, reconcileAssessmentCatalog, recordIndependentAttempt, retestStatus } from '../app/lib/learning-assessment.mjs';
 import { restoreLearningAssessment } from '../app/lib/assessment-transfer.mjs';
 import { emptySkillStats, updateSkillStats } from '../app/lib/adaptive.mjs';
 
 const before = JSON.parse(readFileSync(new URL('./fixtures/natural-word-supply-before.json', import.meta.url), 'utf8'));
+const voiceReview = JSON.parse(readFileSync(new URL('./fixtures/voice-usage-review-before.json', import.meta.url), 'utf8'));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const identity = item => `${item.domain}:${item.surface}`;
 const originalIdentities = new Set(before.words.map(identity));
@@ -64,12 +65,27 @@ test('natural-word expansion adds eight reviewed godan words without changing an
   }
 });
 
-test('reviewed supply additions retain every other original teaching decision and context', () => {
-  const originalExercises = model.exercises.filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
+test('reviewed supply changes retain every unrelated original teaching decision and context', () => {
+  const retired = voiceReview.retired.map(entry => {
+    assert.ok(!model.exercises.some(exercise => exercise.id === entry.id), `${entry.id}: explicitly retired by the voice review`);
+    const exercise = model.registryExercises.find(exercise => exercise.id === entry.id);
+    assert.ok(exercise, `${entry.id}: morphology remains in the registry`);
+    return { ...exercise, context: entry.context };
+  });
+  assert.equal(retired.length, 48);
+  // Reconstruct the old view without replacing or weakening its frozen hashes.
+  // The only exceptions are the documented retirement/context delta and the
+  // context IDs' review-version suffix; every unrelated text is still hashed.
+  const originalExercises = [...model.exercises, ...retired].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
   assert.equal(originalExercises.length, before.counts.eligibleExercises);
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');
-  const contexts = originalExercises.filter(exercise => exercise.context).map(exercise => ({ id: exercise.id, context: exercise.context }))
+  const priorContexts = new Map(voiceReview.changedContexts.map(entry => [entry.id, entry.context]));
+  const contexts = originalExercises.map(exercise => ({ ...exercise,
+    context: priorContexts.has(exercise.id) ? priorContexts.get(exercise.id) : exercise.context,
+  })).filter(exercise => exercise.context).map(exercise => ({ id: exercise.id,
+    context: { ...exercise.context, id: exercise.context.id.replace(/:v\d+$/, `:v${before.reviewVersion}`) },
+  }))
     .sort((a, b) => a.id.localeCompare(b.id));
   assert.equal(hash(contexts), before.contextsSha256);
   for (const [form, words] of Object.entries(approvedExistingPairs)) for (const word of words) {
@@ -81,6 +97,26 @@ test('reviewed supply additions retain every other original teaching decision an
   for (const [form, words] of Object.entries(approvedNewPairs)) for (const word of words) {
     const exercise = find(word, form);
     assert.ok(exercise.context?.id && exercise.context?.text, `${word}/${form}`);
+  }
+});
+
+test('each retired voice question keeps a trainable retest obligation without granting independent success', () => {
+  const at = '2026-09-17T00:00:00Z';
+  const pathCounts = new Map();
+  for (const exercise of model.exercises) {
+    const key = assessmentTarget(exercise).key;
+    pathCounts.set(key, (pathCounts.get(key) ?? 0) + 1);
+  }
+  for (const { id } of voiceReview.retired) {
+    const exercise = model.registryExercises.find(exercise => exercise.id === id);
+    const key = assessmentTarget(exercise).key;
+    const failed = recordIndependentAttempt(emptyAssessment(), { exercise, questionId: `retired:${id}`, correct: false, at });
+    const restored = reconcileAssessmentCatalog(failed, model.exercises, 2);
+    assert.ok(pathCounts.get(key) >= 2, `${id}: enough replacement words to retest`);
+    assert.deepEqual(restored.pending[key], failed.pending[key], `${id}: still pending`);
+    assert.deepEqual(restored.byTarget[key], failed.byTarget[key], `${id}: no new success`);
+    assert.deepEqual(restored.independentByKc, failed.independentByKc);
+    assert.deepEqual(restored.suspendedPending, {});
   }
 });
 

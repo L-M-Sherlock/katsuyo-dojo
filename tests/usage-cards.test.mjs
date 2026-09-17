@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import UsageCardView from '../app/lib/usage-card-view.mjs';
-import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements, basicUsageCardRequirements, usageCardWritingReview, usageCardFor} from '../app/lib/usage-cards.mjs';
+import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements, basicUsageCardRequirements, usageCardStageRequirements, usageCardWritingReview, usageCardFor} from '../app/lib/usage-cards.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 
 const card = {id:'test-negative',senseId:'verb:飲む:のむ',meaning:'喝',form:'negative',
@@ -61,14 +61,21 @@ test('every eligible form and word class retains approved and fully specified us
   assert.ok(USAGE_CARDS.every(c=>c.review==='approved'));
 });
 
-test('all eligible basic conjugations are covered without adding classification cards or losing existing pairs', () => {
-  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true}),[]);
+test('all eligible basic and voice conjugations are covered without adding classification cards or losing existing pairs', () => {
+  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice']}),[]);
   const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
-  const expected=new Set([...seed,...basicUsageCardRequirements()]);
+  const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice')]);
   const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   assert.deepEqual(actual,expected);
   assert.equal(USAGE_CARDS.length,expected.size);
   assert.ok(USAGE_CARDS.every(c=>c.form!==null));
+});
+
+test('a missing voice example is not hidden by the same word in another form', () => {
+  const pair='verb:書く:かく/potentialNegative';
+  const reduced=USAGE_CARDS.filter(c=>`${c.senseId}/${c.form}`!==pair);
+  assert.deepEqual(usageCardIssues(reduced,{requireCoverage:true,requireClassCoverage:true,requireBasicCoverage:true}),[]);
+  assert.ok(usageCardIssues(reduced,{requireStageCoverage:['voice']}).includes(`Missing approved voice card for ${pair}`));
 });
 
 test('a basic word gap cannot be hidden by another card for the same form and class', () => {
@@ -125,6 +132,11 @@ test('writing review surfaces long kana drafts without forbidding natural kana',
   const natural={...card,before:[{text:'ここでは'}]};
   assert.deepEqual(usageCardIssues([natural]),[]);
   assert.deepEqual(usageCardWritingReview([natural]),[]);
+});
+
+test('a copied Japanese example cannot pass as its Chinese translation', () => {
+  assert.match(usageCardIssues([{...card,translation:'今夜はお酒を飲まない。'}]).join('\n'),/translation must be Chinese/);
+  assert.deepEqual(usageCardIssues([{...card,translation:'今晚不喝酒。'}]),[]);
 });
 
 test('reading validation catches stale okurigana and truncated kana without guessing kanji readings', () => {

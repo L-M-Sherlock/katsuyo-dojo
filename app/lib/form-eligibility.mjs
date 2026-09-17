@@ -48,11 +48,7 @@ const indirectPassiveContexts = {
 };
 const causedEventContexts = {
   咲く: '园艺师照料花木，描述这种照料与花朵开放的关系。',
-  開く: '技术人员调整装置，描述装置的作用与门自动开启的关系。',
-  動く: '技术人员操作控制器，描述控制器与机器运转的关系。',
-  届く: '调整信号设备，描述调整与信号到达远处的关系。',
-  落ちる: '测试装置对物体施加作用，描述物体掉落的变化。',
-  壊れる: '测试人员对零件施加负荷，描述零件损坏的变化。',
+  届く: '一个人伸展身体，描述使指尖或手够到某个具体位置的动作。',
   死ぬ: '救护人员处理动物的伤情，描述人的处置与动物生命的关系。',
   喜ぶ: '为家人安排惊喜，描述安排与家人心情的关系。',
   困る: '一个人的举动给周围的人带来麻烦。',
@@ -214,6 +210,24 @@ export function assessFormUsage(item, form) {
   if (adjective) return assessAdjective(sense, form);
   const family = verbUsageFamily(form), word = sense.surface;
   if (family === 'classification' || family === 'basic') return allowed('分类、基础活用和条件连接适用于当前词义。');
+  if (family === 'causative' && ['壊れる', '落ちる', '動く', '開く', '変わる'].includes(word)) return blocked('semantic',
+    `当前“${sense.meaning}”的自动词用义通常用对应他动词表达致使变化；不将这个词义的使役及其肯否时态形式作为常规练习。`, 'non-default-event-causative');
+  if (family === 'causativePassive' && ['動く', '変わる'].includes(word)) return blocked('semantic',
+    '当前自动词用义的使役不作为常规练习，也不继续套用使役受身；不能借同形的他动词受身或其他词义代替。', 'non-default-event-causative-passive');
+  if (family === 'causativePassive' && word === '楽しむ') return blocked('semantic',
+    '当前享受、期待义不把使役受身作为常规表达；被要求参加活动或假装开心不等于实际享受。', 'enjoyment-causative-passive');
+  if (family === 'causativePassive' && word === '着く') return contextual(sense, family,
+    '当前到达义的使役受身暂缺已审核的自然日常语境，不能借就座、就任等其他词义补足。');
+  if (family === 'causativePassive' && word === '勝つ') return contextual(sense, family,
+    '这里表示对手故意让胜，使当事人被安排成赢家；不是命令当事人取得胜利。',
+    '对局中的对手故意放水，当事人想凭自己的实力获胜而不愿被让着。');
+  if (family === 'causativePassive' && word === '信じる') return contextual(sense, family,
+    '这里表示认知受到他人说法或资料的引导，不把相信当作仅凭口头命令就完成的动作。',
+    '当事人受到他人的说法或资料影响而相信某件事，回顾这种认知是如何形成的。');
+  if (['死ぬ', 'いる'].includes(word) && ['passiveNegative', 'passiveNegativePast'].includes(form)) return contextual(sense, family,
+    '该词义的间接受身可描述他人行为造成的影响，但这两个否定形式暂缺适合常规练习的已审核日常语境。');
+  if (word === '習う' && family === 'passive') return contextual(sense, family,
+    '当前学习义的常规受身例句尚未通过审核；不借尊敬形、倣う的仿效义或生硬的物主语直接受身出题。');
   if (family === 'passiveDesireNegativePast' || CHAIN_FORM_SPECS[family]) return assessChain(sense, family);
   if (supplementalWords.has(word)) {
     if (family === 'passive') return contextual(sense, family, '这里明确动作对象或受到影响的人。', transitivePassiveDesireContexts[word]);
@@ -232,6 +246,9 @@ export function assessFormUsage(item, form) {
   if (word === 'いる' && ['teiru', 'teoru'].includes(family)) return blocked('semantic', '当前存在义通常直接使用「いる」，不把存在状态机械重复为ている。');
   if (word === '要る' && ['teiru', 'teoru'].includes(family)) return blocked('semantic', '当前“需要”义直接表示状态，不把它机械重复为ている。');
   if (family === 'passive') {
+    if (word === '受ける') return contextual(sense, family,
+      '这里采用他人擅自承接任务给当事人带来影响的间接受身，不把体检或课程机械改成无生命主语的受身。',
+      '共同工作的同事未事先商量就承接任务，影响了当事人的工作安排。');
     if (sense.transitivity === 'transitive') return allowed('已审核为可表达动作对象受到影响的用法。');
     return contextual(sense, family, '自动词受身需要明确受到事件影响的另一人。', indirectPassiveContexts[word]);
   }

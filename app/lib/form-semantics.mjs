@@ -56,10 +56,10 @@ const BASIC_SEMANTICS = {
   causative: semantic("让某人做……／使……发生", "表示让某人做某事，或使某种变化发生。涉及人的动作时，可以表示强制或许可。", {
     usageNote: "究竟是“让”还是“使”，要由人物关系和语境判断。",
   }),
-  causativePassive: semantic("被迫／被要求做……", "表示主语受到他人驱使而做某事，常带有不情愿或受影响的语感。", {
-    contrast: "使役形从使令者角度说“让别人做”，使役受身形从执行者角度说“被迫做”。",
+  causativePassive: semantic("被要求或促使……", "表示动作、感受或变化因他人的要求或外界影响而发生，常带有不情愿或身不由己的语感。", {
+    contrast: "使役形从施加影响的一方说“让……”，使役受身形从受影响的一方说“被要求或促使……”。",
   }),
-  causativePassiveContracted: semantic("被迫／被要求做……", "与完整使役受身形含义相同，是部分五段动词的缩短形式。", {
+  causativePassiveContracted: semantic("被要求或促使……", "与完整使役受身形含义相同，是部分五段动词的缩短形式。", {
     register: "常用缩约",
     usageNote: "例如「行かせられる」可缩为「行かされる」；す结尾五段动词不这样缩约。",
   }),
@@ -90,9 +90,9 @@ const VOICE_COMPOUND_SEMANTICS = {
   causativePast: continuedSemantic("causative", "past", "曾让某人做……／使……发生了"),
   causativeNegative: continuedSemantic("causative", "negative", "不让某人做……／不使……发生"),
   causativeNegativePast: continuedSemantic("causative", "negativePast", "过去没让某人做……／没使……发生"),
-  causativePassivePast: continuedSemantic("causativePassive", "past", "过去被迫做……"),
-  causativePassiveNegative: continuedSemantic("causativePassive", "negative", "不被迫做……"),
-  causativePassiveNegativePast: continuedSemantic("causativePassive", "negativePast", "过去没有被迫做……"),
+  causativePassivePast: continuedSemantic("causativePassive", "past", "过去被要求或促使……"),
+  causativePassiveNegative: continuedSemantic("causativePassive", "negative", "不会被要求或促使……"),
+  causativePassiveNegativePast: continuedSemantic("causativePassive", "negativePast", "过去没有被要求或促使……"),
 };
 
 const CONSTRUCTION_SEMANTICS = {

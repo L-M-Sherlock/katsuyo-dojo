@@ -10,6 +10,7 @@ import classActions2 from './usage-cards/class-actions-2.mjs';
 import classCombinations1 from './usage-cards/class-combinations-1.mjs';
 import classCombinations2 from './usage-cards/class-combinations-2.mjs';
 import basicWordCards from './usage-cards/basic-words/index.mjs';
+import voiceWordCards from './usage-cards/voice-words/index.mjs';
 import { REVIEWED_LEXICAL_SENSES, reviewedLexicalSense } from './lexical-usage.mjs';
 import { ADJECTIVES } from './adjective-catalog.mjs';
 import { assessFormUsage } from './form-eligibility.mjs';
@@ -25,7 +26,7 @@ import { deriveUnified } from './unified-knowledge.mjs';
 /** Separate teaching content: never populate this from eligibility `context`. */
 export const USAGE_CARDS = /** @type {UsageCard[]} */ ([...basics, ...linking, ...actions, ...combinations,
   ...classBasics, ...classLinking1, ...classLinking2, ...classActions1, ...classActions2, ...classCombinations1, ...classCombinations2,
-  ...basicWordCards]);
+  ...basicWordCards, ...voiceWordCards]);
 export const USAGE_CARD_GROUPS = [
   {id: 'basics', stages: ['basics', 'voice']},
   {id: 'linking', stages: ['linking', 'intentions']},
@@ -108,20 +109,24 @@ export function usageCardClassRequirements() {
   return [...classRequirements];
 }
 
-let basicRequirements;
+const stageRequirements = new Map();
 /** Exact eligible sense/form pairs; classification has no conjugation form. */
-export function basicUsageCardRequirements() {
-  if (!basicRequirements) {
+export function usageCardStageRequirements(stageId) {
+  if (!stageRequirements.has(stageId)) {
     const required = new Set();
-    for (const course of UNIFIED_COURSES.filter(course => course.stageId === 'basics')) {
+    for (const course of UNIFIED_COURSES.filter(course => course.stageId === stageId)) {
       for (const form of course.forms) for (const sense of REVIEWED_LEXICAL_SENSES.filter(sense => sense.domain === course.domain)) {
         const usage = assessFormUsage(usageCardItem(sense.id), form);
         if (usage.status === 'allowed' || (usage.status === 'context-required' && usage.context)) required.add(`${sense.id}/${form}`);
       }
     }
-    basicRequirements = [...required];
+    stageRequirements.set(stageId, [...required]);
   }
-  return [...basicRequirements];
+  return [...stageRequirements.get(stageId)];
+}
+
+export function basicUsageCardRequirements() {
+  return usageCardStageRequirements('basics');
 }
 
 /** Exactly one slot: before + the generated WHOLE target form + after. */
@@ -136,7 +141,7 @@ export function resolveUsageCard(card) {
   }};
 }
 
-export function usageCardIssues(cards, {requireCoverage = false, requireClassCoverage = false, requireBasicCoverage = false} = {}) {
+export function usageCardIssues(cards, {requireCoverage = false, requireClassCoverage = false, requireBasicCoverage = false, requireStageCoverage = []} = {}) {
   const issues = [], ids = new Set(), pairs = new Set(), covered = new Set(), coveredClasses = new Set(), coveredPairs = new Set();
   for (const card of cards) {
     if (!card || typeof card !== 'object' || Array.isArray(card)) { issues.push('Card must be an object'); continue; }
@@ -154,6 +159,7 @@ export function usageCardIssues(cards, {requireCoverage = false, requireClassCov
     if (typeof card.scene === 'string' && /[ぁ-ゖァ-ヺ]/u.test(card.scene)) fail('scene must be Chinese, without Japanese answer fragments');
     if (card.note !== undefined && (typeof card.note !== 'string' || !card.note.trim() || length(card.note) > 60)) fail('note must be 1–60 characters');
     if (typeof card.translation === 'string' && length(card.translation) > 160) fail('translation exceeds 160 characters');
+    if (typeof card.translation === 'string' && /[ぁ-ゖァ-ヺ]/u.test(card.translation)) fail('translation must be Chinese, not copied Japanese');
     for (const key of ['before', 'after']) {
       if (!Array.isArray(card[key])) { fail(`${key} must be sentence parts`); continue; }
       for (const part of card[key]) {
@@ -178,6 +184,7 @@ export function usageCardIssues(cards, {requireCoverage = false, requireClassCov
   if (requireCoverage) for (const form of forms) if (!covered.has(form)) issues.push(`Missing approved card for ${form}`);
   if (requireClassCoverage) for (const pair of usageCardClassRequirements()) if (!coveredClasses.has(pair)) issues.push(`Missing approved card for form/class ${pair}`);
   if (requireBasicCoverage) for (const pair of basicUsageCardRequirements()) if (!coveredPairs.has(pair)) issues.push(`Missing approved basic card for ${pair}`);
+  for (const stage of requireStageCoverage) for (const pair of usageCardStageRequirements(stage)) if (!coveredPairs.has(pair)) issues.push(`Missing approved ${stage} card for ${pair}`);
   return issues;
 }
 

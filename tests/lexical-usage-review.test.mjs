@@ -59,3 +59,46 @@ test('birth sense does not borrow idea-generation contexts to license its causat
   assert.equal(eligibleVerbForm(word('生まれる'), 'past'), true);
   assert.equal(eligibleVerbForm(word('生まれる'), 'tehoshii'), true);
 });
+
+test('lexical event restrictions cover the whole causative family without changing conjugation support', () => {
+  for(const surface of ['壊れる','落ちる','動く','開く','変わる']) for(const form of ['causative','causativePast','causativeNegative','causativeNegativePast']) {
+    assert.equal(supportsVerbForm(word(surface),form),true,`${surface}:${form}`);
+    assert.equal(eligibleVerbForm(word(surface),form),false,`${surface}:${form}`);
+    assert.equal(assessFormUsage(word(surface),form).reasonCode,'non-default-event-causative');
+  }
+  for(const surface of ['壊れる','落ちる']) for(const form of ['past','te','teshimau']) assert.equal(eligibleVerbForm(word(surface),form),true,`${surface}:${form}`);
+  for(const surface of ['咲く','届く','喜ぶ']) assert.equal(eligibleVerbForm(word(surface),'causative'),true,surface);
+  for(const surface of ['開ける','変える','終わる','着く']) assert.equal(eligibleVerbForm(word(surface),'causative'),true,surface);
+});
+
+test('causative-passive restrictions cannot borrow another sense or a homographic transitive passive', () => {
+  for(const surface of ['動く','変わる','楽しむ','着く']) {
+    for(const form of ['causativePassive','causativePassiveContracted','causativePassivePast','causativePassiveNegative','causativePassiveNegativePast']) {
+      assert.equal(supportsVerbForm(word(surface),form),true,`${surface}:${form}`);
+      assert.equal(eligibleVerbForm(word(surface),form),false,`${surface}:${form}`);
+    }
+    assert.equal(eligibleVerbForm(word(surface),'potential'),true,surface);
+  }
+  for(const surface of ['泣く','考える','信じる','勝つ','終わる']) assert.equal(eligibleVerbForm(word(surface),'causativePassive'),true,surface);
+});
+
+test('negative bereavement passives stay out of teaching while affirmative passive and nu sound change remain', () => {
+  for(const surface of ['死ぬ','いる']) for(const form of ['passiveNegative','passiveNegativePast']) {
+    assert.equal(supportsVerbForm(word(surface),form),true);
+    assert.equal(eligibleVerbForm(word(surface),form),false);
+  }
+  for(const form of ['passive','passivePast','past','te','negative']) assert.equal(eligibleVerbForm(word('死ぬ'),form),true,form);
+  for(const form of ['passiveNegative','passiveNegativePast']) assert.equal(eligibleVerbForm(word('泣く'),form),true,form);
+});
+
+test('learning and receiving passives require a reviewed sense rather than a mechanical object subject', () => {
+  for(const form of ['passive','passivePast','passiveNegative','passiveNegativePast']) {
+    assert.equal(supportsVerbForm(word('習う'),form),true);
+    assert.equal(eligibleVerbForm(word('習う'),form),false);
+    const usage=assessFormUsage(word('受ける'),form);
+    assert.equal(usage.status,'context-required');
+    assert.ok(usage.context);
+    assert.equal(eligibleVerbForm(word('受ける'),form),true);
+  }
+  for(const form of ['potential','causative','causativePassive']) assert.equal(eligibleVerbForm(word('習う'),form),true,form);
+});
