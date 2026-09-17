@@ -38,18 +38,45 @@ const kanji = /[\u3400-\u9fff々]/u;
 const length = text => Array.from(text).length;
 
 const readingKey = text => text.normalize('NFKC').replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60))
-  .replace(/[\s、。，．,.!！?？「」『』（）()：:；;]/g, '');
+  .replace(/\s/g, '').replace(/,/g, '、').replace(/\./g, '。');
+const unpunctuatedReading = text => readingKey(text).replace(/[、。!?「」『』()：:；;]/g, '');
 
 /** Align kana anchors so long authored clauses can wrap between ruby words. */
 export function usageSentenceParts(part) {
   if (!part.reading || !kanji.test(part.text)) return [{text: part.text}];
   const groups = part.text.match(/[\u3400-\u9fff々]+|[^\u3400-\u9fff々]+/gu) ?? [];
-  const pattern = groups.map(group => kanji.test(group) ? '(.+?)'
-    : readingKey(group).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('');
-  const matched = readingKey(part.reading).match(new RegExp(`^${pattern}$`, 'u'));
+  const match = key => {
+    if (groups.some((group, index) => index > 0 && index < groups.length - 1
+      && !kanji.test(group) && !key(group) && kanji.test(groups[index - 1]) && kanji.test(groups[index + 1]))) return null;
+    const pattern = capture => groups.map(group => kanji.test(group) ? capture
+      : key(group).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('');
+    const reading = key(part.reading);
+    const shortest = reading.match(new RegExp(`^${pattern('(.+?)')}$`, 'u'));
+    const longest = reading.match(new RegExp(`^${pattern('(.+)')}$`, 'u'));
+    // Repeated kana may occur inside a word's reading too: 昨日の -> きのうの.
+    // Accept a split only when its shortest and longest alignments agree.
+    if (!shortest || !longest || shortest.some((value, index) => value !== longest[index])) return null;
+    return shortest;
+  };
+  let matched = match(readingKey);
+  // Legacy readings sometimes omit punctuation. Never guess the split between
+  // adjacent kanji words once their only separator has been removed.
+  if (!matched) matched = match(unpunctuatedReading);
   if (!matched) return [part];
   let index = 1;
   return groups.map(text => kanji.test(text) ? {text, reading: matched[index++]} : {text});
+}
+
+/** Editorial candidates only: kana is natural for many words and auxiliaries. */
+export function usageCardWritingReview(cards) {
+  return cards.flatMap(card => {
+    const clauses = ['before', 'after'].map(key => Array.isArray(card?.[key])
+      ? card[key].map(part => typeof part?.text === 'string' ? part.text : '').join('') : '');
+    const text = clauses.join('＿＿＿＿');
+    const allKana = !kanji.test(text) && (text.match(/[ぁ-ゖァ-ヺー]/gu)?.length ?? 0) >= 10;
+    if (!allKana && !clauses.some(clause => /[ぁ-ゖ]{12,}/u.test(clause))) return [];
+    return [{id: card.id, text, reason: allKana ? '较长句段全部使用假名，请核对是否省略了常用汉字及注音。' : '存在较长的连续平假名，请核对正文书写。'}];
+  });
 }
 
 export function usageCardItem(senseId) {

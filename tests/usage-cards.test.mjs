@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import UsageCardView from '../app/lib/usage-card-view.mjs';
-import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements, basicUsageCardRequirements} from '../app/lib/usage-cards.mjs';
+import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements, basicUsageCardRequirements, usageCardWritingReview, usageCardFor} from '../app/lib/usage-cards.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 
 const card = {id:'test-negative',senseId:'verb:飲む:のむ',meaning:'喝',form:'negative',
@@ -94,4 +94,35 @@ test('sentence readings align to kanji while kana and punctuation remain indepen
   assert.deepEqual(usageSentenceParts({text:'読ませてもらえなかった',reading:'よませてもらえなかった'}),[
     {text:'読',reading:'よ'},{text:'ませてもらえなかった'},
   ]);
+});
+
+test('commas preserve the reading boundary between adjacent kanji words', () => {
+  assert.deepEqual(usageSentenceParts({text:'彼は昨日、授業に',reading:'かれはきのう、じゅぎょうに'}),[
+    {text:'彼',reading:'かれ'},{text:'は'},{text:'昨日',reading:'きのう'},{text:'、'},
+    {text:'授業',reading:'じゅぎょう'},{text:'に'},
+  ]);
+  const missingBoundary={text:'昨日、先生に',reading:'きのうせんせいに'};
+  assert.deepEqual(usageSentenceParts(missingBoundary),[missingBoundary]);
+  const spacing={text:'昨日 先生に',reading:'きのう せんせいに'};
+  assert.deepEqual(usageSentenceParts(spacing),[spacing]);
+  const repeatedKana={text:'昨日の部屋は',reading:'きのうのへやは'};
+  assert.deepEqual(usageSentenceParts(repeatedKana),[repeatedKana]);
+});
+
+test('the late-for-class card shows standard spelling and ruby without exposing its answer', () => {
+  const resolved=usageCardFor(usageCardItem('verb:遅れる:おくれる'),'past');
+  const front=renderToStaticMarkup(h(UsageCardView,{card:resolved}));
+  assert.match(baseText(front),/彼は昨日、授業に/);
+  for(const word of ['彼<rt>かれ</rt>','昨日<rt>きのう</rt>','授業<rt>じゅぎょう</rt>']) assert.ok(front.includes(word));
+  assert.ok(!front.includes('遅れた'));
+  assert.ok(!front.includes('おくれた'));
+});
+
+test('writing review surfaces long kana drafts without forbidding natural kana', () => {
+  const draft={...card,before:[{text:'かれはきのうじゅぎょうに'}]};
+  assert.equal(usageCardWritingReview([draft]).length,1);
+  assert.deepEqual(usageCardWritingReview([{...draft,before:[{text:'彼は昨日、授業に',reading:'かれはきのう、じゅぎょうに'}]}]),[]);
+  const natural={...card,before:[{text:'ここでは'}]};
+  assert.deepEqual(usageCardIssues([natural]),[]);
+  assert.deepEqual(usageCardWritingReview([natural]),[]);
 });
