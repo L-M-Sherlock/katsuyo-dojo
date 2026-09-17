@@ -209,6 +209,16 @@ export function assessFormUsage(item, form) {
   if (!sense) return blocked('semantic', '这个词条、读音或释义尚未完成适用性审核。', 'unreviewed-lexeme');
   if (adjective) return assessAdjective(sense, form);
   const family = verbUsageFamily(form), word = sense.surface;
+  // Curriculum-specific language review: retain formal conjugation support,
+  // but do not substitute another sense or a different connective use in drills.
+  if (['nagara', 'tsutsu'].includes(form) && ['いる', '来る', '残る'].includes(word)) return contextual(sense, family,
+    '本课要求同一主体并行；当前词义的自然并行例句尚未通过审核，不借所在结果、逆接或渐变用法补足。');
+  if (form === 'tsutsu' && ['寝る', '眠る', '起きる'].includes(word)) return contextual(sense, family,
+    '当前睡眠或起床义尚缺已审核的自然つつ并行例句，不借横躺、已经清醒的状态或其他词条补足。');
+  if (form === 'tewa' && ['いる', '足りる', '違う', '役立つ', '要る', '似る'].includes(word)) return contextual(sense, family,
+    '本课练习反复；当前状态词义的草稿只能稳妥解释为条件或评价，暂不作为常规反复练习。');
+  if (form === 'naide' && word === '間に合う') return contextual(sense, family,
+    '当前赶上时限的结果义尚缺已审核的自然ないで连接例句，保留なくて及其他合格形式。');
   if (family === 'classification' || family === 'basic') return allowed('分类、基础活用和条件连接适用于当前词义。');
   if (family === 'causative' && ['壊れる', '落ちる', '動く', '開く', '変わる'].includes(word)) return blocked('semantic',
     `当前“${sense.meaning}”的自动词用义通常用对应他动词表达致使变化；不将这个词义的使役及其肯否时态形式作为常规练习。`, 'non-default-event-causative');
@@ -275,8 +285,6 @@ export function assessFormUsage(item, form) {
       youtosuru: '描述一个人试图留在现场的行动。',
       teshimau: '谈论一个人停留的场所与适当场所的关系。',
       sugiru: '比较一个人停留的时长与适当范围。',
-      nagara: '描述同一人在家中停留并同时做另一件事。',
-      tsutsu: '描述同一人在家中停留并同时做另一件事。',
     };
     const text = existenceContexts[family] ?? (directiveFamilies.has(family) ? '家人围绕在约定地点等候、停留或陪伴提出安排。' : undefined);
     return contextual(sense, family, '此处采用人主动留下、停留或陪伴的存在义场景。', text);

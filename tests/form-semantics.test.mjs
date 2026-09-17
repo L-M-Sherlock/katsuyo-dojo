@@ -77,3 +77,13 @@ test("returns null for classification and unknown forms", () => {
   assert.equal(semanticsForForm("classify"), null);
   assert.equal(semanticsForForm("not-a-form"), null);
 });
+
+test('tewa explains the repetition taught by its course rather than leading with a different use', () => {
+  const course = UNIFIED_COURSES.find(course => course.id === 'listing');
+  assert.ok(course.forms.includes('tewa'));
+  assert.match(course.description, /反复/);
+  const semantics = semanticsForForm('tewa');
+  assert.match(semantics.concise, /反复/);
+  assert.match(semantics.coreMeaning, /反复/);
+  assert.match(semantics.usageNote, /条件.*禁止/);
+});

@@ -1,0 +1,11 @@
+// Reviewed exact sense/form cards. See docs/usage-card-linking-audit.md.
+export default [
+  {"id":"usage:ba:verb:死ぬ:しぬ","senseId":"verb:死ぬ:しぬ","meaning":"死亡","form":"ba","scene":"游戏角色死亡后就会结束游戏。","before":[{"text":"ゲームでは、キャラクターが","reading":"ゲームでは、キャラクターが"}],"after":[{"text":"、ゲームオーバーです。","reading":"、ゲームオーバーです。"}],"translation":"在游戏中，角色一旦死亡，游戏就结束。","review":"approved"},
+  {"id":"usage:ba:verb:寝る:ねる","senseId":"verb:寝る:ねる","meaning":"睡觉","form":"ba","scene":"如果今晚早点睡，明早就会轻松些。","before":[{"text":"今夜","reading":"こんや"},{"text":"早く","reading":"はやく"}],"after":[{"text":"、明日の朝は楽になります。","reading":"、あしたのあさはらくになります。"}],"translation":"今晚早点睡，明天早上就会轻松些。","review":"approved"},
+  {"id":"usage:ba:verb:来る:くる","senseId":"verb:来る:くる","meaning":"来","form":"ba","scene":"客人如果来，就和他们一起吃饭。","before":[{"text":"お客さんが","reading":"おきゃくさんが"}],"after":[{"text":"、一緒に食事をします。","reading":"、いっしょにしょくじをします。"}],"translation":"客人如果来，就和他们一起吃饭。","review":"approved"},
+  {"id":"usage:adjectiveBa:adjective:いい:いい","senseId":"adjective:いい:いい","meaning":"好","form":"adjectiveBa","scene":"天气好的话，就在公园见面吧。","before":[{"text":"天気が","reading":"てんきが"}],"after":[{"text":"、公園で会いましょう。","reading":"、こうえんであいましょう。"}],"translation":"天气好的话，就在公园见面吧。","review":"approved"},
+  {"id":"usage:adjectiveBa:adjective:必要:ひつよう","senseId":"adjective:必要:ひつよう","meaning":"必要","form":"adjectiveBa","scene":"需要帮助的话，随时告诉我。","before":[{"text":"手伝いが","reading":"てつだいが"}],"after":[{"text":"、いつでも言ってください。","reading":"、いつでもいってください。"}],"translation":"需要帮助的话，请随时告诉我。","review":"approved"},
+  {"id":"usage:tara:verb:死ぬ:しぬ","senseId":"verb:死ぬ:しぬ","meaning":"死亡","form":"tara","scene":"游戏角色死亡后，故事就无法继续。","before":[{"text":"ゲームのキャラクターが","reading":"ゲームのキャラクターが"}],"after":[{"text":"、物語は続けられません。","reading":"、ものがたりはつづけられません。"}],"translation":"游戏角色死了之后，故事就无法继续。","review":"approved"},
+  {"id":"usage:tara:verb:寝る:ねる","senseId":"verb:寝る:ねる","meaning":"睡觉","form":"tara","scene":"孩子睡着后，请把灯关掉。","before":[{"text":"子どもが","reading":"こどもが"}],"after":[{"text":"、電気を消してください。","reading":"、でんきをけしてください。"}],"translation":"孩子睡着后，请把灯关掉。","review":"approved"},
+  {"id":"usage:tara:verb:する:する","senseId":"verb:する:する","meaning":"做","form":"tara","scene":"做完检查后，就提交报告。","before":[{"text":"点検を","reading":"てんけんを"}],"after":[{"text":"、報告書を提出します。","reading":"、ほうこくしょをていしゅつします。"}],"translation":"做完检查后，就提交报告。","review":"approved"}
+];

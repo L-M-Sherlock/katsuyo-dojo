@@ -1,0 +1,78 @@
+{
+  "basis": "Explicit linking review delta against the published voice catalog; restore these prior entries only to verify the original frozen teaching baseline.",
+  "sourceCommit": "b29a5d6f8f7ec1ff6db80cbd8af9b5f1cccb8b48",
+  "reviewVersion": 2,
+  "retired": [
+    {
+      "id": "nakuteNaide:naide:間に合う",
+      "context": null
+    },
+    {
+      "id": "concurrent:nagara:残る",
+      "context": null
+    },
+    {
+      "id": "concurrent:nagara:いる",
+      "context": {
+        "id": "verb:いる:いる:nagara:v2",
+        "text": "描述同一人在家中停留并同时做另一件事。"
+      }
+    },
+    {
+      "id": "concurrent:nagara:来る",
+      "context": null
+    },
+    {
+      "id": "concurrent:tsutsu:眠る",
+      "context": null
+    },
+    {
+      "id": "concurrent:tsutsu:残る",
+      "context": null
+    },
+    {
+      "id": "concurrent:tsutsu:起きる",
+      "context": null
+    },
+    {
+      "id": "concurrent:tsutsu:寝る",
+      "context": null
+    },
+    {
+      "id": "concurrent:tsutsu:いる",
+      "context": {
+        "id": "verb:いる:いる:tsutsu:v2",
+        "text": "描述同一人在家中停留并同时做另一件事。"
+      }
+    },
+    {
+      "id": "concurrent:tsutsu:来る",
+      "context": null
+    },
+    {
+      "id": "listing:tewa:違う",
+      "context": null
+    },
+    {
+      "id": "listing:tewa:役立つ",
+      "context": null
+    },
+    {
+      "id": "listing:tewa:要る",
+      "context": null
+    },
+    {
+      "id": "listing:tewa:いる",
+      "context": null
+    },
+    {
+      "id": "listing:tewa:足りる",
+      "context": null
+    },
+    {
+      "id": "listing:tewa:似る",
+      "context": null
+    }
+  ],
+  "changedContexts": []
+}

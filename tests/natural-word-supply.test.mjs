@@ -10,6 +10,7 @@ import { emptySkillStats, updateSkillStats } from '../app/lib/adaptive.mjs';
 
 const before = JSON.parse(readFileSync(new URL('./fixtures/natural-word-supply-before.json', import.meta.url), 'utf8'));
 const voiceReview = JSON.parse(readFileSync(new URL('./fixtures/voice-usage-review-before.json', import.meta.url), 'utf8'));
+const linkingReview = JSON.parse(readFileSync(new URL('./fixtures/linking-usage-review-before.json', import.meta.url), 'utf8'));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const identity = item => `${item.domain}:${item.surface}`;
 const originalIdentities = new Set(before.words.map(identity));
@@ -66,13 +67,14 @@ test('natural-word expansion adds eight reviewed godan words without changing an
 });
 
 test('reviewed supply changes retain every unrelated original teaching decision and context', () => {
-  const retired = voiceReview.retired.map(entry => {
-    assert.ok(!model.exercises.some(exercise => exercise.id === entry.id), `${entry.id}: explicitly retired by the voice review`);
+  assert.equal(voiceReview.retired.length, 48);
+  assert.equal(linkingReview.retired.length, 16);
+  const retired = [...voiceReview.retired, ...linkingReview.retired].map(entry => {
+    assert.ok(!model.exercises.some(exercise => exercise.id === entry.id), `${entry.id}: explicitly retired by language review`);
     const exercise = model.registryExercises.find(exercise => exercise.id === entry.id);
     assert.ok(exercise, `${entry.id}: morphology remains in the registry`);
     return { ...exercise, context: entry.context };
   });
-  assert.equal(retired.length, 48);
   // Reconstruct the old view without replacing or weakening its frozen hashes.
   // The only exceptions are the documented retirement/context delta and the
   // context IDs' review-version suffix; every unrelated text is still hashed.
@@ -80,7 +82,7 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   assert.equal(originalExercises.length, before.counts.eligibleExercises);
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');
-  const priorContexts = new Map(voiceReview.changedContexts.map(entry => [entry.id, entry.context]));
+  const priorContexts = new Map([...linkingReview.changedContexts, ...voiceReview.changedContexts].map(entry => [entry.id, entry.context]));
   const contexts = originalExercises.map(exercise => ({ ...exercise,
     context: priorContexts.has(exercise.id) ? priorContexts.get(exercise.id) : exercise.context,
   })).filter(exercise => exercise.context).map(exercise => ({ id: exercise.id,
@@ -117,6 +119,39 @@ test('each retired voice question keeps a trainable retest obligation without gr
     assert.deepEqual(restored.byTarget[key], failed.byTarget[key], `${id}: no new success`);
     assert.deepEqual(restored.independentByKc, failed.independentByKc);
     assert.deepEqual(restored.suspendedPending, {});
+  }
+});
+
+test('linking retirement transfers remaining paths and suspends only the two removed kuru paths without awarding mastery', () => {
+  const removedPaths = new Set(['concurrent:nagara:来る', 'concurrent:tsutsu:来る']);
+  const available = new Map();
+  for (const exercise of model.exercises) {
+    const key = assessmentTarget(exercise).key;
+    available.set(key, (available.get(key) ?? 0) + 1);
+  }
+  for (const { id } of linkingReview.retired) {
+    const exercise = model.registryExercises.find(exercise => exercise.id === id);
+    const key = assessmentTarget(exercise).key;
+    const failed = recordIndependentAttempt(emptyAssessment(), {
+      exercise, questionId: `linking-retired:${id}`, correct: false, at: '2026-09-17T00:00:00Z',
+    });
+    const snapshot = structuredClone(failed);
+    const restored = reconcileAssessmentCatalog(failed, model.exercises, 3);
+    assert.deepEqual(failed, snapshot, `${id}: preserve input history`);
+    assert.deepEqual(restored.byTarget, failed.byTarget, `${id}: no new independent success`);
+    assert.deepEqual(restored.independentByKc, failed.independentByKc);
+    assert.equal(restored.originalCount, failed.originalCount);
+    if (removedPaths.has(id)) {
+      assert.equal(available.get(key) ?? 0, 0, id);
+      assert.equal(restored.pending[key], undefined);
+      assert.deepEqual(restored.suspendedPending[key], {
+        ...failed.pending[key], suspension: { reason: 'no-eligible-exercise', catalogVersion: 3 },
+      });
+    } else {
+      assert.ok(available.get(key) >= 2, `${id}: enough alternatives`);
+      assert.deepEqual(restored.pending[key], failed.pending[key]);
+      assert.deepEqual(restored.suspendedPending, {});
+    }
   }
 });
 

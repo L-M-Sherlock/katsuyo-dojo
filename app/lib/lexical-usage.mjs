@@ -1,7 +1,7 @@
 // Reviewed against the catalog's displayed sense, not every possible dictionary sense.
 // This is a static review snapshot: adding/changing a catalog entry does not silently
 // grant exercise eligibility. Update this review and the policy tests together.
-export const LEXICAL_REVIEW_VERSION = 2;
+export const LEXICAL_REVIEW_VERSION = 3;
 
 // surface, reading, displayed meaning, conjugation class, transitivity, usage profile
 export const REVIEWED_VERB_SENSES = [

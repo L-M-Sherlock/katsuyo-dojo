@@ -102,3 +102,33 @@ test('learning and receiving passives require a reviewed sense rather than a mec
   }
   for(const form of ['potential','causative','causativePassive']) assert.equal(eligibleVerbForm(word('習う'),form),true,form);
 });
+
+test('simultaneous teaching keeps unsupported readings out without banning real action processes', () => {
+  for (const surface of ['いる', '来る', '残る']) for (const form of ['nagara', 'tsutsu']) {
+    assert.equal(supportsVerbForm(word(surface), form), true, `${surface}:${form}`);
+    assert.equal(eligibleVerbForm(word(surface), form), false, `${surface}:${form}`);
+  }
+  for (const surface of ['寝る', '眠る', '起きる']) {
+    assert.equal(supportsVerbForm(word(surface), 'tsutsu'), true, surface);
+    assert.equal(eligibleVerbForm(word(surface), 'tsutsu'), false, surface);
+    assert.equal(eligibleVerbForm(word(surface), 'nagara'), true, surface);
+  }
+  for (const surface of ['始める', '出かける', '座る', '立つ', '入る']) for (const form of ['nagara', 'tsutsu']) {
+    assert.equal(eligibleVerbForm(word(surface), form), true, `${surface}:${form}`);
+  }
+  for (const surface of ['いる', '来る', '残る', '寝る', '眠る', '起きる']) for (const form of ['te', 'past', 'tari']) {
+    assert.equal(eligibleVerbForm(word(surface), form), true, `${surface}:${form}`);
+  }
+});
+
+test('repetition and negative-connection restrictions do not remove ordinary conditions or formal recognition', () => {
+  for (const surface of ['いる', '足りる', '違う', '役立つ', '要る', '似る']) {
+    assert.equal(supportsVerbForm(word(surface), 'tewa'), true, surface);
+    assert.equal(eligibleVerbForm(word(surface), 'tewa'), false, surface);
+    for (const form of ['ba', 'tara', 'temo', 'tari']) assert.equal(eligibleVerbForm(word(surface), form), true, `${surface}:${form}`);
+  }
+  assert.equal(supportsVerbForm(word('間に合う'), 'naide'), true);
+  assert.equal(eligibleVerbForm(word('間に合う'), 'naide'), false);
+  for (const form of ['nakute', 'zu', 'zuni']) assert.equal(eligibleVerbForm(word('間に合う'), form), true, form);
+  assert.equal(eligibleVerbForm(word('変わる'), 'naide'), true);
+});

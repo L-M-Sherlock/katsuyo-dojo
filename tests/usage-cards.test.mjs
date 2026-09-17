@@ -61,10 +61,10 @@ test('every eligible form and word class retains approved and fully specified us
   assert.ok(USAGE_CARDS.every(c=>c.review==='approved'));
 });
 
-test('all eligible basic and voice conjugations are covered without adding classification cards or losing existing pairs', () => {
-  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice']}),[]);
+test('all eligible basic, voice and linking conjugations are covered without adding classification cards or losing existing pairs', () => {
+  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice','linking']}),[]);
   const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
-  const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice')]);
+  const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice'),...usageCardStageRequirements('linking')]);
   const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   assert.deepEqual(actual,expected);
   assert.equal(USAGE_CARDS.length,expected.size);
@@ -76,6 +76,13 @@ test('a missing voice example is not hidden by the same word in another form', (
   const reduced=USAGE_CARDS.filter(c=>`${c.senseId}/${c.form}`!==pair);
   assert.deepEqual(usageCardIssues(reduced,{requireCoverage:true,requireClassCoverage:true,requireBasicCoverage:true}),[]);
   assert.ok(usageCardIssues(reduced,{requireStageCoverage:['voice']}).includes(`Missing approved voice card for ${pair}`));
+});
+
+test('a linking word gap cannot be hidden by another word or a different condition form', () => {
+  const pair='verb:書く:かく/ba';
+  const reduced=USAGE_CARDS.filter(c=>`${c.senseId}/${c.form}`!==pair);
+  assert.deepEqual(usageCardIssues(reduced,{requireCoverage:true,requireClassCoverage:true,requireBasicCoverage:true,requireStageCoverage:['voice']}),[]);
+  assert.ok(usageCardIssues(reduced,{requireStageCoverage:['linking']}).includes(`Missing approved linking card for ${pair}`));
 });
 
 test('a basic word gap cannot be hidden by another card for the same form and class', () => {

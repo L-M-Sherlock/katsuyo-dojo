@@ -11,6 +11,7 @@ import classCombinations1 from './usage-cards/class-combinations-1.mjs';
 import classCombinations2 from './usage-cards/class-combinations-2.mjs';
 import basicWordCards from './usage-cards/basic-words/index.mjs';
 import voiceWordCards from './usage-cards/voice-words/index.mjs';
+import linkingWordCards from './usage-cards/linking-words/index.mjs';
 import { REVIEWED_LEXICAL_SENSES, reviewedLexicalSense } from './lexical-usage.mjs';
 import { ADJECTIVES } from './adjective-catalog.mjs';
 import { assessFormUsage } from './form-eligibility.mjs';
@@ -26,7 +27,7 @@ import { deriveUnified } from './unified-knowledge.mjs';
 /** Separate teaching content: never populate this from eligibility `context`. */
 export const USAGE_CARDS = /** @type {UsageCard[]} */ ([...basics, ...linking, ...actions, ...combinations,
   ...classBasics, ...classLinking1, ...classLinking2, ...classActions1, ...classActions2, ...classCombinations1, ...classCombinations2,
-  ...basicWordCards, ...voiceWordCards]);
+  ...basicWordCards, ...voiceWordCards, ...linkingWordCards]);
 export const USAGE_CARD_GROUPS = [
   {id: 'basics', stages: ['basics', 'voice']},
   {id: 'linking', stages: ['linking', 'intentions']},
