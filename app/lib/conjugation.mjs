@@ -1,6 +1,7 @@
 import { conjugateAdjective, acceptedAdjectiveConjugations, explainAdjectiveConjugation } from './adjective-conjugation.mjs';
 import { CHAIN_FORM_SPECS, chainOutputClass, chainIntermediate } from './multi-step-forms.mjs';
 import { COMPOUND_FORM_SPECS } from "./compound-forms.mjs";
+import { FORM_LABELS } from "./form-labels.mjs";
 
 const NEGATIVE_ENDINGS = {
   "う": "わ",
@@ -618,7 +619,7 @@ export function explainConjugation(word, verbClass, form) {
       answer,
       parts: [base, answer.slice(base.length)],
       steps: [base, answer],
-      rule: `先构成${baseForm === "past" ? "过去形" : baseForm === "negative" ? "否定形" : baseForm === "masu" ? "ます形" : baseForm === "volitional" ? "意向形" : `${baseForm}形式`}，再完成题目指定的接续。`,
+      rule: `先构成${FORM_LABELS[baseForm]}，再完成题目指定的接续。`,
     };
   }
 
