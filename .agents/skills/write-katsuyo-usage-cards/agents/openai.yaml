@@ -1,0 +1,4 @@
+interface:
+  display_name: "活用道场用法卡制作与协调"
+  short_description: "协调分批制作与审核日语活用场景卡，核对词义、注音、覆盖和接入验证"
+  default_prompt: "使用 $write-katsuyo-usage-cards 按任务角色协调课程用法卡扩充，或编写、审核指定词义与目标形式的卡片。"
