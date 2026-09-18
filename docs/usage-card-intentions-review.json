@@ -1,0 +1,798 @@
+{
+  "schemaVersion": 1,
+  "stage": "intentions",
+  "approvedCards": 3597,
+  "originalCards": 6001,
+  "originalCardsSha256": "c9d597e72a668de904612c7a2ea366e6c94f6a43e8fdf4884b91451b780661f1",
+  "deferred": [
+    {
+      "id": "usage:naideKudasai:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/naideKudasai",
+      "reason": "撤回原无条件通过。改为导演要求演员演出错过末班车，时限与有意错过的目的明确；但本轮尚不能充分确认裸「間に合わないでください」作为礼貌表演指令的自然度。保留候选待核，不能以场景可解释或结构通过批准。",
+      "sourceHash": "399b51e0c4f06994ef474d162724c86db769bdec503fb930d6e2a7bd7678141f"
+    },
+    {
+      "id": "usage:prohibitive:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/prohibitive",
+      "reason": "撤回原无条件通过。原「敵より先に橋へ間に合うな」误把赶上时限当成先到桥头；现改为导演要求演出错过末班车，以末班车发车为具体时限。但强制不赶上这一结果的裸禁止仍需自然度证据，剧情解释和时限修正不足以直接批准。",
+      "sourceHash": "72330459adc392ddaf9d374e6ff4eaa78bc3cf679e5bb0acd4d78c00f719c29c"
+    },
+    {
+      "id": "usage:temoIi:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/temoIi",
+      "reason": "当前「開演時刻に間に合ってもいいですか」不自然：句意是赶上这一结果可获许可，原场景实际要问到场时间是否足够；不能换成間に合えばいい。尚未建立自然的赶得上义许可场景，固定pair保留未决。",
+      "sourceHash": "0ef57b0d974ed1064855be3b992ea4df80db09026d2adcd2cef99563fda559d9"
+    },
+    {
+      "id": "usage:masenka:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/masenka",
+      "reason": "当前「次は二人で始発に間に合いませんか」难以稳定读成共同邀请，通常读作能否赶上首班车的否定疑问；没有可靠自然邀请证据，不能靠一緒に或角色引用批准。",
+      "sourceHash": "734591dedede2ae783bc9c31c7b9e6c6d903a869c39e1d80ec067c321364bcee"
+    },
+    {
+      "id": "usage:masenka:verb:分かる:わかる",
+      "pair": "verb:分かる:わかる/masenka",
+      "reason": "当前「まずは、お互いの気持ちが少しでも分かりませんか」仍是确认／要求对方理解的否定疑问，不能自然表达邀请一起尝试理解；未采用分かり合いませんか或分かろうとしませんか替换固定目标。待具体自然邀请证据。",
+      "sourceHash": "3b5f0c25a53488d22a8c967ca4b81dd04f017b7b9f8230c4cfcf405771ce641c"
+    }
+  ],
+  "cardHashEncoding": "sha256(JSON.stringify(card)), UTF-8; published review=approved",
+  "batches": [
+    {
+      "file": "tai-1-pilot.mjs",
+      "reviewer": "review_desire",
+      "cards": 16,
+      "sha256": "0d7b04e9162330c360357d0829f6357334b8f627e5f776690aac040f020d1057"
+    },
+    {
+      "file": "tai-1-01.mjs",
+      "reviewer": "review_desire",
+      "cards": 31,
+      "sha256": "546c7c6f6903679100d9d77d8531f753d8670d11eae658e070c53682b7c9b813"
+    },
+    {
+      "file": "tai-1-02.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "f2da14b7a42fa1a9c61a9de2600cafec6ea7fdffda8808a2ca7ce1126f16a650"
+    },
+    {
+      "file": "tai-1-03.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "f105cad90d81651f025fb57cbbcc0a0d57f1596a609a7aeb6e6f828df91ace70"
+    },
+    {
+      "file": "tai-1-04.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "012360766c4b139fd6efcf272c357afea9f3186338f94c2d201c208e0cb4c83f"
+    },
+    {
+      "file": "tai-1-05.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "9df2b3c245aa2016972266ef0a0d78e3089799b02520f16e2cd1133596641bf7"
+    },
+    {
+      "file": "tai-1-06.mjs",
+      "reviewer": "review_desire",
+      "cards": 31,
+      "sha256": "3621e04d062e5a98aec79bfbae8a0d6d70bd42bb011248b87f6e9e07ee74246f"
+    },
+    {
+      "file": "tai-1-07.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "52c7654ad6f660e789fa1a551462168efc6f15a19f6d2bd8171b564be22ab3b3"
+    },
+    {
+      "file": "tai-1-08.mjs",
+      "reviewer": "review_desire",
+      "cards": 16,
+      "sha256": "11df822e2681df11d9171b0d06e3319339c2ba0febfbec51db6711e732c05c64"
+    },
+    {
+      "file": "tai-2-pilot.mjs",
+      "reviewer": "review_desire",
+      "cards": 16,
+      "sha256": "da66f606e222f55e1edc24f2700677b5551883e31d138c0ec289e06b79c9bda6"
+    },
+    {
+      "file": "tai-2-01.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "4c54e5dfa6abb5981e5107d8f502845bf00ac3c1c28f6f4c1e5d1781016977ba"
+    },
+    {
+      "file": "tai-2-02.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "536d52de533f982699b559c271b470daa415fc9611e628ad6ce322680c0d2246"
+    },
+    {
+      "file": "tai-2-03.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "79a44aa63e5bf54f1e96a777fd3672b3dd1f50a753370dc40c05dc658e5f9866"
+    },
+    {
+      "file": "tai-2-04.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "9dbba6c0ded7e0a850955f2961ee53177a2223d76c7e126ae9d6cebb08761b88"
+    },
+    {
+      "file": "tai-2-05.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "1a0f8769f55ae963e68d19bcc2e5e3f8a1d95f3a9ff1136130e9f2464f00f3e5"
+    },
+    {
+      "file": "tai-2-06.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "fc4422919949103092543d12a4a39d03f65bcda8c5e484721c1a9feb81844042"
+    },
+    {
+      "file": "tai-2-07.mjs",
+      "reviewer": "review_desire",
+      "cards": 32,
+      "sha256": "dcd907477e7081a330b26a9bfea86b7788f93728a4d1d6dae1fcb51565a150cc"
+    },
+    {
+      "file": "tai-2-08.mjs",
+      "reviewer": "review_desire",
+      "cards": 14,
+      "sha256": "710cbbe109b9b6c9c3517507f6614a80ffad8b13135f18a47406c6fb9eee337f"
+    },
+    {
+      "file": "hoshii-1-pilot.mjs",
+      "reviewer": "commands_1",
+      "cards": 14,
+      "sha256": "2c1700846a9d7342932a10c3f7e7f4bdb94168af12a9a1a6e586b6b69ea66033"
+    },
+    {
+      "file": "hoshii-1-01.mjs",
+      "reviewer": "commands_1",
+      "cards": 31,
+      "sha256": "21b073831d19d87f59ee9ae7c6d360f87a4526d1c8a30e2b7203b6af66da8409"
+    },
+    {
+      "file": "hoshii-1-02.mjs",
+      "reviewer": "commands_1",
+      "cards": 32,
+      "sha256": "0eb462ed009c9b3de08644ef965b650240c14d0e0beae62fb96d159de6820928"
+    },
+    {
+      "file": "hoshii-1-03.mjs",
+      "reviewer": "commands_1",
+      "cards": 32,
+      "sha256": "c46bb2b7d01f64a5d449a0d29dd6436dbe27f344fd232bda9182883535eee6d1"
+    },
+    {
+      "file": "hoshii-1-04.mjs",
+      "reviewer": "commands_1",
+      "cards": 32,
+      "sha256": "e42568740c98e9779679cccc6a7d1aa4b25cd90a9ba96acfa85308ec2e244109"
+    },
+    {
+      "file": "hoshii-1-05.mjs",
+      "reviewer": "commands_1",
+      "cards": 32,
+      "sha256": "720d35e3da08b4b975ef3e5cf18261578ce6b39c45667e68c6924fb4380a7210"
+    },
+    {
+      "file": "hoshii-1-06.mjs",
+      "reviewer": "commands_1",
+      "cards": 32,
+      "sha256": "f6ac0e49068f841d834e4cd1274fe663e179a7a0f3acf9f3486556ede2f38deb"
+    },
+    {
+      "file": "hoshii-1-07.mjs",
+      "reviewer": "commands_1",
+      "cards": 32,
+      "sha256": "002c98ffa1770cba82103b8249166b611ad1953e856306d83d47ba5a01c3c4c3"
+    },
+    {
+      "file": "hoshii-1-08.mjs",
+      "reviewer": "commands_1",
+      "cards": 32,
+      "sha256": "25aa7363e38dbeee2f003f7cca41ddfd7989d97a80204e985c8f2acb549c4cbf"
+    },
+    {
+      "file": "hoshii-1-09.mjs",
+      "reviewer": "commands_1",
+      "cards": 18,
+      "sha256": "db28ccfe11913e72ecdd81ffd75e50b1a4668e37be52ba27cf517337bca3c9d1"
+    },
+    {
+      "file": "hoshii-2-pilot.mjs",
+      "reviewer": "obligation_1",
+      "cards": 17,
+      "sha256": "2093848992474e48388a936b1368974c9b1f6ccba114c4ab963e3ff27412b6b1"
+    },
+    {
+      "file": "hoshii-2-01.mjs",
+      "reviewer": "obligation_1",
+      "cards": 32,
+      "sha256": "259a4d8c1babe8c33a85e104bc421a58911c61685c021674b6b4e51cfd00c84b"
+    },
+    {
+      "file": "hoshii-2-02.mjs",
+      "reviewer": "obligation_1",
+      "cards": 32,
+      "sha256": "9ded2f3c914d6a9bfa0350b8b8f86df25eae16dce5de2e068af94ebac2633531"
+    },
+    {
+      "file": "hoshii-2-03.mjs",
+      "reviewer": "obligation_1",
+      "cards": 32,
+      "sha256": "1a66bb3eba93e9f0e46d302f5e4014c1636b2e30e739e9bc8ead74b97f76de21"
+    },
+    {
+      "file": "hoshii-2-04.mjs",
+      "reviewer": "obligation_1",
+      "cards": 32,
+      "sha256": "622a31c90410fa7713d288d5c4d2695df01ac771e25eaaf2108ac3b2cfa6fb54"
+    },
+    {
+      "file": "hoshii-2-05.mjs",
+      "reviewer": "obligation_1",
+      "cards": 32,
+      "sha256": "b522b0a7eb651c8e318a2d64b0bb402e1c18f84c26f886ed6b3040609dcb576b"
+    },
+    {
+      "file": "hoshii-2-06.mjs",
+      "reviewer": "obligation_1",
+      "cards": 32,
+      "sha256": "7991c754fb0b61ec716a7967547c5d3c6963c54895bad6d9f39d81ffde5fe08a"
+    },
+    {
+      "file": "hoshii-2-07.mjs",
+      "reviewer": "obligation_1",
+      "cards": 29,
+      "sha256": "60e90e5af033697e00cbebb6567c82c84e6f4a870debe2b3104266a484a10059"
+    },
+    {
+      "file": "hoshii-2-08.mjs",
+      "reviewer": "obligation_1",
+      "cards": 32,
+      "sha256": "b4e5fd5adc9d438ef6a29aad244654b837b876c9a2a85edbdc930c0d784967c4"
+    },
+    {
+      "file": "hoshii-2-09.mjs",
+      "reviewer": "obligation_1",
+      "cards": 15,
+      "sha256": "3d4936601658b9ac4c823db668ea56f0be0737e192d05c9aef4d7ab6a37dafef"
+    },
+    {
+      "file": "tagaru-1-pilot.mjs",
+      "reviewer": "review_intent",
+      "cards": 14,
+      "sha256": "b6643a9c705d817f4e7eb542ccac21a08c3fa4c5c2b707070cd2395cf60af78d"
+    },
+    {
+      "file": "tagaru-1-01.mjs",
+      "reviewer": "review_intent",
+      "cards": 31,
+      "sha256": "690f9cb423ea9b800ca559d59e5fe846132c2221b12acc130be143f04ebd8dbe"
+    },
+    {
+      "file": "tagaru-1-02.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "d91801601857fc4701047e1bcc91d48e865f0c7e1219be101bae5af81f61e696"
+    },
+    {
+      "file": "tagaru-1-03.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "c8311952701c02af1325ce7cbd2c7701418f9f5c59fff06dc97bc4d9ee174579"
+    },
+    {
+      "file": "tagaru-1-04.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "d321a726663e2fc4e790e20d6d0fde97c6c6fa4d684e051fde149589676d0038"
+    },
+    {
+      "file": "tagaru-1-05.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "645a9b594922687beaef4b9b1452a790d2581b3a3ab0147b8103f9f97a568dec"
+    },
+    {
+      "file": "tagaru-1-06.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "c1c9b2cfd157b2bbc66ede7ba01e68b03ec318ec36bdd6d894961560407107d3"
+    },
+    {
+      "file": "tagaru-1-07.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "6771c035884efacaf92c6c7def75edf31b3ac4f4e651a6ec6f7caa40a7a8d32c"
+    },
+    {
+      "file": "tagaru-1-08.mjs",
+      "reviewer": "review_intent",
+      "cards": 18,
+      "sha256": "fda6c2b72a4192e8b78d593e13d1d01502e56baeea0d6a28e46065d171ba742b"
+    },
+    {
+      "file": "tagaru-2-pilot.mjs",
+      "reviewer": "review_intent",
+      "cards": 18,
+      "sha256": "2af91e88986e9a4acb01b44d3c7c8a671cc3b05178fd37357f93a8fa81bb3836"
+    },
+    {
+      "file": "tagaru-2-01.mjs",
+      "reviewer": "review_intent",
+      "cards": 30,
+      "sha256": "76d9f7314e4b629315e7e633d73a33b69148850df27b3aabbed2a624b2c7cc08"
+    },
+    {
+      "file": "tagaru-2-02.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "4c9d7bd3d38ce70979f93cd7ecdb688c683110613778170decfab6e466aa150f"
+    },
+    {
+      "file": "tagaru-2-03.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "36fc3ed407c115172bbb13a252be5f280bb6832b0bdd71ad765a37404d412993"
+    },
+    {
+      "file": "tagaru-2-04.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "ea2d70bcf981d276a19efa931f775e1311036788726a5fd58f0e7592e2bbb7d0"
+    },
+    {
+      "file": "tagaru-2-05.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "83c6c7d049d46f1b5df1e8e9ebf22a8d4f27b8319679003ae6001008c2b4d12a"
+    },
+    {
+      "file": "tagaru-2-06.mjs",
+      "reviewer": "review_intent",
+      "cards": 30,
+      "sha256": "7186d91d31b8caf6580e57ce5af5b6dec0c49cae01620c23dfb8f122f9665475"
+    },
+    {
+      "file": "tagaru-2-07.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "d8fd1900dd3be754116148596aa2362fe33f92b3bc82b9d27d12a5b1e16192d3"
+    },
+    {
+      "file": "tagaru-2-08.mjs",
+      "reviewer": "review_intent",
+      "cards": 15,
+      "sha256": "827ef31a4ff1cca16bff164f81a2735c8e864a5779ff0ce580a33af9335156a0"
+    },
+    {
+      "file": "youto-1-pilot.mjs",
+      "reviewer": "review_intent",
+      "cards": 16,
+      "sha256": "79626b6f43c090900a0ffdbe9eec6a8d113d6a69c283a7fd7134ed4c38b65e05"
+    },
+    {
+      "file": "youto-1-01.mjs",
+      "reviewer": "review_intent",
+      "cards": 31,
+      "sha256": "0ae2a602ad70c5b77e8e5da562b396bf8b79ac1cb9188cde60252f0fafcd76fc"
+    },
+    {
+      "file": "youto-1-02.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "023b57d81bebc7921d1123d4ae004633a2b225c3f297e878d1fe9e002b58354b"
+    },
+    {
+      "file": "youto-1-03.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "48c356781fc3c3729a69fc43682351eae6c89d13db64e6ca40b4e4759749f37d"
+    },
+    {
+      "file": "youto-1-04.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "b5c1984ac8ce7b427ce9792c98df0058aff0fab445a80fa87fff6a94dc73d585"
+    },
+    {
+      "file": "youto-1-05.mjs",
+      "reviewer": "review_intent",
+      "cards": 30,
+      "sha256": "528512476137d737253271b69340c8ecf05a7adda02101e6925d0f5972df0700"
+    },
+    {
+      "file": "youto-1-06.mjs",
+      "reviewer": "review_intent",
+      "cards": 31,
+      "sha256": "6a8ac9291d40874875cde974dd5f3b4c74dff7139a59cb6c81cdfeb7e5c338e6"
+    },
+    {
+      "file": "youto-1-07.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "57dc7dbb7d2e8ca11db7ddc0589d0651647c82eaaebd993dd62bbb88d3a1676d"
+    },
+    {
+      "file": "youto-1-08.mjs",
+      "reviewer": "review_intent",
+      "cards": 16,
+      "sha256": "13444b5b4837b96484fbe0f20dc32a5407e6319e16573d1e3b409da97319e078"
+    },
+    {
+      "file": "youto-2-pilot.mjs",
+      "reviewer": "review_intent",
+      "cards": 10,
+      "sha256": "77b95f690508f44e21a37363992cd2a8b8a20448e5f57b87de7c11d8dd24779e"
+    },
+    {
+      "file": "youto-2-01.mjs",
+      "reviewer": "review_intent",
+      "cards": 31,
+      "sha256": "9e09d2ba1c226ba777bec20d0fe9aaa9a10314785619c766ed261efd958d12e2"
+    },
+    {
+      "file": "youto-2-02.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "35aff9f9a90928260a803fa994c3931d8d87d109d8e52c1b750cae8721db85b5"
+    },
+    {
+      "file": "youto-2-03.mjs",
+      "reviewer": "review_intent",
+      "cards": 29,
+      "sha256": "a4ee8ea7ba0d558cd667cb56a9ed844afee4fc28ea83784289eea1ea594579d6"
+    },
+    {
+      "file": "youto-2-04.mjs",
+      "reviewer": "review_intent",
+      "cards": 30,
+      "sha256": "efe386c99f6fbcd45ab22e8c20bb5719e52316ee03294f5337f8c4b5874987c1"
+    },
+    {
+      "file": "youto-2-05.mjs",
+      "reviewer": "review_intent",
+      "cards": 30,
+      "sha256": "22a054895d2883522262d465182d0b4e86de4b4a98e1e3322d6474f857baa580"
+    },
+    {
+      "file": "youto-2-06.mjs",
+      "reviewer": "review_intent",
+      "cards": 31,
+      "sha256": "98f3a7094968f1e0ed5ec4f842ecdc272e4e2419add02747c7f6eb3f44908051"
+    },
+    {
+      "file": "youto-2-07.mjs",
+      "reviewer": "review_intent",
+      "cards": 32,
+      "sha256": "da720962d2e181d070b685bfaf771c9d95a61679213828f18887c7099770471e"
+    },
+    {
+      "file": "youto-2-08.mjs",
+      "reviewer": "review_intent",
+      "cards": 25,
+      "sha256": "70323b882aad0c48069f6c979c82b1a72df528aebfe243d9cb742b504da58e9a"
+    },
+    {
+      "file": "commands-1-pilot.mjs",
+      "reviewer": "review_requests",
+      "cards": 17,
+      "sha256": "866d2249953d5a03b07a5a165b48238cfd9c0da786e20d7ac767b69053395804"
+    },
+    {
+      "file": "commands-1-01.mjs",
+      "reviewer": "review_requests",
+      "cards": 29,
+      "sha256": "47738da1eec6b2dc7d86d53d2fd37f6829c28fb0016772f2b97a0ec1cc46f599"
+    },
+    {
+      "file": "commands-1-02.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "feee8504d3b512feef2246deb81287b3f4b4d874ab658516ac9cc79f9dc5ee64"
+    },
+    {
+      "file": "commands-1-03.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "bcb5a32e018f13f88d9fa199926cf8b3f9412f9d81caea2b253e870b6e9efbb1"
+    },
+    {
+      "file": "commands-1-04.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "620875d1dcc262a9f633ed7d5c20359336037db0ccd42cc3e88152bc40747b30"
+    },
+    {
+      "file": "commands-1-05.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "5490edfd17778e209883c5c4375282e2f4d8af7aa6c736aa6ca75b3b96f2294c"
+    },
+    {
+      "file": "commands-1-06.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "6d6557848d8943c289b35a3774ccb9ec1303dc294b3f59d2f29fe41fa2405888"
+    },
+    {
+      "file": "commands-1-07.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "8158d69bd990b1c59e62044d632117e7d318254c845603cdf2e9acf3fe6111ea"
+    },
+    {
+      "file": "commands-1-08.mjs",
+      "reviewer": "review_requests",
+      "cards": 28,
+      "sha256": "feece661f6c45b85d72e50f725e41a5e5c87b83c2db603baea29afdc40822b54"
+    },
+    {
+      "file": "commands-1-09.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "b59264e9bdc085a97ffc90905165976bf7ed11661e93e1a1b2217d22da1d79d8"
+    },
+    {
+      "file": "commands-1-10.mjs",
+      "reviewer": "review_requests",
+      "cards": 32,
+      "sha256": "517a1b59488165d00e1f1c3b1b08ddc48f1aace42e3decb9c6ee4b39ab0902e2"
+    },
+    {
+      "file": "commands-2-pilot.mjs",
+      "reviewer": "commands_2",
+      "cards": 18,
+      "sha256": "17551cb86bd51f0cff310a1428b935b5c68b5da4246f51b44c81408e37326d1b"
+    },
+    {
+      "file": "commands-2-01.mjs",
+      "reviewer": "commands_2",
+      "cards": 29,
+      "sha256": "44efa0d58b1ada2eaf4d25f9590368d5a11e4e2867f0133168634c47404e4f79"
+    },
+    {
+      "file": "commands-2-02.mjs",
+      "reviewer": "commands_2",
+      "cards": 30,
+      "sha256": "70511f4f5390475de423e320be2080fc3086b685e1c917be519aeb536fb8d3e8"
+    },
+    {
+      "file": "commands-2-03.mjs",
+      "reviewer": "commands_2",
+      "cards": 30,
+      "sha256": "a0ba5b585af9523f920dcdebf29f3e265ee247f96bb29d9565b6448cb0a2c4f7"
+    },
+    {
+      "file": "commands-2-04.mjs",
+      "reviewer": "commands_2",
+      "cards": 28,
+      "sha256": "6a0306da9c606d607e449f62b76effc641e6bc2e576c203cad3a71bc8be0ea58"
+    },
+    {
+      "file": "commands-2-05.mjs",
+      "reviewer": "commands_2",
+      "cards": 30,
+      "sha256": "2a9b3c3fc1f5b08c64f960a6d1fd0528a2dcae73ebb1b54209e74d86a0ab7fba"
+    },
+    {
+      "file": "commands-2-06.mjs",
+      "reviewer": "commands_2",
+      "cards": 30,
+      "sha256": "aa6014094516c7bc8b8ddb4379c9c771dba62e14280ce340766bb702ef921ed6"
+    },
+    {
+      "file": "commands-2-07.mjs",
+      "reviewer": "commands_2",
+      "cards": 30,
+      "sha256": "ba46f0b0cd54ca4abb7dda16a6ed3570e1a5392c5bbf686d2971a715d49ae1db"
+    },
+    {
+      "file": "commands-2-08.mjs",
+      "reviewer": "commands_2",
+      "cards": 28,
+      "sha256": "2905c5334c066ca6d2b837e4eae960bb928b9f14a16a1b80f7c842475daebe60"
+    },
+    {
+      "file": "commands-2-09.mjs",
+      "reviewer": "commands_2",
+      "cards": 30,
+      "sha256": "f9ca76a6bd0c6cb962abc0c4d06417506d67d14ba1c73d1135fae22afcdd50f4"
+    },
+    {
+      "file": "commands-2-10.mjs",
+      "reviewer": "commands_2",
+      "cards": 29,
+      "sha256": "b5b392920682d4234bdc33e7f8f804dbef0cc82d9797aacabe43bcc87cacbe85"
+    },
+    {
+      "file": "permission-1-pilot.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 16,
+      "sha256": "0e67a527a0c3bdae5aaa9a1cb9f29b6fcd469656e1b70a3891baa07587dc23dc"
+    },
+    {
+      "file": "permission-1-01.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 31,
+      "sha256": "cf6f7a90cfc13201498d300028120b289d96e8bb70d4b29636317d2c2b558c43"
+    },
+    {
+      "file": "permission-1-02.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 31,
+      "sha256": "18227e565b0c9ad0674ac9c0c680c7b8c90fa3072ac500a0d4c8e7a2cb6e91bf"
+    },
+    {
+      "file": "permission-1-03.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 31,
+      "sha256": "a8ede0b12cc66a58fab3b686782f0882bb7b5bea43ae7373a97715864ac35246"
+    },
+    {
+      "file": "permission-1-04.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 32,
+      "sha256": "fbdec527c7c1fc09e597c0163c0bf0c37c2aebbe995d817c3229e5a96dd3bcd4"
+    },
+    {
+      "file": "permission-1-05.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 32,
+      "sha256": "eb093389212e630f5512a10236d04fb18cf1c4f5efea208d627a9e48e5ebdc8d"
+    },
+    {
+      "file": "permission-1-06.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 30,
+      "sha256": "066d12aca656dd9c1c11908e3040ac4139ae6d0e1dfc3fd4361f9af3c76e3518"
+    },
+    {
+      "file": "permission-1-07.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 32,
+      "sha256": "f52f0d803d26befb3581a1977e1ba25008fa2a5ec2e54f3e667ec4980ca1260e"
+    },
+    {
+      "file": "permission-1-08.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 32,
+      "sha256": "7b9aa6ab82a294992ce3d76978742ff56aa2ba315fa01adc845221d17fbe2532"
+    },
+    {
+      "file": "permission-1-09.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 32,
+      "sha256": "89c34b92779fa182ba572724a1a874d0867c63dd9a2f8d3de8eb876f17114351"
+    },
+    {
+      "file": "permission-1-10.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 31,
+      "sha256": "f96bec440948f8bc950062fcc92cc05533b70cdc9b32acbf1d73779162e7ec08"
+    },
+    {
+      "file": "permission-1-11.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 32,
+      "sha256": "55696cd6dd656ef2e9d55935effcc1dc2e290b6c26f6990a378b5cbf8796a7c7"
+    },
+    {
+      "file": "permission-1-12.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 29,
+      "sha256": "7335057c7d520b0eaa844aa0015fcc4f45740426c91ad4ca3fc77842e3f1a7c8"
+    },
+    {
+      "file": "permission-1-13.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 32,
+      "sha256": "6ecc68eb78eb13081f6262d1bb78bff957a06da86183fbc7a868ec2d83ad8aad"
+    },
+    {
+      "file": "permission-1-14.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 32,
+      "sha256": "5000448859c7cf24d5b19ec4497cf1a00edba1d734aba0501bbb025f9989a0dc"
+    },
+    {
+      "file": "permission-1-15.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 32,
+      "sha256": "85c20364c137cf7d5c24b372156916856a38cb1966faf1b010970ed8822b4520"
+    },
+    {
+      "file": "permission-1-16.mjs",
+      "reviewer": "review_permission_new (part-a); review_desire (part-b)",
+      "cards": 14,
+      "sha256": "703541d66b952a0627571e33a1f4aa61da4f1904edec50a266b3d9c591d60778"
+    },
+    {
+      "file": "obligation-1-pilot.mjs",
+      "reviewer": "review_requests",
+      "cards": 18,
+      "sha256": "99c186e1b78f8b91063ab8ab3f7330c614f5dd8e60389677a4807e0b8580f97e"
+    },
+    {
+      "file": "obligation-1-01.mjs",
+      "reviewer": "review_requests",
+      "cards": 31,
+      "sha256": "a41fde58850de144b37e1de472152a1f0e1fa236d3cb7e6ff57f693349caff6b"
+    },
+    {
+      "file": "obligation-1-02.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "77706188c7c7fb277bdc3339f31240da2285827d4de4f53657df70670ab7760e"
+    },
+    {
+      "file": "obligation-1-03.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "4847a27aa2a30e8fede8db7db457c57226bc461ea6985e980729e31dfb986e6f"
+    },
+    {
+      "file": "obligation-1-04.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "9566ac21801e016ff97c761d4c7f7da4679ba6c5069c36fa744b76e955cb4007"
+    },
+    {
+      "file": "obligation-1-05.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "b033d63d4039fdb3d5076028230e7a2a1ff0e89238c018940b68b30a1b712d19"
+    },
+    {
+      "file": "obligation-1-06.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "bc2fc1db6ec399530c11050e40362bed6b3d8ec5ce275a0821dede50da7c71b0"
+    },
+    {
+      "file": "obligation-1-07.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "454a5b6490645da7c2509c0f8b1b4cbfcbd05d4b8b600f9b1a29861370a8f6ec"
+    },
+    {
+      "file": "obligation-1-08.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "fa1164b93d1220926d46f4c856f248819b46739c0cb2736389c78997ef667757"
+    },
+    {
+      "file": "obligation-1-09.mjs",
+      "reviewer": "review_requests",
+      "cards": 32,
+      "sha256": "38f4c1e3db6739548ba27228898d17fe582c2e017d53184decf1f97adced71f7"
+    },
+    {
+      "file": "obligation-1-10.mjs",
+      "reviewer": "review_requests",
+      "cards": 32,
+      "sha256": "d2d418e8de128ad3511e1926d19cfab5a268856431d4a9de9e36f9a5b3c30b0f"
+    },
+    {
+      "file": "obligation-1-11.mjs",
+      "reviewer": "review_requests",
+      "cards": 30,
+      "sha256": "16444e353496d519a130b5fa677c3d050d9bcd1ae2396c3dd249c5017d2ab05d"
+    },
+    {
+      "file": "obligation-1-12.mjs",
+      "reviewer": "review_requests",
+      "cards": 25,
+      "sha256": "e8103893dc3f65a80d9efdbf7fdf4a55c15a5f4ec2259da6c168c90010f2e35b"
+    }
+  ]
+}

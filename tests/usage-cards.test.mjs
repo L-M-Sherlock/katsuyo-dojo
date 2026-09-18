@@ -1,11 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import UsageCardView from '../app/lib/usage-card-view.mjs';
 import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements, basicUsageCardRequirements, usageCardStageRequirements, usageCardWritingReview, usageCardFor} from '../app/lib/usage-cards.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
+import intentionWordCards from '../app/lib/usage-cards/intention-words/index.mjs';
+
+const intentionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-intentions-review.json', import.meta.url),'utf8'));
+const deferredIntentionPairs = new Set(intentionReview.deferred.map(card=>card.pair));
 
 const card = {id:'test-negative',senseId:'verb:飲む:のむ',meaning:'喝',form:'negative',
   scene:'明天要早起，今晚决定不喝酒。',before:[{text:'今夜はお酒を',reading:'こんやはおさけを'}],
@@ -61,14 +66,50 @@ test('every eligible form and word class retains approved and fully specified us
   assert.ok(USAGE_CARDS.every(c=>c.review==='approved'));
 });
 
-test('all eligible basic, voice and linking conjugations are covered without adding classification cards or losing existing pairs', () => {
+test('reviewed stages retain exact eligible coverage and preserve the original representative cards', () => {
   assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice','linking']}),[]);
   const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
-  const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice'),...usageCardStageRequirements('linking')]);
+  const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice'),...usageCardStageRequirements('linking'),
+    ...usageCardStageRequirements('intentions').filter(pair=>!deferredIntentionPairs.has(pair))]);
   const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   assert.deepEqual(actual,expected);
   assert.equal(USAGE_CARDS.length,expected.size);
   assert.ok(USAGE_CARDS.every(c=>c.form!==null));
+});
+
+test('published intention batches match the reviewed content and leave all old cards unchanged', async () => {
+  const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  const ids = new Set(intentionWordCards.map(card=>card.id));
+  assert.equal(ids.size,intentionReview.approvedCards);
+  assert.equal(intentionWordCards.length,intentionReview.approvedCards);
+  assert.equal(hash(USAGE_CARDS.filter(card=>!ids.has(card.id))),intentionReview.originalCardsSha256);
+  const reviewed = [];
+  for(const batch of intentionReview.batches) {
+    const cards=(await import(`../app/lib/usage-cards/intention-words/${batch.file}`)).default;
+    assert.equal(cards.length,batch.cards,batch.file);
+    assert.equal(hash(cards),batch.sha256,batch.file);
+    reviewed.push(...cards);
+  }
+  assert.deepEqual(reviewed,intentionWordCards);
+  assert.ok(intentionWordCards.every(card=>card.review==='approved'));
+  assert.deepEqual(deferredIntentionPairs,new Set([
+    'verb:間に合う:まにあう/naideKudasai',
+    'verb:間に合う:まにあう/prohibitive',
+    'verb:間に合う:まにあう/temoIi',
+    'verb:間に合う:まにあう/masenka',
+    'verb:分かる:わかる/masenka',
+  ]), 'only these explicitly reviewed pairs may remain without a published card');
+  for(const entry of intentionReview.deferred) {
+    assert.ok(!USAGE_CARDS.some(card=>`${card.senseId}/${card.form}`===entry.pair));
+    assert.ok(entry.reason && entry.sourceHash);
+  }
+});
+
+test('an intention word gap cannot be hidden by another word using the same form', () => {
+  const pair='verb:書く:かく/tai';
+  const reduced=USAGE_CARDS.filter(card=>`${card.senseId}/${card.form}`!==pair);
+  assert.deepEqual(usageCardIssues(reduced,{requireCoverage:true,requireClassCoverage:true}),[]);
+  assert.ok(usageCardIssues(reduced,{requireStageCoverage:['intentions']}).includes(`Missing approved intentions card for ${pair}`));
 });
 
 test('a missing voice example is not hidden by the same word in another form', () => {

@@ -88,7 +88,9 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   })).filter(exercise => exercise.context).map(exercise => ({ id: exercise.id,
     context: { ...exercise.context, id: exercise.context.id.replace(/:v\d+$/, `:v${before.reviewVersion}`) },
   }))
-    .sort((a, b) => a.id.localeCompare(b.id));
+    // The frozen fixture was sorted in the CI locale. Do not let a Chinese
+    // desktop's default collation change the hash of otherwise identical data.
+    .sort((a, b) => a.id.localeCompare(b.id, 'en'));
   assert.equal(hash(contexts), before.contextsSha256);
   for (const [form, words] of Object.entries(approvedExistingPairs)) for (const word of words) {
     assert.equal(before.chains[form].words.includes(word), false, 'newly approved pair must be visible as a deliberate expansion');
