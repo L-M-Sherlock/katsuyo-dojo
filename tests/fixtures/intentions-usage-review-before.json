@@ -1,0 +1,48 @@
+{
+  "basis": "User-approved deferral of five exact intention pairs; snapshot from the unmodified published catalog. Restore only these prior entries when validating older immutable baselines.",
+  "sourceCommit": "2777d7756342e28399a87e3f8b935a4447e5a87c",
+  "reviewVersion": 3,
+  "counts": {
+    "exercises": 17885,
+    "cards": 9598
+  },
+  "eligibleExerciseIdsSha256": "a8fb6cf141adaa3498e62f736933f800aea8fc33e5981c6d3d72e4b7223e0037",
+  "contextsSha256": "e8068b625db1906dd312f36edf186cf219732120f4406a874f751bf1372d30a8",
+  "cardsSha256": "5f7f9dcef365905069a2d258a7581b5e3974044caf13bda7b74d959e40fdcfcf",
+  "retired": [
+    {
+      "id": "request:naideKudasai:間に合う",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "naideKudasai",
+      "context": null
+    },
+    {
+      "id": "prohibitive:prohibitive:間に合う",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "prohibitive",
+      "context": null
+    },
+    {
+      "id": "permission:temoIi:間に合う",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "temoIi",
+      "context": null
+    },
+    {
+      "id": "permission:masenka:間に合う",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "masenka",
+      "context": null
+    },
+    {
+      "id": "permission:masenka:分かる",
+      "senseId": "verb:分かる:わかる",
+      "form": "masenka",
+      "context": {
+        "id": "verb:分かる:わかる:masenka:v3",
+        "text": "交流双方围绕“明白”提出请求、劝告或行动目标。"
+      }
+    }
+  ],
+  "changedContexts": []
+}

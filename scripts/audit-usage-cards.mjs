@@ -1,19 +1,12 @@
 import { USAGE_CARDS, usageCardIssues, resolveUsageCard, usageCardItem, usageCardClassRequirements, basicUsageCardRequirements, usageCardStageRequirements, usageCardWritingReview } from '../app/lib/usage-cards.mjs';
-import {readFileSync} from 'node:fs';
 
 const strict = !process.argv.includes('--draft');
-const issues = usageCardIssues(USAGE_CARDS, {requireCoverage: strict, requireClassCoverage: strict, requireBasicCoverage: strict, requireStageCoverage: strict ? ['voice', 'linking'] : []});
+const issues = usageCardIssues(USAGE_CARDS, {requireCoverage: strict, requireClassCoverage: strict, requireBasicCoverage: strict, requireStageCoverage: strict ? ['voice', 'linking', 'intentions'] : []});
 const approved = USAGE_CARDS.filter(card => card.review === 'approved');
 const basic = new Set(basicUsageCardRequirements());
 const voice = new Set(usageCardStageRequirements('voice'));
 const linking = new Set(usageCardStageRequirements('linking'));
 const intentions = new Set(usageCardStageRequirements('intentions'));
-const intentionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-intentions-review.json',import.meta.url),'utf8'));
-const deferredIntentionPairs = new Set(intentionReview.deferred.map(card=>card.pair));
-const coveredPairs = new Set(approved.map(card=>`${card.senseId}/${card.form}`));
-if(strict) for(const pair of intentions) {
-  if(!coveredPairs.has(pair) && !deferredIntentionPairs.has(pair)) issues.push(`Missing approved intentions card for ${pair}`);
-}
 console.log(JSON.stringify({cards: USAGE_CARDS.length, approved: approved.length,
   approvedForms: new Set(approved.map(card => card.form)).size,
   approvedFormClasses: new Set(approved.map(card => `${card.form}/${usageCardItem(card.senseId)?.class}`)).size,
@@ -26,7 +19,6 @@ console.log(JSON.stringify({cards: USAGE_CARDS.length, approved: approved.length
   requiredLinkingPairs: linking.size,
   approvedIntentionPairs: approved.filter(card => intentions.has(`${card.senseId}/${card.form}`)).length,
   requiredIntentionPairs: intentions.size,
-  deferredIntentionPairs: [...deferredIntentionPairs],
   writingReview: usageCardWritingReview(USAGE_CARDS), issues}, null, 2));
 if (process.argv.includes('--sentences')) for (const card of USAGE_CARDS) {
   const resolved = resolveUsageCard(card);

@@ -11,6 +11,7 @@ import { emptySkillStats, updateSkillStats } from '../app/lib/adaptive.mjs';
 const before = JSON.parse(readFileSync(new URL('./fixtures/natural-word-supply-before.json', import.meta.url), 'utf8'));
 const voiceReview = JSON.parse(readFileSync(new URL('./fixtures/voice-usage-review-before.json', import.meta.url), 'utf8'));
 const linkingReview = JSON.parse(readFileSync(new URL('./fixtures/linking-usage-review-before.json', import.meta.url), 'utf8'));
+const intentionReview = JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json', import.meta.url), 'utf8'));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const identity = item => `${item.domain}:${item.surface}`;
 const originalIdentities = new Set(before.words.map(identity));
@@ -69,7 +70,8 @@ test('natural-word expansion adds eight reviewed godan words without changing an
 test('reviewed supply changes retain every unrelated original teaching decision and context', () => {
   assert.equal(voiceReview.retired.length, 48);
   assert.equal(linkingReview.retired.length, 16);
-  const retired = [...voiceReview.retired, ...linkingReview.retired].map(entry => {
+  assert.equal(intentionReview.retired.length, 5);
+  const retired = [...voiceReview.retired, ...linkingReview.retired, ...intentionReview.retired].map(entry => {
     assert.ok(!model.exercises.some(exercise => exercise.id === entry.id), `${entry.id}: explicitly retired by language review`);
     const exercise = model.registryExercises.find(exercise => exercise.id === entry.id);
     assert.ok(exercise, `${entry.id}: morphology remains in the registry`);

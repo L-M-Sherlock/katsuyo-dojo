@@ -67,10 +67,10 @@ test('every eligible form and word class retains approved and fully specified us
 });
 
 test('reviewed stages retain exact eligible coverage and preserve the original representative cards', () => {
-  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice','linking']}),[]);
+  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice','linking','intentions']}),[]);
   const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
   const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice'),...usageCardStageRequirements('linking'),
-    ...usageCardStageRequirements('intentions').filter(pair=>!deferredIntentionPairs.has(pair))]);
+    ...usageCardStageRequirements('intentions')]);
   const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   assert.deepEqual(actual,expected);
   assert.equal(USAGE_CARDS.length,expected.size);
@@ -98,10 +98,11 @@ test('published intention batches match the reviewed content and leave all old c
     'verb:間に合う:まにあう/temoIi',
     'verb:間に合う:まにあう/masenka',
     'verb:分かる:わかる/masenka',
-  ]), 'only these explicitly reviewed pairs may remain without a published card');
+  ]), 'preserve the exact five deferred pairs in the editorial record');
   for(const entry of intentionReview.deferred) {
     assert.ok(!USAGE_CARDS.some(card=>`${card.senseId}/${card.form}`===entry.pair));
     assert.ok(entry.reason && entry.sourceHash);
+    assert.ok(!usageCardStageRequirements('intentions').includes(entry.pair),entry.pair);
   }
 });
 

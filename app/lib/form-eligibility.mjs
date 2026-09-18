@@ -209,6 +209,11 @@ export function assessFormUsage(item, form) {
   if (!sense) return blocked('semantic', '这个词条、读音或释义尚未完成适用性审核。', 'unreviewed-lexeme');
   if (adjective) return assessAdjective(sense, form);
   const family = verbUsageFamily(form), word = sense.surface;
+  // Exact pairs deferred by the intention-card language review. Keep their
+  // morphology and answer recognition; no teaching context has been approved.
+  if ((word === '間に合う' && ['naideKudasai', 'prohibitive', 'temoIi', 'masenka'].includes(form)) ||
+      (word === '分かる' && form === 'masenka')) return contextual(sense, family,
+    '本课的请求、禁止、许可或邀请用义尚无通过审核的自然例句，暂不作为常规练习；保留构形与完整词形识别。');
   // Curriculum-specific language review: retain formal conjugation support,
   // but do not substitute another sense or a different connective use in drills.
   if (['nagara', 'tsutsu'].includes(form) && ['いる', '来る', '残る'].includes(word)) return contextual(sense, family,

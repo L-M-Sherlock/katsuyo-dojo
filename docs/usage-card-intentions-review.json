@@ -794,5 +794,12 @@
       "cards": 25,
       "sha256": "e8103893dc3f65a80d9efdbf7fdf4a55c15a5f4ec2259da6c168c90010f2e35b"
     }
-  ]
+  ],
+  "deferralPolicy": {
+    "reviewVersion": 4,
+    "scope": "excluded-from-eligible-practice",
+    "authorization": "用户于2026-09-18确认：暂缓这五题",
+    "retained": "morphology, full-form recognition, historical assessment evidence",
+    "eligibleIntentionPairs": 3681
+  }
 }
