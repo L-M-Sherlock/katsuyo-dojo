@@ -7,11 +7,14 @@ import { createServer } from 'vite';
 import { assessmentTarget, emptyAssessment, reconcileAssessmentCatalog, recordIndependentAttempt, retestStatus } from '../app/lib/learning-assessment.mjs';
 import { restoreLearningAssessment } from '../app/lib/assessment-transfer.mjs';
 import { emptySkillStats, updateSkillStats } from '../app/lib/adaptive.mjs';
+import { reviewedLexicalSense } from '../app/lib/lexical-usage.mjs';
 
 const before = JSON.parse(readFileSync(new URL('./fixtures/natural-word-supply-before.json', import.meta.url), 'utf8'));
 const voiceReview = JSON.parse(readFileSync(new URL('./fixtures/voice-usage-review-before.json', import.meta.url), 'utf8'));
 const linkingReview = JSON.parse(readFileSync(new URL('./fixtures/linking-usage-review-before.json', import.meta.url), 'utf8'));
 const intentionReview = JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json', import.meta.url), 'utf8'));
+const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url), 'utf8'));
+const actionContexts = new Map((actionReview.contextChanges ?? []).map(row => [row.pair, row]));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const identity = item => `${item.domain}:${item.surface}`;
 const originalIdentities = new Set(before.words.map(identity));
@@ -85,7 +88,13 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');
   const priorContexts = new Map([...linkingReview.changedContexts, ...voiceReview.changedContexts].map(entry => [entry.id, entry.context]));
-  const contexts = originalExercises.map(exercise => ({ ...exercise,
+  const beforeRegionalReview = originalExercises.map(exercise => {
+    const change = actionContexts.get(`${reviewedLexicalSense(exercise.item)?.id}/${exercise.form}`);
+    if (!change) return exercise;
+    assert.deepEqual(exercise.context, change.currentUsage.context);
+    return {...exercise, context: change.previousUsage.context};
+  });
+  const contexts = beforeRegionalReview.map(exercise => ({ ...exercise,
     context: priorContexts.has(exercise.id) ? priorContexts.get(exercise.id) : exercise.context,
   })).filter(exercise => exercise.context).map(exercise => ({ id: exercise.id,
     context: { ...exercise.context, id: exercise.context.id.replace(/:v\d+$/, `:v${before.reviewVersion}`) },

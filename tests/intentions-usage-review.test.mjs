@@ -11,6 +11,7 @@ import {assessmentTarget, emptyAssessment, reconcileAssessmentCatalog, recordInd
 import {restoreLearningAssessment} from '../app/lib/assessment-transfer.mjs';
 import {USAGE_CARDS, usageCardStageRequirements} from '../app/lib/usage-cards.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
+import {reviewedLexicalSense} from '../app/lib/lexical-usage.mjs';
 
 const baseline=JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json',import.meta.url),'utf8'));
 const hash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -23,6 +24,7 @@ const expectedPairs=new Set([
 ]);
 const actionReview=JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json',import.meta.url),'utf8'));
 const actionIds=new Set(actionReview.approvedIds);
+const actionContexts=new Map((actionReview.contextChanges??[]).map(row=>[row.pair,row]));
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
 let model;
 try { model=(await server.ssrLoadModule('/app/page.tsx')).KNOWLEDGE; }
@@ -42,7 +44,23 @@ test('only the five approved intention deferrals change the published exercise c
   assert.equal(model.exercises.length,baseline.counts.exercises-5);
   assert.equal(hash(reconstructed.map(e=>e.id).sort()),baseline.eligibleExerciseIdsSha256,
     'no unrelated exercise may disappear or become eligible');
-  const contexts=reconstructed.filter(e=>e.context).map(e=>({id:e.id,
+  // Preserve the frozen historical hash while accounting for the four
+  // explicitly documented regional てある context changes.
+  assert.deepEqual(new Set(actionContexts.keys()),new Set([
+    'verb:持つ:もつ/tearu','verb:持つ:もつ/tearuPast',
+    'verb:待つ:まつ/tearu','verb:待つ:まつ/tearuPast',
+  ]));
+  const matchedContextChanges=new Set();
+  const priorContexts=reconstructed.map(e=>{
+    const change=actionContexts.get(`${reviewedLexicalSense(e.item)?.id}/${e.form}`);
+    if(!change)return e;
+    matchedContextChanges.add(change.pair);
+    assert.deepEqual(assessFormUsage(e.item,e.form),change.currentUsage);
+    assert.deepEqual(e.context,change.currentUsage.context);
+    return {...e,context:change.previousUsage.context};
+  });
+  assert.deepEqual(matchedContextChanges,new Set(actionContexts.keys()));
+  const contexts=priorContexts.filter(e=>e.context).map(e=>({id:e.id,
     context:{...e.context,id:e.context.id.replace(/:v\d+$/,':vX')},
   })).sort((a,b)=>a.id.localeCompare(b.id,'en'));
   assert.equal(hash(contexts),baseline.contextsSha256,'unrelated applicability notes stay unchanged');

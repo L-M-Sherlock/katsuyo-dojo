@@ -9,6 +9,23 @@ const word = surface => {
   return item;
 };
 
+test('regional tearu examples have their own context without changing the negative preparation forms', () => {
+  for (const surface of ['持つ', '待つ']) {
+    for (const form of ['tearu', 'tearuPast']) {
+      const result = assessFormUsage(word(surface), form);
+      assert.equal(eligibleVerbForm(word(surface), form), true);
+      assert.equal(result.status, 'context-required');
+      assert.match(result.context.id, /:tearu-regional:/);
+      assert.match(result.context.text, /福冈.*尊敬/);
+    }
+    for (const form of ['tearuNegative', 'tearuNegativePast']) {
+      const result = assessFormUsage(word(surface), form);
+      assert.doesNotMatch(result.context?.id ?? '', /tearu-regional/);
+      assert.doesNotMatch(result.reason, /福冈/);
+    }
+  }
+});
+
 test('ordinary direct passive waiting is not lost to a transitivity annotation', () => {
   // 待つ takes the awaited person/object: 私は家族に待たれている.
   for (const form of ['passive', 'passivePast', 'passiveNegative', 'passiveNegativePast']) {

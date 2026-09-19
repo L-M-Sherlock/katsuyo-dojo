@@ -249,6 +249,9 @@ export function assessFormUsage(item, form) {
     return contextual(sense, family, '本次新增词条先提供基础活用、受身及指定组合；其他表达尚无已审核的日常语境。');
   }
   if (family === 'tearu') {
+    if (['持つ', '待つ'].includes(word) && ['tearu', 'tearuPast'].includes(form)) return contextual(sense, 'tearu-regional',
+      '这两个肯定形式采用福冈部分地区的尊敬用法，描述持有或等待状态；不将它们当作标准语准备完成。',
+      '福冈当地对话中，尊敬地谈及老师或客人的持有、等候状态；时态按实际观察点。');
     if (word === '開く') return blocked('semantic', '本词是读作あく的自动词，表示门等自行打开；人为保留打开状态的てある用法应使用他动词「開ける」。', 'tearu-intransitive-sense');
     if (!TRANSITIVE_VERBS.has(word)) return contextual(sense, family, '当前词义尚未审核可用于人为保留结果或事先完成的日常语境。');
     if (storedResultVerbs.has(word)) return allowed('可自然表达人为完成动作后保留的结果。');

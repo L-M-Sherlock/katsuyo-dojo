@@ -10,9 +10,9 @@
   "requiredPairs": 7004,
   "originalActionPairs": 159,
   "assignedPairs": 6845,
-  "approvedCards": 6797,
-  "approvedCardsSha256": "bf089c0a364e54b8d1a93a1a2a67dd3047f56d364cb2a1f3f9b9c8bf5bf072dc",
-  "pendingPairs": 48,
+  "approvedCards": 6809,
+  "approvedCardsSha256": "46bd5af55d43db6c8d4afba34abc2783ddb070ed89697bd8b34acfd995f872bd",
+  "pendingPairs": 36,
   "publishedFile": "actions-generated.mjs",
   "approvedIds": [
     "usage:teiru:verb:書く:かく",
@@ -524,11 +524,13 @@
     "usage:teoruNegativePast:verb:置く:おく",
     "usage:teiru:verb:持つ:もつ",
     "usage:teru:verb:持つ:もつ",
+    "usage:tearu:verb:持つ:もつ",
     "usage:teoru:verb:持つ:もつ",
     "usage:toru:verb:持つ:もつ",
     "usage:teiruPast:verb:持つ:もつ",
     "usage:teiruNegative:verb:持つ:もつ",
     "usage:teiruNegativePast:verb:持つ:もつ",
+    "usage:tearuPast:verb:持つ:もつ",
     "usage:tearuNegative:verb:持つ:もつ",
     "usage:tearuNegativePast:verb:持つ:もつ",
     "usage:teoruPast:verb:持つ:もつ",
@@ -1305,10 +1307,12 @@
     "usage:teoruNegativePast:verb:食べる:たべる",
     "usage:teiru:verb:待つ:まつ",
     "usage:teru:verb:待つ:まつ",
+    "usage:tearu:verb:待つ:まつ",
     "usage:teoru:verb:待つ:まつ",
     "usage:toru:verb:待つ:まつ",
     "usage:teiruNegative:verb:待つ:まつ",
     "usage:teiruNegativePast:verb:待つ:まつ",
+    "usage:tearuPast:verb:待つ:まつ",
     "usage:tearuNegative:verb:待つ:まつ",
     "usage:tearuNegativePast:verb:待つ:まつ",
     "usage:teoruPast:verb:待つ:まつ",
@@ -3949,6 +3953,11 @@
     "usage:teshimauPast:verb:曲がる:まがる",
     "usage:teshimauNegative:verb:曲がる:まがる",
     "usage:teshimauNegativePast:verb:曲がる:まがる",
+    "usage:teshimau:verb:要る:いる",
+    "usage:chau:verb:要る:いる",
+    "usage:teshimauPast:verb:要る:いる",
+    "usage:teshimauNegative:verb:要る:いる",
+    "usage:teshimauNegativePast:verb:要る:いる",
     "usage:teshimau:verb:答える:こたえる",
     "usage:chau:verb:答える:こたえる",
     "usage:teshimauPast:verb:答える:こたえる",
@@ -4890,6 +4899,7 @@
     "usage:toku:verb:信じる:しんじる",
     "usage:teokuPast:verb:信じる:しんじる",
     "usage:teokuNegative:verb:信じる:しんじる",
+    "usage:teokuNegativePast:verb:信じる:しんじる",
     "usage:teoku:verb:続ける:つづける",
     "usage:toku:verb:続ける:つづける",
     "usage:teokuPast:verb:続ける:つづける",
@@ -5833,9 +5843,11 @@
     "usage:tekuruNegativePast:verb:習う:ならう",
     "usage:teiku:verb:思う:おもう",
     "usage:teku:verb:思う:おもう",
+    "usage:tekuru:verb:思う:おもう",
     "usage:teikuPast:verb:思う:おもう",
     "usage:teikuNegative:verb:思う:おもう",
     "usage:tekuruPast:verb:思う:おもう",
+    "usage:tekuruNegative:verb:思う:おもう",
     "usage:tekuruNegativePast:verb:思う:おもう",
     "usage:teiku:verb:洗う:あらう",
     "usage:teku:verb:洗う:あらう",
@@ -6815,46 +6827,6 @@
   ],
   "unresolved": [
     {
-      "id": "usage:tearu:verb:持つ:もつ",
-      "pair": "verb:持つ:もつ/tearu",
-      "batch": "aspect-2/02",
-      "sentence": "旅行中に困らないよう、予備の現金を持ってある。",
-      "scene": "为旅行遇到意外，事先备有应急现金。",
-      "translation": "为免旅行途中为难，已经事先备有应急现金。",
-      "reason": "现金持有义保留，但「予備の現金を持ってある」仍难确认为自然的既成准备状态表达；旅行用途说明备钱目的，却没有化解持つ本身在这里的持续持有读法。考虑改为持有备用账户或资格同样未得到更稳妥搭配；持っている／用意してある各改变固定形式或原词，不能代换。保留具体搭配未决，不断言持つ全词不可接てある。",
-      "sourceHash": "3a0f6fd0de7491faf0f6c84a0a2fca875961321c14170c8b0afccf886f52c964"
-    },
-    {
-      "id": "usage:tearuPast:verb:持つ:もつ",
-      "pair": "verb:持つ:もつ/tearuPast",
-      "batch": "aspect-2/02",
-      "sentence": "山へ出発する前に、予備の現金を持ってあった。",
-      "scene": "回顾山中旅行前，曾备好应急现金。",
-      "translation": "出发进山之前，已经事先备有应急现金。",
-      "reason": "出发前这一观察点与译文的过去准备相符，但「予備の現金を持ってあった」仍依赖未获确认的持有＋人为结果搭配。将观察点换成出发当天也只改善时间，不足以证明这一谓词自然；不以旧课程释义为拒收理由，保留原卡待具体用例。",
-      "sourceHash": "fa08de384e847efa862fa1a0c1bcd890e1af3633442fbcec18acfbcc19514412"
-    },
-    {
-      "id": "usage:tearu:verb:待つ:まつ",
-      "pair": "verb:待つ:まつ/tearu",
-      "batch": "aspect-4/00",
-      "sentence": "薬を飲んでから三十分は待ってあるので、検査を始めてください。",
-      "scene": "检查要求服药后静候半小时，我已等完。",
-      "translation": "服药后已经等了至少三十分钟，请开始检查吧。",
-      "reason": "服药后三十分钟是明确有界等待，检查是合理后续用途，故不能因为动作没有可见物理结果就否定本句；然而「三十分は待ってある」仍不如等待经过的普通完成表达稳妥，本轮未取得可比的可靠用例，无法批准其搭配。三十分は可表达至少等了三十分，译文保留该范围。",
-      "sourceHash": "5be81e76aa6b005ae266a6cc547ecd94200b2a6b8363f4f1f2c3c26fc169f387"
-    },
-    {
-      "id": "usage:tearuPast:verb:待つ:まつ",
-      "pair": "verb:待つ:まつ/tearuPast",
-      "batch": "aspect-4/00",
-      "sentence": "強度を測る時には、接着してから丸一日待ってあった。",
-      "scene": "测试胶水强度前，实验员已按要求等足一天。",
-      "translation": "测量强度时，粘接后已经等了整整一天。",
-      "reason": "粘接至强度测试之间等足一天，确实给等待设置了终点及后续实验目的；问题在「丸一日待ってあった」这一既成准备搭配仍未得到足够支持，而非待つ被笼统列作非意志词。改成胶水已干会偷换词义，改成待っていた会偷换形式，均未采用。过去观察点与原译文无冲突，卡片继续未决。",
-      "sourceHash": "3ba5b4e1c976b7b7992e5b975675761c82665ccfbd84eb38cb5e1d563620bf00"
-    },
-    {
       "id": "usage:temiruNegativePast:verb:終わる:おわる",
       "pair": "verb:終わる:おわる/temiruNegativePast",
       "batch": "temiru-1/07",
@@ -6863,56 +6835,6 @@
       "translation": "昨天一直进行到平常的时间，没有试着提前结束。",
       "reason": "原句「昨日はいつもの時間まで続け、早く終わってみなかった。」的活动持续及过去否定与中文对应，但早く終わってみなかった依旧难以成立为自然的主动试结束叙述。已考虑迁移到经历后发现：終わってみないと／終わってみなければ自然，但不能据此推定过去否定独立句同样成立，也不能改换固定目标来填数；本项保留未决，不否定其他てみる的回顾发现用法。",
       "sourceHash": "02fbe2b96d6f08008153bc629e9fd3d971fe94aa939fb930d3794161b6bfbe2f"
-    },
-    {
-      "id": "usage:teshimau:verb:要る:いる",
-      "pair": "verb:要る:いる/teshimau",
-      "batch": "teshimauChau-1/06",
-      "sentence": "出発前に、傘がもう一つ要ってしまう。",
-      "scene": "准备出发，发现还需要一把伞。",
-      "translation": "出发前发现还需要一把伞。",
-      "reason": "「傘がもう一つ要ってしまう」把静态需要直接接完成／遗憾体，当前语境不足以使搭配自然；自然表达通常需「必要になってしまう」但会换掉目标。译文另增“发现”，故未决。",
-      "sourceHash": "ec0e9693cfbb36aa401e2283129512df5315a41ffede9db3cd263ab10a35b504"
-    },
-    {
-      "id": "usage:chau:verb:要る:いる",
-      "pair": "verb:要る:いる/chau",
-      "batch": "teshimauChau-1/06",
-      "sentence": "雨が強いから、傘がもう一つ要っちゃうね。",
-      "scene": "准备出发，发现还需要一把伞。",
-      "translation": "出发前发现还需要一把伞。",
-      "reason": "「雨が強いから…要っちゃうね」的缩约不能消除要る与しまう的搭配疑点；译文也漏强雨原因并增出发前发现，不能批准。目标读いっちゃう仅构形正确。",
-      "sourceHash": "75912d8c48f7e0b66353570d4615e8b7f9c67e617dd2345bf38e2fa11148a443"
-    },
-    {
-      "id": "usage:teshimauPast:verb:要る:いる",
-      "pair": "verb:要る:いる/teshimauPast",
-      "batch": "teshimauChau-1/06",
-      "sentence": "参加者が多くて、傘がもう一つ要ってしまった。",
-      "scene": "准备出发，发现还需要一把伞。",
-      "translation": "出发前发现还需要一把伞。",
-      "reason": "「参加者が多くて…要ってしまった」意图表达需要量增加，但静态要る不直接表达变得需要；译文遗漏参加者多并增出发前发现，留待重拟而非换成必要になった。",
-      "sourceHash": "191f8a52dbaec0485e6d3bd743ff9a01e99e6d90b2403c05862b14dd025aa011"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:要る:いる",
-      "pair": "verb:要る:いる/teshimauNegative",
-      "batch": "teshimauChau-1/06",
-      "sentence": "バスで移動すれば、人数分の傘が要ってしまわない。",
-      "scene": "团体改乘巴士出游，不希望每人都需要雨伞。",
-      "translation": "如果乘巴士移动，就不会需要每人一把伞。",
-      "reason": "「バスで移動すれば…要ってしまわない」想表达无须每人一伞，却使用生硬的しまう否定直陈；普通要らない或必要にならない不能代替固定目标，故未决。人数分读にんずうぶん无误。",
-      "sourceHash": "ce8cb8b7691cac004b65547cbac318f878317e9f37f9808921aed52357bf509f"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:要る:いる",
-      "pair": "verb:要る:いる/teshimauNegativePast",
-      "batch": "teshimauChau-1/06",
-      "sentence": "昨日は大きな傘を共有したので、人数分の傘が要ってしまわなかった。",
-      "scene": "昨天大家共撑大伞，回顾雨伞需求数量。",
-      "translation": "昨天大家共撑大伞，所以没有需要每人一把伞。",
-      "reason": "共撑大伞导致需求减少可说人数分の傘は要らなかった，但当前「要ってしまわなかった」缺自然完成事件；“没有需要”译文也不够自然，整对未决。共有读きょうゆう。",
-      "sourceHash": "4bdbf3282b72439ef6b8d8c52dfd45ca8ad546be70b0bc8668f180c8799e20a6"
     },
     {
       "id": "usage:teoku:verb:間に合う:まにあう",
@@ -6973,16 +6895,6 @@
       "translation": "因为晚宴前会议没有先结束，会场准备耽搁了。",
       "reason": "晚宴与会议共用会场足以说明后果，但「会議が終わっておかなかったので」过去直陈仍有搭配疑问；不能把常见的終わっておかないと机械变为此过去否定。固定配对保留待证。",
       "sourceHash": "bc599091eaecad21242b2fae34bf0f4e8904cb6a214c48b9d70ab0a75f131b61"
-    },
-    {
-      "id": "usage:teokuNegativePast:verb:信じる:しんじる",
-      "pair": "verb:信じる:しんじる/teokuNegativePast",
-      "batch": "teokuToku-1/12",
-      "sentence": "確認が取れるまでは、匿名の投稿を信じておかなかった。",
-      "scene": "未核实消息前，当时没有先相信匿名帖子。",
-      "translation": "消息得到核实之前，当时没有暂且相信匿名帖子。",
-      "reason": "核实以前不接受帖子更自然对应信じなかった或信じないでおいた；后者否定位置与本目标不同。尝试以暂信、事先采信忠告重设情境，过去否定信じておかなかった仍不够稳定，本轮不借中文暂且二字批准。",
-      "sourceHash": "ea802276d993560e814f402b9124960cdfbb1da1f8ea31633b99e762789e642f"
     },
     {
       "id": "usage:teikuNegative:verb:着く:つく",
@@ -7115,16 +7027,6 @@
       "sourceHash": "379702082759fcd9d96fff049c4e1479b159431b33654f1aebbac4fa51db1d34"
     },
     {
-      "id": "usage:tekuru:verb:思う:おもう",
-      "pair": "verb:思う:おもう/tekuru",
-      "batch": "direction-2/05",
-      "sentence": "一緒に働くうちに、この人は信頼できると思ってくる。",
-      "scene": "描述长期相处后，开始觉得同事值得信赖。",
-      "translation": "一起工作的过程中，会逐渐认为这个人值得信赖。",
-      "reason": "一緒に働くうちに支持渐起判断，但「信頼できると思ってくる」本句缺少自然的起始状态表达；通常是思えてくる／思うようになる，它们不是固定目标。考虑过反复判断及向说话人显现的路线，仍未核实此句自然度，不能由中文逐渐认为反推批准。",
-      "sourceHash": "d7ea3e5e4b6a1351c26d57dde725c81b3479c71ab7ad6e6e4fa82ed05b5c03d7"
-    },
-    {
       "id": "usage:teikuNegativePast:verb:思う:おもう",
       "pair": "verb:思う:おもう/teikuNegativePast",
       "batch": "direction-2/05",
@@ -7133,16 +7035,6 @@
       "translation": "那次和解之后，我没有再一直认为全是对方的错。",
       "reason": "和解以后是有效过去起点，但「全て相手が悪いとは思っていかなかった」未自然呈现逐次的判断发展，普通思わなかった或持续否定不等价于本目标。尝试保持某种评价随人生发展仍缺可靠完整句，暂不批准，不否定形态构造。",
       "sourceHash": "44ecdd1b2ac3104fd218465faf2137008907685f7ea058ac4db0f6073c120b9d"
-    },
-    {
-      "id": "usage:tekuruNegative:verb:思う:おもう",
-      "pair": "verb:思う:おもう/tekuruNegative",
-      "batch": "direction-2/05",
-      "sentence": "長く付き合っても、この人なら安心だとは思ってこない。",
-      "scene": "相处许久仍有疑虑，并没逐渐觉得对方可靠。",
-      "translation": "即使交往久了，也不会逐渐觉得这个人能让人安心。",
-      "reason": "長く付き合っても提供时间跨度，却不能自动使「安心だとは思ってこない」表示安心感没有产生；思えてこない的可感知状态不是本题思う目标。尝试以持续信念解释但原句更明显是起始判断，暂保留。",
-      "sourceHash": "682be7c2f9d039a566df1ee457737715cc6cc2a96dfff6015e236665c222e1f1"
     },
     {
       "id": "usage:teiku:verb:間に合う:まにあう",
@@ -7388,9 +7280,9 @@
     },
     {
       "batch": "aspect-2/02",
-      "cards": 36,
-      "sourceHash": "22adff769df3f1a0d907d73fd4112a6db3db0bad43a025ade1b60c75d0a7f39c",
-      "stateRevision": 8
+      "cards": 38,
+      "sourceHash": "1a9739e0216ad74114f60fc1666486c2b9c8d4db053ab7fad3e1d896f70662af",
+      "stateRevision": 12
     },
     {
       "batch": "aspect-2/03",
@@ -7538,9 +7430,9 @@
     },
     {
       "batch": "aspect-4/00",
-      "cards": 21,
-      "sourceHash": "001c30d1afd6d5f116e78e7b5f6cbb358ec6e9286f2f5fe2709a3e4e3c05914e",
-      "stateRevision": 7
+      "cards": 23,
+      "sourceHash": "822c2d6a12eb05a5c5bc65234daab78efd13ea02220d2b6d6f8122a2deb30944",
+      "stateRevision": 11
     },
     {
       "batch": "aspect-4/01",
@@ -8000,9 +7892,9 @@
     },
     {
       "batch": "teshimauChau-1/06",
-      "cards": 34,
-      "sourceHash": "10ef64d78754fd5312f4b2ebddf8873a5f09d32d85a0f69d7968c8adae386852",
-      "stateRevision": 9
+      "cards": 39,
+      "sourceHash": "0e88542c133806fa830aeb182f0e2cd1460bc540795c10d2ba9ca822230e9d2e",
+      "stateRevision": 13
     },
     {
       "batch": "teshimauChau-1/07",
@@ -8156,9 +8048,9 @@
     },
     {
       "batch": "teokuToku-1/12",
-      "cards": 39,
-      "sourceHash": "b0ecedacf4b8ddb6442cfa3754e38184f498ee5eb35cfdc9a38b4b725ecaa17a",
-      "stateRevision": 8
+      "cards": 40,
+      "sourceHash": "2df9dd7b4162cf2baf6e997110c499afb789ddee3c7f812759ad198908fae88f",
+      "stateRevision": 12
     },
     {
       "batch": "teokuToku-1/13",
@@ -8324,9 +8216,9 @@
     },
     {
       "batch": "direction-2/05",
-      "cards": 33,
-      "sourceHash": "e54cd7c8d7d75792ad520350917f3f315631a9f674b85fdcc84e31360def2bd2",
-      "stateRevision": 7
+      "cards": 35,
+      "sourceHash": "0c747597a52de39db3ea2af89864132ac719f6a4e75387156745956de229a78c",
+      "stateRevision": 9
     },
     {
       "batch": "direction-2/06",
@@ -8489,6 +8381,100 @@
       "cards": 31,
       "sourceHash": "064fc4510da54e9de34bfd988aa17d0ece472bf36e9f766757e5aefa9047f1db",
       "stateRevision": 6
+    }
+  ],
+  "contextChanges": [
+    {
+      "senseId": "verb:持つ:もつ",
+      "form": "tearu",
+      "pair": "verb:持つ:もつ/tearu",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "可自然表达人为完成动作后保留的结果。",
+        "reviewVersion": 4
+      },
+      "currentUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "这两个肯定形式采用福冈部分地区的尊敬用法，描述持有或等待状态；不将它们当作标准语准备完成。",
+        "context": {
+          "id": "verb:持つ:もつ:tearu-regional:v4",
+          "text": "福冈当地对话中，尊敬地谈及老师或客人的持有、等候状态；时态按实际观察点。"
+        },
+        "reviewVersion": 4
+      }
+    },
+    {
+      "senseId": "verb:持つ:もつ",
+      "form": "tearuPast",
+      "pair": "verb:持つ:もつ/tearuPast",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "可自然表达人为完成动作后保留的结果。",
+        "reviewVersion": 4
+      },
+      "currentUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "这两个肯定形式采用福冈部分地区的尊敬用法，描述持有或等待状态；不将它们当作标准语准备完成。",
+        "context": {
+          "id": "verb:持つ:もつ:tearu-regional:v4",
+          "text": "福冈当地对话中，尊敬地谈及老师或客人的持有、等候状态；时态按实际观察点。"
+        },
+        "reviewVersion": 4
+      }
+    },
+    {
+      "senseId": "verb:待つ:まつ",
+      "form": "tearu",
+      "pair": "verb:待つ:まつ/tearu",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:待つ:まつ:tearu:v4",
+          "text": "为接下来的安排做准备，描述“等待”这件事的完成情况。"
+        },
+        "reviewVersion": 4
+      },
+      "currentUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "这两个肯定形式采用福冈部分地区的尊敬用法，描述持有或等待状态；不将它们当作标准语准备完成。",
+        "context": {
+          "id": "verb:待つ:まつ:tearu-regional:v4",
+          "text": "福冈当地对话中，尊敬地谈及老师或客人的持有、等候状态；时态按实际观察点。"
+        },
+        "reviewVersion": 4
+      }
+    },
+    {
+      "senseId": "verb:待つ:まつ",
+      "form": "tearuPast",
+      "pair": "verb:待つ:まつ/tearuPast",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:待つ:まつ:tearu:v4",
+          "text": "为接下来的安排做准备，描述“等待”这件事的完成情况。"
+        },
+        "reviewVersion": 4
+      },
+      "currentUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "这两个肯定形式采用福冈部分地区的尊敬用法，描述持有或等待状态；不将它们当作标准语准备完成。",
+        "context": {
+          "id": "verb:待つ:まつ:tearu-regional:v4",
+          "text": "福冈当地对话中，尊敬地谈及老师或客人的持有、等候状态；时态按实际观察点。"
+        },
+        "reviewVersion": 4
+      }
     }
   ]
 }
