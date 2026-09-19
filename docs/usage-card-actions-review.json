@@ -10,9 +10,9 @@
   "requiredPairs": 7004,
   "originalActionPairs": 159,
   "assignedPairs": 6845,
-  "approvedCards": 6815,
-  "approvedCardsSha256": "96e6dc25f36dcc33f8fc1939de733fb7a514a6bff3f018ee17c7951e7c92615e",
-  "pendingPairs": 30,
+  "approvedCards": 6811,
+  "approvedCardsSha256": "f7cec6103682ffec8b2a2ceada5e3c670fbd81a1ff58da9bfb9554d971296b12",
+  "pendingPairs": 34,
   "publishedFile": "actions-generated.mjs",
   "approvedIds": [
     "usage:teiru:verb:書く:かく",
@@ -4800,7 +4800,6 @@
     "usage:toku:verb:終わる:おわる",
     "usage:teokuPast:verb:終わる:おわる",
     "usage:teokuNegative:verb:終わる:おわる",
-    "usage:teokuNegativePast:verb:終わる:おわる",
     "usage:teoku:verb:残る:のこる",
     "usage:toku:verb:残る:のこる",
     "usage:teokuPast:verb:残る:のこる",
@@ -5823,7 +5822,6 @@
     "usage:tekuru:verb:知る:しる",
     "usage:teikuPast:verb:知る:しる",
     "usage:teikuNegative:verb:知る:しる",
-    "usage:teikuNegativePast:verb:知る:しる",
     "usage:tekuruPast:verb:知る:しる",
     "usage:tekuruNegative:verb:知る:しる",
     "usage:tekuruNegativePast:verb:知る:しる",
@@ -5850,7 +5848,6 @@
     "usage:tekuru:verb:思う:おもう",
     "usage:teikuPast:verb:思う:おもう",
     "usage:teikuNegative:verb:思う:おもう",
-    "usage:teikuNegativePast:verb:思う:おもう",
     "usage:tekuruPast:verb:思う:おもう",
     "usage:tekuruNegative:verb:思う:おもう",
     "usage:tekuruNegativePast:verb:思う:おもう",
@@ -6297,7 +6294,6 @@
     "usage:tekuruPast:verb:片付ける:かたづける",
     "usage:tekuruNegative:verb:片付ける:かたづける",
     "usage:tekuruNegativePast:verb:片付ける:かたづける",
-    "usage:teikuPast:verb:来る:くる",
     "usage:sugiru:verb:書く:かく",
     "usage:sugiruPast:verb:書く:かく",
     "usage:sugiruNegative:verb:書く:かく",
@@ -6873,6 +6869,16 @@
       "sourceHash": "1f89f4dafd7115e53b4f46cdb2162e67e7a4b423721ff3495eb3b5193adde7b2"
     },
     {
+      "id": "usage:teokuNegativePast:verb:終わる:おわる",
+      "pair": "verb:終わる:おわる/teokuNegativePast",
+      "batch": "teokuToku-1/09",
+      "sentence": "なぜ最初から、協力関係で終わっておかなかったのか、今も不思議だ。",
+      "scene": "回想一次合作项目，后悔没有从一开始就保持合作。",
+      "translation": "现在仍不明白，为什么一开始没有以合作关系结束。",
+      "reason": "「なぜ最初から、協力関係で終わっておかなかったのか」把结束理解为合作关系的终点评价，但当前句没有明确“先结束合作”是可预先保持的安排；「終わっておけばよかった」或普通「終わらせておけば」会改变固定目标。过去否定的后悔关系可理解，问题限于自动词終わる接ておく的此处搭配，暂不批准。",
+      "sourceHash": "e6dc30be07819e5497633615d1dae07296ace067b8432e3078c35433d9c50d06"
+    },
+    {
       "id": "usage:teikuNegative:verb:着く:つく",
       "pair": "verb:着く:つく/teikuNegative",
       "batch": "direction-1/07",
@@ -6993,6 +6999,26 @@
       "sourceHash": "c07f7b4e3bbd7f17a8038a541cda241a29035aee34528313c57d2beffe203d4e"
     },
     {
+      "id": "usage:teikuNegativePast:verb:知る:しる",
+      "pair": "verb:知る:しる/teikuNegativePast",
+      "batch": "direction-2/04",
+      "sentence": "展示会の内容をよく知っていかなかったので、会場で戸惑った。",
+      "scene": "第一次参加展会，却没有提前了解活动内容。",
+      "translation": "因为没有提前了解展会内容，我在会场有些不知所措。",
+      "reason": "「展示会の内容をよく知っていかなかったので」的因果只能说明到场前不了解，未形成知っていく所需的渐次认识过程；自然的「調べていかなかった」「よく知らなかった」不能替换固定目标。保留此过去方向否定配对未决，不否定知っていく的肯定或其他时态。",
+      "sourceHash": "5dcf8e125ca6d27b6e3a5051583290e2b68d4e748a3d1a44fb87ca72addf5bf9"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:思う:おもう",
+      "pair": "verb:思う:おもう/teikuNegativePast",
+      "batch": "direction-2/05",
+      "sentence": "前回は店が閉まっていると思っていかなかったが、実際は営業していた。",
+      "scene": "上次以为店休息而没去，后来才知道判断错了。",
+      "translation": "上次以为店关门了就没去，实际上店是营业的。",
+      "reason": "当前「閉まっていると思っていかなかった」最自然的读法是先判断关门而没有去；原词否定应落在去，思う并未被否定，不能作为本题带着判断前行或判断持续的否定。原批准撤销，继续寻找保持目标结构的自然完整句。",
+      "sourceHash": "89e0dbd20537f18160012ae65d1073ad5ebc6199cab0779fc7368e56a5f70e4c"
+    },
+    {
       "id": "usage:teiku:verb:間に合う:まにあう",
       "pair": "verb:間に合う:まにあう/teiku",
       "batch": "direction-2/06",
@@ -7081,6 +7107,16 @@
       "translation": "弟弟正从楼梯上方朝这边来。",
       "reason": "階段の上からこちらへ已经由来る表达单次趋近，再接くる的「来てくる」缺少第二层事件或时间发展；原译正来只译出了来る。考虑先来再返回的双参照场景仍难维持明确视点，暂不批准。",
       "sourceHash": "810834e57d99b7da99441abb91ae497eb4e57a6949ebb94c238c6bbc60e3a3e9"
+    },
+    {
+      "id": "usage:teikuPast:verb:来る:くる",
+      "pair": "verb:来る:くる/teikuPast",
+      "batch": "direction-2/18",
+      "sentence": "春になると、卒業生が順番に挨拶に来ていった。",
+      "scene": "春天开始，毕业生一个接一个来校道谢。",
+      "translation": "到了春天，毕业生们依次来校道谢。",
+      "reason": "「卒業生が順番に挨拶に来ていった」は人々の順次到来を意図しているが、順番にだけでは来るの到着点といくの空間／時間視点の関係が十分明確でない。以前の原文根拠は今回全文を確認できておらず承認を保留する。また挨拶は挨拶・表敬であり、訳文の道谢（謝意）まで句からは確定しない。未決はこの候補に限る。",
+      "sourceHash": "7243e2d24600395037b47b2c15791d9255e5608b79f590437eb54d55410b7a86"
     },
     {
       "id": "usage:teikuNegative:verb:来る:くる",
@@ -7976,9 +8012,9 @@
     },
     {
       "batch": "teokuToku-1/09",
-      "cards": 40,
-      "sourceHash": "303c11b57fd2271960356797df167d0e914a0dc7ceb4bc0a2b6a46b47d8ca218",
-      "stateRevision": 12
+      "cards": 39,
+      "sourceHash": "fd32b13eecb805cb4d3dcb18674ddc4cc5f3f32bc8c9b26ba0c8ddc0fe8d8346",
+      "stateRevision": 14
     },
     {
       "batch": "teokuToku-1/10",
@@ -8156,15 +8192,15 @@
     },
     {
       "batch": "direction-2/04",
-      "cards": 36,
-      "sourceHash": "38079562e9543d0cf5a26df37b4c852c4542349ef87f75f72cada0b8d180024d",
-      "stateRevision": 9
+      "cards": 35,
+      "sourceHash": "67ca4a191a05ecf13d43fca5390cfb9d9621aae790cf5083945c45e610ab8578",
+      "stateRevision": 11
     },
     {
       "batch": "direction-2/05",
-      "cards": 36,
-      "sourceHash": "4223ac27c887a475d59982a69a69309f3e3e2b983bd2cd659c216d280bcf6419",
-      "stateRevision": 11
+      "cards": 35,
+      "sourceHash": "0c747597a52de39db3ea2af89864132ac719f6a4e75387156745956de229a78c",
+      "stateRevision": 13
     },
     {
       "batch": "direction-2/06",
@@ -8240,9 +8276,9 @@
     },
     {
       "batch": "direction-2/18",
-      "cards": 10,
-      "sourceHash": "1ff73b185863cdcee9ec39fca0a7521457f0f4b8e7b77422d47390a1f49be0ab",
-      "stateRevision": 9
+      "cards": 9,
+      "sourceHash": "017fd4faa3b01c7ea78d912dce51c6d4abbfce1a8a0035122f0775e656f5758b",
+      "stateRevision": 11
     },
     {
       "batch": "sugiru-1/00",
