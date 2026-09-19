@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "stage": "actions",
   "complete": false,
-  "semanticPolicy": "Yokubi-aligned open-context review: teshimauNegative and teshimauNegativePast may express unfinished action, avoided completion, regret, accident, or another irreversible result when the full sentence supports it; they are not hard-limited to one Chinese gloss.",
+  "semanticPolicy": "The curriculum can extend beyond reference textbooks and earlier glosses. Review natural full-sentence uses and update teaching explanations together; preserve exact lexical senses, conjugation targets, scope of negation, and register.",
   "pendingNeedsReReview": false,
   "originalCards": 9598,
   "originalCardsSha256": "5f7f9dcef365905069a2d258a7581b5e3974044caf13bda7b74d959e40fdcfcf",
@@ -10,9 +10,9 @@
   "requiredPairs": 7004,
   "originalActionPairs": 159,
   "assignedPairs": 6845,
-  "approvedCards": 6779,
-  "approvedCardsSha256": "94fb3c156bca1f79a3d3c57c750c7ec0f08611aea5ca3e83e258300eb1d42834",
-  "pendingPairs": 66,
+  "approvedCards": 6778,
+  "approvedCardsSha256": "84764103c0224e5b786de95720b63c3264ef765022f5dbb58c20ce2ebb31f4cf",
+  "pendingPairs": 67,
   "publishedFile": "actions-generated.mjs",
   "approvedIds": [
     "usage:teiru:verb:書く:かく",
@@ -1505,15 +1505,11 @@
     "usage:teoruNegativePast:verb:返す:かえす",
     "usage:teiru:verb:指す:さす",
     "usage:teru:verb:指す:さす",
-    "usage:tearu:verb:指す:さす",
     "usage:teoru:verb:指す:さす",
     "usage:toru:verb:指す:さす",
     "usage:teiruPast:verb:指す:さす",
     "usage:teiruNegative:verb:指す:さす",
     "usage:teiruNegativePast:verb:指す:さす",
-    "usage:tearuPast:verb:指す:さす",
-    "usage:tearuNegative:verb:指す:さす",
-    "usage:tearuNegativePast:verb:指す:さす",
     "usage:teoruPast:verb:指す:さす",
     "usage:teoruNegative:verb:指す:さす",
     "usage:teoruNegativePast:verb:指す:さす",
@@ -3928,6 +3924,8 @@
     "usage:teshimau:verb:降る:ふる",
     "usage:chau:verb:降る:ふる",
     "usage:teshimauPast:verb:降る:ふる",
+    "usage:teshimauNegative:verb:降る:ふる",
+    "usage:teshimauNegativePast:verb:降る:ふる",
     "usage:teshimau:verb:教える:おしえる",
     "usage:chau:verb:教える:おしえる",
     "usage:teshimauNegative:verb:教える:おしえる",
@@ -3935,17 +3933,18 @@
     "usage:teshimau:verb:眠る:ねむる",
     "usage:chau:verb:眠る:ねむる",
     "usage:teshimauPast:verb:眠る:ねむる",
+    "usage:teshimauNegative:verb:眠る:ねむる",
+    "usage:teshimauNegativePast:verb:眠る:ねむる",
     "usage:teshimau:verb:起きる:おきる",
     "usage:chau:verb:起きる:おきる",
     "usage:teshimauPast:verb:起きる:おきる",
+    "usage:teshimauNegative:verb:起きる:おきる",
+    "usage:teshimauNegativePast:verb:起きる:おきる",
     "usage:teshimau:verb:曲がる:まがる",
     "usage:chau:verb:曲がる:まがる",
     "usage:teshimauPast:verb:曲がる:まがる",
     "usage:teshimauNegative:verb:曲がる:まがる",
     "usage:teshimauNegativePast:verb:曲がる:まがる",
-    "usage:teshimau:verb:要る:いる",
-    "usage:chau:verb:要る:いる",
-    "usage:teshimauPast:verb:要る:いる",
     "usage:teshimau:verb:答える:こたえる",
     "usage:chau:verb:答える:こたえる",
     "usage:teshimauPast:verb:答える:こたえる",
@@ -6837,6 +6836,46 @@
       "sourceHash": "3ba5b4e1c976b7b7992e5b975675761c82665ccfbd84eb38cb5e1d563620bf00"
     },
     {
+      "id": "usage:tearu:verb:指す:さす",
+      "pair": "verb:指す:さす/tearu",
+      "batch": "aspect-4/06",
+      "sentence": "入口の方向は、案内板で指してある。",
+      "scene": "展览前，方向牌已经指好入口。",
+      "translation": "入口方向已经在指示牌上标好了。",
+      "reason": "入口の方向は、案内板で指してある把指す用于人为标好方向，和更惯用的示す存在搭配边界；目前未找到足够依据确认该固定词义的てある结果句自然，保留未决。",
+      "sourceHash": "840ac2486586e23e45d761dd6b0a2847d0c12b13f09fd2dfb33f8816b1bda43d"
+    },
+    {
+      "id": "usage:tearuPast:verb:指す:さす",
+      "pair": "verb:指す:さす/tearuPast",
+      "batch": "aspect-4/06",
+      "sentence": "会議の時、標識は会場を指してあった。",
+      "scene": "开会时，指示牌已经指向会场。",
+      "translation": "开会时，标牌已经指向会场。",
+      "reason": "標識は会場を指してあった把标牌当作指向施事，却使用通常要求人为事先动作的てある；应区分标牌持续指向与人为标示结果，现句不足以批准，保留未决。",
+      "sourceHash": "2ca267628f589c40c9d2c90ec76b4a53c5ecea8eba688b5acb906bddf22d3866"
+    },
+    {
+      "id": "usage:tearuNegative:verb:指す:さす",
+      "pair": "verb:指す:さす/tearuNegative",
+      "batch": "aspect-4/06",
+      "sentence": "入口の案内はまだ新しい展示室を指してない。",
+      "scene": "入口牌还没指向新展厅。",
+      "translation": "入口指示还没有指向新展厅。",
+      "reason": "入口の案内はまだ新しい展示室を指してない只直接呈现指示尚未指向的状态，场景同样缺乏人为改设的具体准备行为；此句不能凭てない同形就确认为tearuNegative，保留未决。",
+      "sourceHash": "8db9260292ebe48eaa2f4646408ca7ab871b9be10f48d7bf49339763ec723086"
+    },
+    {
+      "id": "usage:tearuNegativePast:verb:指す:さす",
+      "pair": "verb:指す:さす/tearuNegativePast",
+      "batch": "aspect-4/06",
+      "sentence": "客が着いた時、標識はまだ駐車場を指してなかった。",
+      "scene": "客人到达时，路牌还没指向停车场。",
+      "translation": "客人到达时，标牌还没指向停车场。",
+      "reason": "客到达时標識仍未指向停车场，句子可按ている过去否定理解，未交代人为标好方向的准备；固定tearuNegativePast用义证据不足，保留未决。",
+      "sourceHash": "8d89c89e08a3b6dfcc77af8c462bdfbca2647cdc73e17298c09a81778e6308e2"
+    },
+    {
       "id": "usage:temiruNegativePast:verb:終わる:おわる",
       "pair": "verb:終わる:おわる/temiruNegativePast",
       "batch": "temiru-1/07",
@@ -6847,84 +6886,54 @@
       "sourceHash": "02fbe2b96d6f08008153bc629e9fd3d971fe94aa939fb930d3794161b6bfbe2f"
     },
     {
-      "id": "usage:teshimauNegative:verb:降る:ふる",
-      "pair": "verb:降る:ふる/teshimauNegative",
+      "id": "usage:teshimau:verb:要る:いる",
+      "pair": "verb:要る:いる/teshimau",
       "batch": "teshimauChau-1/06",
-      "sentence": "午後は雨が降ってしまわないように、屋内で過ごす。",
-      "scene": "明天要办户外婚礼，祈盼现场不要下雨。",
-      "translation": "正祈祷明天婚礼时不要下起雨来。",
-      "reason": "降る的词义在句中保留，否定形式给出有限范围，表示不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "086b5418f6532668185f75b4b6d6020df92931243271f1b3eb89bd13d37e0008"
+      "sentence": "出発前に、傘がもう一つ要ってしまう。",
+      "scene": "准备出发，发现还需要一把伞。",
+      "translation": "出发前发现还需要一把伞。",
+      "reason": "「傘がもう一つ要ってしまう」把静态需要直接接完成／遗憾体，当前语境不足以使搭配自然；自然表达通常需「必要になってしまう」但会换掉目标。译文另增“发现”，故未决。",
+      "sourceHash": "ec0e9693cfbb36aa401e2283129512df5315a41ffede9db3cd263ab10a35b504"
     },
     {
-      "id": "usage:teshimauNegativePast:verb:降る:ふる",
-      "pair": "verb:降る:ふる/teshimauNegativePast",
+      "id": "usage:chau:verb:要る:いる",
+      "pair": "verb:要る:いる/chau",
       "batch": "teshimauChau-1/06",
-      "sentence": "昨日は雨が降ってしまわなかった。午後は晴れた。",
-      "scene": "昨天朋友在野外露营，问夜里是否下雨。",
-      "translation": "昨天露营时，半夜没下起雨来吧？",
-      "reason": "降る的词义在句中保留，过去否定给出有限范围，表示过去不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "c9774451bd639e9f3ebca3034f9966be632ca171db5bf637cb616ae956c8067f"
+      "sentence": "雨が強いから、傘がもう一つ要っちゃうね。",
+      "scene": "准备出发，发现还需要一把伞。",
+      "translation": "出发前发现还需要一把伞。",
+      "reason": "「雨が強いから…要っちゃうね」的缩约不能消除要る与しまう的搭配疑点；译文也漏强雨原因并增出发前发现，不能批准。目标读いっちゃう仅构形正确。",
+      "sourceHash": "75912d8c48f7e0b66353570d4615e8b7f9c67e617dd2345bf38e2fa11148a443"
     },
     {
-      "id": "usage:teshimauNegative:verb:眠る:ねむる",
-      "pair": "verb:眠る:ねむる/teshimauNegative",
+      "id": "usage:teshimauPast:verb:要る:いる",
+      "pair": "verb:要る:いる/teshimauPast",
       "batch": "teshimauChau-1/06",
-      "sentence": "昼寝の時間を決め、子どもが車内で眠ってしまわないようにする。",
-      "scene": "快到下车站，和同伴说话防止自己睡着。",
-      "translation": "为免在到达下车站前睡着，正和朋友说话。",
-      "reason": "眠る的词义在句中保留，否定形式给出有限范围，表示不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "8afeed49408fd8d549f1e6dd9bd6162aa49c2353e8a8c8750d151539811d3725"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:眠る:ねむる",
-      "pair": "verb:眠る:ねむる/teshimauNegativePast",
-      "batch": "teshimauChau-1/06",
-      "sentence": "昨日は子どもが車内で眠ってしまわなかった。休憩中は起きていた。",
-      "scene": "朋友昨天熬夜后上课，问他是否睡着。",
-      "translation": "昨天上课时，你没有累得睡着吧？",
-      "reason": "眠る的词义在句中保留，过去否定给出有限范围，表示过去不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "a9f2d662e4cea76324bf00558505a3415bbbbf0128daf1aca97e210d575a8145"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:起きる:おきる",
-      "pair": "verb:起きる:おきる/teshimauNegative",
-      "batch": "teshimauChau-1/06",
-      "sentence": "休日も朝の予定があるので、昼まで起きてしまわないようにする。",
-      "scene": "明早可以晚起，调整闹钟避免过早起床。",
-      "translation": "为免明天仍按平时的时间起床，把闹钟设晚一些。",
-      "reason": "起きる的词义在句中保留，否定形式给出有限范围，表示不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "2e73ddcf6e57a39021cd5c4f199df351474e91da66c60ebb66d6d54cbfa79906"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:起きる:おきる",
-      "pair": "verb:起きる:おきる/teshimauNegativePast",
-      "batch": "teshimauChau-1/06",
-      "sentence": "昨日は昼まで起きてしまわなかった。午前中は寝ていた。",
-      "scene": "朋友休假却忘改闹钟，问是否仍早起了。",
-      "translation": "昨天明明休息，你没按平时的时间就起床了吧？",
-      "reason": "起きる的词义在句中保留，过去否定给出有限范围，表示过去不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "bbbed088aa6449c66814dd887638e042161c68912037588dd0b54379c42d6ae8"
+      "sentence": "参加者が多くて、傘がもう一つ要ってしまった。",
+      "scene": "准备出发，发现还需要一把伞。",
+      "translation": "出发前发现还需要一把伞。",
+      "reason": "「参加者が多くて…要ってしまった」意图表达需要量增加，但静态要る不直接表达变得需要；译文遗漏参加者多并增出发前发现，留待重拟而非换成必要になった。",
+      "sourceHash": "191f8a52dbaec0485e6d3bd743ff9a01e99e6d90b2403c05862b14dd025aa011"
     },
     {
       "id": "usage:teshimauNegative:verb:要る:いる",
       "pair": "verb:要る:いる/teshimauNegative",
       "batch": "teshimauChau-1/06",
-      "sentence": "人数分の傘が要ってしまわないように、予備も用意する。",
+      "sentence": "バスで移動すれば、人数分の傘が要ってしまわない。",
       "scene": "团体改乘巴士出游，不希望每人都需要雨伞。",
       "translation": "如果乘巴士移动，就不会需要每人一把伞。",
-      "reason": "要る的词义在句中保留，否定形式给出有限范围，表示不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "8e3913aebef0abe944214f122a1f8438c5c52155a90aededd6d1bb7095b4ecfa"
+      "reason": "「バスで移動すれば…要ってしまわない」想表达无须每人一伞，却使用生硬的しまう否定直陈；普通要らない或必要にならない不能代替固定目标，故未决。人数分读にんずうぶん无误。",
+      "sourceHash": "ce8cb8b7691cac004b65547cbac318f878317e9f37f9808921aed52357bf509f"
     },
     {
       "id": "usage:teshimauNegativePast:verb:要る:いる",
       "pair": "verb:要る:いる/teshimauNegativePast",
       "batch": "teshimauChau-1/06",
-      "sentence": "昨日は傘が人数分要ってしまわなかった。追加は要らなかった。",
+      "sentence": "昨日は大きな傘を共有したので、人数分の傘が要ってしまわなかった。",
       "scene": "昨天大家共撑大伞，回顾雨伞需求数量。",
       "translation": "昨天大家共撑大伞，所以没有需要每人一把伞。",
-      "reason": "要る的词义在句中保留，过去否定给出有限范围，表示过去不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "53cfe1408af74883584d500efaa15dabb15b74b4c0a1e6d4cfcf858238e09f14"
+      "reason": "共撑大伞导致需求减少可说人数分の傘は要らなかった，但当前「要ってしまわなかった」缺自然完成事件；“没有需要”译文也不够自然，整对未决。共有读きょうゆう。",
+      "sourceHash": "4bdbf3282b72439ef6b8d8c52dfd45ca8ad546be70b0bc8668f180c8799e20a6"
     },
     {
       "id": "usage:teoku:verb:間に合う:まにあう",
@@ -7474,7 +7483,7 @@
       "batch": "aspect-1/02",
       "cards": 38,
       "sourceHash": "e86f36fcb0052f2d817dc9acf04c987ec75950fb1682ce92f798b2b8ff92fcfb",
-      "stateRevision": 6
+      "stateRevision": 8
     },
     {
       "batch": "aspect-1/03",
@@ -7522,7 +7531,7 @@
       "batch": "aspect-1/10",
       "cards": 38,
       "sourceHash": "f8177a6bdee2e1c77e507b1c2b24f08475174d7cf9331c9ba449cdce27794907",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "aspect-1/11",
@@ -7534,7 +7543,7 @@
       "batch": "aspect-1/12",
       "cards": 16,
       "sourceHash": "0f439d4ab32152b996bdc1e478aba1738b55471e02b9835e3d5611bfa1ed702c",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "aspect-2/00",
@@ -7588,7 +7597,7 @@
       "batch": "aspect-2/08",
       "cards": 32,
       "sourceHash": "21ebe19bb9796903fa2d08bc78aa0b1c3945000a5da2fc5b29799b167f47896d",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "aspect-2/09",
@@ -7599,8 +7608,8 @@
     {
       "batch": "aspect-2/10",
       "cards": 38,
-      "sourceHash": "a4c06a226ee1b7446392daf002f8d9dbf2dd3894adf338fdfe9bb6d78844ba31",
-      "stateRevision": 7
+      "sourceHash": "c026db1c2173373ee4c146e385e4c30c19f67fcb5ec27a3c2b224531dae7a5fd",
+      "stateRevision": 9
     },
     {
       "batch": "aspect-2/11",
@@ -7684,7 +7693,7 @@
       "batch": "aspect-3/11",
       "cards": 38,
       "sourceHash": "19a6fb3d27413bf58b348d8c802c59049c8c74e492a93cf30376a775945c52c0",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "aspect-3/12",
@@ -7736,9 +7745,9 @@
     },
     {
       "batch": "aspect-4/06",
-      "cards": 28,
-      "sourceHash": "b8ac6f8599e1d8a3e40bce24709bf4d8291f310ebb47192ff1943f5158d0df8f",
-      "stateRevision": 5
+      "cards": 24,
+      "sourceHash": "4d888999f70e0a6e4f379cf040462c3b58f7a727edff5a38bcf63e47bf413edb",
+      "stateRevision": 7
     },
     {
       "batch": "aspect-4/07",
@@ -7791,8 +7800,8 @@
     {
       "batch": "giving-1/02",
       "cards": 36,
-      "sourceHash": "f3a2c5833e91f241d867b52a7597e509c793353c4f8286085b157363e63032d7",
-      "stateRevision": 5
+      "sourceHash": "e7e3d8b2315c93780527abe82b11a81a47231cd232dc30d4f389a017ac4edf4e",
+      "stateRevision": 7
     },
     {
       "batch": "giving-1/03",
@@ -7822,7 +7831,7 @@
       "batch": "giving-1/07",
       "cards": 36,
       "sourceHash": "91fee5cb40482d9c776370d20292de768ae16de9eb0c3646c1c69826aa53bf66",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "giving-1/08",
@@ -7839,8 +7848,8 @@
     {
       "batch": "giving-1/10",
       "cards": 33,
-      "sourceHash": "12420587e198ff7f29f0b2293c914ca33872d487f6ebecbc698727bdac0b6de1",
-      "stateRevision": 5
+      "sourceHash": "c2282b8feeb5c774b6508ed9572dd93a2b9ce0187b47646e76e05dd160e30ecd",
+      "stateRevision": 7
     },
     {
       "batch": "giving-1/11",
@@ -7905,8 +7914,8 @@
     {
       "batch": "giving-2/06",
       "cards": 36,
-      "sourceHash": "c12a5b40f4e2adcbb5a8df032c89ae1407bd9ab5925ffd78720c16649d57fae2",
-      "stateRevision": 5
+      "sourceHash": "b667c458028b5031da1bb9f0cb24d3fbe3c9ff760b78e0e5252f40df564915e0",
+      "stateRevision": 7
     },
     {
       "batch": "giving-2/07",
@@ -7917,14 +7926,14 @@
     {
       "batch": "giving-2/08",
       "cards": 36,
-      "sourceHash": "55a75b2c09e7d916ab51c3ea74b90dd858b545c727ecfb372515d183b2ad9238",
-      "stateRevision": 5
+      "sourceHash": "aff4eb6383bda266a64e6b5b0efa3a3dab9447fdd032ff744f65aff588238fce",
+      "stateRevision": 7
     },
     {
       "batch": "giving-2/09",
       "cards": 36,
       "sourceHash": "9343edb64617964e4da5e54d32c726ed0596bbf5c6f3315e14cb56cb75812b36",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "giving-2/10",
@@ -7965,8 +7974,8 @@
     {
       "batch": "giving-3/01",
       "cards": 36,
-      "sourceHash": "9118aa77885017328596d53bbeed22aca45ef3f5fef8ce93b882ad3cb08c6f6b",
-      "stateRevision": 5
+      "sourceHash": "b8ea4836cd175291c847178f3dfc28fce7a66ab9b0a851d018322478df6e9128",
+      "stateRevision": 7
     },
     {
       "batch": "giving-3/02",
@@ -8162,9 +8171,9 @@
     },
     {
       "batch": "teshimauChau-1/06",
-      "cards": 31,
-      "sourceHash": "7bbbfb7edb0c8e6c428e2dcf3d506b81cbf6fa77057ea0d93a522ee41a18d727",
-      "stateRevision": 7
+      "cards": 34,
+      "sourceHash": "10ef64d78754fd5312f4b2ebddf8873a5f09d32d85a0f69d7968c8adae386852",
+      "stateRevision": 9
     },
     {
       "batch": "teshimauChau-1/07",
@@ -8260,7 +8269,7 @@
       "batch": "teokuToku-1/02",
       "cards": 40,
       "sourceHash": "da8010ca388add9758f9274d4c00020dfef2b0e3a94370e95914a60cad56c735",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "teokuToku-1/03",
@@ -8350,7 +8359,7 @@
       "batch": "direction-1/01",
       "cards": 34,
       "sourceHash": "27a2282b7538f031d67a46b3edeee13877f5065e01d103dd07f873381a8a36d5",
-      "stateRevision": 7
+      "stateRevision": 9
     },
     {
       "batch": "direction-1/02",
@@ -8595,8 +8604,8 @@
     {
       "batch": "sugiru-1/04",
       "cards": 40,
-      "sourceHash": "10d81d66ba9a468e23e90abe7dd2a2e87388a8c970ba3eb195b958c8240456f5",
-      "stateRevision": 5
+      "sourceHash": "efac73544cce9efb305f720791503aed8ac5683520c0843540fa697273382442",
+      "stateRevision": 7
     },
     {
       "batch": "sugiru-1/05",

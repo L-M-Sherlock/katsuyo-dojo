@@ -83,8 +83,8 @@ test('reviewed stages retain exact eligible coverage and preserve the original r
 test('published action cards match the approved review ledger and leave the historical baseline intact', () => {
   const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
   const sourceHash = file => createHash('sha256').update(readFileSync(new URL(file, import.meta.url))).digest('hex');
-  assert.equal(sourceHash('../docs/usage-card-actions-review.json'), '34f48c6f9cf3f7ef440f3409d589443dd8987898e33a0ae93e4f68b686b1dd4f');
-  assert.equal(sourceHash('../app/lib/usage-cards/actions-generated.mjs'), '5f950fd1c3deba5ae66657c7bd709ee151ecf6387e47baeabcca2650a11eeb44');
+  assert.equal(sourceHash('../docs/usage-card-actions-review.json'), 'e416f77dfecb8c38410ae7565674d7ffe8d4cda626f0ab58515154e30ca33807');
+  assert.equal(sourceHash('../app/lib/usage-cards/actions-generated.mjs'), '24b9f19072883541a08f56959d254506c58f9017d8ac4fc355aa2c9f8491f0ed');
   assert.equal(actionWordCards.length, actionReview.approvedCards);
   assert.deepEqual(new Set(actionWordCards.map(card => card.id)), actionIds);
   assert.equal(hash(actionWordCards), actionReview.approvedCardsSha256);
@@ -98,7 +98,7 @@ test('published action cards match the approved review ledger and leave the hist
   const required = new Set(usageCardStageRequirements('actions'));
   const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
   assert.equal(required.size, actionReview.requiredPairs);
-  assert.equal(pendingPairs.size, 66);
+  assert.equal(pendingPairs.size, 67);
   assert.equal(pendingPairs.size, actionReview.pendingPairs);
   assert.equal(actionReview.complete, false);
   for (const pair of pendingPairs) assert.ok(!covered.has(pair), pair);
