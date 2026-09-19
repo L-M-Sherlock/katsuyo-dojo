@@ -43,6 +43,32 @@ node "$SKILL_DIR/scripts/card-workbench.mjs" prepare --project "$PWD" \
 
 只登记将立即启动的具体工作，登记成功后实际派发并核对运行状态。状态文件中的 owner 不是运行句柄；派发失败或负责人已经结束时，保留产物和历史，显式交接给符合配置的可用代理。不要把已登记但未启动的批次算作正在并行执行。
 
+### 协议 2：先提交，再验收
+
+当前实现是任务目录内的 `pipeline.mjs`（本轮位于 `work/actions-20260918/pipeline.mjs`），可复用快照与串行执行工具在本 skill 的 `scripts/delivery-store.mjs`、`scripts/checked-steps.mjs`。新任务应在自己的任务目录适配流水线，不把本轮路径当成固定长期存储。新批次优先 `assign-author --protocol 2`；已有批次由协调者确认原负责人停写后显式 `enable-delivery --batch lane/NN --actor root`，不会自动升级。旧批次保持 `freeze-*` 兼容，协议 2 则禁止它们绕过提交与验收。
+
+作者或审核者把检查命令写成 JSON `steps`（每步明确 `executable` 与字符串 `args`，不经 shell）及本批 `outputs`，运行 `run-checks --batch lane/NN --agent NAME --plan lane/NN.checks.json`。工具先撤销旧成功证据，再串行运行；任何非零退出或输入文件在检查中变化都会失败，之后不能提交旧产物。检查后改稿也会使证据失效。
+
+检查计划示例（从任务目录运行；把脚本路径替换为真实绝对路径）：
+
+```json
+{
+  "outputs": ["lane/00.review-check.md", "lane/00.review-readings.json"],
+  "steps": [
+    {"executable": "node", "args": ["/absolute/skill/scripts/card-workbench.mjs", "check", "--project", "/absolute/project", "--input", "lane/00.cards.json", "--assignment", "lane/00.assignment.json", "--output", "lane/00.review-check.md"]},
+    {"executable": "uv", "args": ["run", "--no-project", "--with", "fugashi[unidic-lite]", "python", "/absolute/skill/scripts/reading-audit.py", "--project", "/absolute/project", "--input", "lane/00.cards.json", "--output", "lane/00.review-readings.json"]}
+  ]
+}
+```
+
+先生成内容，再运行上述检查。候选判读需修改审核报告时，修改后再运行检查绑定最终文件；仅重跑扫描或更新时间戳不能满足“交接后有新报告”的要求。未改卡片的复审可以保留原卡，但须写明本轮实际核验的具体证据。
+
+`submit-author`／`submit-review` 必须携带 `run-checks` 成功返回的 `--revision`；它们验证工作稿、报告与检查证据，创建包含最终字节的快照和 SHA-256 receipt，释放 owner 并停在 submitted 状态。协调者确认代理已停写、实际内容已读，再用 **返回的 `submission.delivery.receipt` 和 submitted revision** 执行 `accept-author`／`accept-review --actor root --receipt ... --revision ...`。验收拒绝旧 receipt、旧 revision、工作文件晚写或快照漂移；不能把“提交成功”计为“已审核”。
+
+返修用 `reject-submission --receipt ... --reason ...` 保留旧提交并返回原负责人，新提交生成新 receipt。已接受稿件则按既有 reopen 流程进入新轮次。快照包含作者当时的原稿；审核者可以合法修改工作稿，但不能把修改后的稿伪称为旧作者快照。旧 reviewed 批次的 `seal-reviewed` 只封存当前已冻结的审核文件，不补造作者历史。
+
+快照位于任务目录的 `deliveries/<batch>/rev-<revision>-<phase>-<uuid>/`；工具先完整写入临时目录，再原子重命名并登记状态。提交失败不会留下可验收的半成品，重试使用新目录，不覆盖旧快照。接入读取 `readDelivery` 验证后返回的同一份字节，不在验证后重新读取易变化的工作稿。共享目录的 owner 和 actor 不是权限系统：无法阻止绕过工具的直接写入，但此类变动不得通过验收或接入校验。
+
 作者任务可按下列信息组织，不要求照抄措辞：
 
 > 读取仓库内 skill 与所需专项规则。按指定只读清单逐条制作，仅写指定内容文件及临时报告；固定词义／形式，每卡显式保存实际场景、句段和译文，状态为 draft。用当前活用器还原整句，执行精确清单检查和读音对照，列出具体未决项。完成本批后停止写入，不自行扩写其他文件或再次委派。
