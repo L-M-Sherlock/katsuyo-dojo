@@ -7,6 +7,7 @@ const basic = new Set(basicUsageCardRequirements());
 const voice = new Set(usageCardStageRequirements('voice'));
 const linking = new Set(usageCardStageRequirements('linking'));
 const intentions = new Set(usageCardStageRequirements('intentions'));
+const actions = new Set(usageCardStageRequirements('actions'));
 console.log(JSON.stringify({cards: USAGE_CARDS.length, approved: approved.length,
   approvedForms: new Set(approved.map(card => card.form)).size,
   approvedFormClasses: new Set(approved.map(card => `${card.form}/${usageCardItem(card.senseId)?.class}`)).size,
@@ -19,6 +20,9 @@ console.log(JSON.stringify({cards: USAGE_CARDS.length, approved: approved.length
   requiredLinkingPairs: linking.size,
   approvedIntentionPairs: approved.filter(card => intentions.has(`${card.senseId}/${card.form}`)).length,
   requiredIntentionPairs: intentions.size,
+  approvedActionPairs: approved.filter(card => actions.has(`${card.senseId}/${card.form}`)).length,
+  requiredActionPairs: actions.size,
+  missingActionPairs: [...actions].filter(pair => !approved.some(card => `${card.senseId}/${card.form}` === pair)),
   writingReview: usageCardWritingReview(USAGE_CARDS), issues}, null, 2));
 if (process.argv.includes('--sentences')) for (const card of USAGE_CARDS) {
   const resolved = resolveUsageCard(card);

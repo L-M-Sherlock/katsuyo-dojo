@@ -21,6 +21,8 @@ const expectedPairs=new Set([
   'verb:間に合う:まにあう/masenka',
   'verb:分かる:わかる/masenka',
 ]);
+const actionReview=JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json',import.meta.url),'utf8'));
+const actionIds=new Set(actionReview.approvedIds);
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
 let model;
 try { model=(await server.ssrLoadModule('/app/page.tsx')).KNOWLEDGE; }
@@ -44,8 +46,9 @@ test('only the five approved intention deferrals change the published exercise c
     context:{...e.context,id:e.context.id.replace(/:v\d+$/,':vX')},
   })).sort((a,b)=>a.id.localeCompare(b.id,'en'));
   assert.equal(hash(contexts),baseline.contextsSha256,'unrelated applicability notes stay unchanged');
-  assert.equal(USAGE_CARDS.length,baseline.counts.cards);
-  assert.equal(hash(USAGE_CARDS),baseline.cardsSha256,'no published example is edited or dropped');
+  const historical=USAGE_CARDS.filter(card=>!actionIds.has(card.id));
+  assert.equal(historical.length,baseline.counts.cards);
+  assert.equal(hash(historical),baseline.cardsSha256,'no published example is edited or dropped');
 });
 
 test('deferred forms remain constructible and recognizable with their usage limitation',()=>{

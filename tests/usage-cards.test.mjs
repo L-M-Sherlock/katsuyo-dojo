@@ -8,6 +8,9 @@ import UsageCardView from '../app/lib/usage-card-view.mjs';
 import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements, basicUsageCardRequirements, usageCardStageRequirements, usageCardWritingReview, usageCardFor} from '../app/lib/usage-cards.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 import intentionWordCards from '../app/lib/usage-cards/intention-words/index.mjs';
+import actionWordCards from '../app/lib/usage-cards/actions-generated.mjs';
+const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url), 'utf8'));
+const actionIds = new Set(actionReview.approvedIds);
 
 const intentionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-intentions-review.json', import.meta.url),'utf8'));
 const deferredIntentionPairs = new Set(intentionReview.deferred.map(card=>card.pair));
@@ -70,11 +73,48 @@ test('reviewed stages retain exact eligible coverage and preserve the original r
   assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice','linking','intentions']}),[]);
   const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
   const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice'),...usageCardStageRequirements('linking'),
-    ...usageCardStageRequirements('intentions')]);
+    ...usageCardStageRequirements('intentions'),...actionWordCards.filter(c=>actionIds.has(c.id)).map(c=>`${c.senseId}/${c.form}`)]);
   const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   assert.deepEqual(actual,expected);
   assert.equal(USAGE_CARDS.length,expected.size);
   assert.ok(USAGE_CARDS.every(c=>c.form!==null));
+});
+
+test('published action cards match the approved review ledger and leave the historical baseline intact', () => {
+  const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  const sourceHash = file => createHash('sha256').update(readFileSync(new URL(file, import.meta.url))).digest('hex');
+  assert.equal(sourceHash('../docs/usage-card-actions-review.json'), '5d234d7589029d41b8b10814f03f078112887ceff41f3cfcc7e64d095cf7d188');
+  assert.equal(sourceHash('../app/lib/usage-cards/actions-generated.mjs'), '30ca1b3fbbd9c541544c0c41fee06932cccd95833217881aaea09e34e6dce159');
+  assert.equal(actionWordCards.length, actionReview.approvedCards);
+  assert.deepEqual(new Set(actionWordCards.map(card => card.id)), actionIds);
+  assert.equal(hash(actionWordCards), actionReview.approvedCardsSha256);
+  const old = USAGE_CARDS.filter(card => !actionIds.has(card.id));
+  assert.equal(old.length, actionReview.originalCards);
+  assert.equal(hash(old), actionReview.originalCardsSha256);
+  const approvedPairs = new Set(actionWordCards.map(card => `${card.senseId}/${card.form}`));
+  const pendingPairs = new Set(actionReview.unresolved.map(entry => entry.pair));
+  assert.equal(approvedPairs.size, actionReview.approvedCards);
+  assert.ok([...pendingPairs].every(pair => !approvedPairs.has(pair)));
+  const required = new Set(usageCardStageRequirements('actions'));
+  const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
+  assert.equal(required.size, actionReview.requiredPairs);
+  assert.equal(pendingPairs.size, 152);
+  assert.equal(pendingPairs.size, actionReview.pendingPairs);
+  assert.equal(actionReview.complete, false);
+  for (const pair of pendingPairs) assert.ok(!covered.has(pair), pair);
+  for (const pair of approvedPairs) assert.ok(required.has(pair), pair);
+  assert.deepEqual(new Set([...covered, ...pendingPairs]), required);
+  assert.equal(covered.size - approvedPairs.size, actionReview.originalActionPairs);
+  assert.ok(actionWordCards.every(card => card.review === 'approved'));
+});
+
+test('another action card in the same form cannot fill an exact sense gap', () => {
+  const card = actionWordCards[0];
+  const pair = `${card.senseId}/${card.form}`;
+  const reduced = USAGE_CARDS.filter(candidate => candidate.id !== card.id);
+  assert.ok(reduced.some(candidate => candidate.form === card.form));
+  assert.equal(createUsageCardLookup(reduced)(usageCardItem(card.senseId), card.form), null);
+  assert.ok(usageCardIssues(reduced, {requireStageCoverage:['actions']}).includes(`Missing approved actions card for ${pair}`));
 });
 
 test('published intention batches match the reviewed content and leave all old cards unchanged', async () => {
@@ -82,7 +122,7 @@ test('published intention batches match the reviewed content and leave all old c
   const ids = new Set(intentionWordCards.map(card=>card.id));
   assert.equal(ids.size,intentionReview.approvedCards);
   assert.equal(intentionWordCards.length,intentionReview.approvedCards);
-  assert.equal(hash(USAGE_CARDS.filter(card=>!ids.has(card.id))),intentionReview.originalCardsSha256);
+  assert.equal(hash(USAGE_CARDS.filter(card=>!ids.has(card.id)&&!actionIds.has(card.id))),intentionReview.originalCardsSha256);
   const reviewed = [];
   for(const batch of intentionReview.batches) {
     const cards=(await import(`../app/lib/usage-cards/intention-words/${batch.file}`)).default;

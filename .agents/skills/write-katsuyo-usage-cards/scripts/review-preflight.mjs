@@ -23,14 +23,6 @@ function read(root, relative) {
 function readJson(root, relative) { return JSON.parse(read(root, relative).replace(/^\uFEFF/u, '')); }
 function report(code, severity, message, cards = []) { return {code, severity, message, cards}; }
 
-function similarity(left, right) {
-  const a = new Set(compact(left).replace(/[^\p{L}\p{N}\u3400-\u9fff]+/gu, '').match(/[\p{L}\p{N}\u3400-\u9fff]{2}/gu) ?? []);
-  const b = new Set(compact(right).replace(/[^\p{L}\p{N}\u3400-\u9fff]+/gu, '').match(/[\p{L}\p{N}\u3400-\u9fff]{2}/gu) ?? []);
-  if (!a.size || !b.size) return 0;
-  let common = 0; for (const token of a) if (b.has(token)) common++;
-  return common / (a.size + b.size - common);
-}
-
 function resolveSentence(card, project) {
   const resolved = project.resolveUsageCard(card);
   if (!resolved) return {sentence: null, reading: null};

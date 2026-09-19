@@ -1,6 +1,7 @@
 import basics from './usage-cards/basics.mjs';
 import linking from './usage-cards/linking.mjs';
 import actions from './usage-cards/actions.mjs';
+import actionsGenerated from './usage-cards/actions-generated.mjs';
 import combinations from './usage-cards/combinations.mjs';
 import classBasics from './usage-cards/class-basics.mjs';
 import classLinking1 from './usage-cards/class-linking-1.mjs';
@@ -26,7 +27,7 @@ import { deriveUnified } from './unified-knowledge.mjs';
 /** @typedef {UsageCard & {target: {text: string, reading: string}}} ResolvedUsageCard */
 
 /** Separate teaching content: never populate this from eligibility `context`. */
-export const USAGE_CARDS = /** @type {UsageCard[]} */ ([...basics, ...linking, ...actions, ...combinations,
+export const USAGE_CARDS = /** @type {UsageCard[]} */ ([...basics, ...linking, ...actions, ...actionsGenerated, ...combinations,
   ...classBasics, ...classLinking1, ...classLinking2, ...classActions1, ...classActions2, ...classCombinations1, ...classCombinations2,
   ...basicWordCards, ...voiceWordCards, ...linkingWordCards, ...intentionWordCards]);
 export const USAGE_CARD_GROUPS = [

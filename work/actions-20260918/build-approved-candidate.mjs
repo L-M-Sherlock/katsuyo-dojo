@@ -35,7 +35,6 @@ const readReviewedDelivery = (state, batch) => {
 
 for (const batch of listing.batches.filter(item => item.status === 'reviewed')) {
   const stem = path.join(dir, batch.batch);
-  console.error('PUBLISH_BATCH', batch.batch);
   const cardsFile = `${stem}.cards.json`;
   const state = await pipeline.run('describe', {batch: batch.batch});
   const delivered = readReviewedDelivery(state, batch.batch);
