@@ -1,18 +1,18 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "stage": "actions",
   "complete": false,
-  "semanticPolicy": "The curriculum can extend beyond reference textbooks and earlier glosses. Review natural full-sentence uses and update teaching explanations together; preserve exact lexical senses, conjugation targets, scope of negation, and register.",
+  "semanticPolicy": "The curriculum can extend beyond reference textbooks and earlier glosses. Review natural full-sentence uses and update teaching explanations together; preserve exact lexical senses, conjugation targets, scope of negation, and register. Repeated failed exact pairs may be deferred from routine practice while retaining form recognition; deferral is pair-scoped and reversible.",
   "pendingNeedsReReview": false,
   "originalCards": 9598,
   "originalCardsSha256": "5f7f9dcef365905069a2d258a7581b5e3974044caf13bda7b74d959e40fdcfcf",
   "originalRequirementSha256": "ed857e5f4158fb5371fe04c8aee870396480d5b2eb59bd40b96206521dce14e9",
-  "requiredPairs": 7004,
+  "requiredPairs": 6982,
   "originalActionPairs": 159,
   "assignedPairs": 6845,
-  "approvedCards": 6811,
-  "approvedCardsSha256": "f7cec6103682ffec8b2a2ceada5e3c670fbd81a1ff58da9bfb9554d971296b12",
-  "pendingPairs": 34,
+  "approvedCards": 6814,
+  "approvedCardsSha256": "58f0cc079ec5e971355939fe77a6ed3cc224a8a8f812759bc19e043d3c12e727",
+  "pendingPairs": 9,
   "publishedFile": "actions-generated.mjs",
   "approvedIds": [
     "usage:teiru:verb:書く:かく",
@@ -4651,6 +4651,7 @@
     "usage:teokuNegativePast:verb:動く:うごく",
     "usage:teoku:verb:間に合う:まにあう",
     "usage:toku:verb:間に合う:まにあう",
+    "usage:teokuNegative:verb:間に合う:まにあう",
     "usage:teoku:verb:描く:えがく",
     "usage:toku:verb:描く:えがく",
     "usage:teokuPast:verb:描く:えがく",
@@ -4800,6 +4801,7 @@
     "usage:toku:verb:終わる:おわる",
     "usage:teokuPast:verb:終わる:おわる",
     "usage:teokuNegative:verb:終わる:おわる",
+    "usage:teokuNegativePast:verb:終わる:おわる",
     "usage:teoku:verb:残る:のこる",
     "usage:toku:verb:残る:のこる",
     "usage:teokuPast:verb:残る:のこる",
@@ -6294,6 +6296,7 @@
     "usage:tekuruPast:verb:片付ける:かたづける",
     "usage:tekuruNegative:verb:片付ける:かたづける",
     "usage:tekuruNegativePast:verb:片付ける:かたづける",
+    "usage:teikuPast:verb:来る:くる",
     "usage:sugiru:verb:書く:かく",
     "usage:sugiruPast:verb:書く:かく",
     "usage:sugiruNegative:verb:書く:かく",
@@ -6829,76 +6832,6 @@
   ],
   "unresolved": [
     {
-      "id": "usage:temiruNegativePast:verb:終わる:おわる",
-      "pair": "verb:終わる:おわる/temiruNegativePast",
-      "batch": "temiru-1/07",
-      "sentence": "昨日はいつもの時間まで続け、早く終わってみなかった。",
-      "scene": "昨天仍按原来的节奏，没试着提前结束。",
-      "translation": "昨天一直进行到平常的时间，没有试着提前结束。",
-      "reason": "原句「昨日はいつもの時間まで続け、早く終わってみなかった。」的活动持续及过去否定与中文对应，但早く終わってみなかった依旧难以成立为自然的主动试结束叙述。已考虑迁移到经历后发现：終わってみないと／終わってみなければ自然，但不能据此推定过去否定独立句同样成立，也不能改换固定目标来填数；本项保留未决，不否定其他てみる的回顾发现用法。",
-      "sourceHash": "02fbe2b96d6f08008153bc629e9fd3d971fe94aa939fb930d3794161b6bfbe2f"
-    },
-    {
-      "id": "usage:teokuPast:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/teokuPast",
-      "batch": "teokuToku-1/06",
-      "sentence": "午後の予定に備えて、朝の集合には間に合っておいた。",
-      "scene": "下午还有安排，上午先赶上了集合。",
-      "translation": "为下午的安排作准备，早上先赶上了集合。",
-      "reason": "上午集合在下午安排之前只构成时间先后，「朝の集合には間に合っておいた」的过去准备直陈仍生硬；改用早到会改变赶得上的固定词义，故保留原稿待证。",
-      "sourceHash": "a58d4d8bd35d1e27c809a49b2aa4c6323beffba91526ef84d7f367ffe0fcc6fb"
-    },
-    {
-      "id": "usage:teokuNegative:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/teokuNegative",
-      "batch": "teokuToku-1/06",
-      "sentence": "この電車に間に合っておかないと、次の乗り換えができない。",
-      "scene": "后面还有转车，不先赶上这班就会误事。",
-      "translation": "若不先赶上这班电车，就无法完成后面的换乘。",
-      "reason": "换乘因果确实支持赶上这班电车的必要性，但「間に合っておかないと」相对「間に合わないと」额外的准备层次仍不稳定；本轮未找到足够自然的固定目标句，不把条件中有否定当作语法错误。",
-      "sourceHash": "d5f44d2e77d69ea08f813413a41f1a63f3a4d173e801a8621bbde8af6dad35dd"
-    },
-    {
-      "id": "usage:teokuNegativePast:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/teokuNegativePast",
-      "batch": "teokuToku-1/06",
-      "sentence": "朝の集合に間に合っておかなかったので、午後の予定もずれた。",
-      "scene": "上午未赶上集合，影响了后面的安排。",
-      "translation": "因为早上没先赶上集合，下午的安排也被打乱了。",
-      "reason": "「朝の集合に間に合っておかなかった」虽可推知没赶上及后续耽误，但先行准备否定直陈的搭配问题未解决；中文不能通过加「先」证明日语自然，仍待可核验用例。",
-      "sourceHash": "1f89f4dafd7115e53b4f46cdb2162e67e7a4b423721ff3495eb3b5193adde7b2"
-    },
-    {
-      "id": "usage:teokuNegativePast:verb:終わる:おわる",
-      "pair": "verb:終わる:おわる/teokuNegativePast",
-      "batch": "teokuToku-1/09",
-      "sentence": "なぜ最初から、協力関係で終わっておかなかったのか、今も不思議だ。",
-      "scene": "回想一次合作项目，后悔没有从一开始就保持合作。",
-      "translation": "现在仍不明白，为什么一开始没有以合作关系结束。",
-      "reason": "「なぜ最初から、協力関係で終わっておかなかったのか」把结束理解为合作关系的终点评价，但当前句没有明确“先结束合作”是可预先保持的安排；「終わっておけばよかった」或普通「終わらせておけば」会改变固定目标。过去否定的后悔关系可理解，问题限于自动词終わる接ておく的此处搭配，暂不批准。",
-      "sourceHash": "e6dc30be07819e5497633615d1dae07296ace067b8432e3078c35433d9c50d06"
-    },
-    {
-      "id": "usage:teikuNegative:verb:着く:つく",
-      "pair": "verb:着く:つく/teikuNegative",
-      "batch": "direction-1/07",
-      "sentence": "雪のため、バスは時間どおりに着いていかない。",
-      "scene": "今天下雪，公交不会按时到站。",
-      "translation": "因为下雪，公交不会准时到达。",
-      "reason": "现句只说明因雪不准点，バス没有明确的多车连续到达序列，也没有离去参照。着いていかない比普通着かない多出的いく在现语境中缺乏明确着落；不能凭时间どおり自动认定为自然的否定发展例。此判断限当前句，不是否认该固定形的所有用法。",
-      "sourceHash": "63e05b9355bb7a5212ec052c3dc9b95de7395b29a41f9951bc54b6bf3de1807a"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:着く:つく",
-      "pair": "verb:着く:つく/teikuNegativePast",
-      "batch": "direction-1/07",
-      "sentence": "昨夜の大雨で、最終バスは駅に着いていかなかった。",
-      "scene": "昨夜大雨，末班车没有到车站。",
-      "translation": "昨晚因大雨，末班车没有到车站。",
-      "reason": "最終バス是一次有终点的单一到达事件，句中没有后续展开或离开观察者的结构。中文仅表达没有到达；当前着いていかなかった显得硬加方向补助动词，建议仍保留未决。",
-      "sourceHash": "ec8e2c438e5290d356d4dec3a454ceb47bdd3bcda343ab9f0c90276edd296d90"
-    },
-    {
       "id": "usage:teikuNegative:verb:喜ぶ:よろこぶ",
       "pair": "verb:喜ぶ:よろこぶ/teikuNegative",
       "batch": "direction-1/10",
@@ -6907,116 +6840,6 @@
       "translation": "这家店的顾客离开时也不是高高兴兴地走。",
       "reason": "喜んでいく可以描写高兴地离去，不能整形禁用；但本句帰る時も喜んでいかない对否定的包装较生硬，容易读作不欣然前往，而译文断定离开时不高兴。仅靠柜台背景尚不足以把这个否定搭配判作可靠教材句。应继续找真实的待客送客用例或重拟完整语境。",
       "sourceHash": "76e135e5bce4433b5cd2ef6b2fe01d45cdeb79f750e2a00cd5c17c1c594963a2"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:喜ぶ:よろこぶ",
-      "pair": "verb:喜ぶ:よろこぶ/teikuNegativePast",
-      "batch": "direction-1/10",
-      "sentence": "昨日、あの客は店を出る時も喜んでいかなかった。",
-      "scene": "回想昨天的送别，失望的客人没有高兴地离开。",
-      "translation": "昨天，那位顾客离开店里时也没有高高兴兴地走。",
-      "reason": "过去时并未解决店を出る時も喜んでいかなかった的搭配疑问；意图是高兴地离去的否定，但当前句更自然的日常表达通常会落到喜んで帰る／うれしそうではなかった，二者都不能直接替换固定目标。本项只是当前句自然度未决，不宣称喜んでいかなかった在所有场景不成立。",
-      "sourceHash": "a789093d5e702cc45b9e961a20c908ff79cddafab637662a68ac450dead56c15"
-    },
-    {
-      "id": "usage:tekuruNegative:verb:喜ぶ:よろこぶ",
-      "pair": "verb:喜ぶ:よろこぶ/tekuruNegative",
-      "batch": "direction-1/10",
-      "sentence": "いい知らせを次々に伝えても、弟は少しも喜んでこない。",
-      "scene": "连续说了许多好消息，弟弟仍没渐渐高兴起来。",
-      "translation": "即使接连传达好消息，弟弟也丝毫没有渐渐高兴起来。",
-      "reason": "次々に是传达好消息的次数，并不自然使弟弟的喜ぶ动作形成渐变；喜んでこない若作朝我高兴地走来又缺路线。不能仅由中文渐渐高兴反推该直接搭配已自然。",
-      "sourceHash": "f2383d33de618ebbab5a946ab53320bf9a8f5a284326f51e04e5d195825125bf"
-    },
-    {
-      "id": "usage:teikuNegative:verb:困る:こまる",
-      "pair": "verb:困る:こまる/teikuNegative",
-      "batch": "direction-1/11",
-      "sentence": "支援が続けば、兄は生活費にこれ以上困っていかない。",
-      "scene": "担心失业后的哥哥，你认为及时援助能阻止处境恶化。",
-      "translation": "援助持续下去的话，哥哥不会进一步为生活费发愁。",
-      "reason": "援助持续可以防止生活困难，但兄は生活費にこれ以上困っていかない直接把发愁当作继续恶化的标尺，直陈否定搭配仍生硬；不以课程只收方向义为由拒收。",
-      "sourceHash": "ab8034f7c62054f6f0ee8ceb968b1618c6ea03f1f3282ab67d1d9ef0c6acff9b"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:困る:こまる",
-      "pair": "verb:困る:こまる/teikuNegativePast",
-      "batch": "direction-1/11",
-      "sentence": "支援が続いたので、兄は生活費にそれ以上困っていかなかった。",
-      "scene": "回顾失业后那段时间，援助持续使哥哥没越过越难。",
-      "translation": "因为援助持续着，哥哥后来没有更加为生活费发愁。",
-      "reason": "支援が続いたので为后来不再困难提供原因，却没有使困っていかなかった的过去发展否定更自然；译文更加为生活费发愁的程度变化尚不能由该固定目标稳妥承载。",
-      "sourceHash": "3434e93f75fbffe7d60db8a610a0d71c032aac20015456f4cc2e648979cdfea6"
-    },
-    {
-      "id": "usage:teikuNegative:verb:降る:ふる",
-      "pair": "verb:降る:ふる/teikuNegative",
-      "batch": "direction-1/12",
-      "sentence": "夜には雲が切れるので、雨は朝まで降っていかない。",
-      "scene": "傍晚云层就会散开，你判断雨不会一直下到天亮。",
-      "translation": "夜里云层会散开，所以雨不会持续下到早晨。",
-      "reason": "云散后雨不下到早晨可自然用降り続かない；本句降っていかない作为时间延续否定的搭配不够稳，朝まで只给终点而未改善表达。不是因降る非意志而禁用。",
-      "sourceHash": "180b64a8f15a3d816a6084fe0d4f2c1417442a3d7d048ac0c91f8032cb686f2a"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:降る:ふる",
-      "pair": "verb:降る:ふる/teikuNegativePast",
-      "batch": "direction-1/12",
-      "sentence": "昨夜は夜中に雲が切れ、雨は朝まで降っていかなかった。",
-      "scene": "回顾昨晚天气，云层半夜散了，雨没下到天亮。",
-      "translation": "昨夜云层在半夜散开，雨没有持续下到早晨。",
-      "reason": "夜中云散可以说明雨已停，雨は朝まで降っていかなかった的过去持续否定仍显绕口；不得把未持续至早晨等价于所有期间没有下雨，也不凭加过去时间就批准。",
-      "sourceHash": "cb00f436f93742833ff4908b720c70a2cb1f5aec5d21847c6cb14cd3a9423906"
-    },
-    {
-      "id": "usage:teikuNegative:verb:要る:いる",
-      "pair": "verb:要る:いる/teikuNegative",
-      "batch": "direction-1/12",
-      "sentence": "この仕組みなら、注文が増えても追加の人手は要っていかない。",
-      "scene": "介绍自动化方案，预期订单增多也不会新增人手需求。",
-      "translation": "采用这套机制，即使订单增加，后续也不会需要额外人手。",
-      "reason": "自动化使订单增加时无需增员可以成立，当前要っていかない却不是要らない的任意未来替换；机制条件并未提供足以批准的直接发展否定搭配。",
-      "sourceHash": "b2627b4ad95d28f35f404c7ac421838d8d9b7ba780f605ef273c2d834265b98a"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:要る:いる",
-      "pair": "verb:要る:いる/teikuNegativePast",
-      "batch": "direction-1/12",
-      "sentence": "その後は機械化が進み、追加の作業員は要っていかなかった。",
-      "scene": "回顾工厂自动化以后，后来没有出现追加工人的需要。",
-      "translation": "此后机械化不断推进，没有进一步产生增派工人的需要。",
-      "reason": "その後定位过去持续机械化，作業員要っていかなかった仍把未出现需求直接写为状态的方向否定；译文的没有进一步产生需要比日语原组合更顺，故不据译文批准。",
-      "sourceHash": "ed26916a8036666fda132b72a9a7a7136ca2e5e52beab29d5abc1071a6ba39cb"
-    },
-    {
-      "id": "usage:teikuPast:verb:足りる:たりる",
-      "pair": "verb:足りる:たりる/teikuPast",
-      "batch": "direction-1/17",
-      "sentence": "物資が届くたびに、各避難所の毛布が少しずつ足りていった。",
-      "scene": "回顾物资不断运入后，各避难所毛毯渐渐够用。",
-      "translation": "每次有物资送达，各避难所的毛毯就逐渐变得够用。",
-      "reason": "各避難所允许逐所补足的解释，但毛布が少しずつ足りていった仍把毛毯数量的逐量增加与足够状态混合；分布读法虽可理解，暂缺足够自然的表达。避難所的ひなんじょ为合法读法保留。",
-      "sourceHash": "c07f7b4e3bbd7f17a8038a541cda241a29035aee34528313c57d2beffe203d4e"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:知る:しる",
-      "pair": "verb:知る:しる/teikuNegativePast",
-      "batch": "direction-2/04",
-      "sentence": "展示会の内容をよく知っていかなかったので、会場で戸惑った。",
-      "scene": "第一次参加展会，却没有提前了解活动内容。",
-      "translation": "因为没有提前了解展会内容，我在会场有些不知所措。",
-      "reason": "「展示会の内容をよく知っていかなかったので」的因果只能说明到场前不了解，未形成知っていく所需的渐次认识过程；自然的「調べていかなかった」「よく知らなかった」不能替换固定目标。保留此过去方向否定配对未决，不否定知っていく的肯定或其他时态。",
-      "sourceHash": "5dcf8e125ca6d27b6e3a5051583290e2b68d4e748a3d1a44fb87ca72addf5bf9"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:思う:おもう",
-      "pair": "verb:思う:おもう/teikuNegativePast",
-      "batch": "direction-2/05",
-      "sentence": "前回は店が閉まっていると思っていかなかったが、実際は営業していた。",
-      "scene": "上次以为店休息而没去，后来才知道判断错了。",
-      "translation": "上次以为店关门了就没去，实际上店是营业的。",
-      "reason": "当前「閉まっていると思っていかなかった」最自然的读法是先判断关门而没有去；原词否定应落在去，思う并未被否定，不能作为本题带着判断前行或判断持续的否定。原批准撤销，继续寻找保持目标结构的自然完整句。",
-      "sourceHash": "89e0dbd20537f18160012ae65d1073ad5ebc6199cab0779fc7368e56a5f70e4c"
     },
     {
       "id": "usage:teiku:verb:間に合う:まにあう",
@@ -7049,26 +6872,6 @@
       "sourceHash": "7fff7e5fd87a19c8b6806b53579ff71b16d9226ec93cf33d74c26f95a3b69ce6"
     },
     {
-      "id": "usage:teikuNegative:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/teikuNegative",
-      "batch": "direction-2/06",
-      "sentence": "この生産量では、今後の注文は納期に間に合っていかない。",
-      "scene": "按照当前产量推算，后续订单不会陆续按期完成。",
-      "translation": "以这样的产量，今后的订单不会陆续赶上交货期。",
-      "reason": "生产量不足可以说明以后赶不上，却不足以说明「間に合っていかない」是自然持续否定。没有擅自译成越来越迟；尝试不断增加订单的时间线后仍缺可靠用例，因此此固定配对未决。",
-      "sourceHash": "a240b38327ca903ce51d1a683f602e5dd429a4853d960ad60c04c844767ef0e0"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/teikuNegativePast",
-      "batch": "direction-2/06",
-      "sentence": "以前の分担では、後の注文も納期に間に合っていかなかった。",
-      "scene": "回忆旧排班问题，多批交货始终未逐步恢复准时。",
-      "translation": "按以前的分工，后续订单也没有陆续赶上交货期。",
-      "reason": "以前の分担与後の注文建立回顾视点，但「納期に間に合っていかなかった」仍是普通没赶上被强行延长；多批订单并不自动构成同一发展的否定。试过持续交付背景仍待自然度核实。",
-      "sourceHash": "e70ffb29f7388760320edb97341bea1fece78df06df17e84254dc539927f0225"
-    },
-    {
       "id": "usage:tekuruNegative:verb:間に合う:まにあう",
       "pair": "verb:間に合う:まにあう/tekuruNegative",
       "batch": "direction-2/06",
@@ -7099,26 +6902,6 @@
       "sourceHash": "1cde3cd64330402abafca7880e3c2e59cbffc62c00348a17d47d908d23fee003"
     },
     {
-      "id": "usage:tekuru:verb:来る:くる",
-      "pair": "verb:来る:くる/tekuru",
-      "batch": "direction-2/18",
-      "sentence": "階段の上から、弟がこちらへ来てくる。",
-      "scene": "自己站在楼梯下，看见弟弟往自己这边来。",
-      "translation": "弟弟正从楼梯上方朝这边来。",
-      "reason": "階段の上からこちらへ已经由来る表达单次趋近，再接くる的「来てくる」缺少第二层事件或时间发展；原译正来只译出了来る。考虑先来再返回的双参照场景仍难维持明确视点，暂不批准。",
-      "sourceHash": "810834e57d99b7da99441abb91ae497eb4e57a6949ebb94c238c6bbc60e3a3e9"
-    },
-    {
-      "id": "usage:teikuPast:verb:来る:くる",
-      "pair": "verb:来る:くる/teikuPast",
-      "batch": "direction-2/18",
-      "sentence": "春になると、卒業生が順番に挨拶に来ていった。",
-      "scene": "春天开始，毕业生一个接一个来校道谢。",
-      "translation": "到了春天，毕业生们依次来校道谢。",
-      "reason": "「卒業生が順番に挨拶に来ていった」は人々の順次到来を意図しているが、順番にだけでは来るの到着点といくの空間／時間視点の関係が十分明確でない。以前の原文根拠は今回全文を確認できておらず承認を保留する。また挨拶は挨拶・表敬であり、訳文の道谢（謝意）まで句からは確定しない。未決はこの候補に限る。",
-      "sourceHash": "7243e2d24600395037b47b2c15791d9255e5608b79f590437eb54d55410b7a86"
-    },
-    {
       "id": "usage:teikuNegative:verb:来る:くる",
       "pair": "verb:来る:くる/teikuNegative",
       "batch": "direction-2/18",
@@ -7137,36 +6920,6 @@
       "translation": "学校迁走后，毕业生没有继续来旧校舍。",
       "reason": "学校迁走后的旧校舍是清楚地点和过去起点，但「旧校舎へ来ていかなかった」仍非没有继续来的可靠普通表达。考虑到访后离开与随年份停止到访，均未得到自然的本目标完整句，暂缓本配对。",
       "sourceHash": "f27e82c778760dbad6d927d5085e961bf49cba4a612ffdde77bbb945e295f380"
-    },
-    {
-      "id": "usage:tekuruPast:verb:来る:くる",
-      "pair": "verb:来る:くる/tekuruPast",
-      "batch": "direction-2/18",
-      "sentence": "昨日、駅で待っていると、友達がこちらへ来てきた。",
-      "scene": "昨天自己在车站等朋友，他从出口朝这边来了。",
-      "translation": "昨天我在车站等着时，朋友朝这边来了。",
-      "reason": "昨天车站等候时朋友こちらへ来る已经表达趋近，「来てきた」重复同一方向，未有独立时间发展或返回动作；原译仅翻朋友来了。试过长期反复来访解释仍需明确证据，保留未决。",
-      "sourceHash": "8af05bedb50dce586d554d738185986c3317fc93cc1f0d743fc7586552773a54"
-    },
-    {
-      "id": "usage:tekuruNegative:verb:来る:くる",
-      "pair": "verb:来る:くる/tekuruNegative",
-      "batch": "direction-2/18",
-      "sentence": "駅で待っているが、友達はまだこちらへ来てこない。",
-      "scene": "自己正在车站等着，朋友仍然没有朝这边来。",
-      "translation": "我在车站等着，但朋友仍然没有朝这边来。",
-      "reason": "まだ／こちらへ与车站等待构成普通尚未来到；「来てこない」多出的くる没有可区分的趋近或发展意义。尝试要求先到一处再回来仍难维持来る的同一说话视点，不能靠中文没有来批准。",
-      "sourceHash": "39249fd9e8fa4e68f750967ee664ff8fa3da5eee542e134107d522b0edbf6cd8"
-    },
-    {
-      "id": "usage:tekuruNegativePast:verb:来る:くる",
-      "pair": "verb:来る:くる/tekuruNegativePast",
-      "batch": "direction-2/18",
-      "sentence": "昨日は閉店まで待ったが、配達員は店に来てこなかった。",
-      "scene": "昨天在店里一直等到关门，送货员也没来。",
-      "translation": "昨天一直等到关门，送货员也没有来店里。",
-      "reason": "昨天等到闭店与送货员不来是自然背景，问题在「店に来てこなかった」的双重趋近；过去否定并未修复该组合，译文也只译单纯没来。考虑来访后返回的双程场景仍未找到明确自然句。",
-      "sourceHash": "d149c8fd0f42a36dda3d8dd338bfbcae8dcb87a0b7547a0d7b6c06ce0fd420be"
     }
   ],
   "batches": [
@@ -7994,9 +7747,9 @@
     },
     {
       "batch": "teokuToku-1/06",
-      "cards": 37,
-      "sourceHash": "fd17523ec164a9c05c8627ea912e5c65e6400098925233e0c728defddb66754b",
-      "stateRevision": 11
+      "cards": 38,
+      "sourceHash": "e79a6cd643965c7c1ef080f575481c9c9ee1e03c7e3d5d65c4076553fcb24d10",
+      "stateRevision": 13
     },
     {
       "batch": "teokuToku-1/07",
@@ -8012,9 +7765,9 @@
     },
     {
       "batch": "teokuToku-1/09",
-      "cards": 39,
-      "sourceHash": "fd32b13eecb805cb4d3dcb18674ddc4cc5f3f32bc8c9b26ba0c8ddc0fe8d8346",
-      "stateRevision": 14
+      "cards": 40,
+      "sourceHash": "e1068a7fd6e8e4dd1dcabaa6e8ba39992bad6d2e9ec97f336e3a4ca1575ff1b8",
+      "stateRevision": 16
     },
     {
       "batch": "teokuToku-1/10",
@@ -8276,9 +8029,9 @@
     },
     {
       "batch": "direction-2/18",
-      "cards": 9,
-      "sourceHash": "017fd4faa3b01c7ea78d912dce51c6d4abbfce1a8a0035122f0775e656f5758b",
-      "stateRevision": 11
+      "cards": 10,
+      "sourceHash": "04d9421c66beeea07f85db7051b4bab755b1625e658c0293ba016b331b9859be",
+      "stateRevision": 15
     },
     {
       "batch": "sugiru-1/00",
@@ -8458,5 +8211,1229 @@
         "reviewVersion": 4
       }
     }
-  ]
+  ],
+  "deferred": [
+    {
+      "id": "usage:temiruNegativePast:verb:終わる:おわる",
+      "pair": "verb:終わる:おわる/temiruNegativePast",
+      "batch": "temiru-1/07",
+      "sentence": "昨日はいつもの時間まで続け、早く終わってみなかった。",
+      "scene": "昨天仍按原来的节奏，没试着提前结束。",
+      "translation": "昨天一直进行到平常的时间，没有试着提前结束。",
+      "reason": "经历后才能判断的尝试仍把“实际经历未发生”接成过去否定てみる；主体是断食事件，不能主动试做结束，原肯定发现构式的后项也不支持该过去直陈。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "02fbe2b96d6f08008153bc629e9fd3d971fe94aa939fb930d3794161b6bfbe2f",
+      "senseId": "verb:終わる:おわる",
+      "form": "temiruNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于尝试、行动准备或事先安排。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:temiruNegativePast:verb:終わる:おわる",
+        "senseId": "verb:終わる:おわる",
+        "meaning": "结束",
+        "form": "temiruNegativePast",
+        "scene": "昨天仍按原来的节奏，没试着提前结束。",
+        "before": [
+          {
+            "text": "昨日はいつもの時間まで続け、早く",
+            "reading": "きのうはいつものじかんまでつづけ、はやく"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天一直进行到平常的时间，没有试着提前结束。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "昨日はいつもの時間まで続け、早く終わってみなかった。",
+          "issue": "原句「昨日はいつもの時間まで続け、早く終わってみなかった。」的活动持续及过去否定与中文对应，但早く終わってみなかった依旧难以成立为自然的主动试结束叙述。已考虑迁移到经历后发现：終わってみないと／終わってみなければ自然，但不能据此推定过去否定独立句同样成立，也不能改换固定目标来填数；本项保留未决，不否定其他てみる的回顾发现用法。",
+          "source": "sealed batch temiru-1/07"
+        },
+        {
+          "sentence": "一週間の断食が終わってみなかったので、体調がどう変わるか分からなかった。",
+          "issue": "经历后才能判断的尝试仍把“实际经历未发生”接成过去否定てみる；主体是断食事件，不能主动试做结束，原肯定发现构式的后项也不支持该过去直陈。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teokuPast:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/teokuPast",
+      "batch": "teokuToku-1/06",
+      "sentence": "午後の予定に備えて、朝の集合には間に合っておいた。",
+      "scene": "下午还有安排，上午先赶上了集合。",
+      "translation": "为下午的安排作准备，早上先赶上了集合。",
+      "reason": "报名截止确为后续选拔前提，但在达成赶上时限这一结果外未形成可保留的预备动作；不能把赶得上改成提前报名或早到以取得自然度。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "a58d4d8bd35d1e27c809a49b2aa4c6323beffba91526ef84d7f367ffe0fcc6fb",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "teokuPast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于尝试、行动准备或事先安排。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teokuPast:verb:間に合う:まにあう",
+        "senseId": "verb:間に合う:まにあう",
+        "meaning": "赶得上",
+        "form": "teokuPast",
+        "scene": "下午还有安排，上午先赶上了集合。",
+        "before": [
+          {
+            "text": "午後の予定に備えて、朝の集合には",
+            "reading": "ごごのよていにそなえて、あさのしゅうごうには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "为下午的安排作准备，早上先赶上了集合。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "午後の予定に備えて、朝の集合には間に合っておいた。",
+          "issue": "上午集合在下午安排之前只构成时间先后，「朝の集合には間に合っておいた」的过去准备直陈仍生硬；改用早到会改变赶得上的固定词义，故保留原稿待证。",
+          "source": "sealed batch teokuToku-1/06"
+        },
+        {
+          "sentence": "選考を受けるために、応募の締め切りには間に合っておいた。",
+          "issue": "报名截止确为后续选拔前提，但在达成赶上时限这一结果外未形成可保留的预备动作；不能把赶得上改成提前报名或早到以取得自然度。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teokuNegativePast:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/teokuNegativePast",
+      "batch": "teokuToku-1/06",
+      "sentence": "朝の集合に間に合っておかなかったので、午後の予定もずれた。",
+      "scene": "上午未赶上集合，影响了后面的安排。",
+      "translation": "因为早上没先赶上集合，下午的安排也被打乱了。",
+      "reason": "相对集合原稿，更换为资格前提仍只陈述未赶上，ておく的事前准备否定在此直陈中无稳定作用；否定条件的获准例不能自动移作本过去形。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "1f89f4dafd7115e53b4f46cdb2162e67e7a4b423721ff3495eb3b5193adde7b2",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "teokuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于尝试、行动准备或事先安排。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teokuNegativePast:verb:間に合う:まにあう",
+        "senseId": "verb:間に合う:まにあう",
+        "meaning": "赶得上",
+        "form": "teokuNegativePast",
+        "scene": "上午未赶上集合，影响了后面的安排。",
+        "before": [
+          {
+            "text": "朝の集合に",
+            "reading": "あさのしゅうごうに"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、午後の予定もずれた。",
+            "reading": "ので、ごごのよていもずれた。"
+          }
+        ],
+        "translation": "因为早上没先赶上集合，下午的安排也被打乱了。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "朝の集合に間に合っておかなかったので、午後の予定もずれた。",
+          "issue": "「朝の集合に間に合っておかなかった」虽可推知没赶上及后续耽误，但先行准备否定直陈的搭配问题未解决；中文不能通过加「先」证明日语自然，仍待可核验用例。",
+          "source": "sealed batch teokuToku-1/06"
+        },
+        {
+          "sentence": "応募の締め切りに間に合っておかなかったので、選考を受けられなかった。",
+          "issue": "相对集合原稿，更换为资格前提仍只陈述未赶上，ておく的事前准备否定在此直陈中无稳定作用；否定条件的获准例不能自动移作本过去形。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegative:verb:着く:つく",
+      "pair": "verb:着く:つく/teikuNegative",
+      "batch": "direction-1/07",
+      "sentence": "雪のため、バスは時間どおりに着いていかない。",
+      "scene": "今天下雪，公交不会按时到站。",
+      "translation": "因为下雪，公交不会准时到达。",
+      "reason": "加入多车序列后，否定只对到站次序，无法辨明いく的远离参照或到达事件继续展开；译为陆续不抵达会多加原句没有的事件量化。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "63e05b9355bb7a5212ec052c3dc9b95de7395b29a41f9951bc54b6bf3de1807a",
+      "senseId": "verb:着く:つく",
+      "form": "teikuNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegative:verb:着く:つく",
+        "senseId": "verb:着く:つく",
+        "meaning": "到达",
+        "form": "teikuNegative",
+        "scene": "今天下雪，公交不会按时到站。",
+        "before": [
+          {
+            "text": "雪のため、バスは時間どおりに",
+            "reading": "ゆきのため、バスはじかんどおりに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "因为下雪，公交不会准时到达。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "雪のため、バスは時間どおりに着いていかない。",
+          "issue": "现句只说明因雪不准点，バス没有明确的多车连续到达序列，也没有离去参照。着いていかない比普通着かない多出的いく在现语境中缺乏明确着落；不能凭时间どおり自动认定为自然的否定发展例。此判断限当前句，不是否认该固定形的所有用法。",
+          "source": "sealed batch direction-1/07"
+        },
+        {
+          "sentence": "迂回路は渋滞しているので、後から来るバスも順番どおりには着いていかない。",
+          "issue": "加入多车序列后，否定只对到站次序，无法辨明いく的远离参照或到达事件继续展开；译为陆续不抵达会多加原句没有的事件量化。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:着く:つく",
+      "pair": "verb:着く:つく/teikuNegativePast",
+      "batch": "direction-1/07",
+      "sentence": "昨夜の大雨で、最終バスは駅に着いていかなかった。",
+      "scene": "昨夜大雨，末班车没有到车站。",
+      "translation": "昨晚因大雨，末班车没有到车站。",
+      "reason": "机场关闭与多航班次序仍未建立离去方向；次々には的否定范围不等于所有航班未到，原词到达也不能换成付く的跟随义。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "ec8e2c438e5290d356d4dec3a454ceb47bdd3bcda343ab9f0c90276edd296d90",
+      "senseId": "verb:着く:つく",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:着く:つく",
+        "senseId": "verb:着く:つく",
+        "meaning": "到达",
+        "form": "teikuNegativePast",
+        "scene": "昨夜大雨，末班车没有到车站。",
+        "before": [
+          {
+            "text": "昨夜の大雨で、最終バスは駅に",
+            "reading": "さくやのおおあめで、さいしゅうバスはえきに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨晚因大雨，末班车没有到车站。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "昨夜の大雨で、最終バスは駅に着いていかなかった。",
+          "issue": "最終バス是一次有终点的单一到达事件，句中没有后续展开或离开观察者的结构。中文仅表达没有到达；当前着いていかなかった显得硬加方向补助动词，建议仍保留未决。",
+          "source": "sealed batch direction-1/07"
+        },
+        {
+          "sentence": "空港が閉鎖されたので、後続の便も次々には着いていかなかった。",
+          "issue": "机场关闭与多航班次序仍未建立离去方向；次々には的否定范围不等于所有航班未到，原词到达也不能换成付く的跟随义。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:喜ぶ:よろこぶ",
+      "pair": "verb:喜ぶ:よろこぶ/teikuNegativePast",
+      "batch": "direction-1/10",
+      "sentence": "昨日、あの客は店を出る時も喜んでいかなかった。",
+      "scene": "回想昨天的送别，失望的客人没有高兴地离开。",
+      "translation": "昨天，那位顾客离开店里时也没有高高兴兴地走。",
+      "reason": "否定 successive 喜び把连续事件组织得生硬，次々に的范围不稳；不能靠“没有越来越开心”的中文把喜ぶ换成情绪渐变。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "a789093d5e702cc45b9e961a20c908ff79cddafab637662a68ac450dead56c15",
+      "senseId": "verb:喜ぶ:よろこぶ",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:喜ぶ:よろこぶ",
+        "senseId": "verb:喜ぶ:よろこぶ",
+        "meaning": "高兴",
+        "form": "teikuNegativePast",
+        "scene": "回想昨天的送别，失望的客人没有高兴地离开。",
+        "before": [
+          {
+            "text": "昨日、あの客は店を出る時も",
+            "reading": "きのう、あのきゃくはみせをでるときも"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天，那位顾客离开店里时也没有高高兴兴地走。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "昨日、あの客は店を出る時も喜んでいかなかった。",
+          "issue": "过去时并未解决店を出る時も喜んでいかなかった的搭配疑问；意图是高兴地离去的否定，但当前句更自然的日常表达通常会落到喜んで帰る／うれしそうではなかった，二者都不能直接替换固定目标。本项只是当前句自然度未决，不宣称喜んでいかなかった在所有场景不成立。",
+          "source": "sealed batch direction-1/10"
+        },
+        {
+          "sentence": "読み進めても、主人公の成功を次々に喜んでいかなかった。",
+          "issue": "否定 successive 喜び把连续事件组织得生硬，次々に的范围不稳；不能靠“没有越来越开心”的中文把喜ぶ换成情绪渐变。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:tekuruNegative:verb:喜ぶ:よろこぶ",
+      "pair": "verb:喜ぶ:よろこぶ/tekuruNegative",
+      "batch": "direction-1/10",
+      "sentence": "いい知らせを次々に伝えても、弟は少しも喜んでこない。",
+      "scene": "连续说了许多好消息，弟弟仍没渐渐高兴起来。",
+      "translation": "即使接连传达好消息，弟弟也丝毫没有渐渐高兴起来。",
+      "reason": "从好消息渐变改成往返共喜仍把自然的情感反应当成可列入行程并决定不实施的活动；句子不能稳定传达拟定的高兴后返回义。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "f2383d33de618ebbab5a946ab53320bf9a8f5a284326f51e04e5d195825125bf",
+      "senseId": "verb:喜ぶ:よろこぶ",
+      "form": "tekuruNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:tekuruNegative:verb:喜ぶ:よろこぶ",
+        "senseId": "verb:喜ぶ:よろこぶ",
+        "meaning": "高兴",
+        "form": "tekuruNegative",
+        "scene": "连续说了许多好消息，弟弟仍没渐渐高兴起来。",
+        "before": [
+          {
+            "text": "いい知らせを次々に伝えても、弟は少しも",
+            "reading": "いいしらせをつぎつぎにつたえても、おとうとはすこしも"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "即使接连传达好消息，弟弟也丝毫没有渐渐高兴起来。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "いい知らせを次々に伝えても、弟は少しも喜んでこない。",
+          "issue": "次々に是传达好消息的次数，并不自然使弟弟的喜ぶ动作形成渐变；喜んでこない若作朝我高兴地走来又缺路线。不能仅由中文渐渐高兴反推该直接搭配已自然。",
+          "source": "sealed batch direction-1/10"
+        },
+        {
+          "sentence": "今日は報告だけなので、実家では弟の合格を喜んでこない。",
+          "issue": "从好消息渐变改成往返共喜仍把自然的情感反应当成可列入行程并决定不实施的活动；句子不能稳定传达拟定的高兴后返回义。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegative:verb:困る:こまる",
+      "pair": "verb:困る:こまる/teikuNegative",
+      "batch": "direction-1/11",
+      "sentence": "支援が続けば、兄は生活費にこれ以上困っていかない。",
+      "scene": "担心失业后的哥哥，你认为及时援助能阻止处境恶化。",
+      "translation": "援助持续下去的话，哥哥不会进一步为生活费发愁。",
+      "reason": "换为持续家务支援后，困难没有出现与困难没有进一步发展仍无法由此否定明确区分，中文“不会越过越难”额外引入程度变化。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "ab8034f7c62054f6f0ee8ceb968b1618c6ea03f1f3282ab67d1d9ef0c6acff9b",
+      "senseId": "verb:困る:こまる",
+      "form": "teikuNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegative:verb:困る:こまる",
+        "senseId": "verb:困る:こまる",
+        "meaning": "为难；困扰",
+        "form": "teikuNegative",
+        "scene": "担心失业后的哥哥，你认为及时援助能阻止处境恶化。",
+        "before": [
+          {
+            "text": "支援が続けば、兄は生活費にこれ以上",
+            "reading": "しえんがつづけば、あにはせいかつひにこれいじょう"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "援助持续下去的话，哥哥不会进一步为生活费发愁。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "支援が続けば、兄は生活費にこれ以上困っていかない。",
+          "issue": "援助持续可以防止生活困难，但兄は生活費にこれ以上困っていかない直接把发愁当作继续恶化的标尺，直陈否定搭配仍生硬；不以课程只收方向义为由拒收。",
+          "source": "sealed batch direction-1/11"
+        },
+        {
+          "sentence": "毎月相談員が訪ねるので、一人暮らしの父は家事に困っていかない。",
+          "issue": "换为持续家务支援后，困难没有出现与困难没有进一步发展仍无法由此否定明确区分，中文“不会越过越难”额外引入程度变化。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:困る:こまる",
+      "pair": "verb:困る:こまる/teikuNegativePast",
+      "batch": "direction-1/11",
+      "sentence": "支援が続いたので、兄は生活費にそれ以上困っていかなかった。",
+      "scene": "回顾失业后那段时间，援助持续使哥哥没越过越难。",
+      "translation": "因为援助持续着，哥哥后来没有更加为生活费发愁。",
+      "reason": "过去购物支援与生活费稿存在相同问题：支持不困扰，却不建立过去起点向后发展的可否定尺度，不能以中文持续性充当日语意义。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "3434e93f75fbffe7d60db8a610a0d71c032aac20015456f4cc2e648979cdfea6",
+      "senseId": "verb:困る:こまる",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:困る:こまる",
+        "senseId": "verb:困る:こまる",
+        "meaning": "为难；困扰",
+        "form": "teikuNegativePast",
+        "scene": "回顾失业后那段时间，援助持续使哥哥没越过越难。",
+        "before": [
+          {
+            "text": "支援が続いたので、兄は生活費にそれ以上",
+            "reading": "しえんがつづいたので、あにはせいかつひにそれいじょう"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "因为援助持续着，哥哥后来没有更加为生活费发愁。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "支援が続いたので、兄は生活費にそれ以上困っていかなかった。",
+          "issue": "支援が続いたので为后来不再困难提供原因，却没有使困っていかなかった的过去发展否定更自然；译文更加为生活费发愁的程度变化尚不能由该固定目标稳妥承载。",
+          "source": "sealed batch direction-1/11"
+        },
+        {
+          "sentence": "毎週支援を受けたので、祖母は買い物に困っていかなかった。",
+          "issue": "过去购物支援与生活费稿存在相同问题：支持不困扰，却不建立过去起点向后发展的可否定尺度，不能以中文持续性充当日语意义。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegative:verb:降る:ふる",
+      "pair": "verb:降る:ふる/teikuNegative",
+      "batch": "direction-1/12",
+      "sentence": "夜には雲が切れるので、雨は朝まで降っていかない。",
+      "scene": "傍晚云层就会散开，你判断雨不会一直下到天亮。",
+      "translation": "夜里云层会散开，所以雨不会持续下到早晨。",
+      "reason": "从时间延续换成高处空间观察后，雨雪降落与谷的离去方向仍难自然结合；当前“下雨雪”词义不能借降りる的下山或物体落下义补足。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "180b64a8f15a3d816a6084fe0d4f2c1417442a3d7d048ac0c91f8032cb686f2a",
+      "senseId": "verb:降る:ふる",
+      "form": "teikuNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegative:verb:降る:ふる",
+        "senseId": "verb:降る:ふる",
+        "meaning": "下（雨雪）",
+        "form": "teikuNegative",
+        "scene": "傍晚云层就会散开，你判断雨不会一直下到天亮。",
+        "before": [
+          {
+            "text": "夜には雲が切れるので、雨は朝まで",
+            "reading": "よるにはくもがきれるので、あめはあさまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "夜里云层会散开，所以雨不会持续下到早晨。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "夜には雲が切れるので、雨は朝まで降っていかない。",
+          "issue": "云散后雨不下到早晨可自然用降り続かない；本句降っていかない作为时间延续否定的搭配不够稳，朝まで只给终点而未改善表达。不是因降る非意志而禁用。",
+          "source": "sealed batch direction-1/12"
+        },
+        {
+          "sentence": "山頂から見ても、雪は谷へ降っていかない。",
+          "issue": "从时间延续换成高处空间观察后，雨雪降落与谷的离去方向仍难自然结合；当前“下雨雪”词义不能借降りる的下山或物体落下义补足。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:降る:ふる",
+      "pair": "verb:降る:ふる/teikuNegativePast",
+      "batch": "direction-1/12",
+      "sentence": "昨夜は夜中に雲が切れ、雨は朝まで降っていかなかった。",
+      "scene": "回顾昨晚天气，云层半夜散了，雨没下到天亮。",
+      "translation": "昨夜云层在半夜散开，雨没有持续下到早晨。",
+      "reason": "过去观察未解决降る的天气发生与雪花空间运动混用，普通无降雪和未向谷下落是不同判断；译文需要补出的移动方向未获日语支持。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "cb00f436f93742833ff4908b720c70a2cb1f5aec5d21847c6cb14cd3a9423906",
+      "senseId": "verb:降る:ふる",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:降る:ふる",
+        "senseId": "verb:降る:ふる",
+        "meaning": "下（雨雪）",
+        "form": "teikuNegativePast",
+        "scene": "回顾昨晚天气，云层半夜散了，雨没下到天亮。",
+        "before": [
+          {
+            "text": "昨夜は夜中に雲が切れ、雨は朝まで",
+            "reading": "さくやはよなかにくもがきれ、あめはあさまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨夜云层在半夜散开，雨没有持续下到早晨。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "昨夜は夜中に雲が切れ、雨は朝まで降っていかなかった。",
+          "issue": "夜中云散可以说明雨已停，雨は朝まで降っていかなかった的过去持续否定仍显绕口；不得把未持续至早晨等价于所有期间没有下雨，也不凭加过去时间就批准。",
+          "source": "sealed batch direction-1/12"
+        },
+        {
+          "sentence": "山頂から見ていたが、雪は谷へ降っていかなかった。",
+          "issue": "过去观察未解决降る的天气发生与雪花空间运动混用，普通无降雪和未向谷下落是不同判断；译文需要补出的移动方向未获日语支持。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegative:verb:要る:いる",
+      "pair": "verb:要る:いる/teikuNegative",
+      "batch": "direction-1/12",
+      "sentence": "この仕組みなら、注文が増えても追加の人手は要っていかない。",
+      "scene": "介绍自动化方案，预期订单增多也不会新增人手需求。",
+      "translation": "采用这套机制，即使订单增加，后续也不会需要额外人手。",
+      "reason": "未来明确时段仍只能稳妥表述需求消失，不能把不要费用自行等同为否定需求持续发展；不是因要る为状态词而限制其他肯定形式。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "b2627b4ad95d28f35f404c7ac421838d8d9b7ba780f605ef273c2d834265b98a",
+      "senseId": "verb:要る:いる",
+      "form": "teikuNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegative:verb:要る:いる",
+        "senseId": "verb:要る:いる",
+        "meaning": "需要",
+        "form": "teikuNegative",
+        "scene": "介绍自动化方案，预期订单增多也不会新增人手需求。",
+        "before": [
+          {
+            "text": "この仕組みなら、注文が増えても追加の人手は",
+            "reading": "このしくみなら、ちゅうもんがふえてもついかのひとでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "采用这套机制，即使订单增加，后续也不会需要额外人手。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "この仕組みなら、注文が増えても追加の人手は要っていかない。",
+          "issue": "自动化使订单增加时无需增员可以成立，当前要っていかない却不是要らない的任意未来替换；机制条件并未提供足以批准的直接发展否定搭配。",
+          "source": "sealed batch direction-1/12"
+        },
+        {
+          "sentence": "契約を解約するので、来月からは毎月の維持費が要っていかない。",
+          "issue": "未来明确时段仍只能稳妥表述需求消失，不能把不要费用自行等同为否定需求持续发展；不是因要る为状态词而限制其他肯定形式。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:要る:いる",
+      "pair": "verb:要る:いる/teikuNegativePast",
+      "batch": "direction-1/12",
+      "sentence": "その後は機械化が進み、追加の作業員は要っていかなかった。",
+      "scene": "回顾工厂自动化以后，后来没有出现追加工人的需要。",
+      "translation": "此后机械化不断推进，没有进一步产生增派工人的需要。",
+      "reason": "过去合同终止提供起点但只说明不再需要，未形成自然的需要量变化或持续需求否定；不能凭此前肯定费用例句直接改尾批准。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "ed26916a8036666fda132b72a9a7a7136ca2e5e52beab29d5abc1071a6ba39cb",
+      "senseId": "verb:要る:いる",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:要る:いる",
+        "senseId": "verb:要る:いる",
+        "meaning": "需要",
+        "form": "teikuNegativePast",
+        "scene": "回顾工厂自动化以后，后来没有出现追加工人的需要。",
+        "before": [
+          {
+            "text": "その後は機械化が進み、追加の作業員は",
+            "reading": "そのあとはきかいかがすすみ、ついかのさぎょういんは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "此后机械化不断推进，没有进一步产生增派工人的需要。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "その後は機械化が進み、追加の作業員は要っていかなかった。",
+          "issue": "その後定位过去持续机械化，作業員要っていかなかった仍把未出现需求直接写为状态的方向否定；译文的没有进一步产生需要比日语原组合更顺，故不据译文批准。",
+          "source": "sealed batch direction-1/12"
+        },
+        {
+          "sentence": "契約を解約してからは、毎月の維持費が要っていかなかった。",
+          "issue": "过去合同终止提供起点但只说明不再需要，未形成自然的需要量变化或持续需求否定；不能凭此前肯定费用例句直接改尾批准。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuPast:verb:足りる:たりる",
+      "pair": "verb:足りる:たりる/teikuPast",
+      "batch": "direction-1/17",
+      "sentence": "物資が届くたびに、各避難所の毛布が少しずつ足りていった。",
+      "scene": "回顾物资不断运入后，各避难所毛毯渐渐够用。",
+      "translation": "每次有物资送达，各避难所的毛毯就逐渐变得够用。",
+      "reason": "从逐量补足改成过去持续够用后，足りていった仍缺可辨的展开：十万円で生活費が混合供给额与需求额，中文一直够用不能证明该独立过去结构自然。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "c07f7b4e3bbd7f17a8038a541cda241a29035aee34528313c57d2beffe203d4e",
+      "senseId": "verb:足りる:たりる",
+      "form": "teikuPast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuPast:verb:足りる:たりる",
+        "senseId": "verb:足りる:たりる",
+        "meaning": "足够",
+        "form": "teikuPast",
+        "scene": "回顾物资不断运入后，各避难所毛毯渐渐够用。",
+        "before": [
+          {
+            "text": "物資が届くたびに、各避難所の毛布が少しずつ",
+            "reading": "ぶっしがとどくたびに、かくひなんじょのもうふがすこしずつ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "每次有物资送达，各避难所的毛毯就逐渐变得够用。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "物資が届くたびに、各避難所の毛布が少しずつ足りていった。",
+          "issue": "各避難所允许逐所补足的解释，但毛布が少しずつ足りていった仍把毛毯数量的逐量增加与足够状态混合；分布读法虽可理解，暂缺足够自然的表达。避難所的ひなんじょ为合法读法保留。",
+          "source": "sealed batch direction-1/17"
+        },
+        {
+          "sentence": "家賃の安い部屋に移ってからは、毎月十万円で生活費が足りていった。",
+          "issue": "从逐量补足改成过去持续够用后，足りていった仍缺可辨的展开：十万円で生活費が混合供给额与需求额，中文一直够用不能证明该独立过去结构自然。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:知る:しる",
+      "pair": "verb:知る:しる/teikuNegativePast",
+      "batch": "direction-2/04",
+      "sentence": "展示会の内容をよく知っていかなかったので、会場で戸惑った。",
+      "scene": "第一次参加展会，却没有提前了解活动内容。",
+      "translation": "因为没有提前了解展会内容，我在会场有些不知所措。",
+      "reason": "邻里交往稿与展会预习稿分别试发展、带了解前往；前者未形成渐次获知的具体过程，后者译成预先调查会换词义，不能靠逐渐／提前补义。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "5dcf8e125ca6d27b6e3a5051583290e2b68d4e748a3d1a44fb87ca72addf5bf9",
+      "senseId": "verb:知る:しる",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:知る:しる",
+        "senseId": "verb:知る:しる",
+        "meaning": "知道",
+        "form": "teikuNegativePast",
+        "scene": "第一次参加展会，却没有提前了解活动内容。",
+        "before": [
+          {
+            "text": "展示会の内容をよく",
+            "reading": "てんじかいのないようをよく"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、会場で戸惑った。",
+            "reading": "ので、かいじょうでとまどった。"
+          }
+        ],
+        "translation": "因为没有提前了解展会内容，我在会场有些不知所措。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "当時は近所付き合いをせず、住民の暮らしを知っていかなかった。",
+          "issue": "邻里交往稿与展会预习稿分别试发展、带了解前往；前者未形成渐次获知的具体过程，后者译成预先调查会换词义，不能靠逐渐／提前补义。",
+          "source": "2026-09-20 coordinator re-review"
+        },
+        {
+          "sentence": "展示会の内容をよく知っていかなかったので、会場で戸惑った。",
+          "issue": "「展示会の内容をよく知っていかなかったので」的因果只能说明到场前不了解，未形成知っていく所需的渐次认识过程；自然的「調べていかなかった」「よく知らなかった」不能替换固定目标。保留此过去方向否定配对未决，不否定知っていく的肯定或其他时态。",
+          "source": "sealed batch direction-2/04"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:思う:おもう",
+      "pair": "verb:思う:おもう/teikuNegativePast",
+      "batch": "direction-2/05",
+      "sentence": "前回は店が閉まっていると思っていかなかったが、実際は営業していた。",
+      "scene": "上次以为店休息而没去，后来才知道判断错了。",
+      "translation": "上次以为店关门了就没去，实际上店是营业的。",
+      "reason": "从因果没去改为读书时逐步评价后，ますます与否定的范围仍不稳定；不是没去、也不是形成不了评价。须避免借思うようにならなかった替换目标。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "89e0dbd20537f18160012ae65d1073ad5ebc6199cab0779fc7368e56a5f70e4c",
+      "senseId": "verb:思う:おもう",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:思う:おもう",
+        "senseId": "verb:思う:おもう",
+        "meaning": "想；认为",
+        "form": "teikuNegativePast",
+        "scene": "上次以为店休息而没去，后来才知道判断错了。",
+        "before": [
+          {
+            "text": "前回は店が閉まっていると",
+            "reading": "ぜんかいはみせがしまっていると"
+          }
+        ],
+        "after": [
+          {
+            "text": "が、実際は営業していた。",
+            "reading": "が、じっさいはえいぎょうしていた。"
+          }
+        ],
+        "translation": "上次以为店关门了就没去，实际上店是营业的。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "あの和解の後は、全て相手が悪いとは思っていかなかった。",
+          "issue": "和解以后是有效过去起点，但「全て相手が悪いとは思っていかなかった」未自然呈现逐次的判断发展，普通思わなかった或持续否定不等价于本目标。尝试保持某种评价随人生发展仍缺可靠完整句，暂不批准，不否定形态构造。",
+          "source": "sealed batch direction-2/05"
+        },
+        {
+          "sentence": "前回は店が閉まっていると思っていかなかったが、実際は営業していた。",
+          "issue": "当前「閉まっていると思っていかなかった」最自然的读法是先判断关门而没有去；原词否定应落在去，思う并未被否定，不能作为本题带着判断前行或判断持续的否定。原批准撤销，继续寻找保持目标结构的自然完整句。",
+          "source": "sealed batch direction-2/05"
+        },
+        {
+          "sentence": "読み進めても、主人公をますます嫌な人だとは思っていかなかった。",
+          "issue": "从因果没去改为读书时逐步评价后，ますます与否定的范围仍不稳定；不是没去、也不是形成不了评价。须避免借思うようにならなかった替换目标。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegative:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/teikuNegative",
+      "batch": "direction-2/06",
+      "sentence": "この生産量では、今後の注文は納期に間に合っていかない。",
+      "scene": "按照当前产量推算，后续订单不会陆续按期完成。",
+      "translation": "以这样的产量，今后的订单不会陆续赶上交货期。",
+      "reason": "加明确逐周增长仍只能表达赶不上不同期限，未形成同一结果的持续发展否定；译文越来越迟或无法应付需求会改变固定赶得上义。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "a240b38327ca903ce51d1a683f602e5dd429a4853d960ad60c04c844767ef0e0",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "teikuNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegative:verb:間に合う:まにあう",
+        "senseId": "verb:間に合う:まにあう",
+        "meaning": "赶得上",
+        "form": "teikuNegative",
+        "scene": "按照当前产量推算，后续订单不会陆续按期完成。",
+        "before": [
+          {
+            "text": "この生産量では、今後の注文は納期に",
+            "reading": "このせいさんりょうでは、こんごのちゅうもんはのうきに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "以这样的产量，今后的订单不会陆续赶上交货期。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "この生産量では、今後の注文は納期に間に合っていかない。",
+          "issue": "生产量不足可以说明以后赶不上，却不足以说明「間に合っていかない」是自然持续否定。没有擅自译成越来越迟；尝试不断增加订单的时间线后仍缺可靠用例，因此此固定配对未决。",
+          "source": "sealed batch direction-2/06"
+        },
+        {
+          "sentence": "毎週注文が増えるので、今の人数では締め切りに間に合っていかない。",
+          "issue": "加明确逐周增长仍只能表达赶不上不同期限，未形成同一结果的持续发展否定；译文越来越迟或无法应付需求会改变固定赶得上义。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/teikuNegativePast",
+      "batch": "direction-2/06",
+      "sentence": "以前の分担では、後の注文も納期に間に合っていかなかった。",
+      "scene": "回忆旧排班问题，多批交货始终未逐步恢复准时。",
+      "translation": "按以前的分工，后续订单也没有陆续赶上交货期。",
+      "reason": "改为过去连续稿件仍与一次次赶不上混用；中文逐步恢复准时没有对应的日语成分，不能换成間に合うようにならなかった。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "e70ffb29f7388760320edb97341bea1fece78df06df17e84254dc539927f0225",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:間に合う:まにあう",
+        "senseId": "verb:間に合う:まにあう",
+        "meaning": "赶得上",
+        "form": "teikuNegativePast",
+        "scene": "回忆旧排班问题，多批交货始终未逐步恢复准时。",
+        "before": [
+          {
+            "text": "以前の分担では、後の注文も納期に",
+            "reading": "いぜんのぶんたんでは、あとのちゅうもんものうきに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "按以前的分工，后续订单也没有陆续赶上交货期。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "以前の分担では、後の注文も納期に間に合っていかなかった。",
+          "issue": "以前の分担与後の注文建立回顾视点，但「納期に間に合っていかなかった」仍是普通没赶上被强行延长；多批订单并不自动构成同一发展的否定。试过持续交付背景仍待自然度核实。",
+          "source": "sealed batch direction-2/06"
+        },
+        {
+          "sentence": "毎週原稿が増え、編集部は締め切りに間に合っていかなかった。",
+          "issue": "改为过去连续稿件仍与一次次赶不上混用；中文逐步恢复准时没有对应的日语成分，不能换成間に合うようにならなかった。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:tekuru:verb:来る:くる",
+      "pair": "verb:来る:くる/tekuru",
+      "batch": "direction-2/18",
+      "sentence": "階段の上から、弟がこちらへ来てくる。",
+      "scene": "自己站在楼梯下，看见弟弟往自己这边来。",
+      "translation": "弟弟正从楼梯上方朝这边来。",
+      "reason": "从单次楼梯趋近改成客源出现后，来る本身已表达朝中心移动，てくる仍缺独立观察时点上的发展；不得把普通客人会来译成逐渐涌来。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "810834e57d99b7da99441abb91ae497eb4e57a6949ebb94c238c6bbc60e3a3e9",
+      "senseId": "verb:来る:くる",
+      "form": "tekuru",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:tekuru:verb:来る:くる",
+        "senseId": "verb:来る:くる",
+        "meaning": "来",
+        "form": "tekuru",
+        "scene": "自己站在楼梯下，看见弟弟往自己这边来。",
+        "before": [
+          {
+            "text": "階段の上から、弟がこちらへ",
+            "reading": "かいだんのうえから、おとうとがこちらへ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "弟弟正从楼梯上方朝这边来。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "階段の上から、弟がこちらへ来てくる。",
+          "issue": "階段の上からこちらへ已经由来る表达单次趋近，再接くる的「来てくる」缺少第二层事件或时间发展；原译正来只译出了来る。考虑先来再返回的双参照场景仍难维持明确视点，暂不批准。",
+          "source": "sealed batch direction-2/18"
+        },
+        {
+          "sentence": "評判が広まれば、遠くからも客が来てくるはずだ。",
+          "issue": "从单次楼梯趋近改成客源出现后，来る本身已表达朝中心移动，てくる仍缺独立观察时点上的发展；不得把普通客人会来译成逐渐涌来。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:tekuruPast:verb:来る:くる",
+      "pair": "verb:来る:くる/tekuruPast",
+      "batch": "direction-2/18",
+      "sentence": "昨日、駅で待っていると、友達がこちらへ来てきた。",
+      "scene": "昨天自己在车站等朋友，他从出口朝这边来了。",
+      "translation": "昨天我在车站等着时，朋友朝这边来了。",
+      "reason": "十年反复到访提供历时背景，但当前来てきた仍重复同一趋近；自然的通ってきた会换词，不能据重复时间词直接认可。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "8af05bedb50dce586d554d738185986c3317fc93cc1f0d743fc7586552773a54",
+      "senseId": "verb:来る:くる",
+      "form": "tekuruPast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:tekuruPast:verb:来る:くる",
+        "senseId": "verb:来る:くる",
+        "meaning": "来",
+        "form": "tekuruPast",
+        "scene": "昨天自己在车站等朋友，他从出口朝这边来了。",
+        "before": [
+          {
+            "text": "昨日、駅で待っていると、友達がこちらへ",
+            "reading": "きのう、えきでまっていると、ともだちがこちらへ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天我在车站等着时，朋友朝这边来了。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "昨日、駅で待っていると、友達がこちらへ来てきた。",
+          "issue": "昨天车站等候时朋友こちらへ来る已经表达趋近，「来てきた」重复同一方向，未有独立时间发展或返回动作；原译仅翻朋友来了。试过长期反复来访解释仍需明确证据，保留未决。",
+          "source": "sealed batch direction-2/18"
+        },
+        {
+          "sentence": "私は十年間、毎年この神社に来てきた。",
+          "issue": "十年反复到访提供历时背景，但当前来てきた仍重复同一趋近；自然的通ってきた会换词，不能据重复时间词直接认可。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:tekuruNegative:verb:来る:くる",
+      "pair": "verb:来る:くる/tekuruNegative",
+      "batch": "direction-2/18",
+      "sentence": "駅で待っているが、友達はまだこちらへ来てこない。",
+      "scene": "自己正在车站等着，朋友仍然没有朝这边来。",
+      "translation": "我在车站等着，但朋友仍然没有朝这边来。",
+      "reason": "广告后的来客出现与车站等人场景均只支持尚未来，两个趋近没有不同参照，不能按中文渐渐出现背书。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "39249fd9e8fa4e68f750967ee664ff8fa3da5eee542e134107d522b0edbf6cd8",
+      "senseId": "verb:来る:くる",
+      "form": "tekuruNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:tekuruNegative:verb:来る:くる",
+        "senseId": "verb:来る:くる",
+        "meaning": "来",
+        "form": "tekuruNegative",
+        "scene": "自己正在车站等着，朋友仍然没有朝这边来。",
+        "before": [
+          {
+            "text": "駅で待っているが、友達はまだこちらへ",
+            "reading": "えきでまっているが、ともだちはまだこちらへ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "我在车站等着，但朋友仍然没有朝这边来。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "駅で待っているが、友達はまだこちらへ来てこない。",
+          "issue": "まだ／こちらへ与车站等待构成普通尚未来到；「来てこない」多出的くる没有可区分的趋近或发展意义。尝试要求先到一处再回来仍难维持来る的同一说话视点，不能靠中文没有来批准。",
+          "source": "sealed batch direction-2/18"
+        },
+        {
+          "sentence": "広告を出しても、客がなかなか来てこない。",
+          "issue": "广告后的来客出现与车站等人场景均只支持尚未来，两个趋近没有不同参照，不能按中文渐渐出现背书。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:tekuruNegativePast:verb:来る:くる",
+      "pair": "verb:来る:くる/tekuruNegativePast",
+      "batch": "direction-2/18",
+      "sentence": "昨日は閉店まで待ったが、配達員は店に来てこなかった。",
+      "scene": "昨天在店里一直等到关门，送货员也没来。",
+      "translation": "昨天一直等到关门，送货员也没有来店里。",
+      "reason": "三个月历时背景未解决来る＋くる重复趋近；不来、未增加和没有出现是不同命题，本句不能稳定负担原译的发展否定。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
+      "sourceHash": "d149c8fd0f42a36dda3d8dd338bfbcae8dcb87a0b7547a0d7b6c06ce0fd420be",
+      "senseId": "verb:来る:くる",
+      "form": "tekuruNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 5,
+      "reviewedAt": "2026-09-20",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 4
+      },
+      "sourceCard": {
+        "id": "usage:tekuruNegativePast:verb:来る:くる",
+        "senseId": "verb:来る:くる",
+        "meaning": "来",
+        "form": "tekuruNegativePast",
+        "scene": "昨天在店里一直等到关门，送货员也没来。",
+        "before": [
+          {
+            "text": "昨日は閉店まで待ったが、配達員は店に",
+            "reading": "きのうはへいてんまでまったが、はいたついんはみせに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天一直等到关门，送货员也没有来店里。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "昨日は閉店まで待ったが、配達員は店に来てこなかった。",
+          "issue": "昨天等到闭店与送货员不来是自然背景，问题在「店に来てこなかった」的双重趋近；过去否定并未修复该组合，译文也只译单纯没来。考虑来访后返回的双程场景仍未找到明确自然句。",
+          "source": "sealed batch direction-2/18"
+        },
+        {
+          "sentence": "開店から三か月たっても、新しい客は来てこなかった。",
+          "issue": "三个月历时背景未解决来る＋くる重复趋近；不来、未增加和没有出现是不同命题，本句不能稳定负担原译的发展否定。",
+          "source": "2026-09-20 coordinator re-review"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    }
+  ],
+  "deferredPairs": 22,
+  "effectiveRequiredPairs": 6982,
+  "reviewVersion": 5,
+  "originalRequiredPairs": 7004
 }

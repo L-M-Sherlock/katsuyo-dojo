@@ -46,6 +46,11 @@ try {
   model = page.KNOWLEDGE;
   reviewedWords = lexical.REVIEWED_LEXICAL_SENSES;
 } finally { await server.close(); }
+const actionDeferred = (actionReview.deferred ?? []).map(entry => {
+  const exercise = model.registryExercises.find(e => `${reviewedLexicalSense(e.item)?.id}/${e.form}` === entry.pair);
+  assert.ok(exercise, entry.pair);
+  return {...exercise, context: entry.previousUsage?.context};
+});
 const find = (surface, form) => {
   const exercise = model.exercises.find(candidate => candidate.item.surface === surface && candidate.form === form);
   assert.ok(exercise, `Expected reviewed exercise: ${surface}/${form}`);
@@ -83,7 +88,7 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   // Reconstruct the old view without replacing or weakening its frozen hashes.
   // The only exceptions are the documented retirement/context delta and the
   // context IDs' review-version suffix; every unrelated text is still hashed.
-  const originalExercises = [...model.exercises, ...retired].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
+  const originalExercises = [...model.exercises, ...retired, ...actionDeferred].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
   assert.equal(originalExercises.length, before.counts.eligibleExercises);
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');
@@ -91,7 +96,7 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   const beforeRegionalReview = originalExercises.map(exercise => {
     const change = actionContexts.get(`${reviewedLexicalSense(exercise.item)?.id}/${exercise.form}`);
     if (!change) return exercise;
-    assert.deepEqual(exercise.context, change.currentUsage.context);
+    assert.deepEqual({...exercise.context,id:exercise.context.id.replace(/:v\d+$/,`:v${change.currentUsage.reviewVersion}`)}, change.currentUsage.context);
     return {...exercise, context: change.previousUsage.context};
   });
   const contexts = beforeRegionalReview.map(exercise => ({ ...exercise,

@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath, pathToFileURL} from 'node:url';
+import {DEFERRED_ACTION_PAIRS} from '../../../../app/lib/form-eligibility.mjs';
 
 const sha = value => crypto.createHash('sha256').update(value).digest('hex');
 const pair = row => `${row.senseId}/${row.form}`;
@@ -61,7 +62,8 @@ export async function runReviewPreflight({taskRoot, batch, phase = 'review', pro
     const target = expected.get(key);
     if (!target) blockers.push(report('scope.out-of-assignment', 'blocker', `Card is outside the fixed assignment: ${key}.`, [card.id]));
     if (card.review !== 'draft') blockers.push(report('scope.source-not-draft', 'blocker', `Source card is not draft: ${card.id}.`, [card.id]));
-    const structural = project.usageCardIssues([card]);
+    const deferred = DEFERRED_ACTION_PAIRS.has(`${card.senseId}/${card.form}`);
+    const structural = deferred && card.review === 'draft' ? [] : project.usageCardIssues([card]);
     if (structural.length) blockers.push(report('structure.card', 'blocker', structural.join(' | '), [card.id]));
     for (const field of ['scene', 'translation']) {
       const value = String(card[field] ?? '');
@@ -69,9 +71,9 @@ export async function runReviewPreflight({taskRoot, batch, phase = 'review', pro
       if (kana.test(value) || japanesePunctuation.test(value)) blockers.push(report(`content.japanese-${field}`, 'blocker', `${field} contains Japanese kana or punctuation; likely field mix-up.`, [card.id]));
       if (placeholder.test(value)) blockers.push(report(`content.placeholder-${field}`, 'blocker', `${field} contains placeholder/template wording.`, [card.id]));
     }
-    const resolved = resolveSentence(card, project);
-    if (!resolved.sentence) blockers.push(report('sentence.unresolvable', 'blocker', `Cannot resolve target for ${card.id}.`, [card.id]));
-    else {
+    const resolved = deferred ? null : resolveSentence(card, project);
+    if (!deferred && !resolved.sentence) blockers.push(report('sentence.unresolvable', 'blocker', `Cannot resolve target for ${card.id}.`, [card.id]));
+    else if (!deferred) {
       const outside = [...(card.before ?? []), ...(card.after ?? [])].map(part => part.text).join('');
       if (resolved.sentence.length > 2 && outside.includes(resolved.sentence)) blockers.push(report('sentence.answer-leak', 'blocker', `Complete sentence appears outside the target slot.`, [card.id]));
       if (resolved.sentence.length > 2 && outside.includes(project.resolveUsageCard(card).target.text)) blockers.push(report('sentence.target-leak', 'blocker', `Target text appears outside the target slot.`, [card.id]));
@@ -81,7 +83,7 @@ export async function runReviewPreflight({taskRoot, batch, phase = 'review', pro
     if (prior) blockers.push(report('content.duplicate-visible', 'blocker', `Visible teaching content is identical to ${prior}.`, [prior, card.id]));
     else visible.set(fingerprint, card.id);
     if (String(card.form).match(/Negative|Past/u) || String(card.form).includes('teshimau') || String(card.form).includes('tearu')) attention.push({id:card.id, reason:'negative/past/completion or preparation form needs explicit scope review'});
-    if (!/[㐀-鿿]/u.test(resolved.sentence ?? '')) attention.push({id:card.id, reason:'full sentence has no kanji; confirm this is natural rather than a template shortcut'});
+    if (!deferred && !/[㐀-鿿]/u.test(resolved.sentence ?? '')) attention.push({id:card.id, reason:'full sentence has no kanji; confirm this is natural rather than a template shortcut'});
   }
   if (seenPairs.size !== assignment.length) blockers.push(report('scope.missing-pair', 'blocker', `Assignment has ${assignment.length} pairs; cards cover ${seenPairs.size}.`));
 
@@ -92,7 +94,7 @@ export async function runReviewPreflight({taskRoot, batch, phase = 'review', pro
     const reasons = new Map();
     for (const record of ledger) {
       const card = cardById.get(record.id);
-      const current = card ? resolveSentence(card, project) : {sentence:null};
+      const current = card && DEFERRED_ACTION_PAIRS.has(`${card.senseId}/${card.form}`) ? {sentence:record.sentence} : card ? resolveSentence(card, project) : {sentence:null};
       if (!card || record.hash !== sha(JSON.stringify(card)) || record.sentence !== current.sentence) blockers.push(report('review.stale-ledger', 'blocker', `Review record does not match the current card: ${record.id}.`, [record.id]));
       const normalized = compact(record.reason);
       if (!normalized || genericReason.test(normalized)) blockers.push(report('review.generic-reason', 'blocker', `Reason is empty or generic for ${record.id}.`, [record.id]));

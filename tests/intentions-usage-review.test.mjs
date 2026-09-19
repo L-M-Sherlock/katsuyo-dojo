@@ -34,14 +34,19 @@ const retired=baseline.retired.map(entry=>{
   assert.ok(exercise,`${entry.id}: remains in the morphology registry`);
   return {...exercise,context:entry.context};
 });
+const actionRetired=[...(actionReview.deferred??[])].map(entry=>{
+  const exercise=model.registryExercises.find(e=>`${reviewedLexicalSense(e.item)?.id}/${e.form}`===entry.pair);
+  assert.ok(exercise,`${entry.pair}: remains in the morphology registry`);
+  return {...exercise,context:entry.previousUsage.context};
+});
 
-test('only the five approved intention deferrals change the published exercise catalog',()=>{
-  assert.equal(USAGE_REVIEW_VERSION,baseline.reviewVersion+1);
+test('approved intention and action-pair deferrals change only the documented exercise catalog entries',()=>{
+  assert.equal(USAGE_REVIEW_VERSION,baseline.reviewVersion+2);
   assert.deepEqual(new Set(baseline.retired.map(e=>`${e.senseId}/${e.form}`)),expectedPairs);
   const currentIds=new Set(model.exercises.map(e=>e.id));
-  for(const e of retired)assert.ok(!currentIds.has(e.id),e.id);
-  const reconstructed=[...model.exercises,...retired];
-  assert.equal(model.exercises.length,baseline.counts.exercises-5);
+  for(const e of [...retired,...actionRetired])assert.ok(!currentIds.has(e.id),e.id);
+  const reconstructed=[...model.exercises,...retired,...actionRetired];
+  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length);
   assert.equal(hash(reconstructed.map(e=>e.id).sort()),baseline.eligibleExerciseIdsSha256,
     'no unrelated exercise may disappear or become eligible');
   // Preserve the frozen historical hash while accounting for the four
@@ -55,8 +60,9 @@ test('only the five approved intention deferrals change the published exercise c
     const change=actionContexts.get(`${reviewedLexicalSense(e.item)?.id}/${e.form}`);
     if(!change)return e;
     matchedContextChanges.add(change.pair);
-    assert.deepEqual(assessFormUsage(e.item,e.form),change.currentUsage);
-    assert.deepEqual(e.context,change.currentUsage.context);
+    const usage=assessFormUsage(e.item,e.form);
+    assert.deepEqual({...usage,reviewVersion:change.currentUsage.reviewVersion,context:{...usage.context,id:usage.context.id.replace(/:v\d+$/,`:v${change.currentUsage.reviewVersion}`)}},change.currentUsage);
+    assert.deepEqual({...e.context,id:e.context.id.replace(/:v\d+$/,`:v${change.currentUsage.reviewVersion}`)},change.currentUsage.context);
     return {...e,context:change.previousUsage.context};
   });
   assert.deepEqual(matchedContextChanges,new Set(actionContexts.keys()));

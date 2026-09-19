@@ -6,6 +6,10 @@ import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import UsageCardView from '../app/lib/usage-card-view.mjs';
 import {USAGE_CARDS, createUsageCardLookup, usageCardIssues, usageCardItem, resolveUsageCard, usageSentenceParts, usageCardClassRequirements, basicUsageCardRequirements, usageCardStageRequirements, usageCardWritingReview, usageCardFor} from '../app/lib/usage-cards.mjs';
+import {DEFERRED_ACTION_PAIRS, eligibleVerbForm, assessFormUsage, supportsVerbForm} from '../app/lib/form-eligibility.mjs';
+import {conjugate} from '../app/lib/conjugation.mjs';
+import {recognizeForms} from '../app/lib/form-recognition.mjs';
+import {normalizeAnswer} from '../app/lib/answer-analysis.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 import intentionWordCards from '../app/lib/usage-cards/intention-words/index.mjs';
 import actionWordCards from '../app/lib/usage-cards/actions-generated.mjs';
@@ -83,8 +87,8 @@ test('reviewed stages retain exact eligible coverage and preserve the original r
 test('published action cards match the approved review ledger and leave the historical baseline intact', () => {
   const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
   const sourceHash = file => createHash('sha256').update(readFileSync(new URL(file, import.meta.url))).digest('hex');
-  assert.equal(sourceHash('../docs/usage-card-actions-review.json'), '51aba5b5960ba1ed1b6310d5fd759095374c5deee799b25cb8a95a039727a496');
-  assert.equal(sourceHash('../app/lib/usage-cards/actions-generated.mjs'), 'd16e27839e7ef686d28fb1f2bdac9968d109accc3c97fd67826bc78de0b8feea');
+  assert.equal(sourceHash('../docs/usage-card-actions-review.json'), 'cab33346b9d6e409d426fec5c7a5649127dbe889ee9b95adf2d37a654d1554ba');
+  assert.equal(sourceHash('../app/lib/usage-cards/actions-generated.mjs'), '8174ee301f3486bae4d5720b14eaab4e9c2cbc532401fda34169d034bf22a93e');
   assert.equal(actionWordCards.length, actionReview.approvedCards);
   assert.deepEqual(new Set(actionWordCards.map(card => card.id)), actionIds);
   assert.equal(hash(actionWordCards), actionReview.approvedCardsSha256);
@@ -97,15 +101,44 @@ test('published action cards match the approved review ledger and leave the hist
   assert.ok([...pendingPairs].every(pair => !approvedPairs.has(pair)));
   const required = new Set(usageCardStageRequirements('actions'));
   const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
-  assert.equal(required.size, actionReview.requiredPairs);
-  assert.equal(pendingPairs.size, 34);
+  assert.equal(required.size, actionReview.effectiveRequiredPairs);
+  assert.equal(pendingPairs.size, 9);
   assert.equal(pendingPairs.size, actionReview.pendingPairs);
+  assert.equal(actionReview.deferredPairs, 22);
+  assert.equal(actionReview.effectiveRequiredPairs, 6982);
+  assert.deepEqual(new Set(actionReview.deferred.map(entry => entry.pair)), DEFERRED_ACTION_PAIRS);
   assert.equal(actionReview.complete, false);
+  const deferred = new Set(actionReview.deferred.map(entry => entry.pair));
   for (const pair of pendingPairs) assert.ok(!covered.has(pair), pair);
   for (const pair of approvedPairs) assert.ok(required.has(pair), pair);
+  assert.ok([...deferred].every(pair=>!required.has(pair)&&!pendingPairs.has(pair)));
   assert.deepEqual(new Set([...covered, ...pendingPairs]), required);
+  assert.equal(required.size+deferred.size,actionReview.originalRequiredPairs);
   assert.equal(covered.size - approvedPairs.size, actionReview.originalActionPairs);
   assert.ok(actionWordCards.every(card => card.review === 'approved'));
+});
+
+test('repeatedly failed action pairs are deferred at exact-pair scope but remain recognizable', () => {
+  assert.equal(DEFERRED_ACTION_PAIRS.size, 22);
+  for (const pair of DEFERRED_ACTION_PAIRS) {
+    const [senseId, form] = pair.split('/');
+    const item = usageCardItem(senseId);
+    assert.ok(item, pair);
+    assert.equal(supportsVerbForm(item, form), true, pair);
+    assert.equal(eligibleVerbForm(item, form), false, pair);
+    const usage = assessFormUsage(item, form);
+    assert.equal(usage.status, 'context-required', pair);
+    assert.equal(usage.context, undefined, pair);
+    const match=recognizeForms(item,conjugate(item.surface,item.class,form),normalizeAnswer).find(r=>r.form===form);
+    assert.ok(match,pair);
+    assert.equal(match.usage.reasonCode,'action-pair-deferred');
+    const record=actionReview.deferred.find(row=>row.pair===pair);
+    assert.equal(record.reason,usage.reason);
+    assert.ok(record.attempts.length>=2);
+    assert.equal(resolveUsageCard(record.sourceCard),null);
+    assert.equal(eligibleVerbForm(item,'past'),true);
+  }
+  for(const row of actionReview.unresolved){const [senseId,form]=row.pair.split('/');assert.equal(eligibleVerbForm(usageCardItem(senseId),form),true,row.pair);}
 });
 
 test('another action card in the same form cannot fill an exact sense gap', () => {

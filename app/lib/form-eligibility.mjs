@@ -1,3 +1,5 @@
+import { ACTION_PAIR_DEFERRALS } from './action-pair-deferrals.mjs';
+export { DEFERRED_ACTION_PAIRS } from './action-pair-deferrals.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
 import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
 import { FORM_LABELS } from './form-labels.mjs';
@@ -209,6 +211,8 @@ export function assessFormUsage(item, form) {
   if (!sense) return blocked('semantic', '这个词条、读音或释义尚未完成适用性审核。', 'unreviewed-lexeme');
   if (adjective) return assessAdjective(sense, form);
   const family = verbUsageFamily(form), word = sense.surface;
+  const deferredReason = ACTION_PAIR_DEFERRALS[`${sense.id}/${form}`];
+  if (deferredReason) return {...contextual(sense, form, deferredReason), reasonCode: 'action-pair-deferred'};
   // Exact pairs deferred by the intention-card language review. Keep their
   // morphology and answer recognition; no teaching context has been approved.
   if ((word === '間に合う' && ['naideKudasai', 'prohibitive', 'temoIi', 'masenka'].includes(form)) ||
