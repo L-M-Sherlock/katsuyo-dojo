@@ -64,9 +64,13 @@ test("describes each complete compound meaning while preserving usage and form m
   assert.match(semanticsForForm("tagaruNegative").concise, /没有表现出.*意愿/);
   assert.match(semanticsForForm("tearuNegative").coreMeaning, /结果状态/);
   for (const form of ["teshimauNegative", "teshimauNegativePast"]) {
-    assert.match(semanticsForForm(form).concise, /全部做完/);
-    assert.doesNotMatch(semanticsForForm(form).concise, /不小心|意外/);
+    assert.match(semanticsForForm(form).coreMeaning, /完成/);
+    assert.match(semanticsForForm(form).coreMeaning, /结果/);
+    assert.match(semanticsForForm(form).coreMeaning, /意外/);
+    assert.doesNotMatch(semanticsForForm(form).coreMeaning, /^表示(?:过去)?不?把某个动作全部做完。$/);
   }
+  assert.match(semanticsForForm("teshimauNegative").coreMeaning, /ように/);
+  assert.match(semanticsForForm("teshimauNegativePast").coreMeaning, /疑问/);
   assert.match(semanticsForForm("teiruPast").coreMeaning, /ている|动作|状态/);
   assert.match(semanticsForForm("teiruPast").coreMeaning, /过去/);
   assert.match(semanticsForForm("taiNegativePast").coreMeaning, /过去不希望自己/);

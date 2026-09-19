@@ -3,16 +3,16 @@
   "stage": "actions",
   "complete": false,
   "semanticPolicy": "Yokubi-aligned open-context review: teshimauNegative and teshimauNegativePast may express unfinished action, avoided completion, regret, accident, or another irreversible result when the full sentence supports it; they are not hard-limited to one Chinese gloss.",
-  "pendingNeedsReReview": true,
+  "pendingNeedsReReview": false,
   "originalCards": 9598,
   "originalCardsSha256": "5f7f9dcef365905069a2d258a7581b5e3974044caf13bda7b74d959e40fdcfcf",
   "originalRequirementSha256": "ed857e5f4158fb5371fe04c8aee870396480d5b2eb59bd40b96206521dce14e9",
   "requiredPairs": 7004,
   "originalActionPairs": 159,
   "assignedPairs": 6845,
-  "approvedCards": 6693,
-  "approvedCardsSha256": "01b3dc1366938c3feb52994cbd9b9b61e98a3386a520221e565fc251d2f7a7a8",
-  "pendingPairs": 152,
+  "approvedCards": 6779,
+  "approvedCardsSha256": "94fb3c156bca1f79a3d3c57c750c7ec0f08611aea5ca3e83e258300eb1d42834",
+  "pendingPairs": 66,
   "publishedFile": "actions-generated.mjs",
   "approvedIds": [
     "usage:teiru:verb:書く:かく",
@@ -3500,6 +3500,9 @@
     "usage:temiruPast:verb:包む:つつむ",
     "usage:temiruNegative:verb:包む:つつむ",
     "usage:temiruNegativePast:verb:包む:つつむ",
+    "usage:temiru:verb:終わる:おわる",
+    "usage:temiruPast:verb:終わる:おわる",
+    "usage:temiruNegative:verb:終わる:おわる",
     "usage:temiru:verb:変わる:かわる",
     "usage:temiruPast:verb:変わる:かわる",
     "usage:temiruNegative:verb:変わる:かわる",
@@ -3740,6 +3743,8 @@
     "usage:teshimau:verb:笑う:わらう",
     "usage:chau:verb:笑う:わらう",
     "usage:teshimauPast:verb:笑う:わらう",
+    "usage:teshimauNegative:verb:笑う:わらう",
+    "usage:teshimauNegativePast:verb:笑う:わらう",
     "usage:teshimau:verb:歩く:あるく",
     "usage:chau:verb:歩く:あるく",
     "usage:teshimauPast:verb:歩く:あるく",
@@ -3758,6 +3763,8 @@
     "usage:teshimau:verb:持つ:もつ",
     "usage:chau:verb:持つ:もつ",
     "usage:teshimauPast:verb:持つ:もつ",
+    "usage:teshimauNegative:verb:持つ:もつ",
+    "usage:teshimauNegativePast:verb:持つ:もつ",
     "usage:teshimau:verb:選ぶ:えらぶ",
     "usage:chau:verb:選ぶ:えらぶ",
     "usage:teshimauPast:verb:選ぶ:えらぶ",
@@ -3766,6 +3773,8 @@
     "usage:teshimau:verb:住む:すむ",
     "usage:chau:verb:住む:すむ",
     "usage:teshimauPast:verb:住む:すむ",
+    "usage:teshimauNegative:verb:住む:すむ",
+    "usage:teshimauNegativePast:verb:住む:すむ",
     "usage:teshimau:verb:走る:はしる",
     "usage:chau:verb:走る:はしる",
     "usage:teshimauPast:verb:走る:はしる",
@@ -3804,6 +3813,8 @@
     "usage:teshimau:verb:違う:ちがう",
     "usage:chau:verb:違う:ちがう",
     "usage:teshimauPast:verb:違う:ちがう",
+    "usage:teshimauNegative:verb:違う:ちがう",
+    "usage:teshimauNegativePast:verb:違う:ちがう",
     "usage:teshimau:verb:描く:えがく",
     "usage:chau:verb:描く:えがく",
     "usage:teshimauPast:verb:描く:えがく",
@@ -3817,6 +3828,8 @@
     "usage:teshimau:verb:泣く:なく",
     "usage:chau:verb:泣く:なく",
     "usage:teshimauPast:verb:泣く:なく",
+    "usage:teshimauNegative:verb:泣く:なく",
+    "usage:teshimauNegativePast:verb:泣く:なく",
     "usage:teshimau:verb:磨く:みがく",
     "usage:chau:verb:磨く:みがく",
     "usage:teshimauPast:verb:磨く:みがく",
@@ -3860,6 +3873,8 @@
     "usage:teshimau:verb:役立つ:やくだつ",
     "usage:chau:verb:役立つ:やくだつ",
     "usage:teshimauPast:verb:役立つ:やくだつ",
+    "usage:teshimauNegative:verb:役立つ:やくだつ",
+    "usage:teshimauNegativePast:verb:役立つ:やくだつ",
     "usage:teshimau:verb:並ぶ:ならぶ",
     "usage:chau:verb:並ぶ:ならぶ",
     "usage:teshimauPast:verb:並ぶ:ならぶ",
@@ -3873,6 +3888,8 @@
     "usage:teshimau:verb:困る:こまる",
     "usage:chau:verb:困る:こまる",
     "usage:teshimauPast:verb:困る:こまる",
+    "usage:teshimauNegative:verb:困る:こまる",
+    "usage:teshimauNegativePast:verb:困る:こまる",
     "usage:teshimau:verb:楽しむ:たのしむ",
     "usage:chau:verb:楽しむ:たのしむ",
     "usage:teshimauPast:verb:楽しむ:たのしむ",
@@ -3896,6 +3913,8 @@
     "usage:teshimau:verb:喜ぶ:よろこぶ",
     "usage:chau:verb:喜ぶ:よろこぶ",
     "usage:teshimauPast:verb:喜ぶ:よろこぶ",
+    "usage:teshimauNegative:verb:喜ぶ:よろこぶ",
+    "usage:teshimauNegativePast:verb:喜ぶ:よろこぶ",
     "usage:teshimau:verb:閉める:しめる",
     "usage:chau:verb:閉める:しめる",
     "usage:teshimauPast:verb:閉める:しめる",
@@ -3945,9 +3964,13 @@
     "usage:teshimau:verb:続ける:つづける",
     "usage:chau:verb:続ける:つづける",
     "usage:teshimauPast:verb:続ける:つづける",
+    "usage:teshimauNegative:verb:続ける:つづける",
+    "usage:teshimauNegativePast:verb:続ける:つづける",
     "usage:teshimau:verb:浴びる:あびる",
     "usage:chau:verb:浴びる:あびる",
     "usage:teshimauPast:verb:浴びる:あびる",
+    "usage:teshimauNegative:verb:浴びる:あびる",
+    "usage:teshimauNegativePast:verb:浴びる:あびる",
     "usage:teshimau:verb:着る:きる",
     "usage:chau:verb:着る:きる",
     "usage:teshimauPast:verb:着る:きる",
@@ -3962,6 +3985,7 @@
     "usage:chau:verb:できる:できる",
     "usage:teshimauPast:verb:できる:できる",
     "usage:teshimauNegative:verb:できる:できる",
+    "usage:teshimauNegativePast:verb:できる:できる",
     "usage:teshimau:verb:止める:とめる",
     "usage:chau:verb:止める:とめる",
     "usage:teshimauPast:verb:止める:とめる",
@@ -3980,6 +4004,8 @@
     "usage:teshimau:verb:疲れる:つかれる",
     "usage:chau:verb:疲れる:つかれる",
     "usage:teshimauPast:verb:疲れる:つかれる",
+    "usage:teshimauNegative:verb:疲れる:つかれる",
+    "usage:teshimauNegativePast:verb:疲れる:つかれる",
     "usage:teshimau:verb:降りる:おりる",
     "usage:chau:verb:降りる:おりる",
     "usage:teshimauPast:verb:降りる:おりる",
@@ -3993,9 +4019,13 @@
     "usage:teshimau:verb:壊れる:こわれる",
     "usage:chau:verb:壊れる:こわれる",
     "usage:teshimauPast:verb:壊れる:こわれる",
+    "usage:teshimauNegative:verb:壊れる:こわれる",
+    "usage:teshimauNegativePast:verb:壊れる:こわれる",
     "usage:teshimau:verb:似る:にる",
     "usage:chau:verb:似る:にる",
     "usage:teshimauPast:verb:似る:にる",
+    "usage:teshimauNegative:verb:似る:にる",
+    "usage:teshimauNegativePast:verb:似る:にる",
     "usage:teshimau:verb:落ちる:おちる",
     "usage:chau:verb:落ちる:おちる",
     "usage:teshimauPast:verb:落ちる:おちる",
@@ -4025,6 +4055,8 @@
     "usage:teshimau:verb:待つ:まつ",
     "usage:chau:verb:待つ:まつ",
     "usage:teshimauPast:verb:待つ:まつ",
+    "usage:teshimauNegative:verb:待つ:まつ",
+    "usage:teshimauNegativePast:verb:待つ:まつ",
     "usage:teshimau:verb:遊ぶ:あそぶ",
     "usage:chau:verb:遊ぶ:あそぶ",
     "usage:teshimauPast:verb:遊ぶ:あそぶ",
@@ -4053,6 +4085,8 @@
     "usage:teshimau:verb:急ぐ:いそぐ",
     "usage:chau:verb:急ぐ:いそぐ",
     "usage:teshimauPast:verb:急ぐ:いそぐ",
+    "usage:teshimauNegative:verb:急ぐ:いそぐ",
+    "usage:teshimauNegativePast:verb:急ぐ:いそぐ",
     "usage:teshimau:verb:会う:あう",
     "usage:chau:verb:会う:あう",
     "usage:teshimauPast:verb:会う:あう",
@@ -4066,6 +4100,8 @@
     "usage:teshimau:verb:働く:はたらく",
     "usage:chau:verb:働く:はたらく",
     "usage:teshimauPast:verb:働く:はたらく",
+    "usage:teshimauNegative:verb:働く:はたらく",
+    "usage:teshimauNegativePast:verb:働く:はたらく",
     "usage:teshimau:verb:置く:おく",
     "usage:chau:verb:置く:おく",
     "usage:teshimauPast:verb:置く:おく",
@@ -4074,6 +4110,8 @@
     "usage:teshimau:verb:騒ぐ:さわぐ",
     "usage:chau:verb:騒ぐ:さわぐ",
     "usage:teshimauPast:verb:騒ぐ:さわぐ",
+    "usage:teshimauNegative:verb:騒ぐ:さわぐ",
+    "usage:teshimauNegativePast:verb:騒ぐ:さわぐ",
     "usage:teshimau:verb:消す:けす",
     "usage:chau:verb:消す:けす",
     "usage:teshimauPast:verb:消す:けす",
@@ -4093,10 +4131,12 @@
     "usage:chau:verb:休む:やすむ",
     "usage:teshimauPast:verb:休む:やすむ",
     "usage:teshimauNegative:verb:休む:やすむ",
+    "usage:teshimauNegativePast:verb:休む:やすむ",
     "usage:teshimau:verb:知る:しる",
     "usage:chau:verb:知る:しる",
     "usage:teshimauPast:verb:知る:しる",
     "usage:teshimauNegative:verb:知る:しる",
+    "usage:teshimauNegativePast:verb:知る:しる",
     "usage:teshimau:verb:作る:つくる",
     "usage:chau:verb:作る:つくる",
     "usage:teshimauPast:verb:作る:つくる",
@@ -4110,6 +4150,8 @@
     "usage:teshimau:verb:思う:おもう",
     "usage:chau:verb:思う:おもう",
     "usage:teshimauPast:verb:思う:おもう",
+    "usage:teshimauNegative:verb:思う:おもう",
+    "usage:teshimauNegativePast:verb:思う:おもう",
     "usage:teshimau:verb:洗う:あらう",
     "usage:chau:verb:洗う:あらう",
     "usage:teshimauPast:verb:洗う:あらう",
@@ -4179,10 +4221,12 @@
     "usage:chau:verb:指す:さす",
     "usage:teshimauPast:verb:指す:さす",
     "usage:teshimauNegative:verb:指す:さす",
+    "usage:teshimauNegativePast:verb:指す:さす",
     "usage:teshimau:verb:勝つ:かつ",
     "usage:chau:verb:勝つ:かつ",
     "usage:teshimauPast:verb:勝つ:かつ",
     "usage:teshimauNegative:verb:勝つ:かつ",
+    "usage:teshimauNegativePast:verb:勝つ:かつ",
     "usage:teshimau:verb:運ぶ:はこぶ",
     "usage:chau:verb:運ぶ:はこぶ",
     "usage:teshimauPast:verb:運ぶ:はこぶ",
@@ -4216,6 +4260,8 @@
     "usage:teshimau:verb:変わる:かわる",
     "usage:chau:verb:変わる:かわる",
     "usage:teshimauPast:verb:変わる:かわる",
+    "usage:teshimauNegative:verb:変わる:かわる",
+    "usage:teshimauNegativePast:verb:変わる:かわる",
     "usage:teshimau:verb:座る:すわる",
     "usage:chau:verb:座る:すわる",
     "usage:teshimauPast:verb:座る:すわる",
@@ -4234,6 +4280,8 @@
     "usage:teshimau:verb:守る:まもる",
     "usage:chau:verb:守る:まもる",
     "usage:teshimauPast:verb:守る:まもる",
+    "usage:teshimauNegative:verb:守る:まもる",
+    "usage:teshimauNegativePast:verb:守る:まもる",
     "usage:teshimau:verb:喋る:しゃべる",
     "usage:chau:verb:喋る:しゃべる",
     "usage:teshimauPast:verb:喋る:しゃべる",
@@ -4242,6 +4290,8 @@
     "usage:teshimau:verb:残る:のこる",
     "usage:chau:verb:残る:のこる",
     "usage:teshimauPast:verb:残る:のこる",
+    "usage:teshimauNegative:verb:残る:のこる",
+    "usage:teshimauNegativePast:verb:残る:のこる",
     "usage:teshimau:verb:見る:みる",
     "usage:chau:verb:見る:みる",
     "usage:teshimauPast:verb:見る:みる",
@@ -4250,6 +4300,8 @@
     "usage:teshimau:verb:寝る:ねる",
     "usage:chau:verb:寝る:ねる",
     "usage:teshimauPast:verb:寝る:ねる",
+    "usage:teshimauNegative:verb:寝る:ねる",
+    "usage:teshimauNegativePast:verb:寝る:ねる",
     "usage:teshimau:verb:開ける:あける",
     "usage:chau:verb:開ける:あける",
     "usage:teshimauPast:verb:開ける:あける",
@@ -4288,6 +4340,8 @@
     "usage:teshimau:verb:いる:いる",
     "usage:chau:verb:いる:いる",
     "usage:teshimauPast:verb:いる:いる",
+    "usage:teshimauNegative:verb:いる:いる",
+    "usage:teshimauNegativePast:verb:いる:いる",
     "usage:teshimau:verb:考える:かんがえる",
     "usage:chau:verb:考える:かんがえる",
     "usage:teshimauPast:verb:考える:かんがえる",
@@ -4316,6 +4370,8 @@
     "usage:teshimau:verb:遅れる:おくれる",
     "usage:chau:verb:遅れる:おくれる",
     "usage:teshimauPast:verb:遅れる:おくれる",
+    "usage:teshimauNegative:verb:遅れる:おくれる",
+    "usage:teshimauNegativePast:verb:遅れる:おくれる",
     "usage:teshimau:verb:迎える:むかえる",
     "usage:chau:verb:迎える:むかえる",
     "usage:teshimauPast:verb:迎える:むかえる",
@@ -4324,9 +4380,13 @@
     "usage:teshimau:verb:生まれる:うまれる",
     "usage:chau:verb:生まれる:うまれる",
     "usage:teshimauPast:verb:生まれる:うまれる",
+    "usage:teshimauNegative:verb:生まれる:うまれる",
+    "usage:teshimauNegativePast:verb:生まれる:うまれる",
     "usage:teshimau:verb:足りる:たりる",
     "usage:chau:verb:足りる:たりる",
     "usage:teshimauPast:verb:足りる:たりる",
+    "usage:teshimauNegative:verb:足りる:たりる",
+    "usage:teshimauNegativePast:verb:足りる:たりる",
     "usage:teshimau:verb:過ぎる:すぎる",
     "usage:chau:verb:過ぎる:すぎる",
     "usage:teshimauPast:verb:過ぎる:すぎる",
@@ -4335,6 +4395,8 @@
     "usage:teshimau:verb:増える:ふえる",
     "usage:chau:verb:増える:ふえる",
     "usage:teshimauPast:verb:増える:ふえる",
+    "usage:teshimauNegative:verb:増える:ふえる",
+    "usage:teshimauNegativePast:verb:増える:ふえる",
     "usage:teshimau:verb:届ける:とどける",
     "usage:chau:verb:届ける:とどける",
     "usage:teshimauPast:verb:届ける:とどける",
@@ -4720,6 +4782,9 @@
     "usage:teokuPast:verb:戻る:もどる",
     "usage:teokuNegative:verb:戻る:もどる",
     "usage:teokuNegativePast:verb:戻る:もどる",
+    "usage:teoku:verb:終わる:おわる",
+    "usage:toku:verb:終わる:おわる",
+    "usage:teokuNegative:verb:終わる:おわる",
     "usage:teoku:verb:残る:のこる",
     "usage:toku:verb:残る:のこる",
     "usage:teokuPast:verb:残る:のこる",
@@ -4969,6 +5034,8 @@
     "usage:teikuNegative:verb:死ぬ:しぬ",
     "usage:teikuNegativePast:verb:死ぬ:しぬ",
     "usage:tekuruPast:verb:死ぬ:しぬ",
+    "usage:tekuruNegative:verb:死ぬ:しぬ",
+    "usage:tekuruNegativePast:verb:死ぬ:しぬ",
     "usage:teiku:verb:買う:かう",
     "usage:teku:verb:買う:かう",
     "usage:tekuru:verb:買う:かう",
@@ -5174,6 +5241,13 @@
     "usage:tekuruPast:verb:描く:えがく",
     "usage:tekuruNegative:verb:描く:えがく",
     "usage:tekuruNegativePast:verb:描く:えがく",
+    "usage:teiku:verb:着く:つく",
+    "usage:teku:verb:着く:つく",
+    "usage:tekuru:verb:着く:つく",
+    "usage:teikuPast:verb:着く:つく",
+    "usage:tekuruPast:verb:着く:つく",
+    "usage:tekuruNegative:verb:着く:つく",
+    "usage:tekuruNegativePast:verb:着く:つく",
     "usage:teiku:verb:泣く:なく",
     "usage:teku:verb:泣く:なく",
     "usage:tekuru:verb:泣く:なく",
@@ -5275,6 +5349,7 @@
     "usage:tekuruNegativePast:verb:並ぶ:ならぶ",
     "usage:teiku:verb:喜ぶ:よろこぶ",
     "usage:teku:verb:喜ぶ:よろこぶ",
+    "usage:tekuru:verb:喜ぶ:よろこぶ",
     "usage:teikuPast:verb:喜ぶ:よろこぶ",
     "usage:tekuruPast:verb:喜ぶ:よろこぶ",
     "usage:tekuruNegativePast:verb:喜ぶ:よろこぶ",
@@ -5328,6 +5403,7 @@
     "usage:tekuru:verb:困る:こまる",
     "usage:teikuPast:verb:困る:こまる",
     "usage:tekuruPast:verb:困る:こまる",
+    "usage:tekuruNegative:verb:困る:こまる",
     "usage:tekuruNegativePast:verb:困る:こまる",
     "usage:teiku:verb:渡る:わたる",
     "usage:teku:verb:渡る:わたる",
@@ -5531,6 +5607,8 @@
     "usage:tekuruPast:verb:増える:ふえる",
     "usage:tekuruNegative:verb:増える:ふえる",
     "usage:tekuruNegativePast:verb:増える:ふえる",
+    "usage:tekuru:verb:足りる:たりる",
+    "usage:tekuruPast:verb:足りる:たりる",
     "usage:teiku:verb:届ける:とどける",
     "usage:teku:verb:届ける:とどける",
     "usage:tekuru:verb:届ける:とどける",
@@ -5714,7 +5792,9 @@
     "usage:teku:verb:知る:しる",
     "usage:tekuru:verb:知る:しる",
     "usage:teikuPast:verb:知る:しる",
+    "usage:teikuNegative:verb:知る:しる",
     "usage:tekuruPast:verb:知る:しる",
+    "usage:tekuruNegative:verb:知る:しる",
     "usage:tekuruNegativePast:verb:知る:しる",
     "usage:teiku:verb:作る:つくる",
     "usage:teku:verb:作る:つくる",
@@ -5737,6 +5817,7 @@
     "usage:teiku:verb:思う:おもう",
     "usage:teku:verb:思う:おもう",
     "usage:teikuPast:verb:思う:おもう",
+    "usage:teikuNegative:verb:思う:おもう",
     "usage:tekuruPast:verb:思う:おもう",
     "usage:tekuruNegativePast:verb:思う:おもう",
     "usage:teiku:verb:洗う:あらう",
@@ -5863,6 +5944,7 @@
     "usage:tekuru:verb:勝つ:かつ",
     "usage:teikuPast:verb:勝つ:かつ",
     "usage:teikuNegative:verb:勝つ:かつ",
+    "usage:teikuNegativePast:verb:勝つ:かつ",
     "usage:tekuruPast:verb:勝つ:かつ",
     "usage:tekuruNegative:verb:勝つ:かつ",
     "usage:tekuruNegativePast:verb:勝つ:かつ",
@@ -6507,6 +6589,10 @@
     "usage:sugiruPast:verb:座る:すわる",
     "usage:sugiruNegative:verb:座る:すわる",
     "usage:sugiruNegativePast:verb:座る:すわる",
+    "usage:sugiru:verb:困る:こまる",
+    "usage:sugiruPast:verb:困る:こまる",
+    "usage:sugiruNegative:verb:困る:こまる",
+    "usage:sugiruNegativePast:verb:困る:こまる",
     "usage:sugiru:verb:送る:おくる",
     "usage:sugiruPast:verb:送る:おくる",
     "usage:sugiruNegative:verb:送る:おくる",
@@ -6717,7 +6803,7 @@
       "sentence": "旅行中に困らないよう、予備の現金を持ってある。",
       "scene": "为旅行遇到意外，事先备有应急现金。",
       "translation": "为免旅行途中为难，已经事先备有应急现金。",
-      "reason": "现句“旅行中に困らないよう、予備の現金を持ってある。”保留持有义，但持つ在此首先为持续持有状态；旅行用途只能说明为何备钱，未使持有本身自然成为已经完成并留下结果的动作。持っている／持っておく更自然却不符合固定目标，暂未找到能证明此肯定てある草稿自然的依据，保留未决。",
+      "reason": "现金持有义保留，但「予備の現金を持ってある」仍难确认为自然的既成准备状态表达；旅行用途说明备钱目的，却没有化解持つ本身在这里的持续持有读法。考虑改为持有备用账户或资格同样未得到更稳妥搭配；持っている／用意してある各改变固定形式或原词，不能代换。保留具体搭配未决，不断言持つ全词不可接てある。",
       "sourceHash": "3a0f6fd0de7491faf0f6c84a0a2fca875961321c14170c8b0afccf886f52c964"
     },
     {
@@ -6727,7 +6813,7 @@
       "sentence": "山へ出発する前に、予備の現金を持ってあった。",
       "scene": "回顾山中旅行前，曾备好应急现金。",
       "translation": "出发进山之前，已经事先备有应急现金。",
-      "reason": "现句“山へ出発する前に、予備の現金を持ってあった。”虽标明出发前准备，但固定持有义下持ってあった仍缺少自然的人为已完成动作及保留结果读法；不能靠中文“已经事先备有”证明日语自然，换作取款或随身携带又会偏离固定词义，保留此具体草稿未决。",
+      "reason": "出发前这一观察点与译文的过去准备相符，但「予備の現金を持ってあった」仍依赖未获确认的持有＋人为结果搭配。将观察点换成出发当天也只改善时间，不足以证明这一谓词自然；不以旧课程释义为拒收理由，保留原卡待具体用例。",
       "sourceHash": "fa08de384e847efa862fa1a0c1bcd890e1af3633442fbcec18acfbcc19514412"
     },
     {
@@ -6737,7 +6823,7 @@
       "sentence": "薬を飲んでから三十分は待ってあるので、検査を始めてください。",
       "scene": "检查要求服药后静候半小时，我已等完。",
       "translation": "服药后已经等了至少三十分钟，请开始检查吧。",
-      "reason": "药后等满三十分钟再检查的准备目的明确，但「三十分は待ってある」把单纯持续等待包装成储备完成结果仍显生硬；核实的权威资料支持てある事先完成构式，没有提供待つ的可比实例。本次未取得足够证据可靠批准此原创搭配，保留原句；不据搜索不足宣布整词禁用。",
+      "reason": "服药后三十分钟是明确有界等待，检查是合理后续用途，故不能因为动作没有可见物理结果就否定本句；然而「三十分は待ってある」仍不如等待经过的普通完成表达稳妥，本轮未取得可比的可靠用例，无法批准其搭配。三十分は可表达至少等了三十分，译文保留该范围。",
       "sourceHash": "5be81e76aa6b005ae266a6cc547ecd94200b2a6b8363f4f1f2c3c26fc169f387"
     },
     {
@@ -6747,38 +6833,8 @@
       "sentence": "強度を測る時には、接着してから丸一日待ってあった。",
       "scene": "测试胶水强度前，实验员已按要求等足一天。",
       "translation": "测量强度时，粘接后已经等了整整一天。",
-      "reason": "测强度前等一天的目的和过去观察点清楚，丸一日读法正确；但「丸一日待ってあった」的待つ预先完成用法没有取得可比的可靠实际例句，不能仅凭教材允许完了构式就认定这一搭配自然。保留现稿未决，不替换成待っていた或待っておいた来冒充固定目标。",
+      "reason": "粘接至强度测试之间等足一天，确实给等待设置了终点及后续实验目的；问题在「丸一日待ってあった」这一既成准备搭配仍未得到足够支持，而非待つ被笼统列作非意志词。改成胶水已干会偷换词义，改成待っていた会偷换形式，均未采用。过去观察点与原译文无冲突，卡片继续未决。",
       "sourceHash": "3ba5b4e1c976b7b7992e5b975675761c82665ccfbd84eb38cb5e1d563620bf00"
-    },
-    {
-      "id": "usage:temiru:verb:終わる:おわる",
-      "pair": "verb:終わる:おわる/temiru",
-      "batch": "temiru-1/07",
-      "sentence": "今日は六時で終わってみる。",
-      "scene": "想改变工作节奏，今天尝试六点结束。",
-      "translation": "今天试着在六点结束。",
-      "reason": "今日は六時で終わってみる省略的应是工作等自行结束事件，却被译为主体试着结束；时限不能令自动词结束变成可直接试做动作，现句不宜批准。",
-      "sourceHash": "1d263cd84351bb7d1c611547664f0eff5be49b1e8699884c0c29fcd171835424"
-    },
-    {
-      "id": "usage:temiruPast:verb:終わる:おわる",
-      "pair": "verb:終わる:おわる/temiruPast",
-      "batch": "temiru-1/07",
-      "sentence": "昨日は昼食前に終わってみた。",
-      "scene": "昨天改变工作节奏，尝试在午饭前结束。",
-      "translation": "昨天试着在午饭前结束了。",
-      "reason": "昨日は昼食前に終わってみた的午饭前只定位结束结果，没有主动试做及观察关系；也不能借終わってみると的回顾结果用法填补本课尝试义。",
-      "sourceHash": "281f1b8cf47f8bd9a3d5adc8d1cf6d3e38af1b69e332ae36551c707132fc7048"
-    },
-    {
-      "id": "usage:temiruNegative:verb:終わる:おわる",
-      "pair": "verb:終わる:おわる/temiruNegative",
-      "batch": "temiru-1/07",
-      "sentence": "今週は予定が詰まっていて、早く終わってみない。",
-      "scene": "本周工作安排紧，不尝试提前结束。",
-      "translation": "这周安排得很满，不尝试提前结束。",
-      "reason": "予定が詰まっていて、早く終わってみない把不尝试结束当作安排繁忙的后果，但未呈现可控的结束动作；若改終える或終わらせる会越过固定自动词目标。",
-      "sourceHash": "a019fe50035d9c797cb6cbf87d19afdf5f8daf87f6cb804c73e47e4fcbe43980"
     },
     {
       "id": "usage:temiruNegativePast:verb:終わる:おわる",
@@ -6787,678 +6843,88 @@
       "sentence": "昨日はいつもの時間まで続け、早く終わってみなかった。",
       "scene": "昨天仍按原来的节奏，没试着提前结束。",
       "translation": "昨天一直进行到平常的时间，没有试着提前结束。",
-      "reason": "続けた而未提前结束只证明实际工作持续到常规时间，不能自然推出没有试做終わる；当前句仍依赖他动结束的中文意图，保留原稿待主代理定界。",
+      "reason": "原句「昨日はいつもの時間まで続け、早く終わってみなかった。」的活动持续及过去否定与中文对应，但早く終わってみなかった依旧难以成立为自然的主动试结束叙述。已考虑迁移到经历后发现：終わってみないと／終わってみなければ自然，但不能据此推定过去否定独立句同样成立，也不能改换固定目标来填数；本项保留未决，不否定其他てみる的回顾发现用法。",
       "sourceHash": "02fbe2b96d6f08008153bc629e9fd3d971fe94aa939fb930d3794161b6bfbe2f"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:笑う:わらう",
-      "pair": "verb:笑う:わらう/teshimauNegative",
-      "batch": "teshimauChau-1/01",
-      "sentence": "笑う場面の最後まで笑ってしまわないように、監督の合図で途中で止める。",
-      "scene": "拍摄长笑镜头时，导演安排中途停下。",
-      "translation": "为了不把这段笑的戏完整笑到最后，按照导演的信号在中途停下。",
-      "reason": "本句否定的是目标范围内的“全部完成”，保留已做一部分或后续安排，未改成完全没做。 实际句「笑う場面の最後まで笑ってしまわないように、監督の合図で途中で止める。」中的主语、对象、时态和场景「拍摄长笑镜头时，导演安排中途停下。」与译文「为了不把这段笑的戏完整笑到最后，按照导演的信号在中途停下。」一致。",
-      "sourceHash": "c7c468c8e871c5d6731e82b0dd3e11633ac707592212f32fd51664b5318f0ccb"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:笑う:わらう",
-      "pair": "verb:笑う:わらう/teshimauNegativePast",
-      "batch": "teshimauChau-1/01",
-      "sentence": "試し撮りでは、笑う場面の最後まで笑ってしまわなかった。途中で監督に止められた。",
-      "scene": "试拍长笑镜头时，导演中途叫停了表演。",
-      "translation": "试拍时没有把这段笑的戏完整笑到最后，中途被导演叫停了。",
-      "reason": "本句否定的是目标范围内的“全部完成”，保留已做一部分或后续安排，未改成完全没做。 实际句「試し撮りでは、笑う場面の最後まで笑ってしまわなかった。途中で監督に止められた。」中的主语、对象、时态和场景「试拍长笑镜头时，导演中途叫停了表演。」与译文「试拍时没有把这段笑的戏完整笑到最后，中途被导演叫停了。」一致。",
-      "sourceHash": "49a151f138b9d1dae241fb5ecc944c87012e50a880a1a4225666ea55a6d1e973"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:持つ:もつ",
-      "pair": "verb:持つ:もつ/teshimauNegative",
-      "batch": "teshimauChau-1/02",
-      "sentence": "一人で荷物を全部持ってしまわないように、二人で分ける。",
-      "scene": "搬运行李时要分担，避免一人拿着全部。",
-      "translation": "为了不让一个人拿着全部行李，两个人分着拿。",
-      "reason": "现句旨在分担行李，全部只限定一人所持的物品集合；持つ在此主要形成拿着状态，未能稳定表达本课“不把动作全部做完”，不能仅靠有限物品数量批准。",
-      "sourceHash": "7ffc577131ad05c40985eb2ea93c0e66d46025b0761a0ed06107c900b16adfb0"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:持つ:もつ",
-      "pair": "verb:持つ:もつ/teshimauNegativePast",
-      "batch": "teshimauChau-1/02",
-      "sentence": "昨日は荷物を一人で全部は持ってしまわなかった。二つは友達に任せた。",
-      "scene": "昨天搬行李有人分担，其中两件交给了朋友。",
-      "translation": "昨天没有一个人拿着全部行李，其中两件交给了朋友。",
-      "reason": "二つは友達に任せた明确有人分担，已修正场景中的两件归属；但否定指一人没有持有所有行李，不自然地等同于“拿这项动作没有全部完成”，课程用义仍未决。",
-      "sourceHash": "081548a265f54504e1759bd528af546322ce0c82cc177ea9f50f1c9a3cd899d5"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:住む:すむ",
-      "pair": "verb:住む:すむ/teshimauNegative",
-      "batch": "teshimauChau-1/02",
-      "sentence": "契約の三年間を最後まで住んでしまわないように、今年中に引っ越す予定だ。",
-      "scene": "想在租期满前搬家，避免把三年租期住满。",
-      "translation": "为了不把合同约定的三年全部住满，计划今年内搬家。",
-      "reason": "契約の三年間を最後まで住む把持续居住与を格期限硬接，且避免住满的否定完成读法生硬；今年中搬家只是中文所需终点，不能据此证明固定形式自然。",
-      "sourceHash": "fd53d3701a730c402350edacefffb22727e7dc1262a6e9110580d0980692002d"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:住む:すむ",
-      "pair": "verb:住む:すむ/teshimauNegativePast",
-      "batch": "teshimauChau-1/02",
-      "sentence": "契約の三年間を最後までは住んでしまわなかった。二年で引っ越した。",
-      "scene": "租约是三年，去年住满两年就搬走了。",
-      "translation": "没有把合同约定的三年全部住满，住了两年就搬走了。",
-      "reason": "二年で引っ越した能陈述租期未满就离开，但三年間を最後までは住んでしまわなかった仍不自然表达完成否定；保持具体草稿，不以事实可理解代替目标自然度。",
-      "sourceHash": "89211ef7e3425fe6cce961c88a353f987dd61eb5588f850f1c179acff06c7e7d"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:違う:ちがう",
-      "pair": "verb:違う:ちがう/teshimauNegative",
-      "batch": "teshimauChau-1/03",
-      "sentence": "元の案とすべてが違ってしまわないように、色だけは変えない。",
-      "scene": "改版时仍留部分原设计，不把所有项目都改掉。",
-      "translation": "为了不让所有部分都和原方案不同，只有颜色不变。",
-      "reason": "すべてが違ってしまわない表达避免所有部分与原案不同，核心是否定差异状态全覆盖而不是某动作未全部做完；色だけは変えない不能把違う转为本课完成否定。原句可理解，仍按指定课程边界保留未决。",
-      "sourceHash": "20ed8e7ebcb2dea63436ca22c9be0d9a750cbf3b52f91483490545c60f658c8c"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:違う:ちがう",
-      "pair": "verb:違う:ちがう/teshimauNegativePast",
-      "batch": "teshimauChau-1/03",
-      "sentence": "元の案とすべてが違ってしまわなかった。色は同じままだった。",
-      "scene": "昨天调整了不少内容，但仍沿用了原配色。",
-      "translation": "没有所有部分都和原方案变得不同，颜色仍保持原样。",
-      "reason": "颜色保持原样只能证明并非处处与原案不同，すべてが違ってしまわなかった的量词否定还易读成所有部分都未不同。既缺自然动作完成范围，又有否定范围歧义，保留这条过去完成否定未决。",
-      "sourceHash": "526a4770e87973f70e6c4ecba6fcf2d0daad5fe8239e27e0dcf59e425adfd467"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:泣く:なく",
-      "pair": "verb:泣く:なく/teshimauNegative",
-      "batch": "teshimauChau-1/03",
-      "sentence": "泣く場面を最後まで泣いてしまわないように、今日は途中で止める。",
-      "scene": "排练哭戏时只演前半段，把结尾留到明天。",
-      "translation": "为了不把哭戏一直哭到最后，今天在中途停下。",
-      "reason": "泣く場面を最後まで泣いてしまわない把哭戏场面作为泣く宾语，搭配生硬；即使改場面では，按排练时长中途停哭也未充分证明本课把动作全部做完的自然完成范围。不能只添加最後まで批准，保留未决。",
-      "sourceHash": "57beb234ca9d7c60373f515e0afbf7d314bdb77aecceaaff7d50941d24237634"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:泣く:なく",
-      "pair": "verb:泣く:なく/teshimauNegativePast",
-      "batch": "teshimauChau-1/03",
-      "sentence": "昨日は泣く場面を最後までは泣いてしまわなかった。途中で監督が止めた。",
-      "scene": "昨天排练哭戏只演了一半，导演便喊停了。",
-      "translation": "昨天没有把哭戏完整哭到最后，导演在中途叫停了。",
-      "reason": "昨日は泣く場面を最後までは泣いてしまわなかった同样以场面作哭泣宾语；导演中途叫停证明停止表演，却不自动使哭泣具有可全部完成的范围。当前过去否定不宜作为本课教材，保留精确配对。",
-      "sourceHash": "4abb291d84832d4f56f66f3afa64a1dbe2f64b6bfa9d1e088abf3b43e795b2f5"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:役立つ:やくだつ",
-      "pair": "verb:役立つ:やくだつ/teshimauNegative",
-      "batch": "teshimauChau-1/04",
-      "sentence": "ヒントがすべて役立ってしまわないように、一つは謎と関係のない話にする。",
-      "scene": "设计解谜游戏，线索中故意混入一条无关信息。",
-      "translation": "为了不让提示全部派上用场，其中一条写成与谜题无关的话。",
-      "reason": "ヒントがすべて与一つは無関係能表达“不是全部提示都有用”，但役立つ仍是作用/用途状态；当前てしまわない主要是否定提示全都意外有用，尚未形成自然可完成的动作终点。不能仅因非意志便禁用整词，也不能用すべて代替本课完成义证据，保留本精确配对。",
-      "sourceHash": "59c6e9c245e4a42cd7bd9a3c5640ae2e2507d4b3892c043c828e5b196b13da0a"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:役立つ:やくだつ",
-      "pair": "verb:役立つ:やくだつ/teshimauNegativePast",
-      "batch": "teshimauChau-1/04",
-      "sentence": "昨日はヒントがすべて役立ってしまわなかった。最後の一つは謎と無関係だった。",
-      "scene": "昨天解谜时有一条提示无关，只用到其他线索。",
-      "translation": "昨天提示没有全部派上用场，最后一条与谜题无关。",
-      "reason": "最后一条无关说明提示并非全有用，却不能自然使役立ってしまわなかった表示“未把作用动作全部做完”；当前否定过去更多是效用状态未普遍成立。缺少本课完成否定的自然实例，保留草稿，不改为使う或役目を終える等别词来通过。",
-      "sourceHash": "0f305a8fff8a9a9328b7e0beabe9199619526e2936ff3b8c2a9e5da723ca2dcf"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:困る:こまる",
-      "pair": "verb:困る:こまる/teshimauNegative",
-      "batch": "teshimauChau-1/05",
-      "sentence": "予備の案があるので、完全には困ってしまわない。",
-      "scene": "随身带着备用方案，遇到变故仍有退路。",
-      "translation": "有备用方案，所以不会彻底陷入困境。",
-      "reason": "完全には困ってしまわない只能尝试否定为难程度，完全并未提供动作全集或可完成终点；不符合本课不全部做完，保留备选方案场景候选。",
-      "sourceHash": "4a7423ca714929ab0b8ae6e6232dae3c74207b11babc7d134b6ca317c84de25d"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:困る:こまる",
-      "pair": "verb:困る:こまる/teshimauNegativePast",
-      "batch": "teshimauChau-1/05",
-      "sentence": "助けがあったので、完全には困ってしまわなかった。",
-      "scene": "当时朋友伸出援手，自己还有办法应对。",
-      "translation": "当时有人援助，所以没有彻底陷入困境。",
-      "reason": "援助使人未完全陷入困境仍是否定困境程度，不能等同没有全部做完；未找到保持固定困る词义的可靠完成否定读法。",
-      "sourceHash": "3fcdb53fc89c9ebdf0876b8697b494dc57fcd800da611a35f91f00c40bef4740"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:喜ぶ:よろこぶ",
-      "pair": "verb:喜ぶ:よろこぶ/teshimauNegative",
-      "batch": "teshimauChau-1/05",
-      "sentence": "結果が未確定なので、まだ全部は喜んでしまわない。",
-      "scene": "得知自己可能获奖，结果还没有正式确认。",
-      "translation": "结果还未确定，所以还不完全高兴起来。",
-      "reason": "全部は喜んでしまわない缺少全部的可数对象或可完成行为范围；尚未证实只能解释不尽情高兴，偏离不全部做完。",
-      "sourceHash": "8af839aefd4aec7a15625d6094f0c680bca8e4106327372d371e8d378e2863f0"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:喜ぶ:よろこぶ",
-      "pair": "verb:喜ぶ:よろこぶ/teshimauNegativePast",
-      "batch": "teshimauChau-1/05",
-      "sentence": "結果が未確定だったので、全部は喜んでしまわなかった。",
-      "scene": "当时可能得奖的消息尚未证实，心中仍有保留。",
-      "translation": "结果尚未确定，所以没有完全高兴起来。",
-      "reason": "全部は与单一获奖情绪没有自然全集对应，否定喜悦程度不能充当未全部完成；保留具体获奖候选待协调者处理。",
-      "sourceHash": "5fa9d5fd2654130e93496e5034a530d9f3c10bd513fb45df7b2a44da2e6f290a"
     },
     {
       "id": "usage:teshimauNegative:verb:降る:ふる",
       "pair": "verb:降る:ふる/teshimauNegative",
       "batch": "teshimauChau-1/06",
       "sentence": "午後は雨が降ってしまわないように、屋内で過ごす。",
-      "scene": "乌云聚集，不久下起雨来。",
-      "translation": "乌云聚集，下起了雨。",
+      "scene": "明天要办户外婚礼，祈盼现场不要下雨。",
+      "translation": "正祈祷明天婚礼时不要下起雨来。",
       "reason": "降る的词义在句中保留，否定形式给出有限范围，表示不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "f4c7aec3816fa0e2aa93d32df9579cd28fa7da4ddb3ce2e2ca6f39c5278c1e6c"
+      "sourceHash": "086b5418f6532668185f75b4b6d6020df92931243271f1b3eb89bd13d37e0008"
     },
     {
       "id": "usage:teshimauNegativePast:verb:降る:ふる",
       "pair": "verb:降る:ふる/teshimauNegativePast",
       "batch": "teshimauChau-1/06",
       "sentence": "昨日は雨が降ってしまわなかった。午後は晴れた。",
-      "scene": "乌云聚集，不久下起雨来。",
-      "translation": "乌云聚集，下起了雨。",
+      "scene": "昨天朋友在野外露营，问夜里是否下雨。",
+      "translation": "昨天露营时，半夜没下起雨来吧？",
       "reason": "降る的词义在句中保留，过去否定给出有限范围，表示过去不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "50ffd087038303d1d1bb3e5498872448d86e69d83e32a3ddd48a790ad28180ba"
+      "sourceHash": "c9774451bd639e9f3ebca3034f9966be632ca171db5bf637cb616ae956c8067f"
     },
     {
       "id": "usage:teshimauNegative:verb:眠る:ねむる",
       "pair": "verb:眠る:ねむる/teshimauNegative",
       "batch": "teshimauChau-1/06",
       "sentence": "昼寝の時間を決め、子どもが車内で眠ってしまわないようにする。",
-      "scene": "旅行太累，孩子在车上睡着了。",
-      "translation": "孩子在车上睡着了。",
+      "scene": "快到下车站，和同伴说话防止自己睡着。",
+      "translation": "为免在到达下车站前睡着，正和朋友说话。",
       "reason": "眠る的词义在句中保留，否定形式给出有限范围，表示不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "5c86f0bdb199718f0e53fe5ef4d9695acb743ead56c1dfda143e7a39253d7351"
+      "sourceHash": "8afeed49408fd8d549f1e6dd9bd6162aa49c2353e8a8c8750d151539811d3725"
     },
     {
       "id": "usage:teshimauNegativePast:verb:眠る:ねむる",
       "pair": "verb:眠る:ねむる/teshimauNegativePast",
       "batch": "teshimauChau-1/06",
       "sentence": "昨日は子どもが車内で眠ってしまわなかった。休憩中は起きていた。",
-      "scene": "旅行太累，孩子在车上睡着了。",
-      "translation": "孩子在车上睡着了。",
+      "scene": "朋友昨天熬夜后上课，问他是否睡着。",
+      "translation": "昨天上课时，你没有累得睡着吧？",
       "reason": "眠る的词义在句中保留，过去否定给出有限范围，表示过去不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "c126c70e76e881dc15ddc01514310fdc51e7e82394cd65001146bc95ada45db5"
+      "sourceHash": "a9f2d662e4cea76324bf00558505a3415bbbbf0128daf1aca97e210d575a8145"
     },
     {
       "id": "usage:teshimauNegative:verb:起きる:おきる",
       "pair": "verb:起きる:おきる/teshimauNegative",
       "batch": "teshimauChau-1/06",
       "sentence": "休日も朝の予定があるので、昼まで起きてしまわないようにする。",
-      "scene": "闹钟响过头，终于起床了。",
-      "translation": "闹钟响后终于起床了。",
+      "scene": "明早可以晚起，调整闹钟避免过早起床。",
+      "translation": "为免明天仍按平时的时间起床，把闹钟设晚一些。",
       "reason": "起きる的词义在句中保留，否定形式给出有限范围，表示不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "42fdcdfb23d620d41ebfbff5b0c9db7a6d2ee0f12d8f90a7e591e868909cc7fa"
+      "sourceHash": "2e73ddcf6e57a39021cd5c4f199df351474e91da66c60ebb66d6d54cbfa79906"
     },
     {
       "id": "usage:teshimauNegativePast:verb:起きる:おきる",
       "pair": "verb:起きる:おきる/teshimauNegativePast",
       "batch": "teshimauChau-1/06",
       "sentence": "昨日は昼まで起きてしまわなかった。午前中は寝ていた。",
-      "scene": "闹钟响过头，终于起床了。",
-      "translation": "闹钟响后终于起床了。",
+      "scene": "朋友休假却忘改闹钟，问是否仍早起了。",
+      "translation": "昨天明明休息，你没按平时的时间就起床了吧？",
       "reason": "起きる的词义在句中保留，过去否定给出有限范围，表示过去不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "60fdd618fa1432c299af13b389705246d90c14d213f573b8d67926166bc6f060"
+      "sourceHash": "bbbed088aa6449c66814dd887638e042161c68912037588dd0b54379c42d6ae8"
     },
     {
       "id": "usage:teshimauNegative:verb:要る:いる",
       "pair": "verb:要る:いる/teshimauNegative",
       "batch": "teshimauChau-1/06",
       "sentence": "人数分の傘が要ってしまわないように、予備も用意する。",
-      "scene": "准备出发，发现还需要一把伞。",
-      "translation": "出发前发现还需要一把伞。",
+      "scene": "团体改乘巴士出游，不希望每人都需要雨伞。",
+      "translation": "如果乘巴士移动，就不会需要每人一把伞。",
       "reason": "要る的词义在句中保留，否定形式给出有限范围，表示不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "ef69b7163d3fe56b6c983b0cb6570a0f65e498cc41082984bb91ca11ae56975e"
+      "sourceHash": "8e3913aebef0abe944214f122a1f8438c5c52155a90aededd6d1bb7095b4ecfa"
     },
     {
       "id": "usage:teshimauNegativePast:verb:要る:いる",
       "pair": "verb:要る:いる/teshimauNegativePast",
       "batch": "teshimauChau-1/06",
       "sentence": "昨日は傘が人数分要ってしまわなかった。追加は要らなかった。",
-      "scene": "准备出发，发现还需要一把伞。",
-      "translation": "出发前发现还需要一把伞。",
+      "scene": "昨天大家共撑大伞，回顾雨伞需求数量。",
+      "translation": "昨天大家共撑大伞，所以没有需要每人一把伞。",
       "reason": "要る的词义在句中保留，过去否定给出有限范围，表示过去不全部完成；前后句、译文、时态和否定范围逐卡核对。该非意志/状态候选仍需独立确认完成边界。",
-      "sourceHash": "49ddd7b3a8cde376950e038f8d6b10ebe6c27eaa4c1bbe6ff7601730dcd4f3be"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:続ける:つづける",
-      "pair": "verb:続ける:つづける/teshimauNegative",
-      "batch": "teshimauChau-1/07",
-      "sentence": "休憩を入れて、練習を最後まで一気に続けてしまわないようにする。",
-      "scene": "活动安排有休息，不打算一口气做到最后。",
-      "translation": "我会安排休息，不一口气把练习持续到最后。",
-      "reason": "最後まで虽给终点，但続けてしまわない主要是不持续过久；是否自然表达本课不全部做完仍未确定，不能只凭终点词批准。",
-      "sourceHash": "8b39cb3c2c125bf87d635be443a50c904ab19a87eb6cd36059740ed4e5cd898a"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:続ける:つづける",
-      "pair": "verb:続ける:つづける/teshimauNegativePast",
-      "batch": "teshimauChau-1/07",
-      "sentence": "昨日は練習を最後まで続けてしまわなかった。途中で休憩を入れた。",
-      "scene": "昨天练习中途休息，没有连续练到最后。",
-      "translation": "昨天没有把练习一直持续到最后，中途休息了。",
-      "reason": "否定过去続けてしまわなかった比続けなかった生硬，中途休息也不证明后来未完成活动；需实际完成否定用例支撑。",
-      "sourceHash": "360220b36f38bfb73a9cd652476c03eef66108a934dd3787dfa25ec570f0f26b"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:浴びる:あびる",
-      "pair": "verb:浴びる:あびる/teshimauNegative",
-      "batch": "teshimauChau-1/07",
-      "sentence": "後の人のために、桶のお湯を全部浴びてしまわないように、半分残す。",
-      "scene": "要和同伴共用热水，不把一桶全用来冲身。",
-      "translation": "为了后面的人，我会留下一半，不把桶里的热水全用来冲身。",
-      "reason": "有限桶水给出量，但全部浴びる能否自然表用尽此水的完成范围需核实，不得用湯を使い切る另一动词背书。",
-      "sourceHash": "72d5d9c4e0838c285de98f74183aa649bbb447ef9c5e668fcda96be939169442"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:浴びる:あびる",
-      "pair": "verb:浴びる:あびる/teshimauNegativePast",
-      "batch": "teshimauChau-1/07",
-      "sentence": "桶のお湯を全部は浴びてしまわなかった。家族の分を残した。",
-      "scene": "昨天只用部分热水冲身，剩下的留给家人。",
-      "translation": "我没有把桶里的热水全用来冲身，给家人留了一份。",
-      "reason": "有限热水与全部は候选保留，但浴びてしまわなかった的用尽否定自然度未得到足够依据。",
-      "sourceHash": "f69002ea12b51b094613e4983a2ffc14fe90b4b95fc82039c9e0eab9f8c57f73"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:できる:できる",
-      "pair": "verb:できる:できる/teshimauNegativePast",
-      "batch": "teshimauChau-1/07",
-      "sentence": "模型が全部できてしまわなかったのは、部品が一つ足りなかったからだ。",
-      "scene": "模型缺少一个零件，当时还没全部完成。",
-      "translation": "模型没有全部做好，是因为缺少一个零件。",
-      "reason": "完成义できてしまわなかった较できなかった生硬，全部不能独自证明其自然度；保留当前候选待证据。",
-      "sourceHash": "20a41763d51d566663558bee7dad889a758906e9ff25c50359f4b4330bc97ac3"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:疲れる:つかれる",
-      "pair": "verb:疲れる:つかれる/teshimauNegative",
-      "batch": "teshimauChau-1/08",
-      "sentence": "完全に疲れてしまわないように、途中で何度か休む。",
-      "scene": "徒步时控制节奏，避免耗尽全部体力。",
-      "translation": "为了不彻底累垮，中途休息几次。",
-      "reason": "未决：完全に疲れてしまわないように描述避免累垮，疲劳程度否定仍非本课不把动作全部做完；完全に不能单独建立完成范围。疲れ切る虽更常用却不能替换固定疲れる；保留尝试交协调者。",
-      "sourceHash": "cc18cb3553d5462fa0d10d52cb6b0dd17a097bb7db4dba0c66cd74a7fbe4a1b9"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:疲れる:つかれる",
-      "pair": "verb:疲れる:つかれる/teshimauNegativePast",
-      "batch": "teshimauChau-1/08",
-      "sentence": "途中で何度も休んだので、完全には疲れてしまわなかった。",
-      "scene": "徒步途中多次休息，体力还留有余地。",
-      "translation": "因为中途休息了好多次，没有彻底累垮。",
-      "reason": "未决：多次休息后完全には疲れてしまわなかった是在说明尚未累垮，缺少可完成动作或自然整体终点；加完全には不足以满足过去未全部完成课程义，当前固定疲れる配对待裁定。",
-      "sourceHash": "d19bf2d8b8f15d741e9d9af5f754f9b3a711735c6c2dd3dd35c9a30a113cb76d"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:壊れる:こわれる",
-      "pair": "verb:壊れる:こわれる/teshimauNegative",
-      "batch": "teshimauChau-1/08",
-      "sentence": "時計が完全に壊れてしまわないうちに、修理に出したい。",
-      "scene": "旧钟开始卡顿，想趁彻底坏掉前修理。",
-      "translation": "想在钟还没彻底坏掉时送去修理。",
-      "reason": "未决：時計が完全に壊れてしまわないうちに为趁彻底故障前修理，当前主要预防不良事件；完全に提示程度却不足证明本课动作未全部完成，保留局部到全损尝试但不批准。",
-      "sourceHash": "b1fb13011d011455d6693c10a1a40b3f811c1db57e7cdc503b3230b9d0c6afce"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:壊れる:こわれる",
-      "pair": "verb:壊れる:こわれる/teshimauNegativePast",
-      "batch": "teshimauChau-1/08",
-      "sentence": "画面は割れたが、電話は完全には壊れてしまわなかった。",
-      "scene": "手机摔后屏幕裂了，但还能打电话。",
-      "translation": "虽然屏幕裂了，但电话没有彻底坏掉。",
-      "reason": "未决：画面割れ与電話は完全には壊れてしまわなかった形成局部损坏对全损的程度对比；未建立本课过去未把动作全部做完的清楚读法，不能由完全には直接批准。",
-      "sourceHash": "e11d761df2a795c7ebe6c1132bf82e078bfb4151444b96bbbe036424a67def0c"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:似る:にる",
-      "pair": "verb:似る:にる/teshimauNegative",
-      "batch": "teshimauChau-1/08",
-      "sentence": "二つの模様が完全に似てしまわないように、一部の色を変える。",
-      "scene": "避免两款图案完全相同，调整一处配色。",
-      "translation": "为了不让两个图案完全相似，改变部分颜色。",
-      "reason": "未决：二つの模様が完全に似てしまわないように本身以相似程度冒充全同终点，场景完全相同与似る并不等价；改配色只能支持避免雷同，不能支持本课未全部完成。",
-      "sourceHash": "f58abb5a38c4bdba3e9cf152192790f914c3001f3cf2776dcfd1beea18932f96"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:似る:にる",
-      "pair": "verb:似る:にる/teshimauNegativePast",
-      "batch": "teshimauChau-1/08",
-      "sentence": "色を変えたので、二つの模様は完全には似てしまわなかった。",
-      "scene": "虽参考了旧图案，但保留了不同的配色。",
-      "translation": "因为改变了颜色，两个图案没有完全相似。",
-      "reason": "未决：完全には似てしまわなかった仍是否定完全相似程度，似る没有由此建立可完成动作范围；色を変えた原因不补足课程义，保留固定配对不以似せる或同じになる替代。",
-      "sourceHash": "49def2b39ab23336a4551b649d7cf74244f8c09a54f33730c0e1a371a3c0cbc7"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:待つ:まつ",
-      "pair": "verb:待つ:まつ/teshimauNegative",
-      "batch": "teshimauChau-2/00",
-      "sentence": "全員がそろうまで待ってしまわないように、半数が来たら出発する。",
-      "scene": "一半人到就出发，不等全部成员到齐。",
-      "translation": "为了不一直等到全员到齐，一半人到了就出发。",
-      "reason": "未决：全員がそろうまで待ってしまわないように虽给外部终点，但主要避免久等的读法，不能仅凭全员到齐证明待つ自然承担本课不全部完成；保留当前尝试不替换固定词形。",
-      "sourceHash": "9bdbb5e70bd94a45b175bac2dd838ff1a22d21565682f849740495bc288838ae"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:待つ:まつ",
-      "pair": "verb:待つ:まつ/teshimauNegativePast",
-      "batch": "teshimauChau-2/00",
-      "sentence": "昨日は全員がそろうまで待ってしまわなかった。半数が来たところで出発した。",
-      "scene": "昨天等来一半成员就出发，没有等齐全部人。",
-      "translation": "昨天没有一直等到全员到齐，一半人到了就出发了。",
-      "reason": "未决：半数来后出发表明没等齐，但待ってしまわなかった本身的完成否定自然度仍不够可靠，不能由后句补全就批准。可自然说待たなかった却不属于固定目标，交协调者裁定。",
-      "sourceHash": "7c65e5a758893ad8f40a7ca9942a4dce9b628a4e739f7a09cb2f29150cbf7cd1"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:急ぐ:いそぐ",
-      "pair": "verb:急ぐ:いそぐ/teshimauNegative",
-      "batch": "teshimauChau-2/01",
-      "sentence": "道のりを最後まで急いでしまわないように、展望台で足を止める。",
-      "scene": "沿路想停下看风景，不准备一直匆忙走到终点。",
-      "translation": "为了不把整段路一直赶到最后，在观景台停下脚步。",
-      "reason": "道のりを最後まで急ぐ较硬，当前是避免一路匆忙而不是不全部完成可界定任务；观景台暂停仅终止急促方式，保留课程完成否定用义未决。",
-      "sourceHash": "db6af5041939510b92cde2f72543db9a26ebd70feca581a387ad7d203838e28d"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:急ぐ:いそぐ",
-      "pair": "verb:急ぐ:いそぐ/teshimauNegativePast",
-      "batch": "teshimauChau-2/01",
-      "sentence": "昨日は道のりを最後までは急いでしまわなかった。途中から景色を楽しんだ。",
-      "scene": "昨天前半程赶路，后来停下看风景再慢慢走。",
-      "translation": "昨天没有一路都赶到终点，从中途开始欣赏了风景。",
-      "reason": "从中途欣赏风景说明不再匆忙，未证明某项待完成行为未全部完成；最后まで不足以把急ぐ方式动作自然量化，保留未决。",
-      "sourceHash": "266ac0b48da736ef6cc5474cfee2eddae59b3c63cf4d69e73459811b7deb6837"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:働く:はたらく",
-      "pair": "verb:働く:はたらく/teshimauNegative",
-      "batch": "teshimauChau-2/01",
-      "sentence": "休日に丸一日働いてしまわないように、午後は仕事を入れない。",
-      "scene": "周末预留半天休息，不把整天都用来工作。",
-      "translation": "为了不在休息日工作一整天，下午不安排工作。",
-      "reason": "丸一日虽有限时长，本句主要是避免休息日工作占满整天的遗憾，未给自然待完成工作范围；本课完成否定边界不足，保留未决。",
-      "sourceHash": "43de6f714d5113afd46ca4ce7d08853474562ca4de2b84410cbc4d5d34b51b41"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:働く:はたらく",
-      "pair": "verb:働く:はたらく/teshimauNegativePast",
-      "batch": "teshimauChau-2/01",
-      "sentence": "日曜日は丸一日働いてしまわなかった。午後は子供と遊んだ。",
-      "scene": "上周日只工作半天，下午仍有时间陪孩子。",
-      "translation": "星期天没有工作一整天，下午和孩子玩了。",
-      "reason": "下午陪孩子说明没工作整天，但并无未全部完成的工作任务或完成终点；不能以全天时长直接等同全部做完，保留未决。",
-      "sourceHash": "91b7433ceb616527e82d43de905980ac0084adc046884923e3ce39a7c2f0768f"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:騒ぐ:さわぐ",
-      "pair": "verb:騒ぐ:さわぐ/teshimauNegative",
-      "batch": "teshimauChau-2/02",
-      "sentence": "騒ぐ場面の最後まで騒いでしまわないように、今日は途中で止める。",
-      "scene": "排练吵闹场面时分段演，不一次演到结尾。",
-      "translation": "为了不把吵闹的场面一直演到最后，今天在中途停下。",
-      "reason": "未决：騒ぐ場面の最後まで騒いでしまわない把无自然终点的吵闹硬接戏剧终点；中文却翻成演到最后，实际目标不是演じる。时间终点不能自动证明本课全部做完义。場面／途中读ばめん／とちゅう无误，但不能补救词义与完成自然度。",
-      "sourceHash": "fa33dfc9adbc3af07deee142bdb36f37592be553eefa13709df5dd92db9a8f87"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:騒ぐ:さわぐ",
-      "pair": "verb:騒ぐ:さわぐ/teshimauNegativePast",
-      "batch": "teshimauChau-2/02",
-      "sentence": "昨日は騒ぐ場面の最後までは騒いでしまわなかった。後半は今日練習する。",
-      "scene": "昨天只排了吵闹场面的前半段，后面还没演。",
-      "translation": "昨天没有一直闹到这场戏的结尾，后半段今天练习。",
-      "reason": "未决：最後までは騒いでしまわなかった叙述过去没有闹到结尾，难以自然理解成完成指定吵闹动作；後半は今日練習する把活动转成排练而未解决目标搭配。昨日／後半读きのう／こうはん正确，暂不批准此精确配对。",
-      "sourceHash": "7389ee75e5bc18dbbcb15e4e1ccf7e90d054171cfe45755ce7ee0486a83a1494"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:休む:やすむ",
-      "pair": "verb:休む:やすむ/teshimauNegativePast",
-      "batch": "teshimauChau-2/02",
-      "sentence": "昨日は丸一日休んでしまわなかった。午後は用事で出かけた。",
-      "scene": "昨天上午休息，下午仍然出门办事了。",
-      "translation": "昨天没有休息一整天，下午出门办事了。",
-      "reason": "未决：丸一日休んでしまわなかった作为直陈过去在此显得生硬，后句下午出门仅证明没有整日休息，未充分支撑否定しまう的完成用法。不能因为时长有界就自动批准；用事／出かけた读ようじ／でかけた正确。",
-      "sourceHash": "c3505b7f5685ecad6e24d481cb77f4bb7f125d425e610f095b06762a672aa5c7"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:知る:しる",
-      "pair": "verb:知る:しる/teshimauNegativePast",
-      "batch": "teshimauChau-2/02",
-      "sentence": "昨日は事件の全容を知ってしまわなかった。詳しい経緯はまだ聞いていなかった。",
-      "scene": "昨天只了解了事件开头，详细经过还不清楚。",
-      "translation": "昨天没有了解到事件全貌，还没有听到详细经过。",
-      "reason": "未决：事件の全容を知ってしまわなかった直接否定知晓结果，缺少令人信服的完成否定自然用法；后句还未听到详细经过只能支撑知らなかった，不能替代固定目标。全容／経緯读ぜんよう／けいい，当前译文掩盖了目标生硬。",
-      "sourceHash": "b425b17023422c9507765667b2a89cc5eb86be74b9ce4216cf88d3db44a80080"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:思う:おもう",
-      "pair": "verb:思う:おもう/teshimauNegative",
-      "batch": "teshimauChau-2/03",
-      "sentence": "最初から全部正しいと思ってしまわないように、別の案も検討する。",
-      "scene": "讨论方案时保留多个可能，不急着认定全部正确。",
-      "translation": "为了不一开始就觉得所有方案都正确，也考虑其他方案。",
-      "reason": "思う的判断对象仍是抽象的“全部明白/全部正确”，否定目标缺少可核验的完成终点，保留未决（usage:teshimauNegative:verb:思う:おもう）。",
-      "sourceHash": "ae66943463cb073c3fb9229de36c889bf94903cbc0db616403599a47fbf9a17f"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:思う:おもう",
-      "pair": "verb:思う:おもう/teshimauNegativePast",
-      "batch": "teshimauChau-2/03",
-      "sentence": "昨日は事情が全部分かったと思ってしまわなかった。まだ確認中だ。",
-      "scene": "昨天只接受了部分解释，还没有认定整件事都清楚。",
-      "translation": "昨天没有觉得自己已经完全了解情况，还在确认。",
-      "reason": "思う的判断对象仍是抽象的“全部明白/全部正确”，否定目标缺少可核验的完成终点，保留未决（usage:teshimauNegativePast:verb:思う:おもう）。",
-      "sourceHash": "86d2bfc5851066581bcfa05173e63f6d14e947dd91adc9d470b68bbff50683f4"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:指す:さす",
-      "pair": "verb:指す:さす/teshimauNegativePast",
-      "batch": "teshimauChau-2/04",
-      "sentence": "昨日は地点を全部は指してしまわなかった。中間は省いた。",
-      "scene": "昨天只指出起点和终点，没有把中间地点全指出。",
-      "translation": "昨天没有把地点全部指出，中间部分省略了。",
-      "reason": "加全部は后能看出未全部指点的逻辑范围，后句省略中间地点也相容；但地点を全部は指してしまわなかった仍像机械给瞬时指向添完成否定，尚不能确认教材所需自然度。不能仅因有全部与中間就批准。",
-      "sourceHash": "ba81d0b92c41ebc59d50f372c00e6f1dc4d644497124ecfde1eefece236fdb32"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:勝つ:かつ",
-      "pair": "verb:勝つ:かつ/teshimauNegativePast",
-      "batch": "teshimauChau-2/04",
-      "sentence": "昨日は全試合には勝ってしまわなかった。一敗した。",
-      "scene": "回顾昨天三场比赛，赢两场、输一场。",
-      "translation": "昨天没有赢下所有比赛，输了一场。",
-      "reason": "昨日全試合には勝ってしまわなかった接一敗した可推算没有全胜，但てしまわなかった作为赢完全部比赛的事后否定仍生硬，通常会用全勝しなかった；不能替换目标或仅凭一敗支撑自然度，故保留此配对未决。",
-      "sourceHash": "10af08f2275951ce4367661fea9fb93b0757ffad7ba9f43802a2accd20462e47"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:変わる:かわる",
-      "pair": "verb:変わる:かわる/teshimauNegative",
-      "batch": "teshimauChau-2/05",
-      "sentence": "外観が全部変わってしまわないように、玄関は元の形を残す。",
-      "scene": "修复老房子要留原貌，不能把所有外观都改掉。",
-      "translation": "为了不让外观全部改变，玄关保留原来的形状。",
-      "reason": "现句“外観が全部変わってしまわないように、玄関は元の形を残す”自然意图是避免整个外观变样，属于变化程度／覆盖范围的否定；当前材料不能明确证明本课要求的“不把动作全部做完”，保留原候选，不把外观未全变直接当课程完成否定批准。",
-      "sourceHash": "f8a9480d41eb848c16a6ae5eeb57bdfedb75adbba4a185a7c8bf69740f74437b"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:変わる:かわる",
-      "pair": "verb:変わる:かわる/teshimauNegativePast",
-      "batch": "teshimauChau-2/05",
-      "sentence": "昨日の修正では絵がすっかり変わってしまわなかった。構図は元のままだった。",
-      "scene": "昨天改图只改了颜色，构图没有完全变化。",
-      "translation": "昨天的修改没有使画面完全变掉，构图仍保持原样。",
-      "reason": "现句“昨日の修正では絵がすっかり変わってしまわなかった。構図は元のままだった”中的すっかり与否定搭配不自然，且只证实画面未完全变样而非某动作未全部完成；构图保留不能自动填补本课完成义，保留草稿待裁定。",
-      "sourceHash": "4a14c72b735ad790041a45824cfc437904f99780d2cf3fb160fc6a83941fbe8a"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:守る:まもる",
-      "pair": "verb:守る:まもる/teshimauNegative",
-      "batch": "teshimauChau-2/06",
-      "sentence": "古い規則を全部守ってしまわないように、不合理な条項には異議を唱える。",
-      "scene": "模拟谈判要对部分规则提异议，不能照单全守。",
-      "translation": "为了不把旧规定照单全守，对不合理的条款提出异议。",
-      "reason": "未决：规则全部限定遵守的覆盖面，却未建立执行完某次任务的完成终点；对条款提异议也不等于不执行，现句不足以支持本课的全部完成否定。",
-      "sourceHash": "6a62fab1315fab8b3d9a4c2d766930e9f78cbdfd6552f0f0cafe9753a1bfd40e"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:守る:まもる",
-      "pair": "verb:守る:まもる/teshimauNegativePast",
-      "batch": "teshimauChau-2/06",
-      "sentence": "昨日は古い規則を全部は守ってしまわなかった。一つには異議を唱えた。",
-      "scene": "昨天没有照守全部旧规定，对不合理的一条提出异议。",
-      "translation": "昨天没有遵守全部旧规定，对其中一条提出了异议。",
-      "reason": "未决：昨日对其中一条规则提异议并不证明没有执行该条，规则集合亦不直接构成可完成任务；守ってしまわなかった的完成义尚未确立，暂不批准。",
-      "sourceHash": "8ab9b2f4b279a94aa14baff84bc7a7dc0d598e52f26269b6fd1665dab74912be"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:残る:のこる",
-      "pair": "verb:残る:のこる/teshimauNegative",
-      "batch": "teshimauChau-2/06",
-      "sentence": "作品が全部残ってしまわないように、手頃な価格にする。",
-      "scene": "展销不想让作品全部剩下，至少先卖出几件。",
-      "translation": "为了不让作品全部剩下，把价格定得实惠些。",
-      "reason": "未决：作品全部剩下是商品结果状态而非主体完成的动作，价格策略虽避免结果但不能稳定承载本课“动作未全部完成”边界。",
-      "sourceHash": "88d387e45fffa253c4a13e03ab7a52e15be76e6ba9858844545cfde02866e22d"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:残る:のこる",
-      "pair": "verb:残る:のこる/teshimauNegativePast",
-      "batch": "teshimauChau-2/06",
-      "sentence": "昨日は作品が全部残ってしまわなかった。三点は売れた。",
-      "scene": "昨天有些作品卖掉了，没有全部留在摊位上。",
-      "translation": "昨天作品没有全部剩下，卖出了三件。",
-      "reason": "未决：昨日卖出三件只证明没有全部剩下，残ってしまわなかった仍是非意志结果状态；暂不将其批准为课程完成否定。",
-      "sourceHash": "23e0f02719e986ca5cda5c33a29ddd4c02a9bcdc5554b88031649487e095245b"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:寝る:ねる",
-      "pair": "verb:寝る:ねる/teshimauNegative",
-      "batch": "teshimauChau-2/06",
-      "sentence": "休日を丸一日寝てしまわないように、午後は友達と会う約束を入れる。",
-      "scene": "假日安排了下午活动，不想整个白天都睡过去。",
-      "translation": "为了不把休息日一整天都睡过去，下午约好见朋友。",
-      "reason": "未决：丸一日提供整天的时长范围，但现句重点是避免把假日睡过去，没有建立要完成的睡眠任务；不能仅靠时长明确就批准为本课完成否定。",
-      "sourceHash": "9019ee2a83706abeceab13e43259cc202bec76272916042a3490956dfe869fa2"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:寝る:ねる",
-      "pair": "verb:寝る:ねる/teshimauNegativePast",
-      "batch": "teshimauChau-2/06",
-      "sentence": "昨日は丸一日寝てしまわなかった。午後は起きて出かけた。",
-      "scene": "昨天只睡了上午，下午起来出门办事。",
-      "translation": "昨天没有睡一整天，下午起来出门了。",
-      "reason": "未决：昨日只睡上午和下午出门说明事实未满一天，但丸一日寝てしまわなかった仍可能只是时长否定；保留待课程边界复核。",
-      "sourceHash": "528ba71e1b6af917d76ea51dfd47e6a45c7c322efa5865978426a15038223335"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:いる:いる",
-      "pair": "verb:いる:いる/teshimauNegative",
-      "batch": "teshimauChau-2/07",
-      "sentence": "休日に丸一日家にいてしまわないように、午後は散歩に出る。",
-      "scene": "假日不想整天困在家里，午后安排外出。",
-      "translation": "为了不在休息日一整天都待在家里，下午出门散步。",
-      "reason": "「いる」表示持续停留状态；句子虽以整天范围和午后外出限定否定，但该状态与本课“不全部完成”的てしまう否定结合仍需确认。",
-      "sourceHash": "c0b52abb3b31c228a6b027a8e0e40270fa621e0cae707b19d7a0d0c1cdf37fbf"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:いる:いる",
-      "pair": "verb:いる:いる/teshimauNegativePast",
-      "batch": "teshimauChau-2/07",
-      "sentence": "昨日は丸一日家にいてしまわなかった。午後は展覧会に出かけた。",
-      "scene": "昨天只在家待了上午，下午出去看展览。",
-      "translation": "昨天没有一整天都待在家里，下午出去看展览了。",
-      "reason": "过去上午在家、下午外出限定了整天停留；但状态动词「いる」的过去完成否定语义边界仍未决。",
-      "sourceHash": "da5e680ca991da2bc6e92f0491cb64b509a62eeb2b9376859aa0511b08790a12"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:遅れる:おくれる",
-      "pair": "verb:遅れる:おくれる/teshimauNegative",
-      "batch": "teshimauChau-2/08",
-      "sentence": "早く出て、約束に遅れてしまわないようにする。",
-      "scene": "提前出门，确保不迟到预约。",
-      "translation": "早点出门，确保不迟到约定。",
-      "reason": "未决：早点出门避免迟到是意外否定，未提供能不全部做完的动作范围；约定时点不等于完成范围。",
-      "sourceHash": "fc35bed1962e6f5af6c13cd523f4afdd14792608100098eadfc24c95351509e3"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:遅れる:おくれる",
-      "pair": "verb:遅れる:おくれる/teshimauNegativePast",
-      "batch": "teshimauChau-2/08",
-      "sentence": "昨日は約束に遅れてしまわなかった。",
-      "scene": "昨天准时到达，没有迟到预约。",
-      "translation": "昨天没有迟到约定。",
-      "reason": "未决：昨天没迟到只是迟到事实的否定，当前遅れてしまわなかった生硬且不能表示过去没全部做完。",
-      "sourceHash": "8187416a12d84e9706012cd5e79d826ce6c4d46d9e8331302eaaa18c9f793820"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:生まれる:うまれる",
-      "pair": "verb:生まれる:うまれる/teshimauNegative",
-      "batch": "teshimauChau-2/08",
-      "sentence": "一度に子猫が十匹も生まれてしまわないように、親を分けて飼う。",
-      "scene": "控制繁殖数量，不能一窝生出太多小猫。",
-      "translation": "为了不让一窝生出十只小猫，把母猫分开饲养。",
-      "reason": "未决：防止一次出生十只仅是数量限制/避免结果，不是不全部出生；把父母分开饲养也不能控制已怀孕一窝数。",
-      "sourceHash": "e506088d9f864aefeb4fa31b346b5807b29a2bf40e1762f537a238a1191bd9e5"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:生まれる:うまれる",
-      "pair": "verb:生まれる:うまれる/teshimauNegativePast",
-      "batch": "teshimauChau-2/08",
-      "sentence": "昨日は子猫が全部生まれてしまわなかった。二匹だけだった。",
-      "scene": "昨天只出生两只，没出现整窝小猫。",
-      "translation": "昨天没有整窝小猫都出生，只有两只。",
-      "reason": "未决：没有整窝出生只描述生产尚未结束，当前全部生まれてしまわなかった搭配生硬，不能只添全部便批准完成否定。",
-      "sourceHash": "e45fd3e3d48b4fd8f0dc8a4addd91e85e58b72781ad16a808408decee7a80ff6"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:足りる:たりる",
-      "pair": "verb:足りる:たりる/teshimauNegative",
-      "batch": "teshimauChau-2/08",
-      "sentence": "料理が全員分足りてしまわないように、追加で作る。",
-      "scene": "还要来几位客人，准备更多食物避免份量不够。",
-      "translation": "为了让饭菜够所有人吃，再追加一些。",
-      "reason": "未决：足りてしまわないように是否定变得足够，与追加饭菜以求够吃相反；状态足够缺少可不全完成任务。",
-      "sourceHash": "51b481bc7910faa4f95ea5713ae03335cff0d81671a5c907925a54ff3c45e4a3"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:足りる:たりる",
-      "pair": "verb:足りる:たりる/teshimauNegativePast",
-      "batch": "teshimauChau-2/08",
-      "sentence": "昨日は料理が全員分足りてしまわなかった。追加で買いに行った。",
-      "scene": "昨天客人太多，饭菜不够所有人吃。",
-      "translation": "昨天饭菜不够所有人吃，又去买了些。",
-      "reason": "未决：全員分不够是数量未满足，足りてしまわなかった不自然承载本课未全部做完；保留旧未决。",
-      "sourceHash": "7275ed95857b1b7886cb5327d0a4a71980411b1bb053bcd6714fa13d6cd4e5d4"
-    },
-    {
-      "id": "usage:teshimauNegative:verb:増える:ふえる",
-      "pair": "verb:増える:ふえる/teshimauNegative",
-      "batch": "teshimauChau-2/09",
-      "sentence": "参加者が定員の三十人まで増えてしまわないように、申込みは二十人で締め切る。",
-      "scene": "活动想留十个名额备用，只接受二十人报名。",
-      "translation": "为了不让参加人数一直增加到三十人的满额，二十人报名就截止。",
-      "reason": "未决：三十人是人数上限，増えてしまわないように仍首先表达防止不希望的增长至某程度；报名截止没有把「增加」转成可全部完成的任务。当前不能据上限数字确认本课“不全部做完”义。",
-      "sourceHash": "c749b952894221dcdde541f1f229a4590b9692cae8fee08cf9d095ad54e733c4"
-    },
-    {
-      "id": "usage:teshimauNegativePast:verb:増える:ふえる",
-      "pair": "verb:増える:ふえる/teshimauNegativePast",
-      "batch": "teshimauChau-2/09",
-      "sentence": "去年は参加者が定員の三十人までは増えてしまわなかった。二十人で募集を終えた。",
-      "scene": "去年活动只招到二十人，人数没增至三十人。",
-      "translation": "去年参加人数没有增加到三十人的满额，二十人时就结束了招募。",
-      "reason": "未决：二十人时停止招募只能说明人数未增至三十，并非「增加」任务没有全部做完；増えてしまわなかった在此也生硬，未取得足以批准的完成否定依据。",
-      "sourceHash": "9e94d6c92caa3a9b17482f1bd9a7d8c409bbc20af4630bff223679739743c504"
+      "sourceHash": "53cfe1408af74883584d500efaa15dabb15b74b4c0a1e6d4cfcf858238e09f14"
     },
     {
       "id": "usage:teoku:verb:間に合う:まにあう",
@@ -7467,7 +6933,7 @@
       "sentence": "午後の準備もあるので、午前の集合時間には間に合っておく。",
       "scene": "下午还有准备工作，上午得先赶上集合。",
       "translation": "下午还有准备工作，上午要先赶上集合时间。",
-      "reason": "午前集合与下午准备仅有先后关系，当前間に合っておく把赶上时间的达成结果作为准备行为，直接搭配自然度不足；未找到足以批准本句的证据，保留原草稿未决。",
+      "reason": "赶上上午集合与下午准备有关，但「間に合っておく」仍把一次赶上时间的达成结果写成可主动预置的动作；现句没有自然的结果保留读法。本轮尝试以换乘、集合前置条件理解，仍不足批准；不是因自动词身份或教材未收录拒收。",
       "sourceHash": "0b95308f42045c80bb97ef228b7a41a29c4261d0ba001acd38ac194334503f41"
     },
     {
@@ -7477,7 +6943,7 @@
       "sentence": "車内で相談するから、この電車には間に合っとくね。",
       "scene": "约好在车上讨论，我先赶上这班车。",
       "translation": "要在车里商量事情，我先赶上这班电车。",
-      "reason": "车内讨论可解释赶车目的，但不使間に合っとく自然成为预先可实施的动作；口语缩约不能消除本体搭配疑问，保留本句未决。",
+      "reason": "「車内で相談する」说明乘车目的，却不能单独使「この電車には間に合っとくね」成为自然的事先安排说法；口语缩约不消除本体搭配疑问，不能偷换成先乘车或早点到站。",
       "sourceHash": "742a0a06750c9f2efb41dde06b9a58544a5a177211b66d0d9b8b9c9d6f97a12b"
     },
     {
@@ -7487,7 +6953,7 @@
       "sentence": "午後の予定に備えて、朝の集合には間に合っておいた。",
       "scene": "下午还有安排，上午先赶上了集合。",
       "translation": "为下午的安排作准备，早上先赶上了集合。",
-      "reason": "为下午安排而先赶上早晨集合，没有说清可保留到后事的准备行为；間に合っておいた较自然的間に合った多出缺少依据的准备层，保留未决。",
+      "reason": "上午集合在下午安排之前只构成时间先后，「朝の集合には間に合っておいた」的过去准备直陈仍生硬；改用早到会改变赶得上的固定词义，故保留原稿待证。",
       "sourceHash": "a58d4d8bd35d1e27c809a49b2aa4c6323beffba91526ef84d7f367ffe0fcc6fb"
     },
     {
@@ -7497,7 +6963,7 @@
       "sentence": "この電車に間に合っておかないと、次の乗り換えができない。",
       "scene": "后面还有转车，不先赶上这班就会误事。",
       "translation": "若不先赶上这班电车，就无法完成后面的换乘。",
-      "reason": "赶上本班车是后续换乘必要条件，但直接間に合っておかないと的准备层自然度仍存疑；条件嵌套本身不是拒收理由，未用它掩盖本体搭配未决。",
+      "reason": "换乘因果确实支持赶上这班电车的必要性，但「間に合っておかないと」相对「間に合わないと」额外的准备层次仍不稳定；本轮未找到足够自然的固定目标句，不把条件中有否定当作语法错误。",
       "sourceHash": "d5f44d2e77d69ea08f813413a41f1a63f3a4d173e801a8621bbde8af6dad35dd"
     },
     {
@@ -7507,28 +6973,8 @@
       "sentence": "朝の集合に間に合っておかなかったので、午後の予定もずれた。",
       "scene": "上午未赶上集合，影响了后面的安排。",
       "translation": "因为早上没先赶上集合，下午的安排也被打乱了。",
-      "reason": "未赶上早晨集合造成下午延误的因果能成立，但間に合っておかなかった没有自然的独立预备动作；不能只以中文先赶上批准，保留精确配对未决。",
+      "reason": "「朝の集合に間に合っておかなかった」虽可推知没赶上及后续耽误，但先行准备否定直陈的搭配问题未解决；中文不能通过加「先」证明日语自然，仍待可核验用例。",
       "sourceHash": "1f89f4dafd7115e53b4f46cdb2162e67e7a4b423721ff3495eb3b5193adde7b2"
-    },
-    {
-      "id": "usage:teoku:verb:終わる:おわる",
-      "pair": "verb:終わる:おわる/teoku",
-      "batch": "teokuToku-1/09",
-      "sentence": "機材の準備があるので、会議は五時までに終わっておく必要がある。",
-      "scene": "晚间还要准备设备，会议需要先结束。",
-      "translation": "还要准备设备，所以会议需要在五点前先结束。",
-      "reason": "「会議は五時までに終わっておく必要がある」以会议为主题，准备的行动者缺失，意图更像预先把会议结束；当前句自然度不足以批准，不能偷换成終わらせておく。",
-      "sourceHash": "d02083bf423a4be2a880c4c5fcdae5c3be19b29c6e8788c78103fc1bbd831ab4"
-    },
-    {
-      "id": "usage:toku:verb:終わる:おわる",
-      "pair": "verb:終わる:おわる/toku",
-      "batch": "teokuToku-1/09",
-      "sentence": "次の公演もあるから、僕たちの練習は先に終わっとくよ。",
-      "scene": "后面还有演出，我们的排练先结束。",
-      "translation": "后面还有演出，我们的练习先结束。",
-      "reason": "「僕たちの練習は先に終わっとく」可猜是说话人先结束练习，但主题与准备施事不清，缩约不能自动使此搭配自然；保持原稿未决，不作全动词禁用结论。",
-      "sourceHash": "5db9c2b286ede662a02dfa6cc96f9c49fbc009a91f775c1b79c48ba7e837b82a"
     },
     {
       "id": "usage:teokuPast:verb:終わる:おわる",
@@ -7537,18 +6983,8 @@
       "sentence": "午後の来客に備えて、会議は午前中に終わっておいた。",
       "scene": "下午要接待客人，午前会议已先结束。",
       "translation": "为下午接待客人作准备，会议上午就先结束了。",
-      "reason": "「会議は午前中に終わっておいた」像把会议结束当作有意完成的准备，却无明确施事；自然的已结束状态更常用終わっていた，固定ておいた用例尚待证据。",
+      "reason": "「会議は午前中に終わっておいた」仍不如必要性或条件中的先行结果读法自然；明确来客目的不能直接证明过去肯定直陈成立。未拿已批准的終わっておく必要がある替本配对背书。",
       "sourceHash": "e476933250f4d69bd407971a8d8b514828d24397a16f4a69955e412313f204e5"
-    },
-    {
-      "id": "usage:teokuNegative:verb:終わる:おわる",
-      "pair": "verb:終わる:おわる/teokuNegative",
-      "batch": "teokuToku-1/09",
-      "sentence": "午後は停電なので、会議が午前中に終わっておかないと困る。",
-      "scene": "下午要停电，提醒会议先在午前结束。",
-      "translation": "下午停电，会议要是不先在上午结束就麻烦了。",
-      "reason": "「会議が午前中に終わっておかないと」将事件主语的结束结果与有意准备相连，条件后果可理解但当前搭配缺可靠自然度支持；保留未决。",
-      "sourceHash": "95c65e50b8536b9b99658c918a1b9f8daa90dcd510dd135448963cebad7b63dd"
     },
     {
       "id": "usage:teokuNegativePast:verb:終わる:おわる",
@@ -7557,7 +6993,7 @@
       "sentence": "夕食会の前に会議が終わっておかなかったので、会場の準備が遅れた。",
       "scene": "晚宴开始时会议还没先结束，布置被耽误。",
       "translation": "因为晚宴前会议没有先结束，会场准备耽搁了。",
-      "reason": "「会議が終わっておかなかった」的事件主语配过去准备否定生硬；会场准备延误只是后果，未补清谁预先完成结束，不能以因果清楚替代自然度。",
+      "reason": "晚宴与会议共用会场足以说明后果，但「会議が終わっておかなかったので」过去直陈仍有搭配疑问；不能把常见的終わっておかないと机械变为此过去否定。固定配对保留待证。",
       "sourceHash": "bc599091eaecad21242b2fae34bf0f4e8904cb6a214c48b9d70ab0a75f131b61"
     },
     {
@@ -7567,68 +7003,8 @@
       "sentence": "確認が取れるまでは、匿名の投稿を信じておかなかった。",
       "scene": "未核实消息前，当时没有先相信匿名帖子。",
       "translation": "消息得到核实之前，当时没有暂且相信匿名帖子。",
-      "reason": "现句「確認が取れるまでは、匿名の投稿を信じておかなかった」把“核实以前不相信”直接套为过去准备否定，未清楚说明此前有什么信任状态没有保留；更普通的「信じなかった」或“暂不相信”的「信じないでおいた」均不能代换本目标。未找到足够自然且保留固定否定方向的修法，保留该精确配对未决。",
+      "reason": "核实以前不接受帖子更自然对应信じなかった或信じないでおいた；后者否定位置与本目标不同。尝试以暂信、事先采信忠告重设情境，过去否定信じておかなかった仍不够稳定，本轮不借中文暂且二字批准。",
       "sourceHash": "ea802276d993560e814f402b9124960cdfbb1da1f8ea31633b99e762789e642f"
-    },
-    {
-      "id": "usage:tekuruNegative:verb:死ぬ:しぬ",
-      "pair": "verb:死ぬ:しぬ/tekuruNegative",
-      "batch": "direction-1/01",
-      "sentence": "駆除剤をまいて一日たつが、虫がなかなか死んでこない。",
-      "scene": "喷洒药剂一天后仍未见虫子逐渐死亡",
-      "translation": "喷洒驱虫药剂已经一天，虫子却迟迟没有开始死去。",
-      "reason": "完整句「駆除剤をまいて一日たつが、虫がなかなか死んでこない。」虽以药剂后虫群死亡显现为来向视点，场景与译文保留“迟迟未开始”；但死んでこない／死んでこなかった比普通死なない更少见，固定配对自然度待可靠用例核实，暂列未决。",
-      "sourceHash": "3ecbba215cb27046d80ed5a91467e9a84bfb0e2ada95fe40e82835bced4fcc68"
-    },
-    {
-      "id": "usage:tekuruNegativePast:verb:死ぬ:しぬ",
-      "pair": "verb:死ぬ:しぬ/tekuruNegativePast",
-      "batch": "direction-1/01",
-      "sentence": "昨日は薬を薄めすぎたせいか、害虫がなかなか死んでこなかった。",
-      "scene": "回忆昨天药剂太稀未见害虫逐渐死亡",
-      "translation": "昨天也许是药稀释过头了，害虫迟迟没有开始死去。",
-      "reason": "完整句「昨日は薬を薄めすぎたせいか、害虫がなかなか死んでこなかった。」虽以药剂后虫群死亡显现为来向视点，场景与译文保留“迟迟未开始”；但死んでこない／死んでこなかった比普通死なない更少见，固定配对自然度待可靠用例核实，暂列未决。",
-      "sourceHash": "9d626be359294fa3024713591ad0cedaa2d0c07da5a829a55dbfbf4c1f1bc5e2"
-    },
-    {
-      "id": "usage:teiku:verb:着く:つく",
-      "pair": "verb:着く:つく/teiku",
-      "batch": "direction-1/07",
-      "sentence": "この列車はまもなく終点に着いていく。",
-      "scene": "列车继续驶向终点，马上会到站。",
-      "translation": "这列车马上就会到达终点。",
-      "reason": "まもなく終点に着いていく只写单次列车到站，未说明ていく的持续展开；不能把原义到达改成同音的付いていく跟随。尝试多人陆续到站场景仍缺足够自然度把握，保留原句未决。",
-      "sourceHash": "98ad3d9c2ed31fc9e507385bd5825bc222b1bbdc54491a771cde0918a9774307"
-    },
-    {
-      "id": "usage:teku:verb:着く:つく",
-      "pair": "verb:着く:つく/teku",
-      "batch": "direction-1/07",
-      "sentence": "「海岸沿いを歩けば、灯台に着いてく。」",
-      "scene": "朋友说沿海岸走就会到灯塔。",
-      "translation": "“沿着海岸走就会到灯塔。”",
-      "reason": "灯台に着いてく把普通到达后缀化而无明确未来发展／离去观察，缩约不能修复；不借跟随义补齐，固定到达配对未决。",
-      "sourceHash": "63e797a4051e70d8d2e0e4e28e7ce966eee45eb86f4192d71bea75f31197af97"
-    },
-    {
-      "id": "usage:tekuru:verb:着く:つく",
-      "pair": "verb:着く:つく/tekuru",
-      "batch": "direction-1/07",
-      "sentence": "駅に迎えに着いてくる。",
-      "scene": "我去车站接人，很快回来。",
-      "translation": "我去车站接人就回来。",
-      "reason": "駅に迎えに着いてくる并不能表示去车站接人再回来，着く只有到达义，不承担行く或迎える。未取得可靠到达＋てくる用例，原句保留未决。",
-      "sourceHash": "f961eb7967e7a0013339956be423998e5f2158d04c31c8c1e8d581a992fd0e6a"
-    },
-    {
-      "id": "usage:teikuPast:verb:着く:つく",
-      "pair": "verb:着く:つく/teikuPast",
-      "batch": "direction-1/07",
-      "sentence": "隊列は山道を進み、夕方にはキャンプ場に着いていった。",
-      "scene": "回忆队伍沿山路向营地走去。",
-      "translation": "队伍沿山路前进，傍晚到达了营地。",
-      "reason": "キャンプ場に着いていった将一次营地到达当作方向持续，原句无多人依次到达等支撑；译文只说到达也遗漏teいく作用，暂不能可靠修复。",
-      "sourceHash": "c85efce355df2abfac985e69e422a8b1d4730bc17a0368bf931a718c3768351d"
     },
     {
       "id": "usage:teikuNegative:verb:着く:つく",
@@ -7637,7 +7013,7 @@
       "sentence": "雪のため、バスは時間どおりに着いていかない。",
       "scene": "今天下雪，公交不会按时到站。",
       "translation": "因为下雪，公交不会准时到达。",
-      "reason": "バスは時間どおりに着いていかない不自然地把普通不会准时到达写成方向否定；需固定到达义的自然发展语境，不能改为付いていかない或行かない。",
+      "reason": "现句只说明因雪不准点，バス没有明确的多车连续到达序列，也没有离去参照。着いていかない比普通着かない多出的いく在现语境中缺乏明确着落；不能凭时间どおり自动认定为自然的否定发展例。此判断限当前句，不是否认该固定形的所有用法。",
       "sourceHash": "63e05b9355bb7a5212ec052c3dc9b95de7395b29a41f9951bc54b6bf3de1807a"
     },
     {
@@ -7647,48 +7023,8 @@
       "sentence": "昨夜の大雨で、最終バスは駅に着いていかなかった。",
       "scene": "昨夜大雨，末班车没有到车站。",
       "translation": "昨晚因大雨，末班车没有到车站。",
-      "reason": "末班车未到车站的事实未提供着いていかなかった所需的发展视点；保留原草稿未决，不用没去或没跟上偷换到达义。",
+      "reason": "最終バス是一次有终点的单一到达事件，句中没有后续展开或离开观察者的结构。中文仅表达没有到达；当前着いていかなかった显得硬加方向补助动词，建议仍保留未决。",
       "sourceHash": "ec8e2c438e5290d356d4dec3a454ceb47bdd3bcda343ab9f0c90276edd296d90"
-    },
-    {
-      "id": "usage:tekuruPast:verb:着く:つく",
-      "pair": "verb:着く:つく/tekuruPast",
-      "batch": "direction-1/07",
-      "sentence": "空港に両親を迎えに着いてきた。",
-      "scene": "我去机场接父母后回来。",
-      "translation": "我去机场接父母后回来了。",
-      "reason": "空港に両親を迎えに着いてきた被译成去机场接父母回来，实际着く不表达接人或往返；无法沿原文可靠批准，保留精确配对待核实。",
-      "sourceHash": "dc757052c0d96f03ad6e7ebec0c1584f71dc7a99c588756b900cd0d2955772c0"
-    },
-    {
-      "id": "usage:tekuruNegative:verb:着く:つく",
-      "pair": "verb:着く:つく/tekuruNegative",
-      "batch": "direction-1/07",
-      "sentence": "今日は書類を届けるだけで、客先には着いてこない。",
-      "scene": "今天只去送文件，不到客户办公室。",
-      "translation": "今天只送文件，不去客户办公室。",
-      "reason": "届けるだけで客先には着いてこない的对象／地点安排也不明，译文用不去取代未到达且未表达てくる；不以同音跟随形式救句。",
-      "sourceHash": "21a7c2dae98177f85b104ccf963364e452b9c7e22169a37042ba11ccc06839f5"
-    },
-    {
-      "id": "usage:tekuruNegativePast:verb:着く:つく",
-      "pair": "verb:着く:つく/tekuruNegativePast",
-      "batch": "direction-1/07",
-      "sentence": "昨日は駅へ行ったが、列車は着いてこなかった。",
-      "scene": "昨天去车站，却没等到列车。",
-      "translation": "昨天去了车站，但列车没有到达。",
-      "reason": "列車は着いてこなかった虽可被理解为未到站，当前孤立到达搭配自然度仍不足；搜索主要返回付く跟随误字而非到达例证，保留原句未决，不宣称所有语境不可能。",
-      "sourceHash": "3db01ecf9efa9635b11059e33e3952a9e5e28d365780d5a504dee0363284c6eb"
-    },
-    {
-      "id": "usage:tekuru:verb:喜ぶ:よろこぶ",
-      "pair": "verb:喜ぶ:よろこぶ/tekuru",
-      "batch": "direction-1/10",
-      "sentence": "姉の合格を、実家で家族と喜んでくる。",
-      "scene": "姐姐考上大学，你准备回娘家分享喜悦后回来。",
-      "translation": "我要到老家和家人一起为姐姐通过考试而高兴，然后回来。",
-      "reason": "当前候选「姉の合格を、実家で家族と喜んでくる」虽给出家中分享喜悦并返回的视点，喜ぶ仍是情感反应，专程做完该反应再回来的用例显得牵强。考虑过明确家人共同感受的解释，但尚无足够自然度依据；不能借更自然的祝う替换目标来放行。已仅把译文“考上大学”收紧为原句的“通过考试”，构式疑点未消除。",
-      "sourceHash": "326c7e71ace21dd5c360438305c8c71fcec895e719cd1699999b738bd181c805"
     },
     {
       "id": "usage:teikuNegative:verb:喜ぶ:よろこぶ",
@@ -7697,7 +7033,7 @@
       "sentence": "この店の客は、帰る時も喜んでいかない。",
       "scene": "你站在柜台旁，观察顾客离开时仍闷闷不乐。",
       "translation": "这家店的顾客离开时也不是高高兴兴地走。",
-      "reason": "当前句「この店の客は、帰る時も喜んでいかない」可被理解成喜んで修饰行く的“不欣然前往”，与作者想表达的不带高兴状态离店并不稳定对应。柜台和帰る時只能给出去向，无法单独证明该情感词与方向否定的本课用义自然；保留原候选，不把中文“闷闷不乐”当证据。",
+      "reason": "喜んでいく可以描写高兴地离去，不能整形禁用；但本句帰る時も喜んでいかない对否定的包装较生硬，容易读作不欣然前往，而译文断定离开时不高兴。仅靠柜台背景尚不足以把这个否定搭配判作可靠教材句。应继续找真实的待客送客用例或重拟完整语境。",
       "sourceHash": "76e135e5bce4433b5cd2ef6b2fe01d45cdeb79f750e2a00cd5c17c1c594963a2"
     },
     {
@@ -7707,7 +7043,7 @@
       "sentence": "昨日、あの客は店を出る時も喜んでいかなかった。",
       "scene": "回想昨天的送别，失望的客人没有高兴地离开。",
       "translation": "昨天，那位顾客离开店里时也没有高高兴兴地走。",
-      "reason": "当前句「昨日、あの客は店を出る時も喜んでいかなかった」有明确过去离店参照，但喜んで作为欣然的副词式读法仍与作者拟表达的高兴状态伴随离去竞争。加昨日和店を出る時没有消除搭配疑点；不按过去时合法便批准。",
+      "reason": "过去时并未解决店を出る時も喜んでいかなかった的搭配疑问；意图是高兴地离去的否定，但当前句更自然的日常表达通常会落到喜んで帰る／うれしそうではなかった，二者都不能直接替换固定目标。本项只是当前句自然度未决，不宣称喜んでいかなかった在所有场景不成立。",
       "sourceHash": "a789093d5e702cc45b9e961a20c908ff79cddafab637662a68ac450dead56c15"
     },
     {
@@ -7717,7 +7053,7 @@
       "sentence": "いい知らせを次々に伝えても、弟は少しも喜んでこない。",
       "scene": "连续说了许多好消息，弟弟仍没渐渐高兴起来。",
       "translation": "即使接连传达好消息，弟弟也丝毫没有渐渐高兴起来。",
-      "reason": "当前句「いい知らせを次々に伝えても、弟は少しも喜んでこない」拟表达喜悦截至当前仍未渐起。喜ぶ的情感反应是否自然采用此てこない渐变读法仍不明确；次々に和少しも不足以证明成立，不能暗换成嬉しくなる。保留未决而不宣称日语中此形不存在。",
+      "reason": "次々に是传达好消息的次数，并不自然使弟弟的喜ぶ动作形成渐变；喜んでこない若作朝我高兴地走来又缺路线。不能仅由中文渐渐高兴反推该直接搭配已自然。",
       "sourceHash": "f2383d33de618ebbab5a946ab53320bf9a8f5a284326f51e04e5d195825125bf"
     },
     {
@@ -7727,7 +7063,7 @@
       "sentence": "支援が続けば、兄は生活費にこれ以上困っていかない。",
       "scene": "担心失业后的哥哥，你认为及时援助能阻止处境恶化。",
       "translation": "援助持续下去的话，哥哥不会进一步为生活费发愁。",
-      "reason": "支援が続けば及これ以上提供未来与程度标准，但生活費に困っていかない作为直接否定困境加深仍拗口：可读成不继续处于困境，未稳定表达中文不会进一步恶化；改困らない将丢时间发展目标，改困らなくなっていく将改变固定答案，保留原具体候选。",
+      "reason": "援助持续可以防止生活困难，但兄は生活費にこれ以上困っていかない直接把发愁当作继续恶化的标尺，直陈否定搭配仍生硬；不以课程只收方向义为由拒收。",
       "sourceHash": "ab8034f7c62054f6f0ee8ceb968b1618c6ea03f1f3282ab67d1d9ef0c6acff9b"
     },
     {
@@ -7737,18 +7073,8 @@
       "sentence": "支援が続いたので、兄は生活費にそれ以上困っていかなかった。",
       "scene": "回顾失业后那段时间，援助持续使哥哥没越过越难。",
       "translation": "因为援助持续着，哥哥后来没有更加为生活费发愁。",
-      "reason": "过去援助持续与それ以上虽有时间锚点，困っていかなかった对未继续为难和未更加为难的边界仍不够自然清晰；肯定困っていった可用程度增长解释，不能据此机械批准其否定，保留失业后援助的候选待确认。",
+      "reason": "支援が続いたので为后来不再困难提供原因，却没有使困っていかなかった的过去发展否定更自然；译文更加为生活费发愁的程度变化尚不能由该固定目标稳妥承载。",
       "sourceHash": "3434e93f75fbffe7d60db8a610a0d71c032aac20015456f4cc2e648979cdfea6"
-    },
-    {
-      "id": "usage:tekuruNegative:verb:困る:こまる",
-      "pair": "verb:困る:こまる/tekuruNegative",
-      "batch": "direction-1/11",
-      "sentence": "倉庫を広げたので、荷物が増えても置き場には困ってこない。",
-      "scene": "同事问物品是否太多，你说仓库扩建后尚不发愁。",
-      "translation": "仓库扩大了，即使东西增加，也没有开始为存放位置发愁。",
-      "reason": "扩仓使存放困扰未出现的情境合理，但荷物が増えても置き場には困ってこない直接否定心理状态显现仍偏硬；句子更像一般不会为难，中文却说截至目前没有开始发愁。改困ってこなかった可表达过去历程但会变更目标，故不强行批准。",
-      "sourceHash": "32a8f48d2007925c8aee24c1453d546a7bc21c2fb49d28b6e053e82e47839310"
     },
     {
       "id": "usage:teikuNegative:verb:降る:ふる",
@@ -7757,7 +7083,7 @@
       "sentence": "夜には雲が切れるので、雨は朝まで降っていかない。",
       "scene": "傍晚云层就会散开，你判断雨不会一直下到天亮。",
       "translation": "夜里云层会散开，所以雨不会持续下到早晨。",
-      "reason": "雨は朝まで降っていかない的朝まで只给持续终点，未给远离观察者的空间路线；将持续下雨否定直接接成降っていかない仍不自然，通常需降り続かない但那会改目标，故保留当前配对未决。",
+      "reason": "云散后雨不下到早晨可自然用降り続かない；本句降っていかない作为时间延续否定的搭配不够稳，朝まで只给终点而未改善表达。不是因降る非意志而禁用。",
       "sourceHash": "180b64a8f15a3d816a6084fe0d4f2c1417442a3d7d048ac0c91f8032cb686f2a"
     },
     {
@@ -7767,7 +7093,7 @@
       "sentence": "昨夜は夜中に雲が切れ、雨は朝まで降っていかなかった。",
       "scene": "回顾昨晚天气，云层半夜散了，雨没下到天亮。",
       "translation": "昨夜云层在半夜散开，雨没有持续下到早晨。",
-      "reason": "云层半夜散开能说明雨没持续至早晨，但朝まで降っていかなかった把天气持续过去否定机械接ていく，未建立足以支持该接续的推进或空间视点；不能仅凭中文读通批准。",
+      "reason": "夜中云散可以说明雨已停，雨は朝まで降っていかなかった的过去持续否定仍显绕口；不得把未持续至早晨等价于所有期间没有下雨，也不凭加过去时间就批准。",
       "sourceHash": "cb00f436f93742833ff4908b720c70a2cb1f5aec5d21847c6cb14cd3a9423906"
     },
     {
@@ -7777,7 +7103,7 @@
       "sentence": "子どもの成長とともに、これから部屋がもっと要っていく。",
       "scene": "孩子将陆续长大，你预计今后会需要更多房间。",
       "translation": "随着孩子成长，今后将逐渐需要更多房间。",
-      "reason": "子どもの成長与もっと可表达房间需求增加，但部屋が要っていく是否为自然的标准需要义接续未得到支持；构形许可和未来时间背景不足，不能改成必要になっていく来充数。",
+      "reason": "孩子成长使房间需求增加的语义合理，但部屋がもっと要っていく直接把需要状态当成发展过程，标准教学句自然度未稳；不能改为必要になっていく来绕过固定要る。",
       "sourceHash": "395c30181eb3d5982424b8515bba37e06b52ca4089bba06e907489a66de7a419"
     },
     {
@@ -7787,7 +7113,7 @@
       "sentence": "修理が進むと、もっと細かい工具も要ってくよ。",
       "scene": "朋友开始学修表，你说之后会逐渐需要精细工具。",
       "translation": "修理继续进行下去，也会逐渐需要更精细的工具。",
-      "reason": "修理推进后需要更精细工具的意思清楚，但要ってくよ只是把未核实的要っていく缩约，朋友口吻本身不能证明接续自然；工具需要的原义仍须保留。",
+      "reason": "修理推进会需要更细工具是合理因果，工具读こうぐ无误；口语缩约要ってく仍继承要っていく的搭配疑点，不能凭よ这一口语结尾批准。",
       "sourceHash": "89cbe088ee5bf9150ff5145e206da98a3794f8c14c5682b94ce4b59f79dd4299"
     },
     {
@@ -7797,7 +7123,7 @@
       "sentence": "子どもが学校に通い始めると、教材費が要ってくる。",
       "scene": "讨论孩子入学后的开支，教材费届时会成为新需要。",
       "translation": "孩子开始上学后，就会逐渐需要教材费。",
-      "reason": "孩子入学时开始产生教材费需求，原句欲表达需求显现；教材費が要ってくる在该状态动词义下自然度仍未确认，不能以必要になってくる的常见用法反向认可固定目标。",
+      "reason": "入学后产生教材费需求有明确起点；要ってくる在部分口语中可理解，但作为中性教学句与要るようになる相比自然度有争议。本轮未获得足以限定语体的依据，保留该精确配对。",
       "sourceHash": "8f8daa084b28dacc80f4cf380922bb2ee7bb34ae4e8abdbb15ffefb2f1601ea6"
     },
     {
@@ -7807,7 +7133,7 @@
       "sentence": "店を大きくするにつれて、仕入れの資金もさらに要っていった。",
       "scene": "回顾店铺逐步扩大时，进货所需资金也渐渐增多。",
       "translation": "随着店铺扩大，也逐渐需要更多进货资金。",
-      "reason": "店铺扩大、进货资金更多只是需求量增加的具体背景，さらに要っていった仍缺少自然教材用例支持；过去时间词未解决要る与方向发展的接续问题。",
+      "reason": "店铺扩大与进货资金增加构成过去需求演变，但さらに要っていった的直接组合仍缺稳定自然读法；未把要る解释成花费来偷换词义。",
       "sourceHash": "a5de85c00b00630fbe3071621886c28a6791286fe02fcad8cbef0719de60b639"
     },
     {
@@ -7817,7 +7143,7 @@
       "sentence": "この仕組みなら、注文が増えても追加の人手は要っていかない。",
       "scene": "介绍自动化方案，预期订单增多也不会新增人手需求。",
       "translation": "采用这套机制，即使订单增加，后续也不会需要额外人手。",
-      "reason": "自动化下无需额外人手是合乎逻辑的预测，但人手は要っていかない与通常人手は要らない不同；当前稿未可靠体现需要状态的未来发展否定，保留精确形式未决。",
+      "reason": "自动化使订单增加时无需增员可以成立，当前要っていかない却不是要らない的任意未来替换；机制条件并未提供足以批准的直接发展否定搭配。",
       "sourceHash": "b2627b4ad95d28f35f404c7ac421838d8d9b7ba780f605ef273c2d834265b98a"
     },
     {
@@ -7827,7 +7153,7 @@
       "sentence": "その後は機械化が進み、追加の作業員は要っていかなかった。",
       "scene": "回顾工厂自动化以后，后来没有出现追加工人的需要。",
       "translation": "此后机械化不断推进，没有进一步产生增派工人的需要。",
-      "reason": "机械化以后无需新增工人的过去事实可以理解，追加の作業員は要っていかなかった却仍生硬；不能把中文进一步产生需要当作日语已经自然表达出的成分。",
+      "reason": "その後定位过去持续机械化，作業員要っていかなかった仍把未出现需求直接写为状态的方向否定；译文的没有进一步产生需要比日语原组合更顺，故不据译文批准。",
       "sourceHash": "ed26916a8036666fda132b72a9a7a7136ca2e5e52beab29d5abc1071a6ba39cb"
     },
     {
@@ -7837,7 +7163,7 @@
       "sentence": "この十年で、家の修理に以前より多くのお金が要ってきた。",
       "scene": "房子使用了十年，你发现到现在维修费需求越来越高。",
       "translation": "这十年间，房屋维修逐渐需要比以前更多的钱。",
-      "reason": "十年间维修费需求增长提供到当前的回顾时点，但お金が要ってきた的自然性未确认；不可偷换成花的钱更多或钱逐渐收到等其他原义。",
+      "reason": "十年间维修需要更多钱有发展到当前的观察时点，十年读じゅうねん正确；要ってきた的标准语自然度与潜在地区用法需核实，不能仅有多年跨度便批准。",
       "sourceHash": "3f019006ac8a43273dc40aaae2169711971bbb4886a73072234d969e1dff7c94"
     },
     {
@@ -7847,7 +7173,7 @@
       "sentence": "今のところ、標準の機能で足りていて、追加料金は要ってこない。",
       "scene": "试用系统一段时间，到现在还没有追加费用的需要。",
       "translation": "到目前为止，标准功能已经够用，还没有产生追加费用的需要。",
-      "reason": "标准功能够用能说明目前无需追加费用，却不能自动支持追加料金は要ってこない；需要状态未出现的解释依赖意图推断，尚不足用于批准。",
+      "reason": "标准功能够用解释为何不用付追加费用，今のところ也给观察点；要ってこない是否可中性表达需求迟迟未产生仍待更可靠语用依据，不把无读音差异当作自然度结论。",
       "sourceHash": "47f70f2e4fee7691b46cf02e4218bb7533098bd5887a1cdb647e8b74aa5333a5"
     },
     {
@@ -7857,7 +7183,7 @@
       "sentence": "去年の準備では、最後まで追加の人手は要ってこなかった。",
       "scene": "回顾去年的筹备工作，直到结束都未出现增派人手的需要。",
       "translation": "去年的筹备工作中，直到最后都没有产生额外人手的需要。",
-      "reason": "去年筹备到最后未需增员有明确过去截止点，仍未验证人手は要ってこなかった的常用需要义接续；保留完整候选，不改成要らなかった或必要にならなかった。",
+      "reason": "去年准备活动至结束始终无需额外人手是清楚的过去范围，但要ってこなかった作为中性状态发展否定仍待证；最后まで与否定范围无冲突，问题限于目标搭配。",
       "sourceHash": "060fe776e208839ba522866685b2cc8083ae6e5847ba211d3d3b3141b02c36bc"
     },
     {
@@ -7867,7 +7193,7 @@
       "sentence": "募集を続ければ、各部署の人手が次第に足りていくだろう。",
       "scene": "设想持续招募志愿者后，各岗位人手逐步够用。",
       "translation": "持续招募的话，各部门的人手应该会逐渐够用。",
-      "reason": "未决：募集持续、各部署复数和次第に虽可解释岗位逐步补齐，但足りる表示满足需要的状态，足りていく直接表达状态渐变仍欠自然用例依据；当前中文等同足りるようになる，不能仅凭渐进副词批准。",
+      "reason": "各部门人手可分批达到足够，确有可设想的分布变化，但次第に足りていくだろう在当前说法中仍容易成为硬造的逐渐够用；未以足りる是状态词就整体判不合法。",
       "sourceHash": "f33a1475da96e2942479b7d869f05e0b50cfbbb56c0996589af3095f674a2ca9"
     },
     {
@@ -7877,18 +7203,8 @@
       "sentence": "寄付が続けば、毛布もだんだん足りてくと思うよ。",
       "scene": "与朋友讨论陆续到来的援助，预计被褥会够用。",
       "translation": "我想，捐赠持续下去的话，毛毯也会逐渐够用。",
-      "reason": "未决：寄付持续可使毛毯够用，但だんだん足りてく继承足りていく的基础搭配疑点；口语と思うよ只处理语体，不能证明足够状态可直接这样逐渐发展。",
+      "reason": "毛毯随捐赠增加不等于足够这一阈值可连续递增；だんだん足りてく的口语缩约未解决这处搭配疑点。と思うよ推量译得正确，仍留待自然用例裁定。",
       "sourceHash": "e31e804f7fdc943ea54646a3208332e6e7607f34e0ce0548bf4e357f9a832b78"
-    },
-    {
-      "id": "usage:tekuru:verb:足りる:たりる",
-      "pair": "verb:足りる:たりる/tekuru",
-      "batch": "direction-1/17",
-      "sentence": "応援の人が集まれば、必要な人手も足りてくるはずだ。",
-      "scene": "志愿者陆续到岗，负责人期待人手渐渐够用。",
-      "translation": "帮忙的人集合起来后，所需的人手应该也会逐渐够用。",
-      "reason": "未决：応援の人集合后预计人手够用，足りてくる比いく较易理解为充足显现，但当前必要な人手も足りてくる仍缺可靠自然度依据；はずだ与译文推量匹配，暂不因此批准搭配。",
-      "sourceHash": "cb53badf34e831ec5a047856ecc7f784cdfdb66be4bc65e4f14fab17cc8695ab"
     },
     {
       "id": "usage:teikuPast:verb:足りる:たりる",
@@ -7897,7 +7213,7 @@
       "sentence": "物資が届くたびに、各避難所の毛布が少しずつ足りていった。",
       "scene": "回顾物资不断运入后，各避难所毛毯渐渐够用。",
       "translation": "每次有物资送达，各避难所的毛毯就逐渐变得够用。",
-      "reason": "未决：各避難所和届くたびに可提供逐所补足的序列，但毛布が少しずつ足りていった把二值够用状态表成少量递增，仍显生硬；需证明此构式的自然分布读法，不能改用補われる绕过固定目标。",
+      "reason": "各避難所允许逐所补足的解释，但毛布が少しずつ足りていった仍把毛毯数量的逐量增加与足够状态混合；分布读法虽可理解，暂缺足够自然的表达。避難所的ひなんじょ为合法读法保留。",
       "sourceHash": "c07f7b4e3bbd7f17a8038a541cda241a29035aee34528313c57d2beffe203d4e"
     },
     {
@@ -7907,7 +7223,7 @@
       "sentence": "退職する人が多ければ、募集を続けても人手は足りていかないだろう。",
       "scene": "讨论人员持续离职的局面，认为将来人手仍不足。",
       "translation": "离职的人如果很多，即使持续招募，人手也不会逐渐够用。",
-      "reason": "未决：离职者多与持续招募说明未来仍不足，但足りていかない不是普通足りない的自然等价替换；中文不会逐渐够用揭示渐变解读尚未证实，暂留具体人手场景。",
+      "reason": "人员不断离职使招募后仍不足的条件成立，足りていかないだろう却仍更像将足りない机械加时间方向；未改用补足或追上来替代指定词义。",
       "sourceHash": "4f5b6ec0fc41a40bc91049bfb4a44298bded3cfd4ef66488d7e72ec62810998d"
     },
     {
@@ -7917,18 +7233,8 @@
       "sentence": "患者が急増したため、ベッドを追加しても数は足りていかなかった。",
       "scene": "临时病房需求一直增长，病床后来仍没有够用。",
       "translation": "患者急剧增加，因此即使添置病床，数量也没有逐渐够用。",
-      "reason": "未决：患者急增及病床追加可说明过去供不应求，数は足りていかなかった的逐渐足够否定却仍欠自然依据；数读かず正确，不将读音通过等同搭配通过。",
+      "reason": "患者增长快于添床可导致过去一直不足，数は足りていかなかった的否定发展搭配仍不够稳；数是独立名词读かず，不采用词典分词的スウ。",
       "sourceHash": "754d99ba6ca2865111288d8c8a45cb6a6e253aaeb4c252fda1400b672f0a5914"
-    },
-    {
-      "id": "usage:tekuruPast:verb:足りる:たりる",
-      "pair": "verb:足りる:たりる/tekuruPast",
-      "batch": "direction-1/17",
-      "sentence": "新人が入るにつれて、工場の人手も足りてきた。",
-      "scene": "工厂陆续雇到新人，近来所需人手渐渐齐了。",
-      "translation": "随着新人入职，工厂的人手也渐渐够用了。",
-      "reason": "未决：新人逐批入职可带来够用状态，足りてきた趋近当前状态有可理解读法，但与惯常足りるようになってきた相比，直接搭配的教材自然度未有可靠依据；不据作者未决直接判为绝不合法。",
-      "sourceHash": "dca57730259204b71c827deff9066e17b7ff9bc91f7e5b1b6a3df17aaaed8cf4"
     },
     {
       "id": "usage:tekuruNegative:verb:足りる:たりる",
@@ -7937,7 +7243,7 @@
       "sentence": "支援が届いても、必要な毛布がなかなか足りてこない。",
       "scene": "收到物资已有一段时间，避难所毛毯仍然不足。",
       "translation": "即使援助物资到了，所需的毛毯还是迟迟没有够用。",
-      "reason": "未决：支援届いても与なかなか提供迟迟未满足需求的让步语境，但毛布が足りてこない仍可能是把不足未改善硬译为方向否定；固定目标自然度待证，读音和译文方向无确定错误。",
+      "reason": "支援届いても与なかなか支持期待落空，但毛布が足りてこない作为不足状态持续的教学表达仍有不自然感；肯定的足りてくる可用不能自动批准所有否定组合。",
       "sourceHash": "4be7f40e7c6c99fb7a564619d31ee37aa3743aecb338443cb56fe1e415426ab7"
     },
     {
@@ -7947,18 +7253,8 @@
       "sentence": "何度応援を頼んでも、あの時は人手が足りてこなかった。",
       "scene": "当时不断请人来支援，实际人手始终不够。",
       "translation": "那时不管请求几次支援，人手都没有逐渐够用。",
-      "reason": "未决：何度応援を頼んでも及あの時明确过去反复求援后仍不足；足りてこなかった是否自然指向过去观察点的未充足状态仍待证，不把没有足够状态出现直接替代普通足りなかった。",
+      "reason": "反复求援后的过去仍缺人是完整背景，足りてこなかった却不能仅凭あの時变成自然的过去持续不足；保留疑点而不宣称此形在任何语境都不成立。",
       "sourceHash": "62df8756e0c6e13544f71844bead761838125e0083f208260947377c3187e9c3"
-    },
-    {
-      "id": "usage:teikuNegative:verb:知る:しる",
-      "pair": "verb:知る:しる/teikuNegative",
-      "batch": "direction-2/04",
-      "sentence": "同じ仲間としか話さなければ、別の暮らし方を知っていかない。",
-      "scene": "分析封闭社交圈的后果，难以逐步接触别种生活。",
-      "translation": "如果只与同一群伙伴交谈，就不会逐渐了解别的生活方式。",
-      "reason": "独立复核仍未决：同じ仲間としか話さなければ、別の暮らし方を知っていかない。条件只说明缺少获知机会，不能充分支持裸知っていかない的自然持续否定；知る机会がない或知ろうとしない会改变目标／意图，不能替代。",
-      "sourceHash": "88e9b816f02bcb60dd479780844125217464a2d08bffbbae89dfab414fa73d60"
     },
     {
       "id": "usage:teikuNegativePast:verb:知る:しる",
@@ -7967,18 +7263,8 @@
       "sentence": "当時は近所付き合いをせず、住民の暮らしを知っていかなかった。",
       "scene": "回忆曾住的小镇，当时不交流也没逐步了解居民。",
       "translation": "当时不与邻居交往，也没有逐渐了解居民的生活。",
-      "reason": "独立复核仍未决：当時は近所付き合いをせず、住民の暮らしを知っていかなかった。缺少交往说明过去不了解，却未提供可自然被否定的渐次认识过程；追加逐渐的中文不能证明裸知っていかなかった合格，保留当前候选。",
+      "reason": "当時／住民の暮らし使知识对象和过去视点明确，但「近所付き合いをせず、知っていかなかった」仍像把没有了解硬写成未持续发展。试过添加少しずつ与后续学习阶段，未找到足够自然的过去否定直陈；不以旧说明为拒收依据，暂保留固定配对待核实。",
       "sourceHash": "379702082759fcd9d96fff049c4e1479b159431b33654f1aebbac4fa51db1d34"
-    },
-    {
-      "id": "usage:tekuruNegative:verb:知る:しる",
-      "pair": "verb:知る:しる/tekuruNegative",
-      "batch": "direction-2/04",
-      "sentence": "入学前の説明会を欠席した子は、学校の決まりを知ってこない。",
-      "scene": "老师谈孩子入学前的准备，有人未先了解校规。",
-      "translation": "缺席入学前说明会的孩子，不会事先了解学校的规定再来。",
-      "reason": "独立复核仍未决：入学前の説明会を欠席した子は、学校の決まりを知ってこない。当前写法把知晓状态当作到校前完成的准备，惯常自然动作是調べてくる等而不是知ってくる；缺席说明会也不等于无从获知。不能换目标来批准。",
-      "sourceHash": "842cd7c9f68fd8d4e489d4c43b9861ba661755a718cb84e9518d6d991fe2d4ee"
     },
     {
       "id": "usage:tekuru:verb:思う:おもう",
@@ -7987,18 +7273,8 @@
       "sentence": "一緒に働くうちに、この人は信頼できると思ってくる。",
       "scene": "描述长期相处后，开始觉得同事值得信赖。",
       "translation": "一起工作的过程中，会逐渐认为这个人值得信赖。",
-      "reason": "独立复核新增未决：一緒に働くうちに、この人は信頼できると思ってくる。命题虽具体，逐渐形成判断通常需思うようになる等；当前裸思ってくる的渐变用法仍显生硬，不能将時間经历或中文逐渐当作自然度证明。没有换目标来放行。",
+      "reason": "一緒に働くうちに支持渐起判断，但「信頼できると思ってくる」本句缺少自然的起始状态表达；通常是思えてくる／思うようになる，它们不是固定目标。考虑过反复判断及向说话人显现的路线，仍未核实此句自然度，不能由中文逐渐认为反推批准。",
       "sourceHash": "d7ea3e5e4b6a1351c26d57dde725c81b3479c71ab7ad6e6e4fa82ed05b5c03d7"
-    },
-    {
-      "id": "usage:teikuNegative:verb:思う:おもう",
-      "pair": "verb:思う:おもう/teikuNegative",
-      "batch": "direction-2/05",
-      "sentence": "これからは、自分を失敗者だと思っていかない。",
-      "scene": "决定走出失败阴影，以后不再把自己当失败者。",
-      "translation": "从今以后，我不会继续把自己看成失败者。",
-      "reason": "独立复核新增未决：これからは、自分を失敗者だと思っていかない。文本意图为今后不再持某判断，但裸思っていかない的持续否定不够自然；更常规的不再这样想或不这样活下去均需其他结构。保持候选而不继承自审通过。",
-      "sourceHash": "038de224134b001b61e638be1201c5faa2bb5cdfa2bf4cda84a4a047c48905c5"
     },
     {
       "id": "usage:teikuNegativePast:verb:思う:おもう",
@@ -8007,7 +7283,7 @@
       "sentence": "あの和解の後は、全て相手が悪いとは思っていかなかった。",
       "scene": "那次和解后，没有再持续认定所有问题都是对方的错。",
       "translation": "那次和解之后，我没有再一直认为全是对方的错。",
-      "reason": "独立复核新增未决：あの和解の後は、全て相手が悪いとは思っていかなかった。和解后不再认为对方全错是判断停止，不自然支持当前裸否定发展形；原中文没有再一直认为不能证明日语推进读法。",
+      "reason": "和解以后是有效过去起点，但「全て相手が悪いとは思っていかなかった」未自然呈现逐次的判断发展，普通思わなかった或持续否定不等价于本目标。尝试保持某种评价随人生发展仍缺可靠完整句，暂不批准，不否定形态构造。",
       "sourceHash": "44ecdd1b2ac3104fd218465faf2137008907685f7ea058ac4db0f6073c120b9d"
     },
     {
@@ -8017,7 +7293,7 @@
       "sentence": "長く付き合っても、この人なら安心だとは思ってこない。",
       "scene": "相处许久仍有疑虑，并没逐渐觉得对方可靠。",
       "translation": "即使交往久了，也不会逐渐觉得这个人能让人安心。",
-      "reason": "作者未决经独审保留：長く付き合っても、この人なら安心だとは思ってこない。长久交往未形成安心判断的意图清楚，但裸思ってこない并不能自然担当这里的渐变否定；没有用思えてこない偷换目标。",
+      "reason": "長く付き合っても提供时间跨度，却不能自动使「安心だとは思ってこない」表示安心感没有产生；思えてこない的可感知状态不是本题思う目标。尝试以持续信念解释但原句更明显是起始判断，暂保留。",
       "sourceHash": "682be7c2f9d039a566df1ee457737715cc6cc2a96dfff6015e236665c222e1f1"
     },
     {
@@ -8027,7 +7303,7 @@
       "sentence": "工程を改善すれば、今後の注文も納期に間に合っていく。",
       "scene": "排产改善后，预测后续订单会逐个按期完成。",
       "translation": "如果改善工序，今后的订单也会陆续赶上交货期。",
-      "reason": "工序改善与今後の注文提供未来业务背景，但裸間に合っていく仍把达成期限强作渐进；多笔订单本身不足以保证自然接续。固定目标不能改成間に合うようになる，保留未决。",
+      "reason": "今後の注文／納期允许反复按期交货，但「間に合っていく」不能单凭订单复数证明发展义；订单逐批完成与每批赶得上各自期限尚需自然搭配证据。试过分批出货仍存在该问题，保持赶得上词义且不批准为够用。",
       "sourceHash": "f127fd4db02b9f0dc071652a1e532ca28a4561a731ecf25ae11ffa941ac09085"
     },
     {
@@ -8037,7 +7313,7 @@
       "sentence": "この分担なら、次の原稿も締め切りに間に合ってくよ。",
       "scene": "与同事看新排班，估计后续交稿逐渐能准时。",
       "translation": "照这样分工，接下来的稿件也会逐渐赶上截止时间。",
-      "reason": "次の原稿も只指接下来稿件，分担条件未建立持续发展序列；間に合ってく的口语缩约不消除基础搭配疑点，译文逐渐可能强加变化，未决。",
+      "reason": "「次の原稿も締め切りに間に合ってくよ」的次の原稿偏单次终点；口语よ不能修复「逐渐赶上」与一次稿件是否赶得上的差异。考虑多篇稿件后仍缺明确自然时间发展用例，未因缩约或旧说明拒收。",
       "sourceHash": "c1f1d568f346013d0be2a613b30b2f448bf8bed3a5be326f28641cd1fc84c786"
     },
     {
@@ -8047,7 +7323,7 @@
       "sentence": "作業に慣れると、毎週の提出期限に間に合ってくる。",
       "scene": "讨论熟悉工作后的进度，期限不再那么紧张。",
       "translation": "熟悉工作之后，就会逐渐赶上每周的提交期限。",
-      "reason": "作業に慣れると表达熟悉后渐能准时，但間に合ってくる是否自然承载此渐变仍不稳；常见ようになる不可替换固定目标，故未决。",
+      "reason": "毎週提供反复期限，但「慣れると間に合ってくる」可能是渐渐变得赶得上，当前无ようになる等变化载体，语感仍待核实。也考虑具体工期预测中间に合ってくる的结果显现读法，尚无可靠上下文支持此原创句。",
       "sourceHash": "9ad2595cfcf1314a2dee2ec651b5d263f395df593080342a8856be5243971944"
     },
     {
@@ -8057,7 +7333,7 @@
       "sentence": "人員を増やすと、残りの注文も納期に間に合っていった。",
       "scene": "回顾交货危机，追加人手后订单逐项按期完成。",
       "translation": "增加人手之后，剩余订单也陆续赶上了交货期。",
-      "reason": "人員を増やすと和残りの注文能构成先后业务叙述，却不足以证明裸間に合っていった自然；旧批准不能靠陆续中文维持，降为未决等待具体用例。",
+      "reason": "人員を増やすと建立过去变化原因，残りの注文呈复数；「納期に間に合っていった」是否自然表达一批批及时完成仍未明确，不能把陆续翻译当证据。尝试逐批时间轴但本词仍是赶得上，不改为完成。",
       "sourceHash": "7fff7e5fd87a19c8b6806b53579ff71b16d9226ec93cf33d74c26f95a3b69ce6"
     },
     {
@@ -8067,7 +7343,7 @@
       "sentence": "この生産量では、今後の注文は納期に間に合っていかない。",
       "scene": "按照当前产量推算，后续订单不会陆续按期完成。",
       "translation": "以这样的产量，今后的订单不会陆续赶上交货期。",
-      "reason": "この生産量では是产量不足条件，今後の注文明确未来期限；間に合っていかない裸否定发展搭配仍生硬，中文不会陆续赶上不能充当日语自然度证据。",
+      "reason": "生产量不足可以说明以后赶不上，却不足以说明「間に合っていかない」是自然持续否定。没有擅自译成越来越迟；尝试不断增加订单的时间线后仍缺可靠用例，因此此固定配对未决。",
       "sourceHash": "a240b38327ca903ce51d1a683f602e5dd429a4853d960ad60c04c844767ef0e0"
     },
     {
@@ -8077,7 +7353,7 @@
       "sentence": "以前の分担では、後の注文も納期に間に合っていかなかった。",
       "scene": "回忆旧排班问题，多批交货始终未逐步恢复准时。",
       "translation": "按以前的分工，后续订单也没有陆续赶上交货期。",
-      "reason": "以前の分担及後の注文给出过去批次，但間に合っていかなかった不自然疑点未解除；不能将逐渐恢复准时的场景当已在日文成立，保留未决。",
+      "reason": "以前の分担与後の注文建立回顾视点，但「納期に間に合っていかなかった」仍是普通没赶上被强行延长；多批订单并不自动构成同一发展的否定。试过持续交付背景仍待自然度核实。",
       "sourceHash": "e70ffb29f7388760320edb97341bea1fece78df06df17e84254dc539927f0225"
     },
     {
@@ -8087,18 +7363,8 @@
       "sentence": "分担を変えても、毎週の提出期限には間に合ってこない。",
       "scene": "调整分工已有一阵，周周提交仍未渐渐赶上。",
       "translation": "即使改变分工，也还是没有逐渐赶上每周的提交期限。",
-      "reason": "分担を変えても否定改变分工的预期效果，然而毎週の提出期限には間に合ってこない的渐变否定读法仍未确认；不能凭中文逐渐补出ようになる结构，降为未决。",
+      "reason": "改变分工后反复未赶上可理解，然而「提出期限には間に合ってこない」的趋向结果显现读法尚未确认；不把原句偷改成間に合うようにならない来完成固定目标。需可靠具体语境再裁定。",
       "sourceHash": "b8f996610af5401428dde638a3e630f5842e135a585c23c09e5260bf75489986"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:勝つ:かつ",
-      "pair": "verb:勝つ:かつ/teikuNegativePast",
-      "batch": "direction-2/09",
-      "sentence": "前回は、優勝候補が予想どおりには勝っていかなかった。",
-      "scene": "回顾上届比赛，夺冠热门没按预期连胜。",
-      "translation": "上次，夺冠热门并没有如预料的那样一路赢下去。",
-      "reason": "现句「前回は、優勝候補が予想どおりには勝っていかなかった。」已修掉作業を和未来译文，前回、予想どおりには也给出过去连胜预期；但固定勝っていかなかった的自然度仍存疑，常见的勝ち進めなかった或勝っていけなかった会改成能力或换动词，不能直接替换。本轮未取得足够依据批准此精确配对，保留当前具体草稿。",
-      "sourceHash": "c2079467c8601e37c5ef227aa15dad348696cea0a9dcfd045f4c66b02332b5ce"
     },
     {
       "id": "usage:teiku:verb:来る:くる",
@@ -8107,7 +7373,7 @@
       "sentence": "これからも毎年、卒業生がこの学校に来ていく。",
       "scene": "学校打算继续办聚会，校友以后还会年年来。",
       "translation": "今后毕业生也会每年来这所学校。",
-      "reason": "现句“これからも毎年、卒業生がこの学校に来ていく。”用每年为未来来访提供频率，但本词来る已选择趋近学校的视点，后接いく的额外方向／发展没有获得自然的搭配支持；不能把一般会来逐字等同来ていく，保留当前草稿未决。",
+      "reason": "每年毕业生来学校可表达重复到访，但「この学校に来ていく」的时间延续仍不如通っていく／来続ける自然，不能只凭これから自动批准。尝试来此后离开的空间读法，来ていく自身仍欠清楚常规搭配，保留待核实。",
       "sourceHash": "4cd23f51da2a0fccad054af46943ec523abcced35078eaeff6fef52942008b33"
     },
     {
@@ -8117,7 +7383,7 @@
       "sentence": "これからも、休日にはここへ来てくよ。",
       "scene": "在朋友家谈今后的安排，说以后周末还会来。",
       "translation": "以后休息日还会来这里。",
-      "reason": "现句“これからも、休日にはここへ来てくよ。”固定目标是来ていく缩约，休日和ここへ只支持反复来访；来てく还可能使读者猜测来てくれる的省略，不能借其他省略读法证明本课来ていく自然，保留。",
+      "reason": "朋友家是来る的自然终点，休日反复到访也明确；「ここへ来てくよ」作为来ていく缩约容易与来てくる／着ていく混淆，尚未核实本句的持续到访读法。未因口语缩约本身拒收，也未以他动词替换。",
       "sourceHash": "1cde3cd64330402abafca7880e3c2e59cbffc62c00348a17d47d908d23fee003"
     },
     {
@@ -8127,7 +7393,7 @@
       "sentence": "階段の上から、弟がこちらへ来てくる。",
       "scene": "自己站在楼梯下，看见弟弟往自己这边来。",
       "translation": "弟弟正从楼梯上方朝这边来。",
-      "reason": "现句“階段の上から、弟がこちらへ来てくる。”虽有楼梯起点和こちら的清楚接近终点，但来る和补助くる都表示趋近，来てくる并未形成自然的独立行为再回返或时间变化；直接译来掩盖了双重趋近，未通过。",
+      "reason": "階段の上からこちらへ已经由来る表达单次趋近，再接くる的「来てくる」缺少第二层事件或时间发展；原译正来只译出了来る。考虑先来再返回的双参照场景仍难维持明确视点，暂不批准。",
       "sourceHash": "810834e57d99b7da99441abb91ae497eb4e57a6949ebb94c238c6bbc60e3a3e9"
     },
     {
@@ -8137,7 +7403,7 @@
       "sentence": "開店した年は、毎月新しい客がこの店に来ていった。",
       "scene": "回想开店头一年，新顾客每个月陆续到店。",
       "translation": "开店那年，每个月都有新顾客陆续来到这家店。",
-      "reason": "现句“開店した年は、毎月新しい客がこの店に来ていった。”每月新客可支持来客连续发生，却不能自动使来ていった成为自然来访历程；也没有来到后另行离开的独立动作或转变，保持未决。",
+      "reason": "开店当年每月新客可形成系列事件，但「客がこの店に来ていった」未清楚是连续到访还是来后又离开；原译陆续来没有解释いった。尝试过去持续来访与经过到访两条路线仍未确认自然完整句。",
       "sourceHash": "f536a9f7572186cb120b4d2a20df4008762d17e184fdbb1b4f363aecef5466f9"
     },
     {
@@ -8147,7 +7413,7 @@
       "sentence": "今後は会をオンラインにするので、卒業生は学校へ来ていかない。",
       "scene": "今后聚会改在线举办，校友不再持续到学校来。",
       "translation": "今后聚会改为在线举办，所以毕业生不再到学校来。",
-      "reason": "现句“今後は会をオンラインにするので、卒業生は学校へ来ていかない。”在线聚会支持不再到访学校，但普通来訪否定不能证明来ていかない的去向／发展组合自然；否定并不消除词汇方向冲突，保留。",
+      "reason": "线上聚会可自然推出不再来学校，却不足以支持「来ていかない」的持续否定；不能把来なくなる的意思直接赋给本目标。试过来访后离去的路线仍未明晰视点，保留当前卡不批准。",
       "sourceHash": "bf7d7d181b6f3ec88ab93d057723a2e91a13d847831678696ef17ee56e87d6f1"
     },
     {
@@ -8157,7 +7423,7 @@
       "sentence": "学校が移転してから、卒業生は旧校舎へ来ていかなかった。",
       "scene": "搬校后聚会改到新址，校友没有继续来旧校舍。",
       "translation": "学校迁走后，毕业生没有继续来旧校舍。",
-      "reason": "现句“学校が移転してから、卒業生は旧校舎へ来ていかなかった。”移校后的时间起点明确，语意可理解为不再来旧址；仍未显示来ていく本身自然承载该持续路线，不能仅靠时段补救目标，未通过。",
+      "reason": "学校迁走后的旧校舍是清楚地点和过去起点，但「旧校舎へ来ていかなかった」仍非没有继续来的可靠普通表达。考虑到访后离开与随年份停止到访，均未得到自然的本目标完整句，暂缓本配对。",
       "sourceHash": "f27e82c778760dbad6d927d5085e961bf49cba4a612ffdde77bbb945e295f380"
     },
     {
@@ -8167,7 +7433,7 @@
       "sentence": "昨日、駅で待っていると、友達がこちらへ来てきた。",
       "scene": "昨天自己在车站等朋友，他从出口朝这边来了。",
       "translation": "昨天我在车站等着时，朋友朝这边来了。",
-      "reason": "现句“昨日、駅で待っていると、友達がこちらへ来てきた。”朋友朝等候者接近只需要一次趋近，来てきた中的第二个くる无独立事件或观察发展支撑；译文“来了”不体现固定组合的自然意义，保留。",
+      "reason": "昨天车站等候时朋友こちらへ来る已经表达趋近，「来てきた」重复同一方向，未有独立时间发展或返回动作；原译仅翻朋友来了。试过长期反复来访解释仍需明确证据，保留未决。",
       "sourceHash": "8af05bedb50dce586d554d738185986c3317fc93cc1f0d743fc7586552773a54"
     },
     {
@@ -8177,7 +7443,7 @@
       "sentence": "駅で待っているが、友達はまだこちらへ来てこない。",
       "scene": "自己正在车站等着，朋友仍然没有朝这边来。",
       "translation": "我在车站等着，但朋友仍然没有朝这边来。",
-      "reason": "现句“駅で待っているが、友達はまだこちらへ来てこない。”车站、こちら、まだ充分限定尚未趋近事件，但未解决来てこない的重复趋近搭配；不能将可自然成立的来ない换名视为目标已通过。",
+      "reason": "まだ／こちらへ与车站等待构成普通尚未来到；「来てこない」多出的くる没有可区分的趋近或发展意义。尝试要求先到一处再回来仍难维持来る的同一说话视点，不能靠中文没有来批准。",
       "sourceHash": "39249fd9e8fa4e68f750967ee664ff8fa3da5eee542e134107d522b0edbf6cd8"
     },
     {
@@ -8187,48 +7453,8 @@
       "sentence": "昨日は閉店まで待ったが、配達員は店に来てこなかった。",
       "scene": "昨天在店里一直等到关门，送货员也没来。",
       "translation": "昨天一直等到关门，送货员也没有来店里。",
-      "reason": "现句“昨日は閉店まで待ったが、配達員は店に来てこなかった。”截至闭店的过去终点和未到店事实明确，然而来てこなかった仍无自然的双层来向解释；不替换为来なかった或别的移动动词，保留确切配对待裁定。",
+      "reason": "昨天等到闭店与送货员不来是自然背景，问题在「店に来てこなかった」的双重趋近；过去否定并未修复该组合，译文也只译单纯没来。考虑来访后返回的双程场景仍未找到明确自然句。",
       "sourceHash": "d149c8fd0f42a36dda3d8dd338bfbcae8dcb87a0b7547a0d7b6c06ce0fd420be"
-    },
-    {
-      "id": "usage:sugiru:verb:困る:こまる",
-      "pair": "verb:困る:こまる/sugiru",
-      "batch": "sugiru-1/08",
-      "sentence": "小さな失敗でも困りすぎると、人に相談する余裕がなくなる。",
-      "scene": "一点小失误就为难得慌了神，连求助也忘了。",
-      "translation": "即使只是小失误，感到过于为难时，也会顾不上向别人求助。",
-      "reason": "小失误造成无暇求助可以描述困扰严重，但场景“慌了神”实际上要求慌张或焦虑；現句困りすぎる无法仅靠余裕がなくなる证明自然的为难程度过度，不能用慌てる／悩む替代固定目标。",
-      "sourceHash": "0dcb0a844f480426452bb2139dbcd6c2cbefa10cab77beb932d256272a24c980"
-    },
-    {
-      "id": "usage:sugiruPast:verb:困る:こまる",
-      "pair": "verb:困る:こまる/sugiruPast",
-      "batch": "sugiru-1/08",
-      "sentence": "昨日は切符を買い間違えて困りすぎたせいで、交換できることに気づかなかった。",
-      "scene": "昨天发现票买错时太过为难，一时没想到改签。",
-      "translation": "昨天买错车票后，我为难过了头，没有想到可以换票。",
-      "reason": "买错票后没有想到可更换，后果更直接由惊慌或不知所措解释；困りすぎたせいで把处境困难硬写成过度反应，固定过去形虽合法，但原义及自然度仍未解决。",
-      "sourceHash": "6bc4b396de0c46253b63aee8b2eeb9739eaca2db9ed57e2e34361c75ed49c734"
-    },
-    {
-      "id": "usage:sugiruNegative:verb:困る:こまる",
-      "pair": "verb:困る:こまる/sugiruNegative",
-      "batch": "sugiru-1/08",
-      "sentence": "助けてくれる同僚がいるので、小さな失敗では困りすぎない。",
-      "scene": "同事总能及时帮忙，我遇到小失误也不太为难。",
-      "translation": "有会帮助我的同事，所以遇到小失误，我不会过于为难。",
-      "reason": "有同事相助只证明小失误不太为难，未自然形成困りすぎない的“超过合适程度”尺度；不能用普通轻度否定あまり困らない给本目标背书，保留未决。",
-      "sourceHash": "d2f7fb39003cd462ccc04e45c426ddc157980a78d4cff8c43caf846b19f59fda"
-    },
-    {
-      "id": "usage:sugiruNegativePast:verb:困る:こまる",
-      "pair": "verb:困る:こまる/sugiruNegativePast",
-      "batch": "sugiru-1/08",
-      "sentence": "前回は鍵を忘れても、家族がいたので、困りすぎなかった。",
-      "scene": "上次忘带钥匙时有人帮忙，我没有过于为难。",
-      "translation": "上次虽然忘了带钥匙，但因为家人在，我没有过于为难。",
-      "reason": "家人在使忘钥匙后的实际困难减轻，但困りすぎなかった没有明确自然的过度界限；过去事件可理解不等于此程度否定适于教学，保留固定候选。",
-      "sourceHash": "8a1eabbb568e70974625afc15c0e49b8f7812ff03833859a7056d04e27308443"
     }
   ],
   "batches": [
@@ -8326,7 +7552,7 @@
       "batch": "aspect-2/02",
       "cards": 36,
       "sourceHash": "22adff769df3f1a0d907d73fd4112a6db3db0bad43a025ade1b60c75d0a7f39c",
-      "stateRevision": 6
+      "stateRevision": 8
     },
     {
       "batch": "aspect-2/03",
@@ -8476,7 +7702,7 @@
       "batch": "aspect-4/00",
       "cards": 21,
       "sourceHash": "001c30d1afd6d5f116e78e7b5f6cbb358ec6e9286f2f5fe2709a3e4e3c05914e",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "aspect-4/01",
@@ -8864,9 +8090,9 @@
     },
     {
       "batch": "temiru-1/07",
-      "cards": 36,
-      "sourceHash": "c970f7205148161c78b1af9a493169541ea883f940266a72f67f3fe3479d079b",
-      "stateRevision": 5
+      "cards": 39,
+      "sourceHash": "e999c6931e378964b6ffaae5e8aaf952f2fff565ecb1cb898dedd2580733b7d6",
+      "stateRevision": 7
     },
     {
       "batch": "temiru-1/08",
@@ -8906,51 +8132,51 @@
     },
     {
       "batch": "teshimauChau-1/01",
-      "cards": 38,
-      "sourceHash": "54eeaa3049913052497202a946f499344a5bfac5545be0897876d449ceb831b0",
-      "stateRevision": 12
+      "cards": 40,
+      "sourceHash": "bcfdd65bb6b9e7d8dbabcfbe4585df1a05020443985b2ca404d9bb2d26382dc1",
+      "stateRevision": 14
     },
     {
       "batch": "teshimauChau-1/02",
-      "cards": 36,
-      "sourceHash": "e84c1e10202e6ae9cb4447d2b58b02ec9c2f953e643c05ffb4998bfd1da40bf8",
-      "stateRevision": 5
-    },
-    {
-      "batch": "teshimauChau-1/03",
-      "cards": 36,
-      "sourceHash": "0b5e7007f1b6257769d525932e4e9e70fe54144295d8683256b5fd69991a345e",
+      "cards": 40,
+      "sourceHash": "07cbe1af94345f17760dd43509ab7035f7bc62b6831d844f55a2e4bf9d98c5f2",
       "stateRevision": 7
     },
     {
+      "batch": "teshimauChau-1/03",
+      "cards": 40,
+      "sourceHash": "025cad828272f027880babf5c3c5c3786aa30b006073437f9e73c4a30eb99816",
+      "stateRevision": 9
+    },
+    {
       "batch": "teshimauChau-1/04",
-      "cards": 38,
-      "sourceHash": "fe8170cef9a3c8637828b92b843810a35f37a9f9c0553e22b9686857cd6cc52e",
-      "stateRevision": 5
+      "cards": 40,
+      "sourceHash": "861e3885d8962143a59be589ec3a2ef0f71cece9eaf4d06d4e03f61609db1ce5",
+      "stateRevision": 7
     },
     {
       "batch": "teshimauChau-1/05",
-      "cards": 36,
-      "sourceHash": "c129410bb2bb7adaaec6a2812284a2237676ced6c1c7faaa53d9ab2129c06646",
-      "stateRevision": 5
+      "cards": 40,
+      "sourceHash": "ca82fd71a5e645a4d5be89f3a48c7e4d552c82b1ac1224e836f5b136f613b834",
+      "stateRevision": 7
     },
     {
       "batch": "teshimauChau-1/06",
       "cards": 31,
-      "sourceHash": "e9e0d58631878669011bc03cae49f339d87764abd78c71aac1d91ffc0da13508",
-      "stateRevision": 5
+      "sourceHash": "7bbbfb7edb0c8e6c428e2dcf3d506b81cbf6fa77057ea0d93a522ee41a18d727",
+      "stateRevision": 7
     },
     {
       "batch": "teshimauChau-1/07",
-      "cards": 35,
-      "sourceHash": "620cc5be2350617261bd85e88a682112e8c82cc50cb4fdeae069189a94265363",
-      "stateRevision": 12
+      "cards": 40,
+      "sourceHash": "9093e83028cad7c920c2857cb90f2bc3fa3b28c229cd6d7e7ed8c339ed18bd88",
+      "stateRevision": 14
     },
     {
       "batch": "teshimauChau-1/08",
-      "cards": 34,
-      "sourceHash": "789d6bb0caf4efacf31cda86b12d39007330f2e3e14db92e81412298792ace11",
-      "stateRevision": 6
+      "cards": 40,
+      "sourceHash": "8b08c99f32c4346496c578c36416febc22c3d288b35db42a0b3d693fdac8d47b",
+      "stateRevision": 8
     },
     {
       "batch": "teshimauChau-1/09",
@@ -8960,63 +8186,63 @@
     },
     {
       "batch": "teshimauChau-2/00",
-      "cards": 18,
-      "sourceHash": "eb8b4b6a81c8c07fb78823012e42ddf74115f7d02397c6692ce654c1f1782c23",
-      "stateRevision": 5
+      "cards": 20,
+      "sourceHash": "5fb86682d4c4c1f548d0e0753f51a11bd4edc60eeab71793beee01ed63828fd2",
+      "stateRevision": 7
     },
     {
       "batch": "teshimauChau-2/01",
-      "cards": 36,
-      "sourceHash": "50580b3ec04a46125bfde180f07cc430a11d313aeb776b8d954442d00602c75e",
-      "stateRevision": 5
+      "cards": 40,
+      "sourceHash": "2f981ed77a92216520711f86a91422942761632ee9b5c4945adb22db733338f9",
+      "stateRevision": 7
     },
     {
       "batch": "teshimauChau-2/02",
-      "cards": 36,
-      "sourceHash": "3a14b6b1f7d87bbde070762ac494615859be6829f4261cdc4a1d4ba07460f01d",
-      "stateRevision": 7
-    },
-    {
-      "batch": "teshimauChau-2/03",
-      "cards": 38,
-      "sourceHash": "e0f70c457cebd6cdb949db2b0c830d24ccfa86838462a05749cc789547de4cf8",
+      "cards": 40,
+      "sourceHash": "3bb24a36bb3fa5266552d66539c0fac27a209825cab898c261f8d7a086260e8b",
       "stateRevision": 9
     },
     {
+      "batch": "teshimauChau-2/03",
+      "cards": 40,
+      "sourceHash": "b39630cdbff9a0cb39fc5dcfc311703602a2b735afe893d174e72dcb957ad955",
+      "stateRevision": 11
+    },
+    {
       "batch": "teshimauChau-2/04",
-      "cards": 38,
-      "sourceHash": "eaf780718943cc2f25ec9eb4d9192ee9540f0d3e903d7f33a58f2897bec37d13",
-      "stateRevision": 7
+      "cards": 40,
+      "sourceHash": "32eb40935c103a4f8ca43315681fde5f5ffcf1b623c3a9b717456c687f47ce5a",
+      "stateRevision": 9
     },
     {
       "batch": "teshimauChau-2/05",
-      "cards": 38,
-      "sourceHash": "b11abf3a6c33ad5ea89770048ff3517aaf3f90c705c48968a1e1e1ab1548e00c",
-      "stateRevision": 5
+      "cards": 40,
+      "sourceHash": "393af77d69de687de14663ce38acd1bab3f666d268d813a10b4d08903698db40",
+      "stateRevision": 7
     },
     {
       "batch": "teshimauChau-2/06",
-      "cards": 34,
-      "sourceHash": "c59dd89e92314c813f96da78f1fc2cc73bbd867ab95da92e8a3a207859dbf16a",
-      "stateRevision": 5
+      "cards": 40,
+      "sourceHash": "9c75b57a797f2a427efc80e9b9a7d5b1693523ac979bfb9fdd9c9bb7b7aec0c2",
+      "stateRevision": 7
     },
     {
       "batch": "teshimauChau-2/07",
-      "cards": 38,
-      "sourceHash": "65f9521798cd8e56fee2bca28c87ae630825109954f9c4e24ea8158ad8193e0b",
-      "stateRevision": 7
+      "cards": 40,
+      "sourceHash": "a8630b70c704f47024dd4270faa9d6aa30df54fc975fe5e6b8cc44c442900b0c",
+      "stateRevision": 9
     },
     {
       "batch": "teshimauChau-2/08",
-      "cards": 34,
-      "sourceHash": "3f592db3b0584e3d5d3929201cb36c7b267f6bb8547d52fe5e009d5180efb7ee",
-      "stateRevision": 7
+      "cards": 40,
+      "sourceHash": "b414b5092a12fecaa7ad18d721cb083c71cef4c83c0fda06a43c177664da8247",
+      "stateRevision": 9
     },
     {
       "batch": "teshimauChau-2/09",
-      "cards": 20,
-      "sourceHash": "ccd3a37e00200813c0701689a5d954f74e488241637774c01b633de12f8ab48c",
-      "stateRevision": 6
+      "cards": 22,
+      "sourceHash": "c6e73017c3e453a1b74ff22ff3d20c9a63d4e34a729e777ee9049df3fefec0e0",
+      "stateRevision": 8
     },
     {
       "batch": "teokuToku-1/00",
@@ -9058,7 +8284,7 @@
       "batch": "teokuToku-1/06",
       "cards": 35,
       "sourceHash": "71fc5046d17dd5dc200ad7a3a5bf53a9a50d0dcb6d2aa66a8126856eb75ea087",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "teokuToku-1/07",
@@ -9074,9 +8300,9 @@
     },
     {
       "batch": "teokuToku-1/09",
-      "cards": 35,
-      "sourceHash": "dae01c281f7a05a4e061b8fbddfb83adbe923a8135710bd90368409799e45658",
-      "stateRevision": 6
+      "cards": 38,
+      "sourceHash": "9ba87af7bd9c9692d942adb0ed6db9b95b180f1802f85483b5975a15d083634d",
+      "stateRevision": 8
     },
     {
       "batch": "teokuToku-1/10",
@@ -9094,7 +8320,7 @@
       "batch": "teokuToku-1/12",
       "cards": 39,
       "sourceHash": "b0ecedacf4b8ddb6442cfa3754e38184f498ee5eb35cfdc9a38b4b725ecaa17a",
-      "stateRevision": 6
+      "stateRevision": 8
     },
     {
       "batch": "teokuToku-1/13",
@@ -9122,9 +8348,9 @@
     },
     {
       "batch": "direction-1/01",
-      "cards": 32,
-      "sourceHash": "09ab89577adeef9439298793413d59fa5a08b5b39636e2f67de668aaaeb5ded3",
-      "stateRevision": 5
+      "cards": 34,
+      "sourceHash": "27a2282b7538f031d67a46b3edeee13877f5065e01d103dd07f873381a8a36d5",
+      "stateRevision": 7
     },
     {
       "batch": "direction-1/02",
@@ -9158,9 +8384,9 @@
     },
     {
       "batch": "direction-1/07",
-      "cards": 27,
-      "sourceHash": "ffd36df93842f552c13840ef143b0e1c5812959b337c4746a6d1bd806066fe32",
-      "stateRevision": 5
+      "cards": 34,
+      "sourceHash": "90ca38fc6310d5c2b536c1d77886f40bf875f74201e91ca380563a92ee99ff94",
+      "stateRevision": 7
     },
     {
       "batch": "direction-1/08",
@@ -9176,21 +8402,21 @@
     },
     {
       "batch": "direction-1/10",
-      "cards": 32,
-      "sourceHash": "fa85d195d4097ad14b4f68aaa146068f2699eaa03b0fdfd06c30d11145b721be",
-      "stateRevision": 5
+      "cards": 33,
+      "sourceHash": "d5f7cd718815833c653dc9be5aae0bb5d8d747ce188eb64a8efa1599253af5bf",
+      "stateRevision": 7
     },
     {
       "batch": "direction-1/11",
-      "cards": 33,
-      "sourceHash": "b204abd70613fdb8777892ec0a6e43ff1e9a09c41c61dbb631cd85d005f26d86",
-      "stateRevision": 5
+      "cards": 34,
+      "sourceHash": "a4a3cad4087f8c9f680cb15f01f651ae0a382996a437b18a50d84e94c17f9bca",
+      "stateRevision": 7
     },
     {
       "batch": "direction-1/12",
       "cards": 25,
       "sourceHash": "08e6a781510c94690cda8eda8a523f5dd7a5d4a1b63724a64b9e545b075bca65",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "direction-1/13",
@@ -9218,9 +8444,9 @@
     },
     {
       "batch": "direction-1/17",
-      "cards": 27,
-      "sourceHash": "34d2b1f5bd23e398d356db4afab1f6bf24e7c8b7ea97e78a9102b0a92a178a1f",
-      "stateRevision": 7
+      "cards": 29,
+      "sourceHash": "c749a7376c077889f02db86eb1d19ddbdef928c82660e20cb237252aab4661c0",
+      "stateRevision": 9
     },
     {
       "batch": "direction-1/18",
@@ -9254,21 +8480,21 @@
     },
     {
       "batch": "direction-2/04",
-      "cards": 33,
-      "sourceHash": "e08212c02a606810f8f414259b613fd8e7d88f4cdb21c62051a014dc9c5246eb",
-      "stateRevision": 5
+      "cards": 35,
+      "sourceHash": "67ca4a191a05ecf13d43fca5390cfb9d9621aae790cf5083945c45e610ab8578",
+      "stateRevision": 7
     },
     {
       "batch": "direction-2/05",
-      "cards": 32,
-      "sourceHash": "2d5b437b4fdc45d4b312014df8219ff88914fc367782c3fa361196787a72410d",
-      "stateRevision": 5
+      "cards": 33,
+      "sourceHash": "e54cd7c8d7d75792ad520350917f3f315631a9f674b85fdcc84e31360def2bd2",
+      "stateRevision": 7
     },
     {
       "batch": "direction-2/06",
       "cards": 29,
       "sourceHash": "97c0c21bcf025054b71967df5c772bd8585f7367485bde21ae28c32d8e45dc52",
-      "stateRevision": 7
+      "stateRevision": 9
     },
     {
       "batch": "direction-2/07",
@@ -9284,9 +8510,9 @@
     },
     {
       "batch": "direction-2/09",
-      "cards": 35,
-      "sourceHash": "37fc965d2f77195d6b27310b2bfb0897c1158cc7c91c22a0113a6670169ac049",
-      "stateRevision": 5
+      "cards": 36,
+      "sourceHash": "fa9fb8f1721fbaad26e531acc7aa9c6f2ca542c5e82acb5b91f0db625e2efbe7",
+      "stateRevision": 7
     },
     {
       "batch": "direction-2/10",
@@ -9340,7 +8566,7 @@
       "batch": "direction-2/18",
       "cards": 9,
       "sourceHash": "017fd4faa3b01c7ea78d912dce51c6d4abbfce1a8a0035122f0775e656f5758b",
-      "stateRevision": 5
+      "stateRevision": 7
     },
     {
       "batch": "sugiru-1/00",
@@ -9392,9 +8618,9 @@
     },
     {
       "batch": "sugiru-1/08",
-      "cards": 36,
-      "sourceHash": "946d5a7f78e37c5d9b898ffcbc97e95839118790b909f4933e09507c63feca22",
-      "stateRevision": 5
+      "cards": 40,
+      "sourceHash": "8e60afa9539d29b3497f8e2685c5c78fece9fc9163c71e2ca1f2366a00307ad7",
+      "stateRevision": 7
     },
     {
       "batch": "sugiru-1/09",
