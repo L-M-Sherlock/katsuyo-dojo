@@ -2,6 +2,8 @@
   "schemaVersion": 1,
   "stage": "actions",
   "complete": false,
+  "semanticPolicy": "Yokubi-aligned open-context review: teshimauNegative and teshimauNegativePast may express unfinished action, avoided completion, regret, accident, or another irreversible result when the full sentence supports it; they are not hard-limited to one Chinese gloss.",
+  "pendingNeedsReReview": true,
   "originalCards": 9598,
   "originalCardsSha256": "5f7f9dcef365905069a2d258a7581b5e3974044caf13bda7b74d959e40fdcfcf",
   "originalRequirementSha256": "ed857e5f4158fb5371fe04c8aee870396480d5b2eb59bd40b96206521dce14e9",
