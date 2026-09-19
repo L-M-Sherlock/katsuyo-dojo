@@ -10,9 +10,9 @@
   "requiredPairs": 7004,
   "originalActionPairs": 159,
   "assignedPairs": 6845,
-  "approvedCards": 6809,
-  "approvedCardsSha256": "46bd5af55d43db6c8d4afba34abc2783ddb070ed89697bd8b34acfd995f872bd",
-  "pendingPairs": 36,
+  "approvedCards": 6811,
+  "approvedCardsSha256": "f7cec6103682ffec8b2a2ceada5e3c670fbd81a1ff58da9bfb9554d971296b12",
+  "pendingPairs": 34,
   "publishedFile": "actions-generated.mjs",
   "approvedIds": [
     "usage:teiru:verb:書く:かく",
@@ -4649,6 +4649,8 @@
     "usage:teokuPast:verb:動く:うごく",
     "usage:teokuNegative:verb:動く:うごく",
     "usage:teokuNegativePast:verb:動く:うごく",
+    "usage:teoku:verb:間に合う:まにあう",
+    "usage:toku:verb:間に合う:まにあう",
     "usage:teoku:verb:描く:えがく",
     "usage:toku:verb:描く:えがく",
     "usage:teokuPast:verb:描く:えがく",
@@ -6837,26 +6839,6 @@
       "sourceHash": "02fbe2b96d6f08008153bc629e9fd3d971fe94aa939fb930d3794161b6bfbe2f"
     },
     {
-      "id": "usage:teoku:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/teoku",
-      "batch": "teokuToku-1/06",
-      "sentence": "午後の準備もあるので、午前の集合時間には間に合っておく。",
-      "scene": "下午还有准备工作，上午得先赶上集合。",
-      "translation": "下午还有准备工作，上午要先赶上集合时间。",
-      "reason": "赶上上午集合与下午准备有关，但「間に合っておく」仍把一次赶上时间的达成结果写成可主动预置的动作；现句没有自然的结果保留读法。本轮尝试以换乘、集合前置条件理解，仍不足批准；不是因自动词身份或教材未收录拒收。",
-      "sourceHash": "0b95308f42045c80bb97ef228b7a41a29c4261d0ba001acd38ac194334503f41"
-    },
-    {
-      "id": "usage:toku:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/toku",
-      "batch": "teokuToku-1/06",
-      "sentence": "車内で相談するから、この電車には間に合っとくね。",
-      "scene": "约好在车上讨论，我先赶上这班车。",
-      "translation": "要在车里商量事情，我先赶上这班电车。",
-      "reason": "「車内で相談する」说明乘车目的，却不能单独使「この電車には間に合っとくね」成为自然的事先安排说法；口语缩约不消除本体搭配疑问，不能偷换成先乘车或早点到站。",
-      "sourceHash": "742a0a06750c9f2efb41dde06b9a58544a5a177211b66d0d9b8b9c9d6f97a12b"
-    },
-    {
       "id": "usage:teokuPast:verb:間に合う:まにあう",
       "pair": "verb:間に合う:まにあう/teokuPast",
       "batch": "teokuToku-1/06",
@@ -8012,9 +7994,9 @@
     },
     {
       "batch": "teokuToku-1/06",
-      "cards": 35,
-      "sourceHash": "71fc5046d17dd5dc200ad7a3a5bf53a9a50d0dcb6d2aa66a8126856eb75ea087",
-      "stateRevision": 7
+      "cards": 37,
+      "sourceHash": "fd17523ec164a9c05c8627ea912e5c65e6400098925233e0c728defddb66754b",
+      "stateRevision": 9
     },
     {
       "batch": "teokuToku-1/07",
