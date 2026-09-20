@@ -74,10 +74,10 @@ test('every eligible form and word class retains approved and fully specified us
 });
 
 test('reviewed stages retain exact eligible coverage and preserve the original representative cards', () => {
-  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice','linking','intentions']}),[]);
+  assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice','linking','intentions','actions']}),[]);
   const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
   const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice'),...usageCardStageRequirements('linking'),
-    ...usageCardStageRequirements('intentions'),...actionWordCards.filter(c=>actionIds.has(c.id)).map(c=>`${c.senseId}/${c.form}`)]);
+    ...usageCardStageRequirements('intentions'),...usageCardStageRequirements('actions')]);
   const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   assert.deepEqual(actual,expected);
   assert.equal(USAGE_CARDS.length,expected.size);
@@ -87,7 +87,7 @@ test('reviewed stages retain exact eligible coverage and preserve the original r
 test('published action cards match the approved review ledger and leave the historical baseline intact', () => {
   const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
   const sourceHash = file => createHash('sha256').update(readFileSync(new URL(file, import.meta.url))).digest('hex');
-  assert.equal(sourceHash('../docs/usage-card-actions-review.json'), 'cab33346b9d6e409d426fec5c7a5649127dbe889ee9b95adf2d37a654d1554ba');
+  assert.equal(sourceHash('../docs/usage-card-actions-review.json'), '0c7b751498b6c1370ebf960f8b0d217659af39d88f242ea4b16d9ddb6bbf000a');
   assert.equal(sourceHash('../app/lib/usage-cards/actions-generated.mjs'), '8174ee301f3486bae4d5720b14eaab4e9c2cbc532401fda34169d034bf22a93e');
   assert.equal(actionWordCards.length, actionReview.approvedCards);
   assert.deepEqual(new Set(actionWordCards.map(card => card.id)), actionIds);
@@ -102,12 +102,12 @@ test('published action cards match the approved review ledger and leave the hist
   const required = new Set(usageCardStageRequirements('actions'));
   const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
   assert.equal(required.size, actionReview.effectiveRequiredPairs);
-  assert.equal(pendingPairs.size, 9);
+  assert.equal(pendingPairs.size, 0);
   assert.equal(pendingPairs.size, actionReview.pendingPairs);
-  assert.equal(actionReview.deferredPairs, 22);
-  assert.equal(actionReview.effectiveRequiredPairs, 6982);
+  assert.equal(actionReview.deferredPairs, 31);
+  assert.equal(actionReview.effectiveRequiredPairs, 6973);
   assert.deepEqual(new Set(actionReview.deferred.map(entry => entry.pair)), DEFERRED_ACTION_PAIRS);
-  assert.equal(actionReview.complete, false);
+  assert.equal(actionReview.complete, true);
   const deferred = new Set(actionReview.deferred.map(entry => entry.pair));
   for (const pair of pendingPairs) assert.ok(!covered.has(pair), pair);
   for (const pair of approvedPairs) assert.ok(required.has(pair), pair);
@@ -118,8 +118,8 @@ test('published action cards match the approved review ledger and leave the hist
   assert.ok(actionWordCards.every(card => card.review === 'approved'));
 });
 
-test('repeatedly failed action pairs are deferred at exact-pair scope but remain recognizable', () => {
-  assert.equal(DEFERRED_ACTION_PAIRS.size, 22);
+test('reviewed and user-requested action deferrals remain recognizable at exact-pair scope', () => {
+  assert.equal(DEFERRED_ACTION_PAIRS.size, 31);
   for (const pair of DEFERRED_ACTION_PAIRS) {
     const [senseId, form] = pair.split('/');
     const item = usageCardItem(senseId);
@@ -134,7 +134,7 @@ test('repeatedly failed action pairs are deferred at exact-pair scope but remain
     assert.equal(match.usage.reasonCode,'action-pair-deferred');
     const record=actionReview.deferred.find(row=>row.pair===pair);
     assert.equal(record.reason,usage.reason);
-    assert.ok(record.attempts.length>=2);
+    assert.ok(record.attempts.length>=(record.deferralBasis==='user-request'?1:2));
     assert.equal(resolveUsageCard(record.sourceCard),null);
     assert.equal(eligibleVerbForm(item,'past'),true);
   }

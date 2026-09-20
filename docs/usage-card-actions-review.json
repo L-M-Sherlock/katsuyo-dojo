@@ -1,18 +1,18 @@
 {
   "schemaVersion": 2,
   "stage": "actions",
-  "complete": false,
-  "semanticPolicy": "The curriculum can extend beyond reference textbooks and earlier glosses. Review natural full-sentence uses and update teaching explanations together; preserve exact lexical senses, conjugation targets, scope of negation, and register. Repeated failed exact pairs may be deferred from routine practice while retaining form recognition; deferral is pair-scoped and reversible.",
+  "complete": true,
+  "semanticPolicy": "The curriculum can extend beyond reference textbooks and earlier glosses. Review natural full-sentence uses and update teaching explanations together; preserve exact lexical senses, conjugation targets, scope of negation, and register. Repeated failed exact pairs may be deferred from routine practice while retaining form recognition; deferral is pair-scoped and reversible. Explicit user-requested deferrals retain unresolved evidence without treating deferral as a linguistic rejection.",
   "pendingNeedsReReview": false,
   "originalCards": 9598,
   "originalCardsSha256": "5f7f9dcef365905069a2d258a7581b5e3974044caf13bda7b74d959e40fdcfcf",
   "originalRequirementSha256": "ed857e5f4158fb5371fe04c8aee870396480d5b2eb59bd40b96206521dce14e9",
-  "requiredPairs": 6982,
+  "requiredPairs": 6973,
   "originalActionPairs": 159,
   "assignedPairs": 6845,
   "approvedCards": 6814,
   "approvedCardsSha256": "58f0cc079ec5e971355939fe77a6ed3cc224a8a8f812759bc19e043d3c12e727",
-  "pendingPairs": 9,
+  "pendingPairs": 0,
   "publishedFile": "actions-generated.mjs",
   "approvedIds": [
     "usage:teiru:verb:書く:かく",
@@ -6830,98 +6830,7 @@
     "usage:sugiruNegative:verb:食べる:たべる",
     "usage:sugiruNegative:verb:飲む:のむ"
   ],
-  "unresolved": [
-    {
-      "id": "usage:teikuNegative:verb:喜ぶ:よろこぶ",
-      "pair": "verb:喜ぶ:よろこぶ/teikuNegative",
-      "batch": "direction-1/10",
-      "sentence": "この店の客は、帰る時も喜んでいかない。",
-      "scene": "你站在柜台旁，观察顾客离开时仍闷闷不乐。",
-      "translation": "这家店的顾客离开时也不是高高兴兴地走。",
-      "reason": "喜んでいく可以描写高兴地离去，不能整形禁用；但本句帰る時も喜んでいかない对否定的包装较生硬，容易读作不欣然前往，而译文断定离开时不高兴。仅靠柜台背景尚不足以把这个否定搭配判作可靠教材句。应继续找真实的待客送客用例或重拟完整语境。",
-      "sourceHash": "76e135e5bce4433b5cd2ef6b2fe01d45cdeb79f750e2a00cd5c17c1c594963a2"
-    },
-    {
-      "id": "usage:teiku:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/teiku",
-      "batch": "direction-2/06",
-      "sentence": "工程を改善すれば、今後の注文も納期に間に合っていく。",
-      "scene": "排产改善后，预测后续订单会逐个按期完成。",
-      "translation": "如果改善工序，今后的订单也会陆续赶上交货期。",
-      "reason": "今後の注文／納期允许反复按期交货，但「間に合っていく」不能单凭订单复数证明发展义；订单逐批完成与每批赶得上各自期限尚需自然搭配证据。试过分批出货仍存在该问题，保持赶得上词义且不批准为够用。",
-      "sourceHash": "f127fd4db02b9f0dc071652a1e532ca28a4561a731ecf25ae11ffa941ac09085"
-    },
-    {
-      "id": "usage:teku:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/teku",
-      "batch": "direction-2/06",
-      "sentence": "この分担なら、次の原稿も締め切りに間に合ってくよ。",
-      "scene": "与同事看新排班，估计后续交稿逐渐能准时。",
-      "translation": "照这样分工，接下来的稿件也会逐渐赶上截止时间。",
-      "reason": "「次の原稿も締め切りに間に合ってくよ」的次の原稿偏单次终点；口语よ不能修复「逐渐赶上」与一次稿件是否赶得上的差异。考虑多篇稿件后仍缺明确自然时间发展用例，未因缩约或旧说明拒收。",
-      "sourceHash": "c1f1d568f346013d0be2a613b30b2f448bf8bed3a5be326f28641cd1fc84c786"
-    },
-    {
-      "id": "usage:teikuPast:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/teikuPast",
-      "batch": "direction-2/06",
-      "sentence": "人員を増やすと、残りの注文も納期に間に合っていった。",
-      "scene": "回顾交货危机，追加人手后订单逐项按期完成。",
-      "translation": "增加人手之后，剩余订单也陆续赶上了交货期。",
-      "reason": "人員を増やすと建立过去变化原因，残りの注文呈复数；「納期に間に合っていった」是否自然表达一批批及时完成仍未明确，不能把陆续翻译当证据。尝试逐批时间轴但本词仍是赶得上，不改为完成。",
-      "sourceHash": "7fff7e5fd87a19c8b6806b53579ff71b16d9226ec93cf33d74c26f95a3b69ce6"
-    },
-    {
-      "id": "usage:tekuruNegative:verb:間に合う:まにあう",
-      "pair": "verb:間に合う:まにあう/tekuruNegative",
-      "batch": "direction-2/06",
-      "sentence": "分担を変えても、毎週の提出期限には間に合ってこない。",
-      "scene": "调整分工已有一阵，周周提交仍未渐渐赶上。",
-      "translation": "即使改变分工，也还是没有逐渐赶上每周的提交期限。",
-      "reason": "改变分工后反复未赶上可理解，然而「提出期限には間に合ってこない」的趋向结果显现读法尚未确认；不把原句偷改成間に合うようにならない来完成固定目标。需可靠具体语境再裁定。",
-      "sourceHash": "b8f996610af5401428dde638a3e630f5842e135a585c23c09e5260bf75489986"
-    },
-    {
-      "id": "usage:teiku:verb:来る:くる",
-      "pair": "verb:来る:くる/teiku",
-      "batch": "direction-2/18",
-      "sentence": "これからも毎年、卒業生がこの学校に来ていく。",
-      "scene": "学校打算继续办聚会，校友以后还会年年来。",
-      "translation": "今后毕业生也会每年来这所学校。",
-      "reason": "每年毕业生来学校可表达重复到访，但「この学校に来ていく」的时间延续仍不如通っていく／来続ける自然，不能只凭これから自动批准。尝试来此后离开的空间读法，来ていく自身仍欠清楚常规搭配，保留待核实。",
-      "sourceHash": "4cd23f51da2a0fccad054af46943ec523abcced35078eaeff6fef52942008b33"
-    },
-    {
-      "id": "usage:teku:verb:来る:くる",
-      "pair": "verb:来る:くる/teku",
-      "batch": "direction-2/18",
-      "sentence": "これからも、休日にはここへ来てくよ。",
-      "scene": "在朋友家谈今后的安排，说以后周末还会来。",
-      "translation": "以后休息日还会来这里。",
-      "reason": "朋友家是来る的自然终点，休日反复到访也明确；「ここへ来てくよ」作为来ていく缩约容易与来てくる／着ていく混淆，尚未核实本句的持续到访读法。未因口语缩约本身拒收，也未以他动词替换。",
-      "sourceHash": "1cde3cd64330402abafca7880e3c2e59cbffc62c00348a17d47d908d23fee003"
-    },
-    {
-      "id": "usage:teikuNegative:verb:来る:くる",
-      "pair": "verb:来る:くる/teikuNegative",
-      "batch": "direction-2/18",
-      "sentence": "今後は会をオンラインにするので、卒業生は学校へ来ていかない。",
-      "scene": "今后聚会改在线举办，校友不再持续到学校来。",
-      "translation": "今后聚会改为在线举办，所以毕业生不再到学校来。",
-      "reason": "线上聚会可自然推出不再来学校，却不足以支持「来ていかない」的持续否定；不能把来なくなる的意思直接赋给本目标。试过来访后离去的路线仍未明晰视点，保留当前卡不批准。",
-      "sourceHash": "bf7d7d181b6f3ec88ab93d057723a2e91a13d847831678696ef17ee56e87d6f1"
-    },
-    {
-      "id": "usage:teikuNegativePast:verb:来る:くる",
-      "pair": "verb:来る:くる/teikuNegativePast",
-      "batch": "direction-2/18",
-      "sentence": "学校が移転してから、卒業生は旧校舎へ来ていかなかった。",
-      "scene": "搬校后聚会改到新址，校友没有继续来旧校舍。",
-      "translation": "学校迁走后，毕业生没有继续来旧校舍。",
-      "reason": "学校迁走后的旧校舍是清楚地点和过去起点，但「旧校舎へ来ていかなかった」仍非没有继续来的可靠普通表达。考虑到访后离开与随年份停止到访，均未得到自然的本目标完整句，暂缓本配对。",
-      "sourceHash": "f27e82c778760dbad6d927d5085e961bf49cba4a612ffdde77bbb945e295f380"
-    }
-  ],
+  "unresolved": [],
   "batches": [
     {
       "batch": "aspect-1/00",
@@ -9430,10 +9339,488 @@
         }
       ],
       "restoreCondition": "取得保持固定词义和完整目标形式、能消除上述实质问题的自然用例；主代理逐句复核并同步课程说明、卡片及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegative:verb:喜ぶ:よろこぶ",
+      "pair": "verb:喜ぶ:よろこぶ/teikuNegative",
+      "batch": "direction-1/10",
+      "sentence": "この店の客は、帰る時も喜んでいかない。",
+      "scene": "你站在柜台旁，观察顾客离开时仍闷闷不乐。",
+      "translation": "这家店的顾客离开时也不是高高兴兴地走。",
+      "reason": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
+      "sourceHash": "76e135e5bce4433b5cd2ef6b2fe01d45cdeb79f750e2a00cd5c17c1c594963a2",
+      "senseId": "verb:喜ぶ:よろこぶ",
+      "form": "teikuNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 6,
+      "reviewedAt": "2026-09-20",
+      "deferralBasis": "user-request",
+      "authorization": "9对开放未决也暂缓出题",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 5
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegative:verb:喜ぶ:よろこぶ",
+        "senseId": "verb:喜ぶ:よろこぶ",
+        "meaning": "高兴",
+        "form": "teikuNegative",
+        "scene": "你站在柜台旁，观察顾客离开时仍闷闷不乐。",
+        "before": [
+          {
+            "text": "この店の客は、帰る時も",
+            "reading": "このみせのきゃくは、かえるときも"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "这家店的顾客离开时也不是高高兴兴地走。",
+        "review": "draft"
+      },
+      "priorReviewReason": "喜んでいく可以描写高兴地离去，不能整形禁用；但本句帰る時も喜んでいかない对否定的包装较生硬，容易读作不欣然前往，而译文断定离开时不高兴。仅靠柜台背景尚不足以把这个否定搭配判作可靠教材句。应继续找真实的待客送客用例或重拟完整语境。",
+      "attempts": [
+        {
+          "sentence": "この店の客は、帰る時も喜んでいかない。",
+          "issue": "喜んでいく可以描写高兴地离去，不能整形禁用；但本句帰る時も喜んでいかない对否定的包装较生硬，容易读作不欣然前往，而译文断定离开时不高兴。仅靠柜台背景尚不足以把这个否定搭配判作可靠教材句。应继续找真实的待客送客用例或重拟完整语境。",
+          "source": "sealed batch direction-1/10"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
+    },
+    {
+      "id": "usage:teiku:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/teiku",
+      "batch": "direction-2/06",
+      "sentence": "工程を改善すれば、今後の注文も納期に間に合っていく。",
+      "scene": "排产改善后，预测后续订单会逐个按期完成。",
+      "translation": "如果改善工序，今后的订单也会陆续赶上交货期。",
+      "reason": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
+      "sourceHash": "f127fd4db02b9f0dc071652a1e532ca28a4561a731ecf25ae11ffa941ac09085",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "teiku",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 6,
+      "reviewedAt": "2026-09-20",
+      "deferralBasis": "user-request",
+      "authorization": "9对开放未决也暂缓出题",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 5
+      },
+      "sourceCard": {
+        "id": "usage:teiku:verb:間に合う:まにあう",
+        "senseId": "verb:間に合う:まにあう",
+        "meaning": "赶得上",
+        "form": "teiku",
+        "scene": "排产改善后，预测后续订单会逐个按期完成。",
+        "before": [
+          {
+            "text": "工程を改善すれば、今後の注文も納期に",
+            "reading": "こうていをかいぜんすれば、こんごのちゅうもんものうきに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "如果改善工序，今后的订单也会陆续赶上交货期。",
+        "review": "draft"
+      },
+      "priorReviewReason": "今後の注文／納期允许反复按期交货，但「間に合っていく」不能单凭订单复数证明发展义；订单逐批完成与每批赶得上各自期限尚需自然搭配证据。试过分批出货仍存在该问题，保持赶得上词义且不批准为够用。",
+      "attempts": [
+        {
+          "sentence": "工程を改善すれば、今後の注文も納期に間に合っていく。",
+          "issue": "今後の注文／納期允许反复按期交货，但「間に合っていく」不能单凭订单复数证明发展义；订单逐批完成与每批赶得上各自期限尚需自然搭配证据。试过分批出货仍存在该问题，保持赶得上词义且不批准为够用。",
+          "source": "sealed batch direction-2/06"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
+    },
+    {
+      "id": "usage:teku:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/teku",
+      "batch": "direction-2/06",
+      "sentence": "この分担なら、次の原稿も締め切りに間に合ってくよ。",
+      "scene": "与同事看新排班，估计后续交稿逐渐能准时。",
+      "translation": "照这样分工，接下来的稿件也会逐渐赶上截止时间。",
+      "reason": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
+      "sourceHash": "c1f1d568f346013d0be2a613b30b2f448bf8bed3a5be326f28641cd1fc84c786",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "teku",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 6,
+      "reviewedAt": "2026-09-20",
+      "deferralBasis": "user-request",
+      "authorization": "9对开放未决也暂缓出题",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 5
+      },
+      "sourceCard": {
+        "id": "usage:teku:verb:間に合う:まにあう",
+        "senseId": "verb:間に合う:まにあう",
+        "meaning": "赶得上",
+        "form": "teku",
+        "scene": "与同事看新排班，估计后续交稿逐渐能准时。",
+        "before": [
+          {
+            "text": "この分担なら、次の原稿も締め切りに",
+            "reading": "このぶんたんなら、つぎのげんこうもしめきりに"
+          }
+        ],
+        "after": [
+          {
+            "text": "よ。"
+          }
+        ],
+        "translation": "照这样分工，接下来的稿件也会逐渐赶上截止时间。",
+        "review": "draft"
+      },
+      "priorReviewReason": "「次の原稿も締め切りに間に合ってくよ」的次の原稿偏单次终点；口语よ不能修复「逐渐赶上」与一次稿件是否赶得上的差异。考虑多篇稿件后仍缺明确自然时间发展用例，未因缩约或旧说明拒收。",
+      "attempts": [
+        {
+          "sentence": "この分担なら、次の原稿も締め切りに間に合ってくよ。",
+          "issue": "「次の原稿も締め切りに間に合ってくよ」的次の原稿偏单次终点；口语よ不能修复「逐渐赶上」与一次稿件是否赶得上的差异。考虑多篇稿件后仍缺明确自然时间发展用例，未因缩约或旧说明拒收。",
+          "source": "sealed batch direction-2/06"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuPast:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/teikuPast",
+      "batch": "direction-2/06",
+      "sentence": "人員を増やすと、残りの注文も納期に間に合っていった。",
+      "scene": "回顾交货危机，追加人手后订单逐项按期完成。",
+      "translation": "增加人手之后，剩余订单也陆续赶上了交货期。",
+      "reason": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
+      "sourceHash": "7fff7e5fd87a19c8b6806b53579ff71b16d9226ec93cf33d74c26f95a3b69ce6",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "teikuPast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 6,
+      "reviewedAt": "2026-09-20",
+      "deferralBasis": "user-request",
+      "authorization": "9对开放未决也暂缓出题",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 5
+      },
+      "sourceCard": {
+        "id": "usage:teikuPast:verb:間に合う:まにあう",
+        "senseId": "verb:間に合う:まにあう",
+        "meaning": "赶得上",
+        "form": "teikuPast",
+        "scene": "回顾交货危机，追加人手后订单逐项按期完成。",
+        "before": [
+          {
+            "text": "人員を増やすと、残りの注文も納期に",
+            "reading": "じんいんをふやすと、のこりのちゅうもんものうきに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "增加人手之后，剩余订单也陆续赶上了交货期。",
+        "review": "draft"
+      },
+      "priorReviewReason": "人員を増やすと建立过去变化原因，残りの注文呈复数；「納期に間に合っていった」是否自然表达一批批及时完成仍未明确，不能把陆续翻译当证据。尝试逐批时间轴但本词仍是赶得上，不改为完成。",
+      "attempts": [
+        {
+          "sentence": "人員を増やすと、残りの注文も納期に間に合っていった。",
+          "issue": "人員を増やすと建立过去变化原因，残りの注文呈复数；「納期に間に合っていった」是否自然表达一批批及时完成仍未明确，不能把陆续翻译当证据。尝试逐批时间轴但本词仍是赶得上，不改为完成。",
+          "source": "sealed batch direction-2/06"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
+    },
+    {
+      "id": "usage:tekuruNegative:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/tekuruNegative",
+      "batch": "direction-2/06",
+      "sentence": "分担を変えても、毎週の提出期限には間に合ってこない。",
+      "scene": "调整分工已有一阵，周周提交仍未渐渐赶上。",
+      "translation": "即使改变分工，也还是没有逐渐赶上每周的提交期限。",
+      "reason": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
+      "sourceHash": "b8f996610af5401428dde638a3e630f5842e135a585c23c09e5260bf75489986",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "tekuruNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 6,
+      "reviewedAt": "2026-09-20",
+      "deferralBasis": "user-request",
+      "authorization": "9对开放未决也暂缓出题",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 5
+      },
+      "sourceCard": {
+        "id": "usage:tekuruNegative:verb:間に合う:まにあう",
+        "senseId": "verb:間に合う:まにあう",
+        "meaning": "赶得上",
+        "form": "tekuruNegative",
+        "scene": "调整分工已有一阵，周周提交仍未渐渐赶上。",
+        "before": [
+          {
+            "text": "分担を変えても、毎週の提出期限には",
+            "reading": "ぶんたんをかえても、まいしゅうのていしゅつきげんには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "即使改变分工，也还是没有逐渐赶上每周的提交期限。",
+        "review": "draft"
+      },
+      "priorReviewReason": "改变分工后反复未赶上可理解，然而「提出期限には間に合ってこない」的趋向结果显现读法尚未确认；不把原句偷改成間に合うようにならない来完成固定目标。需可靠具体语境再裁定。",
+      "attempts": [
+        {
+          "sentence": "分担を変えても、毎週の提出期限には間に合ってこない。",
+          "issue": "改变分工后反复未赶上可理解，然而「提出期限には間に合ってこない」的趋向结果显现读法尚未确认；不把原句偷改成間に合うようにならない来完成固定目标。需可靠具体语境再裁定。",
+          "source": "sealed batch direction-2/06"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
+    },
+    {
+      "id": "usage:teiku:verb:来る:くる",
+      "pair": "verb:来る:くる/teiku",
+      "batch": "direction-2/18",
+      "sentence": "これからも毎年、卒業生がこの学校に来ていく。",
+      "scene": "学校打算继续办聚会，校友以后还会年年来。",
+      "translation": "今后毕业生也会每年来这所学校。",
+      "reason": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
+      "sourceHash": "4cd23f51da2a0fccad054af46943ec523abcced35078eaeff6fef52942008b33",
+      "senseId": "verb:来る:くる",
+      "form": "teiku",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 6,
+      "reviewedAt": "2026-09-20",
+      "deferralBasis": "user-request",
+      "authorization": "9对开放未决也暂缓出题",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 5
+      },
+      "sourceCard": {
+        "id": "usage:teiku:verb:来る:くる",
+        "senseId": "verb:来る:くる",
+        "meaning": "来",
+        "form": "teiku",
+        "scene": "学校打算继续办聚会，校友以后还会年年来。",
+        "before": [
+          {
+            "text": "これからも毎年、卒業生がこの学校に",
+            "reading": "これからもまいとし、そつぎょうせいがこのがっこうに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "今后毕业生也会每年来这所学校。",
+        "review": "draft"
+      },
+      "priorReviewReason": "每年毕业生来学校可表达重复到访，但「この学校に来ていく」的时间延续仍不如通っていく／来続ける自然，不能只凭これから自动批准。尝试来此后离开的空间读法，来ていく自身仍欠清楚常规搭配，保留待核实。",
+      "attempts": [
+        {
+          "sentence": "これからも毎年、卒業生がこの学校に来ていく。",
+          "issue": "每年毕业生来学校可表达重复到访，但「この学校に来ていく」的时间延续仍不如通っていく／来続ける自然，不能只凭これから自动批准。尝试来此后离开的空间读法，来ていく自身仍欠清楚常规搭配，保留待核实。",
+          "source": "sealed batch direction-2/18"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
+    },
+    {
+      "id": "usage:teku:verb:来る:くる",
+      "pair": "verb:来る:くる/teku",
+      "batch": "direction-2/18",
+      "sentence": "これからも、休日にはここへ来てくよ。",
+      "scene": "在朋友家谈今后的安排，说以后周末还会来。",
+      "translation": "以后休息日还会来这里。",
+      "reason": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
+      "sourceHash": "1cde3cd64330402abafca7880e3c2e59cbffc62c00348a17d47d908d23fee003",
+      "senseId": "verb:来る:くる",
+      "form": "teku",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 6,
+      "reviewedAt": "2026-09-20",
+      "deferralBasis": "user-request",
+      "authorization": "9对开放未决也暂缓出题",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 5
+      },
+      "sourceCard": {
+        "id": "usage:teku:verb:来る:くる",
+        "senseId": "verb:来る:くる",
+        "meaning": "来",
+        "form": "teku",
+        "scene": "在朋友家谈今后的安排，说以后周末还会来。",
+        "before": [
+          {
+            "text": "これからも、休日にはここへ",
+            "reading": "これからも、きゅうじつにはここへ"
+          }
+        ],
+        "after": [
+          {
+            "text": "よ。"
+          }
+        ],
+        "translation": "以后休息日还会来这里。",
+        "review": "draft"
+      },
+      "priorReviewReason": "朋友家是来る的自然终点，休日反复到访也明确；「ここへ来てくよ」作为来ていく缩约容易与来てくる／着ていく混淆，尚未核实本句的持续到访读法。未因口语缩约本身拒收，也未以他动词替换。",
+      "attempts": [
+        {
+          "sentence": "これからも、休日にはここへ来てくよ。",
+          "issue": "朋友家是来る的自然终点，休日反复到访也明确；「ここへ来てくよ」作为来ていく缩约容易与来てくる／着ていく混淆，尚未核实本句的持续到访读法。未因口语缩约本身拒收，也未以他动词替换。",
+          "source": "sealed batch direction-2/18"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegative:verb:来る:くる",
+      "pair": "verb:来る:くる/teikuNegative",
+      "batch": "direction-2/18",
+      "sentence": "今後は会をオンラインにするので、卒業生は学校へ来ていかない。",
+      "scene": "今后聚会改在线举办，校友不再持续到学校来。",
+      "translation": "今后聚会改为在线举办，所以毕业生不再到学校来。",
+      "reason": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
+      "sourceHash": "bf7d7d181b6f3ec88ab93d057723a2e91a13d847831678696ef17ee56e87d6f1",
+      "senseId": "verb:来る:くる",
+      "form": "teikuNegative",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 6,
+      "reviewedAt": "2026-09-20",
+      "deferralBasis": "user-request",
+      "authorization": "9对开放未决也暂缓出题",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 5
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegative:verb:来る:くる",
+        "senseId": "verb:来る:くる",
+        "meaning": "来",
+        "form": "teikuNegative",
+        "scene": "今后聚会改在线举办，校友不再持续到学校来。",
+        "before": [
+          {
+            "text": "今後は会をオンラインにするので、卒業生は学校へ",
+            "reading": "こんごはかいをオンラインにするので、そつぎょうせいはがっこうへ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "今后聚会改为在线举办，所以毕业生不再到学校来。",
+        "review": "draft"
+      },
+      "priorReviewReason": "线上聚会可自然推出不再来学校，却不足以支持「来ていかない」的持续否定；不能把来なくなる的意思直接赋给本目标。试过来访后离去的路线仍未明晰视点，保留当前卡不批准。",
+      "attempts": [
+        {
+          "sentence": "今後は会をオンラインにするので、卒業生は学校へ来ていかない。",
+          "issue": "线上聚会可自然推出不再来学校，却不足以支持「来ていかない」的持续否定；不能把来なくなる的意思直接赋给本目标。试过来访后离去的路线仍未明晰视点，保留当前卡不批准。",
+          "source": "sealed batch direction-2/18"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:来る:くる",
+      "pair": "verb:来る:くる/teikuNegativePast",
+      "batch": "direction-2/18",
+      "sentence": "学校が移転してから、卒業生は旧校舎へ来ていかなかった。",
+      "scene": "搬校后聚会改到新址，校友没有继续来旧校舍。",
+      "translation": "学校迁走后，毕业生没有继续来旧校舍。",
+      "reason": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
+      "sourceHash": "f27e82c778760dbad6d927d5085e961bf49cba4a612ffdde77bbb945e295f380",
+      "senseId": "verb:来る:くる",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "reviewer": "/root",
+      "reviewVersion": 6,
+      "reviewedAt": "2026-09-20",
+      "deferralBasis": "user-request",
+      "authorization": "9对开放未决也暂缓出题",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 5
+      },
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:来る:くる",
+        "senseId": "verb:来る:くる",
+        "meaning": "来",
+        "form": "teikuNegativePast",
+        "scene": "搬校后聚会改到新址，校友没有继续来旧校舍。",
+        "before": [
+          {
+            "text": "学校が移転してから、卒業生は旧校舎へ",
+            "reading": "がっこうがいてんしてから、そつぎょうせいはきゅうこうしゃへ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "学校迁走后，毕业生没有继续来旧校舍。",
+        "review": "draft"
+      },
+      "priorReviewReason": "学校迁走后的旧校舍是清楚地点和过去起点，但「旧校舎へ来ていかなかった」仍非没有继续来的可靠普通表达。考虑到访后离开与随年份停止到访，均未得到自然的本目标完整句，暂缓本配对。",
+      "attempts": [
+        {
+          "sentence": "学校が移転してから、卒業生は旧校舎へ来ていかなかった。",
+          "issue": "学校迁走后的旧校舍是清楚地点和过去起点，但「旧校舎へ来ていかなかった」仍非没有继续来的可靠普通表达。考虑到访后离开与随年份停止到访，均未得到自然的本目标完整句，暂缓本配对。",
+          "source": "sealed batch direction-2/18"
+        }
+      ],
+      "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
     }
   ],
-  "deferredPairs": 22,
-  "effectiveRequiredPairs": 6982,
-  "reviewVersion": 5,
-  "originalRequiredPairs": 7004
+  "deferredPairs": 31,
+  "effectiveRequiredPairs": 6973,
+  "reviewVersion": 6,
+  "originalRequiredPairs": 7004,
+  "completionScope": "All currently eligible action/state sense-form pairs have approved cards; 31 exact pairs are deferred from routine practice and retain morphological recognition."
 }

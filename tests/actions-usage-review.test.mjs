@@ -21,6 +21,27 @@ const removed=review.deferred.map(row=>{
   return e;
 });
 
+test('the nine user-requested deferrals retain their unresolved evidence and prior permission',()=>{
+  const expected=new Set([
+    'verb:喜ぶ:よろこぶ/teikuNegative',
+    'verb:間に合う:まにあう/teiku', 'verb:間に合う:まにあう/teku',
+    'verb:間に合う:まにあう/teikuPast', 'verb:間に合う:まにあう/tekuruNegative',
+    'verb:来る:くる/teiku', 'verb:来る:くる/teku',
+    'verb:来る:くる/teikuNegative', 'verb:来る:くる/teikuNegativePast',
+  ]);
+  const requested=review.deferred.filter(r=>r.deferralBasis==='user-request');
+  assert.deepEqual(new Set(requested.map(r=>r.pair)),expected);
+  assert.equal(review.deferred.length-requested.length,22);
+  assert.equal(review.reviewVersion,USAGE_REVIEW_VERSION);
+  for(const row of requested){
+    assert.equal(row.authorization,'9对开放未决也暂缓出题');
+    assert.equal(row.previousUsage.reviewVersion,5);
+    assert.ok(row.previousUsage.status==='allowed'||row.previousUsage.context);
+    assert.equal(row.attempts[0].issue,row.priorReviewReason);
+    assert.equal(row.attempts[0].sentence,row.sentence);
+  }
+});
+
 test('action deferrals retain rejected drafts and affect only the documented sense/form pairs',()=>{
   assert.deepEqual(new Set(removed.map(pair)),DEFERRED_ACTION_PAIRS);
   assert.ok(removed.every(e=>!model.exercises.some(x=>x.id===e.id)));
@@ -28,7 +49,7 @@ test('action deferrals retain rejected drafts and affect only the documented sen
     assert.equal(row.sourceCard.review,'draft');
     assert.equal(`${row.sourceCard.senseId}/${row.sourceCard.form}`,row.pair);
     assert.equal(createHash('sha256').update(JSON.stringify(row.sourceCard)).digest('hex'),row.sourceHash);
-    assert.ok(new Set(row.attempts.map(x=>x.sentence)).size>=2,row.pair);
+    assert.ok(new Set(row.attempts.map(x=>x.sentence)).size>=(row.deferralBasis==='user-request'?1:2),row.pair);
     assert.ok(row.attempts.every(x=>x.issue&&x.source));
     assert.ok(row.restoreCondition&&row.reason);
   }
@@ -39,8 +60,8 @@ test('action deferrals retain rejected drafts and affect only the documented sen
     assert.ok(model.exercises.some(e=>e.courseId===course.id&&e.form===form),`${course.id}/${form}`);
 });
 
-test('action-pair retirement preserves failures and suspends only the four unavailable kuru rule paths',()=>{
-  const expectedSuspended=new Set(['tekuru','tekuruPast','tekuruNegative','tekuruNegativePast'].map(f=>`verb:来る:くる/${f}`));
+test('action-pair retirement preserves failures and suspends only the eight unavailable kuru rule paths',()=>{
+  const expectedSuspended=new Set(['teiku','teku','teikuNegative','teikuNegativePast','tekuru','tekuruPast','tekuruNegative','tekuruNegativePast'].map(f=>`verb:来る:くる/${f}`));
   const actualSuspended=new Set();
   for(const e of removed){
     const key=assessmentTarget(e).key;

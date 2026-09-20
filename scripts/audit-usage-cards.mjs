@@ -1,7 +1,7 @@
 import { USAGE_CARDS, usageCardIssues, resolveUsageCard, usageCardItem, usageCardClassRequirements, basicUsageCardRequirements, usageCardStageRequirements, usageCardWritingReview } from '../app/lib/usage-cards.mjs';
 
 const strict = !process.argv.includes('--draft');
-const issues = usageCardIssues(USAGE_CARDS, {requireCoverage: strict, requireClassCoverage: strict, requireBasicCoverage: strict, requireStageCoverage: strict ? ['voice', 'linking', 'intentions'] : []});
+const issues = usageCardIssues(USAGE_CARDS, {requireCoverage: strict, requireClassCoverage: strict, requireBasicCoverage: strict, requireStageCoverage: strict ? ['voice', 'linking', 'intentions', 'actions'] : []});
 const approved = USAGE_CARDS.filter(card => card.review === 'approved');
 const basic = new Set(basicUsageCardRequirements());
 const voice = new Set(usageCardStageRequirements('voice'));
