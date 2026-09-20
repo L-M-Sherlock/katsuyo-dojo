@@ -1,0 +1,47 @@
+[
+  {
+    "id": "usage:temiruDesireNegativePast:verb:帰る:かえる",
+    "senseId": "verb:帰る:かえる",
+    "meaning": "回去",
+    "form": "temiruDesireNegativePast",
+    "scene": "旅馆住得很舒服，她当时不想试着回家。",
+    "before": [
+      { "text": "旅館が快適で、家に", "reading": "りょかんがかいてきで、いえに" }
+    ],
+    "after": [
+      { "text": "。", "reading": "。" }
+    ],
+    "translation": "旅馆住得很舒服，她当时不想试着回家。",
+    "review": "draft"
+  },
+  {
+    "id": "usage:temiruDesirePast:verb:歌う:うたう",
+    "senseId": "verb:歌う:うたう",
+    "meaning": "唱歌",
+    "form": "temiruDesirePast",
+    "scene": "站在舞台边，她曾想试着唱歌。",
+    "before": [
+      { "text": "彼女は", "reading": "かのじょは" }
+    ],
+    "after": [
+      { "text": "。", "reading": "。" }
+    ],
+    "translation": "她曾想试着唱歌。",
+    "review": "draft"
+  },
+  {
+    "id": "usage:temiruDesirePast:verb:聞く:きく",
+    "senseId": "verb:聞く:きく",
+    "meaning": "听；询问",
+    "form": "temiruDesirePast",
+    "scene": "找不到房间时，他曾想试着询问前台。",
+    "before": [
+      { "text": "部屋が見つからず、彼は受付に", "reading": "へやがみつからず、かれはうけつけに" }
+    ],
+    "after": [
+      { "text": "。", "reading": "。" }
+    ],
+    "translation": "找不到房间时，他曾想试着询问前台。",
+    "review": "draft"
+  }
+]
