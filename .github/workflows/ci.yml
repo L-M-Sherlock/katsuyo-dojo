@@ -55,6 +55,7 @@ jobs:
       - run: npm ci
       - run: npm run audit
       - run: npm run audit:usage
+      - run: npm run audit:integration
       - run: npm run simulate:perfect
       - run: npm run simulate:mixed
       - run: npm run typecheck

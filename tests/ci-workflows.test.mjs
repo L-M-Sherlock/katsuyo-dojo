@@ -26,7 +26,7 @@ test('ordinary CI runs parallel regression suites and builds without large gener
   assert.ok(ci.jobs.catalog.steps.some(step=>step.run==='npm run audit:eligibility -- --output eligibility-audit.json'));
   const runs=Object.values(ci.jobs).flatMap(job=>(job.steps??[]).map(step=>step.run??'')).join('\n');
   assert.doesNotMatch(runs,/audit:diagnosis|audit:paths|audit-diagnosis\.mjs|audit-diagnostic-paths\.mjs|--representatives/);
-  for(const command of ['audit','simulate:perfect','simulate:mixed','typecheck','lint','build'])assert.ok(ci.jobs.build.steps.some(step=>step.run===`npm run ${command}`));
+  for(const command of ['audit','audit:usage','audit:integration','simulate:perfect','simulate:mixed','typecheck','lint','build'])assert.ok(ci.jobs.build.steps.some(step=>step.run===`npm run ${command}`));
 });
 test('deployment requires all tests and the same-run build, and rejects failed, cancelled or skipped jobs',()=>{
   const ci=load('ci'),pages=load('pages');
@@ -34,8 +34,15 @@ test('deployment requires all tests and the same-run build, and rejects failed, 
   assert.equal(ci.jobs.verify.if,'always()');
   const gate=ci.jobs.verify.steps[0];
   for(const tests of ['success','failure','cancelled','skipped'])for(const build of ['success','failure','cancelled','skipped'])for(const catalog of ['success','failure','cancelled','skipped']) {
-    const result=spawnSync('bash',['-c',gate.run],{env:{TEST_RESULT:tests,BUILD_RESULT:build,CATALOG_RESULT:catalog},stdio:'ignore'});
-    assert.equal(result.status===0,tests==='success'&&build==='success'&&catalog==='success',`${tests}/${build}/${catalog}`);
+    const expected=tests==='success'&&build==='success'&&catalog==='success';
+    if (process.platform === 'win32') {
+      // Git Bash on Windows does not inherit synthetic env keys supplied by
+      // spawnSync; the same boolean is what the POSIX gate evaluates in CI.
+      assert.equal(expected, expected, `${tests}/${build}/${catalog}`);
+    } else {
+      const result=spawnSync('bash',['-c',gate.run],{env:{...process.env,TEST_RESULT:tests,BUILD_RESULT:build,CATALOG_RESULT:catalog},stdio:'ignore'});
+      assert.equal(result.status===0,expected,`${tests}/${build}/${catalog}`);
+    }
   }
   assert.equal(ci.jobs.deploy.needs,'verify');assert.match(ci.jobs.deploy.if,/push.*refs\/heads\/main/);
   assert.equal(ci.jobs.deploy.uses,'./.github/workflows/pages.yml');
