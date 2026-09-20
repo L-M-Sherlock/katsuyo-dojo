@@ -130,12 +130,23 @@ test('reviewer registration is bounded at eight and rejects duplicate identities
     requiredReviews: 2, reviewPolicy: 'coordinator-only',
   });
   const job = await f.dispatch('scale0', '/root/author');
-  f.write(job);
+  const cards = f.write(job);
   await f.submit(job);
-  for (let i = 1; i <= 8; i++) {
-    await f.workflow.run('assign-review', {
-      actor: '/root', batch: job.batch, stage: job.stage, reviewer: `/root/reviewer_${i}`,
-    });
+  for (const reviewer of ['/root/reviewer_1', '/root/reviewer_2']) {
+    await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer});
+  }
+  const first = f.review(cards, 'approved', '/root/reviewer_1');
+  const second = f.review(cards, 'approved', '/root/reviewer_2');
+  second.rows[0].status = 'rejected';
+  await f.workflow.run('review', {actor: '/root/reviewer_1', batch: job.batch, stage: job.stage, review: first});
+  await f.workflow.run('review', {actor: '/root/reviewer_2', batch: job.batch, stage: job.stage, review: second});
+  for (let i = 3; i <= 8; i++) {
+    const reviewer = `/root/reviewer_${i}`;
+    const {packet} = await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer});
+    const report = f.review(cards, 'approved', reviewer);
+    report.rows = [report.rows[0]];
+    fs.writeFileSync(packet.output, JSON.stringify({...report, reviewer, authorReceipt: packet.receipt}));
+    await f.workflow.run('review', {actor: reviewer, batch: job.batch, stage: job.stage, reviewPath: packet.output});
   }
   await assert.rejects(
     f.workflow.run('assign-review', {
