@@ -157,8 +157,8 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
     if (report.scopeHash !== undefined && report.scopeHash !== stage.scopeHash) fail('Reviewer scope hash mismatch');
     if (report.cardSnapshotHash !== undefined && report.cardSnapshotHash !== stage.cardSnapshotHash) fail('Reviewer card snapshot hash mismatch');
     if (report.count !== undefined && report.count !== stage.pairs.length) fail('Reviewer card count mismatch');
-    const {reviewer: _reviewer, selfReview: _selfReview, reviewedAt: _reviewedAt, authorReceipt: _authorReceipt,
-      scopeHash: _scopeHash, cardSnapshotHash: _cardSnapshotHash, count: _count, ...review} = report;
+    const review = {...report};
+    for (const key of ['reviewer', 'selfReview', 'reviewedAt', 'authorReceipt', 'scopeHash', 'cardSnapshotHash', 'count']) delete review[key];
     if (JSON.stringify(review) !== JSON.stringify(entry.review)) fail('Reviewer report delivery does not match recorded report');
     return review;
   };
@@ -268,7 +268,8 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
       const requiredReviews = quorum(state.requiredReviews, maxReviewers);
       guard(state);
       if (command === 'status' || command === 'metrics') {
-        const stages = Object.entries(state.batches).flatMap(([batch, item]) => item.stages.map(s => ({batch, id: s.id, kind: s.kind, owner: s.owner, status: s.status, count: s.pairs.length})));
+        const stages = Object.entries(state.batches).flatMap(([batch, item]) => item.stages.map(s => ({batch, id: s.id, kind: s.kind, owner: s.owner, status: s.status, count: s.pairs.length,
+          lease: s.lease ? {heartbeatAt: s.lease.heartbeatAt, expiresAt: s.lease.expiresAt, expired: leaseExpired(s)} : null})));
         const decisions = state.events.filter(e => e.type === 'reviewed');
         const first = new Map(); for (const e of state.events.filter(e => e.type === 'first-draft')) for (const row of e.rows) if (!first.has(row.id)) first.set(row.id, {...row, outcome: row.invalid ? 'rejected' : 'pending'});
         for (const e of decisions) for (const row of e.decisions) {
@@ -527,6 +528,9 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         if (expectedReport && opts.reviewPath && path.resolve(opts.reviewPath) !== path.resolve(file(expectedReport))) fail('Review output must use the assigned reviewer packet path');
         if (inputReview?.reviewer !== undefined && inputReview.reviewer !== opts.actor) fail('Review identity does not match assigned reviewer');
         if (inputReview?.authorReceipt !== undefined && inputReview.authorReceipt !== stage.delivery.receipt) fail('Review source receipt does not match assigned packet');
+        if (inputReview?.scopeHash !== undefined && inputReview.scopeHash !== stage.scopeHash) fail('Review scope hash does not match assigned packet');
+        if (inputReview?.cardSnapshotHash !== undefined && inputReview.cardSnapshotHash !== stage.cardSnapshotHash) fail('Review card snapshot hash does not match assigned packet');
+        if (inputReview?.count !== undefined && inputReview.count !== stage.pairs.length) fail('Review card count does not match assigned packet');
         if (stage.reviews?.[opts.actor]) fail('Reviewer already submitted; reopen for a new immutable revision');
         if (screenCards(snap.cards, current.rows.filter(r => stage.pairs.includes(pair(r))), project).issues.length) fail('Stage fails current preflight');
         const conflictReviewer = stage.conflict?.reviewer === opts.actor;
@@ -611,7 +615,6 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
           return {id: card.id, pair: pair(card), hash: cardHash(card), status,
             votes: {approved: approvedVotes, rejected: rejectedVotes}};
         });
-        const candidateIds = new Set(snap.readings.candidates.map(c => c.id));
         const candidates = [...new Set(snap.readings.candidates.map(c => c.id))].map(id => {
           const direct = byReport.map(report => report.candidates.find(c => c.id === id)?.decision);
           const primaryDecisions = (stage.conflict?.primaryReviewers ?? []).map(reviewer => stage.reviews?.[reviewer]?.review?.candidates.find(c => c.id === id)?.decision);
