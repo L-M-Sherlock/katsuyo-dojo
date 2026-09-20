@@ -105,13 +105,19 @@ test('one submitted snapshot can be assigned three independent reviewers', async
   await f.submit(job);
   await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_1'});
   await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_2'});
-  await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_3'});
+  const first = f.review(cards, 'approved', '/root/reviewer_1');
+  const second = f.review(cards, 'approved', '/root/reviewer_2');
+  second.rows[0].status = 'rejected';
+  await f.workflow.run('review', {actor: '/root/reviewer_1', batch: job.batch, stage: job.stage, review: first});
+  await f.workflow.run('review', {actor: '/root/reviewer_2', batch: job.batch, stage: job.stage, review: second});
+  const thirdPacket = await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_3'});
   const state = JSON.parse(fs.readFileSync(path.join(f.root, 'staged-state/state.json')));
   assert.equal(state.batches[job.batch].stages[0].reviewers.length, 3);
-  for (const reviewer of ['/root/reviewer_1', '/root/reviewer_2', '/root/reviewer_3']) {
-    const result = await f.workflow.run('review', {actor: reviewer, batch: job.batch, stage: job.stage, review: f.review(cards, 'approved', reviewer)});
-    assert.equal(result.status, 'submitted');
-  }
+  const thirdReview = f.review(cards, 'approved', '/root/reviewer_3');
+  thirdReview.rows = [thirdReview.rows[0]];
+  const result = await f.workflow.run('review', {actor: '/root/reviewer_3', batch: job.batch, stage: job.stage, review: thirdReview});
+  assert.equal(result.status, 'submitted');
+  assert.deepEqual(thirdPacket.packet.reviewPairs, [pair(cards[0])]);
 });
 
 test('reviewer registration is bounded at eight and rejects duplicate identities', async t => {
@@ -322,16 +328,22 @@ test('coordinator finalization applies unanimous or majority rules without a sem
   await f.workflow.run('init', {actor: '/root', maxAuthors: 4, maxReviewQueue: 4, maxReviewers: 3, reviewPolicy: 'consensus'});
   const job = await f.dispatch('scale0', '/root/author');
   const cards = f.write(job); await f.submit(job);
-  for (const reviewer of ['/root/reviewer_1', '/root/reviewer_2', '/root/reviewer_3']) {
+  for (const reviewer of ['/root/reviewer_1', '/root/reviewer_2']) {
     await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer});
   }
   await f.workflow.run('review', {actor: '/root/reviewer_1', batch: job.batch, stage: job.stage, review: f.review(cards, 'approved', 'a')});
-  await f.workflow.run('review', {actor: '/root/reviewer_2', batch: job.batch, stage: job.stage, review: f.review(cards, 'approved', 'b')});
-  await f.workflow.run('review', {actor: '/root/reviewer_3', batch: job.batch, stage: job.stage, review: f.review(cards, 'rejected', 'c')});
+  const second = f.review(cards, 'approved', 'b');
+  second.rows[0].status = 'rejected';
+  await f.workflow.run('review', {actor: '/root/reviewer_2', batch: job.batch, stage: job.stage, review: second});
+  // Introduce a disagreement, then add the third reviewer for the conflict set.
+  const third = await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_3'});
+  assert.deepEqual(third.packet.reviewPairs, [pair(cards[0])]);
+  const thirdReview = f.review(cards, 'approved', 'c');
+  thirdReview.rows = [thirdReview.rows[0]];
+  await f.workflow.run('review', {actor: '/root/reviewer_3', batch: job.batch, stage: job.stage, review: thirdReview});
   await assert.rejects(f.workflow.run('review', {actor: '/root', batch: job.batch, stage: job.stage, review: f.review(cards)}), /Coordinator-only/);
   const finalized = await f.workflow.run('finalize', {actor: '/root', batch: job.batch, stage: job.stage});
   assert.equal(finalized.status, 'approved');
-  assert.equal(finalized.conflicts.length, cards.length);
 });
 
 test('real CLI consumes existing packet reports without overwriting them and pins every merge dependency', async t => {

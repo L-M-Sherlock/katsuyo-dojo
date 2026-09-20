@@ -173,7 +173,9 @@ function difference(a, b) { return new Set([...a].filter(item => !b.has(item)));
 export async function auditIntegrationCoverage(options = {}) {
   const root = path.resolve(options.project ?? process.cwd());
   const strict = options.strict === true || options.strict === 'true';
-  const requirementFile = absolute(root, options.requirements, 'work/integration-20260920/stage-requirements.json');
+  const frozenDefault = fs.existsSync(path.resolve(root, 'docs/integration-stage-requirements.v1.json'))
+    ? 'docs/integration-stage-requirements.v1.json' : 'work/integration-20260920/stage-requirements.json';
+  const requirementFile = absolute(root, options.requirements, frozenDefault);
   if (!requirementFile || !fs.existsSync(requirementFile)) fail(`Requirements file not found: ${requirementFile}`);
   const requirementData = readData(requirementFile).value;
   const required = normalizePairs(requirementData, 'required');
@@ -201,9 +203,9 @@ export async function auditIntegrationCoverage(options = {}) {
   const unexpectedCards = new Set(cards.map(pairKey).filter(pair => pair && !required.set.has(pair) && cardMap.pairs.get(pair)?.review === 'approved'));
 
   const deferredData = options.deferred && fs.existsSync(absolute(root, options.deferred))
-    ? readData(absolute(root, options.deferred)).value : [];
+    ? readData(absolute(root, options.deferred)).value : requirementData?.deferred ?? [];
   const openData = options.open && fs.existsSync(absolute(root, options.open))
-    ? readData(absolute(root, options.open)).value : [];
+    ? readData(absolute(root, options.open)).value : requirementData?.open ?? [];
   const deferred = normalizePairs(deferredData, 'deferred');
   const open = normalizePairs(openData, 'open');
   for (const set of [deferred, open]) {
