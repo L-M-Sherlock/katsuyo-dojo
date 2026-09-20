@@ -204,6 +204,9 @@ export async function auditIntegrationCoverage(options = {}) {
   const missingCardIds = cards.filter(card => !card || typeof card.id !== 'string' || !card.id.trim()).length;
   if (missingCardIds) errors.push(`Cards missing IDs: ${missingCardIds}`);
   const approvedCards = cards.filter(card => card?.review === 'approved');
+  const structuralIssues = typeof runtime?.usageCardIssues === 'function'
+    ? runtime.usageCardIssues(approvedCards).map(issue => String(issue)) : [];
+  if (structuralIssues.length) errors.push(`Approved card structural issues: ${structuralIssues.join('; ')}`);
   const approved = new Set(approvedCards.map(pairKey).filter(pair => required.set.has(pair)));
   const nonApprovedRequired = new Set(cards.map(pairKey).filter(pair => required.set.has(pair) && !approved.has(pair)));
   if (nonApprovedRequired.size) errors.push(`Required pairs are present only as non-approved cards: ${setArray(nonApprovedRequired).join(', ')}`);
@@ -289,7 +292,7 @@ export async function auditIntegrationCoverage(options = {}) {
     open: {count: open.set.size, pairs: setArray(open.set)},
     sets: {union: setArray(union), missing: setArray(missing), extra: setArray(extra), overlap: Object.fromEntries(Object.entries(overlap).map(([name, set]) => [name, setArray(set)]))},
     baseline: baseline ? {path: absolute(root, options.baseline), count: baseline.cards.length, missing: baselineMissing, changed: baselineChanged} : null,
-    integrity: {cardIdentity, readingMissing, readingMismatch, receiptMissing, receiptInvalid, receiptHashMismatch, expectedFileHash: expectedFileHash ?? null, fileHashMatches},
+    integrity: {cardIdentity, structuralIssues, readingMissing, readingMismatch, receiptMissing, receiptInvalid, receiptHashMismatch, expectedFileHash: expectedFileHash ?? null, fileHashMatches},
     valid: errors.length === 0,
     errors,
   };

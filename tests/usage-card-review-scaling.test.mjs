@@ -279,7 +279,7 @@ test('repairing reviewer packets invalidates old reports before a fresh review',
   assert.equal(repaired.status, 'submitted');
   await assert.rejects(
     f.workflow.run('finalize', {actor: '/root', batch: job.batch, stage: job.stage}),
-    /Missing independent reviewer report|repair|stale/i,
+    /Missing independent reviewer report|immutable reviewer delivery|repair|stale/i,
   );
   const after = JSON.parse(fs.readFileSync(path.join(f.root, 'staged-state/state.json')));
   const newReviews = after.batches[job.batch].stages[0].reviews ?? {};
