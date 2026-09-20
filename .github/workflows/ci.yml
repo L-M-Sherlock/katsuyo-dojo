@@ -54,6 +54,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run audit
+      - run: npm run audit:usage
       - run: npm run simulate:perfect
       - run: npm run simulate:mixed
       - run: npm run typecheck
