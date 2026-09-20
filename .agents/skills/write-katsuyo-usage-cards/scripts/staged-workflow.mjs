@@ -538,7 +538,8 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         if (inputReview?.count !== undefined && inputReview.count !== stage.pairs.length) fail('Review card count does not match assigned packet');
         if (stage.reviews?.[opts.actor]) fail('Reviewer already submitted; reopen for a new immutable revision');
         if (screenCards(snap.cards, current.rows.filter(r => stage.pairs.includes(pair(r))), project).issues.length) fail('Stage fails current preflight');
-        const conflictReviewer = stage.conflict?.reviewer === opts.actor;
+        const conflictReviewer = Boolean(stage.conflict && (stage.conflict.reviewer === opts.actor
+          || assignedReviewers.indexOf(opts.actor) >= requiredReviews));
         const expectedCardIds = new Set(conflictReviewer ? stage.conflict.cardIds : snap.cards.map(card => card.id));
         if (!Array.isArray(review?.rows) || review.rows.length !== expectedCardIds.size || new Set(review.rows.map(r => r.id)).size !== expectedCardIds.size
             || review.rows.some(row => !expectedCardIds.has(row.id))) fail(conflictReviewer ? 'Conflict review must cover conflict cards only' : 'Review each card exactly once');
