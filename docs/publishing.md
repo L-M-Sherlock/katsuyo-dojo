@@ -15,6 +15,7 @@ build 与四组测试同时运行，执行知识模型检查、全对和混合�
 ```bash
 npm ci
 npm run audit:usage
+npm run audit:integration -- --project "$PWD" --output integration-coverage.json
 npm run audit:eligibility -- --output eligibility-audit.json
 npm test
 npm run audit

@@ -322,8 +322,12 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToP
       const output = absolute(options.project ?? process.cwd(), options.output);
       fs.mkdirSync(path.dirname(output), {recursive: true});
       fs.writeFileSync(output, `${JSON.stringify(report, null, 2)}\n`);
+      process.stdout.write(`${JSON.stringify({valid: report.valid, required: report.requirements.count,
+        approved: report.cards.approvedPairs.length, deferred: report.deferred.count, open: report.open.count,
+        missing: report.sets.missing.length, errors: report.errors.length, output})}\n`);
+    } else {
+      process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
     }
-    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
     if (!report.valid) process.exitCode = 1;
   } catch (error) {
     process.stderr.write(`${error.stack ?? error}\n`);
