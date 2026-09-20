@@ -41,6 +41,7 @@ export async function runReviewPreflight({taskRoot, batch, phase = 'review', pro
   const manifest = readJson(root, 'manifest.json');
   const row = manifest.find(item => `${item.lane}/${String(item.batch).padStart(2, '0')}` === batch);
   if (!row) throw new Error(`Batch is absent from manifest: ${batch}`);
+  const integrationBatch = row.course === 'multiStepCompound' || row.stageId === 'integration';
   const assignment = readJson(root, row.assignment);
   const cards = readJson(root, row.cards);
   const blockers = [];
@@ -49,6 +50,7 @@ export async function runReviewPreflight({taskRoot, batch, phase = 'review', pro
   const seenPairs = new Set();
   const seenIds = new Set();
   const visible = new Map();
+  const scaffolds = new Map();
 
   if (!Array.isArray(cards) || cards.length !== row.count) blockers.push(report('scope.count', 'blocker', `Expected ${row.count} cards, got ${cards?.length ?? 'non-array'}.`));
   if (!Array.isArray(cards)) return {batch, phase, cards: 0, assignment: assignment.length, blockers, attention, summary:{blocking:blocks(blockers), attention:attention.length}};
@@ -70,6 +72,21 @@ export async function runReviewPreflight({taskRoot, batch, phase = 'review', pro
       if (!value.trim()) blockers.push(report(`content.empty-${field}`, 'blocker', `${field} is empty.`, [card.id]));
       if (kana.test(value) || japanesePunctuation.test(value)) blockers.push(report(`content.japanese-${field}`, 'blocker', `${field} contains Japanese kana or punctuation; likely field mix-up.`, [card.id]));
       if (placeholder.test(value)) blockers.push(report(`content.placeholder-${field}`, 'blocker', `${field} contains placeholder/template wording.`, [card.id]));
+    }
+    if (compact(card.scene) && compact(card.translation) && compact(card.scene) === compact(card.translation)) {
+      blockers.push(report('content.translation-copies-scene', 'blocker', `Translation repeats the Chinese scene instead of translating the actual Japanese sentence.`, [card.id]));
+    }
+    if (integrationBatch) {
+      const scaffold = JSON.stringify({form: card.form, before: (card.before ?? []).map(part => part.text), after: (card.after ?? []).map(part => part.text)});
+      const prior = scaffolds.get(scaffold) ?? [];
+      if (prior.length && prior.length < 3 && (card.before ?? []).concat(card.after ?? []).map(part => part.text).join('').length <= 24) {
+        blockers.push(report('content.generic-scaffold', 'blocker', `Short before/after scaffold is reused across integration cards; add a concrete object, role, or situation.`, [...prior, card.id]));
+      }
+      prior.push(card.id);
+      scaffolds.set(scaffold, prior);
+      if (/^passive/u.test(String(card.form)) && /处理/u.test(String(card.translation ?? ''))) {
+        blockers.push(report('content.generic-passive-translation', 'blocker', `Passive integration translation uses the generic “处理”; translate the actual action and affected object.`, [card.id]));
+      }
     }
     const resolved = deferred ? null : resolveSentence(card, project);
     if (!deferred && !resolved.sentence) blockers.push(report('sentence.unresolvable', 'blocker', `Cannot resolve target for ${card.id}.`, [card.id]));

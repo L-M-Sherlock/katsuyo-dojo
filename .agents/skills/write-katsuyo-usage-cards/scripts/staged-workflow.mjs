@@ -90,6 +90,11 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
     return {owner, token: leaseToken(), heartbeatAt: started,
       expiresAt: new Date(isoTime(started) + duration).toISOString()};
   };
+  const renewLease = (stage, duration) => {
+    const started = now();
+    return {...stage.lease, owner: stage.owner, heartbeatAt: started,
+      expiresAt: new Date(isoTime(started) + duration).toISOString()};
+  };
   const snapshot = stage => {
     const bytes = readDelivery(root, stage.delivery);
     const scopeBytes = bytes.get(stage.paths.scope);
@@ -360,7 +365,7 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         if (opts.actor !== stage.owner) fail('Only the active stage owner may heartbeat');
         if (opts.leaseToken !== undefined && opts.leaseToken !== stage.lease?.token) fail('Lease token does not match the active owner');
         if (leaseExpired(stage)) fail('Owner lease expired; coordinator must reclaim the stage');
-        stage.lease = newLease(stage.owner, stageLeaseMs);
+        stage.lease = renewLease(stage, stageLeaseMs);
         event(state, 'heartbeat', {batch: opts.batch, stage: stage.id, owner: stage.owner, expiresAt: stage.lease.expiresAt});
         writeState(state);
         return {status: stage.status, owner: stage.owner, leaseToken: stage.lease.token, lease: stage.lease};

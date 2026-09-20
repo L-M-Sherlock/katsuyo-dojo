@@ -22,7 +22,9 @@
     "audit:diagnosis:parallel": "node scripts/audit-diagnosis-parallel.mjs",
     "audit:paths": "node scripts/audit-diagnostic-paths.mjs",
     "audit:paths:parallel": "node scripts/audit-diagnostic-paths-parallel.mjs",
-    "audit:usage": "node scripts/audit-usage-cards.mjs"
+    "audit:usage": "node scripts/audit-usage-cards.mjs",
+    "audit:integration": "node scripts/audit-integration-coverage.mjs",
+    "freeze:integration": "node scripts/freeze-integration-requirements.mjs"
   },
   "dependencies": {
     "react": "19.2.6",
