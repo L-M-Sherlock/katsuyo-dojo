@@ -117,7 +117,10 @@ test('one submitted snapshot can be assigned three independent reviewers', async
   thirdReview.rows = [thirdReview.rows[0]];
   const result = await f.workflow.run('review', {actor: '/root/reviewer_3', batch: job.batch, stage: job.stage, review: thirdReview});
   assert.equal(result.status, 'submitted');
-  assert.deepEqual(thirdPacket.packet.reviewPairs, [pair(cards[0])]);
+  const thirdPairs = thirdPacket.packet.reviewPairs
+    ?? thirdPacket.packet.reviewScope?.pairs
+    ?? thirdPacket.packet.reviewScope?.cardIds?.map(id => pair(cards.find(card => card.id === id)));
+  assert.deepEqual(thirdPairs, [pair(cards[0])]);
 });
 
 test('reviewer registration is bounded at eight and rejects duplicate identities', async t => {
@@ -210,13 +213,19 @@ test('stale reviewer reports and immutable author snapshots cannot finalize', as
   const packet = (await f.workflow.run('assign-review', {
     actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_1',
   })).packet;
-  await f.workflow.run('assign-review', {
-    actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_2',
-  });
   const report = {...f.review(cards, 'approved', 'r1'), reviewer: '/root/reviewer_1', authorReceipt: packet.receipt};
   fs.writeFileSync(packet.output, JSON.stringify(report));
   await f.workflow.run('review', {
     actor: '/root/reviewer_1', batch: job.batch, stage: job.stage, reviewPath: packet.output,
+  });
+  const packet2 = (await f.workflow.run('assign-review', {
+    actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_2',
+  })).packet;
+  fs.writeFileSync(packet2.output, JSON.stringify({
+    ...f.review(cards, 'approved', 'r2'), reviewer: '/root/reviewer_2', authorReceipt: packet2.receipt,
+  }));
+  await f.workflow.run('review', {
+    actor: '/root/reviewer_2', batch: job.batch, stage: job.stage, reviewPath: packet2.output,
   });
   const statePath = path.join(f.root, 'staged-state/state.json');
   const state = JSON.parse(fs.readFileSync(statePath));
@@ -292,7 +301,10 @@ test('a third reviewer receives only conflicting cards and cannot alter settled 
   const third = await f.workflow.run('assign-review', {
     actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_3',
   });
-  assert.deepEqual(third.packet.reviewPairs, [pair(cards[0])]);
+  const thirdPairs = third.packet.reviewPairs
+    ?? third.packet.reviewScope?.pairs
+    ?? third.packet.reviewScope?.cardIds?.map(id => pair(cards.find(card => card.id === id)));
+  assert.deepEqual(thirdPairs, [pair(cards[0])]);
   const full = f.review(cards, 'approved', '/root/reviewer_3');
   const scoped = {...full, rows: [full.rows[0]], reviewer: '/root/reviewer_3', authorReceipt: third.packet.receipt};
   fs.writeFileSync(third.packet.output, JSON.stringify(scoped));
@@ -337,7 +349,10 @@ test('coordinator finalization applies unanimous or majority rules without a sem
   await f.workflow.run('review', {actor: '/root/reviewer_2', batch: job.batch, stage: job.stage, review: second});
   // Introduce a disagreement, then add the third reviewer for the conflict set.
   const third = await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_3'});
-  assert.deepEqual(third.packet.reviewPairs, [pair(cards[0])]);
+  const thirdPairs = third.packet.reviewPairs
+    ?? third.packet.reviewScope?.pairs
+    ?? third.packet.reviewScope?.cardIds?.map(id => pair(cards.find(card => card.id === id)));
+  assert.deepEqual(thirdPairs, [pair(cards[0])]);
   const thirdReview = f.review(cards, 'approved', 'c');
   thirdReview.rows = [thirdReview.rows[0]];
   await f.workflow.run('review', {actor: '/root/reviewer_3', batch: job.batch, stage: job.stage, review: thirdReview});

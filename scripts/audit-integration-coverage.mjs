@@ -120,6 +120,13 @@ function expectedReading(row) {
 function extractReceiptMap(value) {
   const map = new Map(), files = new Map(), cards = new Map();
   const visit = (row, keyHint = null) => {
+    if (typeof row === 'string' && keyHint) {
+      if (HEX.test(row)) {
+        if (keyHint.includes('/') || keyHint.startsWith('usage:')) map.set(keyHint, row);
+        if (keyHint.endsWith('.json') || keyHint.endsWith('.mjs')) files.set(keyHint, row);
+      }
+      return;
+    }
     if (!row || typeof row !== 'object') return;
     if (Array.isArray(row)) { for (const item of row) visit(item); return; }
     const key = typeof row.id === 'string' ? row.id : keyHint;
@@ -135,7 +142,7 @@ function extractReceiptMap(value) {
     if (key && (row.cardHash || row.hash)) cards.set(key, row.cardHash ?? row.hash);
     for (const [name, child] of Object.entries(row)) {
       if (['receipt', 'cardReceipt', 'authorReceipt', 'fileHash', 'formalFileHash', 'sourceHash', 'cardHash', 'hash'].includes(name)) continue;
-      if (child && typeof child === 'object') visit(child, name.includes('/') ? name : null);
+      if (child && typeof child === 'object') visit(child, (name.includes('/') || name.startsWith('usage:') || name.endsWith('.json') || name.endsWith('.mjs')) ? name : null);
     }
   };
   visit(value);
