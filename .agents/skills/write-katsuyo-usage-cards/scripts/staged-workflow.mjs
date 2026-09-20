@@ -478,7 +478,7 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         stage.reviewOutputPaths[opts.reviewer] ??= `staged-state/${opts.batch}/${stage.id}.${stage.delivery.receipt.slice(0, 12)}.p${stage.reviewPacketRevision ?? 0}.review-${opts.reviewer.split('/').at(-1)}.json`;
         stage.reviewScopes ??= {};
         stage.reviewScopes[opts.reviewer] ??= {pairs: stage.pairs.slice(), candidateIds: null};
-        if (stage.conflict) stage.conflict.reviewer = opts.reviewer;
+        if (stage.conflict && !stage.conflict.reviewer) stage.conflict.reviewer = opts.reviewer;
         event(state, 'review-assigned', {batch: opts.batch, stage: stage.id, reviewer: opts.reviewer}); writeState(state);
         return {status: stage.status, reviewers: stage.reviewers, reviewer: opts.reviewer, packet: reviewerPacket(stage, opts.reviewer), reviewTable: file(`staged-state/${opts.batch}/${stage.id}.table.md`)};
       }
