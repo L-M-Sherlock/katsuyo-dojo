@@ -484,7 +484,7 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         stage.reviewPacketRevision = (stage.reviewPacketRevision ?? 0) + 1;
         stage.reviewers = (stage.reviewers ?? []).slice(0, requiredReviews);
         stage.reviews = {}; delete stage.reviewDelivery; delete stage.reviewDeliveries; delete stage.reviewReceipts;
-        delete stage.finalization; delete stage.conflict;
+        delete stage.finalization; delete stage.conflict; stage.reviewScopes = {};
         stage.reviewOutputPaths = {};
         for (const reviewer of stage.reviewers) {
           independent(stage, reviewer);
