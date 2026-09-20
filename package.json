@@ -24,6 +24,7 @@
     "audit:paths:parallel": "node scripts/audit-diagnostic-paths-parallel.mjs",
     "audit:usage": "node scripts/audit-usage-cards.mjs",
     "audit:integration": "node scripts/audit-integration-coverage.mjs",
+    "test:integration-release": "node --test tests/integration-release.test.mjs",
     "freeze:integration": "node scripts/freeze-integration-requirements.mjs"
   },
   "dependencies": {

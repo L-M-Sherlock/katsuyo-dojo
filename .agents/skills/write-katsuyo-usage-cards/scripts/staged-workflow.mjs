@@ -114,11 +114,32 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
     if (!agentPattern.test(reviewer ?? '') || reviewer === '/root' || reviewer === stage.owner
         || stage.previousOwners?.some(row => row.owner === reviewer)) fail('Reviewer must be independent of root and every current or previous author');
   };
+  const semanticFields = ['reviewer', 'reviewers', 'reviews', 'reviewDelivery', 'reviewDeliveries',
+    'reviewReceipts', 'reviewOutputPaths', 'reviewScopes', 'reviewAssignedAt', 'reviewedAt',
+    'reviewerDecisionBy', 'finalization', 'finalizedAt', 'conflict'];
+  const archiveReview = (stage, action, reason) => {
+    const report = `staged-state/${stage.batch}/${stage.id}.review-history-${crypto.randomUUID()}.json`;
+    const record = {version: 1, action, reason, at: now(), status: stage.status,
+      packetRevision: stage.reviewPacketRevision ?? 0,
+      author: Object.fromEntries(['owner', 'paths', 'scopeHash', 'cardSnapshotHash', 'delivery', 'check', 'submittedAt']
+        .filter(key => stage[key] !== undefined).map(key => [key, stage[key]])),
+      semantics: Object.fromEntries(semanticFields.filter(key => stage[key] !== undefined).map(key => [key, stage[key]]))};
+    writeNew(report, record);
+    const delivery = createDelivery({root, batch: stage.batch, phase: 'review', revision: Math.max(1, stage.reviewPacketRevision ?? 0),
+      artifacts: new Map([[report, read(report)]])});
+    stage.reviewHistory ??= [];
+    stage.reviewHistory.push({action, reason, at: record.at, status: record.status, report, delivery, semantics: record.semantics});
+  };
+  const clearReview = stage => {
+    for (const key of semanticFields) delete stage[key];
+    stage.reviewers = []; stage.reviews = {}; stage.reviewScopes = {}; stage.reviewOutputPaths = {};
+    stage.reviewPacketRevision = (stage.reviewPacketRevision ?? 0) + 1;
+  };
   const reviewerPacket = (stage, reviewer) => {
-    readDelivery(root, stage.delivery);
+    snapshot(stage);
     const report = stage.reviewOutputPaths?.[reviewer];
     if (!report) fail('Missing fixed reviewer output path');
-    const conflict = stage.conflict;
+    const conflict = stage.conflict?.reviewer === reviewer ? verifiedConflict(stage) : null;
     return {
       version: 1,
       reviewer,
@@ -143,13 +164,32 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
     };
   };
   const reportConflicts = (stage, snap, reviewers) => {
-    const reports = reviewers.map(reviewer => stage.reviews?.[reviewer]?.review).filter(Boolean);
+    const reports = reviewers.filter(reviewer => stage.reviews?.[reviewer]).map(reviewer => verifiedReview(stage, reviewer));
     if (reports.length < reviewers.length || reports.length < 2) return null;
     const cardIds = snap.cards.filter(card => new Set(reports.map(report => report.rows.find(row => row.id === card.id)?.status)).size > 1).map(card => card.id);
     const candidateIds = snap.readings.candidates.filter(candidate => new Set(reports.map(report => report.candidates.find(row => row.id === candidate.id)?.decision)).size > 1).map(candidate => candidate.id);
     if (!cardIds.length && !candidateIds.length) return null;
-    return {cardIds, candidateIds, primaryReviewers: [...reviewers],
+    return {cardIds, candidateIds, authorReceipt: stage.delivery.receipt, scopeHash: stage.scopeHash,
+      cardSnapshotHash: stage.cardSnapshotHash, primaryReviewers: [...reviewers],
       primaryReceipts: Object.fromEntries(reviewers.map(reviewer => [reviewer, stage.reviews[reviewer].delivery.receipt]))};
+  };
+  const sameReceipts = (actual, expected) => actual && typeof actual === 'object' && !Array.isArray(actual)
+    && Object.keys(actual).length === Object.keys(expected).length
+    && Object.entries(expected).every(([reviewer, receipt]) => actual[reviewer] === receipt);
+  const verifiedConflict = stage => {
+    const conflict = stage.conflict;
+    if (!conflict || conflict.authorReceipt !== stage.delivery.receipt || conflict.scopeHash !== stage.scopeHash
+        || conflict.cardSnapshotHash !== stage.cardSnapshotHash) fail('Conflict source snapshot is stale');
+    const primary = conflict.primaryReviewers;
+    if (!Array.isArray(primary) || primary.length < 2 || new Set(primary).size !== primary.length
+        || primary.some((reviewer, i) => stage.reviewers?.[i] !== reviewer)
+        || (conflict.reviewer && stage.reviewers?.[primary.length] !== conflict.reviewer)
+        || (stage.reviewers?.length ?? 0) > primary.length + 1) fail('Conflict reviewer dependencies changed');
+    const current = reportConflicts(stage, snapshot(stage), primary);
+    if (!current || !sameReceipts(conflict.primaryReceipts, current.primaryReceipts)
+        || JSON.stringify(conflict.cardIds) !== JSON.stringify(current.cardIds)
+        || JSON.stringify(conflict.candidateIds) !== JSON.stringify(current.candidateIds)) fail('Conflict primary receipts or scope changed');
+    return conflict;
   };
   const verifiedReview = (stage, reviewer) => {
     independent(stage, reviewer);
@@ -162,8 +202,14 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
     if (report.scopeHash !== undefined && report.scopeHash !== stage.scopeHash) fail('Reviewer scope hash mismatch');
     if (report.cardSnapshotHash !== undefined && report.cardSnapshotHash !== stage.cardSnapshotHash) fail('Reviewer card snapshot hash mismatch');
     if (report.count !== undefined && report.count !== stage.pairs.length) fail('Reviewer card count mismatch');
+    if (report.packetRevision !== undefined && report.packetRevision !== (stage.reviewPacketRevision ?? 0)) fail('Reviewer packet revision mismatch');
+    if (stage.conflict?.reviewer === reviewer) {
+      const conflict = verifiedConflict(stage);
+      if (report.scopeHash !== stage.scopeHash || report.cardSnapshotHash !== stage.cardSnapshotHash
+          || !sameReceipts(report.primaryReceipts, conflict.primaryReceipts)) fail('Conflict reviewer dependency mismatch');
+    }
     const review = {...report};
-    for (const key of ['reviewer', 'selfReview', 'reviewedAt', 'authorReceipt', 'scopeHash', 'cardSnapshotHash', 'count']) delete review[key];
+    for (const key of ['reviewer', 'selfReview', 'reviewedAt', 'authorReceipt', 'scopeHash', 'cardSnapshotHash', 'count', 'packetRevision', 'primaryReceipts']) delete review[key];
     if (JSON.stringify(review) !== JSON.stringify(entry.review)) fail('Reviewer report delivery does not match recorded report');
     return review;
   };
@@ -182,7 +228,12 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         || summary.stage !== stage.id || summary.requiredReviews < 2) fail('Finalization source or outcome mismatch');
     readDelivery(root, stage.delivery);
     const reviewers = stage.reviewers ?? [];
-    if (reviewers.length < summary.requiredReviews || Object.keys(summary.reviewerReceipts).length !== reviewers.length) fail('Finalization quorum mismatch');
+    if (new Set(reviewers).size !== reviewers.length || reviewers.length < summary.requiredReviews
+        || reviewers.length > summary.requiredReviews + 1 || Object.keys(summary.reviewerReceipts).length !== reviewers.length) fail('Finalization quorum mismatch');
+    if (reviewers.length > summary.requiredReviews) {
+      if (!stage.conflict?.reviewer || stage.conflict.primaryReviewers?.length !== summary.requiredReviews) fail('Missing conflict reviewer dependencies');
+      verifiedConflict(stage);
+    }
     for (const reviewer of reviewers) {
       verifiedReview(stage, reviewer);
       if (summary.reviewerReceipts[reviewer] !== stage.reviews[reviewer].delivery.receipt) fail('Finalization reviewer dependency changed');
@@ -249,7 +300,8 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
           maxReviewers: limit(opts.maxReviewers, 8, 'maxReviewers'),
           reviewPolicy: policy(opts.reviewPolicy),
           stageLeaseMs: leaseDuration(opts.stageLeaseMs),
-          protected: protectedFiles, batches: {}, pending: {}, registeredReviewers: [], events: []};
+          protected: protectedFiles, batches: {}, pending: {}, registeredReviewers: [], reviewerRegistryVersion: 1,
+          reviewerRegistryHistory: [], events: []};
         state.requiredReviews = quorum(opts.requiredReviews, state.maxReviewers);
         event(state, 'initialized'); writeNew(statePath, state);
         return {version: 3, maxAuthors: state.maxAuthors, maxReviewQueue: state.maxReviewQueue,
@@ -264,14 +316,31 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
       const maxReviewers = limit(state.maxReviewers, 8, 'maxReviewers');
       const stageLeaseMs = leaseDuration(state.stageLeaseMs);
       state.stageLeaseMs = stageLeaseMs;
+      const hadReviewerRegistry = Array.isArray(state.registeredReviewers);
       state.registeredReviewers ??= [];
-      for (const batch of Object.values(state.batches ?? {})) for (const stage of batch.stages ?? []) {
-        for (const reviewer of stage.reviewers ?? []) if (!state.registeredReviewers.includes(reviewer)) state.registeredReviewers.push(reviewer);
+      let registryMigrated = false;
+      // Recover old registries once. Historical assignments must never silently
+      // reactivate an explicitly retired reviewer on later operations.
+      if (state.reviewerRegistryVersion !== 1) {
+        if (!hadReviewerRegistry) for (const batch of Object.values(state.batches ?? {})) for (const stage of batch.stages ?? []) {
+          // Only assignments that still have unfinished review work are active
+          // during compatibility migration; completed historical assignments
+          // must remain archival and cannot repopulate the pool.
+          if (stage.status !== 'submitted') continue;
+          for (const reviewer of stage.reviewers ?? (stage.reviewer ? [stage.reviewer] : [])) {
+            if (!stage.reviews?.[reviewer] && !state.registeredReviewers.includes(reviewer)) state.registeredReviewers.push(reviewer);
+          }
+        }
+        state.reviewerRegistryVersion = 1;
+        state.reviewerRegistryHistory ??= [];
+        state.reviewerRegistryHistory.push({action: 'migrated', at: now(), reviewers: [...state.registeredReviewers]});
+        registryMigrated = true;
       }
       if (state.registeredReviewers.length > maxReviewers) fail('Registered reviewer pool exceeds configured capacity');
       const reviewPolicy = policy(state.reviewPolicy);
       const requiredReviews = quorum(state.requiredReviews, maxReviewers);
       guard(state);
+      if (registryMigrated) writeState(state);
       if (command === 'status' || command === 'metrics') {
         const stages = Object.entries(state.batches).flatMap(([batch, item]) => item.stages.map(s => ({batch, id: s.id, kind: s.kind, owner: s.owner, status: s.status, count: s.pairs.length,
           lease: s.lease ? {heartbeatAt: s.lease.heartbeatAt, expiresAt: s.lease.expiresAt, expired: leaseExpired(s)} : null})));
@@ -316,6 +385,22 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         return {maxAuthors: state.maxAuthors, maxReviewQueue: state.maxReviewQueue,
           maxReviewers: state.maxReviewers, requiredReviews: state.requiredReviews, reviewPolicy: state.reviewPolicy,
           stageLeaseMs: state.stageLeaseMs};
+      }
+      if (command === 'retire-reviewer') {
+        main(opts.actor);
+        if (!agentPattern.test(opts.reviewer ?? '') || opts.reviewer === '/root' || !opts.reason?.trim()) fail('Reviewer retirement requires an actual reviewer and reason');
+        if (!state.registeredReviewers.includes(opts.reviewer)) fail('Reviewer is not in the active registered pool');
+        for (const [batch, item] of Object.entries(state.batches)) for (const pending of item.stages) {
+          const assigned = pending.reviewers ?? (pending.reviewer ? [pending.reviewer] : []);
+          if (pending.status !== 'submitted' || !assigned.includes(opts.reviewer)) continue;
+          if (!pending.reviews?.[opts.reviewer]) fail(`Reviewer has unfinished assigned review: ${batch}/${pending.id}`);
+          verifiedReview(pending, opts.reviewer);
+        }
+        state.registeredReviewers = state.registeredReviewers.filter(reviewer => reviewer !== opts.reviewer);
+        state.reviewerRegistryHistory ??= [];
+        state.reviewerRegistryHistory.push({action: 'retired', reviewer: opts.reviewer, reason: opts.reason, at: now()});
+        event(state, 'reviewer-retired', {reviewer: opts.reviewer, reason: opts.reason}); writeState(state);
+        return {reviewer: opts.reviewer, retired: true, registeredReviewers: state.registeredReviewers.length};
       }
       if (command === 'dispatch') {
         main(opts.actor);
@@ -396,12 +481,38 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
       if (command === 'reopen') {
         main(opts.actor);
         if (!['submitted', 'rejected'].includes(stage.status) || !agentPattern.test(opts.owner ?? '') || !opts.reason?.trim()) fail('Reopen needs a submitted/rejected stage, actual owner and reason');
+        if (item.merged) fail('Cannot reopen a merged batch without explicit output invalidation');
+        stage.batch = opts.batch;
+        archiveReview(stage, 'reopen', opts.reason);
         stage.previousStatuses ??= []; stage.previousStatuses.push({status: stage.status, at: now(), reason: opts.reason});
         stage.previousOwners ??= []; stage.previousOwners.push({owner: stage.owner, at: now(), reason: opts.reason});
-        stage.owner = opts.owner; stage.status = 'writing'; stage.lease = newLease(opts.owner, stageLeaseMs); stage.leaseHistory ??= []; delete stage.check; delete stage.reviewer; delete stage.reviewers; delete stage.reviews; delete stage.reviewDelivery; delete stage.reviewDeliveries; delete stage.reviewReceipts; delete stage.reviewOutputPaths; delete stage.finalization;
-        stage.reviewScopes = {};
+        stage.leaseHistory ??= []; stage.leaseHistory.push({owner: stage.owner, lease: stage.lease, at: now(), reason: opts.reason});
+        clearReview(stage);
+        stage.owner = opts.owner; stage.status = 'writing'; stage.lease = newLease(opts.owner, stageLeaseMs);
+        delete stage.check; delete stage.delivery; delete stage.cardSnapshotHash; delete stage.submittedAt;
         event(state, 'reopened', {batch: opts.batch, stage: stage.id, owner: opts.owner, reason: opts.reason}); writeState(state);
         return {status: stage.status, owner: stage.owner, leaseToken: stage.lease.token, lease: stage.lease, writable: [file(stage.paths.cards), file(stage.paths.notes)]};
+      }
+      if (command === 'restart-review') {
+        main(opts.actor);
+        if (!['submitted', 'approved', 'rejected'].includes(stage.status) || !stage.delivery || !opts.reason?.trim()) fail('Review restart requires a submitted/approved/rejected author delivery and reason');
+        if (item.merged) fail('Cannot restart review of a merged batch without explicit output invalidation');
+        snapshot(stage);
+        stage.batch = opts.batch;
+        archiveReview(stage, 'restart-review', opts.reason);
+        stage.previousStatuses ??= []; stage.previousStatuses.push({status: stage.status, at: now(), reason: opts.reason});
+        clearReview(stage); stage.status = 'submitted';
+        event(state, 'review-restarted', {batch: opts.batch, stage: stage.id, reason: opts.reason, packetRevision: stage.reviewPacketRevision});
+        writeState(state);
+        return {status: stage.status, reviewers: [], authorReceipt: stage.delivery.receipt, packetRevision: stage.reviewPacketRevision};
+      }
+      if (command === 'packet') {
+        const reviewer = opts.reviewer ?? opts.actor;
+        if (opts.actor !== '/root' && opts.actor !== reviewer) fail('Only root or the assigned reviewer may retrieve this packet');
+        if (!(stage.reviewers ?? []).includes(reviewer)) fail('Reviewer is not assigned to this stage');
+        if (stage.status !== 'submitted') fail('Packet requires a submitted immutable stage');
+        independent(stage, reviewer);
+        return reviewerPacket(stage, reviewer);
       }
       if (['check', 'submit'].includes(command)) {
         if (!needsWork(stage)) fail('Only the active stage author may check or submit');
@@ -459,18 +570,26 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         independent(stage, opts.reviewer);
         stage.reviewers ??= stage.reviewer ? [stage.reviewer] : [];
         if (stage.reviewers.includes(opts.reviewer)) fail('Reviewer already assigned');
+        if (stage.reviewers.length >= requiredReviews + 1) fail('Stage reviewer limit reached: only one conflict reviewer is allowed');
         // A third reviewer is an adjudicator, never an extra vote.  Wait for
         // the two required primary reports and create a conflict-only scope.
-        if (stage.reviewers.length >= requiredReviews && !stage.conflict) {
+        if (stage.reviewers.length === requiredReviews) {
           const primary = stage.reviewers.slice(0, requiredReviews);
           const detected = reportConflicts(stage, snapshot(stage), primary);
           if (!detected) fail('Third reviewer is allowed only after a primary-review conflict');
-          stage.conflict = detected;
+          if (stage.conflict) verifiedConflict(stage);
+          else stage.conflict = detected;
+        } else if (stage.conflict) {
+          fail('Conflict cannot precede the complete primary reviewer quorum');
         }
         if (stage.reviewers.length >= maxReviewers) fail('Reviewer limit reached');
         state.registeredReviewers ??= [];
         if (!state.registeredReviewers.includes(opts.reviewer) && state.registeredReviewers.length >= maxReviewers) fail('Reviewer pool limit reached');
-        if (!state.registeredReviewers.includes(opts.reviewer)) state.registeredReviewers.push(opts.reviewer);
+        if (!state.registeredReviewers.includes(opts.reviewer)) {
+          state.registeredReviewers.push(opts.reviewer);
+          state.reviewerRegistryHistory ??= [];
+          state.reviewerRegistryHistory.push({action: 'registered', reviewer: opts.reviewer, at: now()});
+        }
         stage.reviewers.push(opts.reviewer);
         stage.batch = opts.batch;
         stage.reviewer = stage.reviewers[0]; stage.reviewAssignedAt = now();
@@ -486,11 +605,10 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         main(opts.actor);
         if (stage.status !== 'submitted') fail('Packet repair requires a submitted immutable stage');
         stage.batch = opts.batch;
-        stage.reviewPacketRevision = (stage.reviewPacketRevision ?? 0) + 1;
-        stage.reviewers = (stage.reviewers ?? []).slice(0, requiredReviews);
-        stage.reviews = {}; delete stage.reviewDelivery; delete stage.reviewDeliveries; delete stage.reviewReceipts;
-        delete stage.finalization; delete stage.conflict; stage.reviewScopes = {};
-        stage.reviewOutputPaths = {};
+        archiveReview(stage, 'repair-review-packets', opts.reason ?? 'Repair immutable reviewer packet paths');
+        const reviewers = (stage.reviewers ?? []).slice(0, requiredReviews);
+        clearReview(stage); stage.reviewers = reviewers;
+        if (reviewers.length) stage.reviewer = reviewers[0];
         for (const reviewer of stage.reviewers) {
           independent(stage, reviewer);
           stage.reviewOutputPaths[reviewer] = `staged-state/${opts.batch}/${stage.id}.${stage.delivery.receipt.slice(0, 12)}.p${stage.reviewPacketRevision}.review-${reviewer.split('/').at(-1)}.json`;
@@ -569,8 +687,10 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         const allPassed = review.rows.every(r => r.status === 'approved') && review.candidates.every(c => c.decision === 'retain');
         stage.reviewOutputPaths ??= {};
         const report = `staged-state/${opts.batch}/${stage.id}.accepted-review-${crypto.randomUUID()}.json`;
+        const conflictDependencies = stage.conflict?.reviewer === opts.actor ? verifiedConflict(stage).primaryReceipts : undefined;
         writeNew(report, {...review, reviewer: opts.actor, selfReview: stage.owner === opts.actor, authorReceipt: stage.delivery.receipt,
-          scopeHash: stage.scopeHash, cardSnapshotHash: stage.cardSnapshotHash, count: stage.pairs.length, reviewedAt: now()});
+          scopeHash: stage.scopeHash, cardSnapshotHash: stage.cardSnapshotHash, count: stage.pairs.length,
+          packetRevision: stage.reviewPacketRevision ?? 0, ...(conflictDependencies ? {primaryReceipts: conflictDependencies} : {}), reviewedAt: now()});
         stage.reviews ??= {};
         const delivery = createDelivery({root, batch: opts.batch, phase: 'review', revision: item.stages.length, artifacts: new Map([[report, read(report)]])});
         stage.reviews[opts.actor] = {report, receipt: delivery.receipt, delivery, review};

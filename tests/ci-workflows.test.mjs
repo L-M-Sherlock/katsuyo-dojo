@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { resolve } from 'node:path';
 import yaml from 'js-yaml';
 import { TEST_SUITES, suiteForTest, testFilesForSuite } from '../scripts/ci-tests.mjs';
 const load=name=>yaml.load(readFileSync(`.github/workflows/${name}.yml`,'utf8'));
@@ -33,16 +34,19 @@ test('deployment requires all tests and the same-run build, and rejects failed, 
   assert.deepEqual(ci.jobs.verify.needs,['tests','build','catalog']);
   assert.equal(ci.jobs.verify.if,'always()');
   const gate=ci.jobs.verify.steps[0];
+  let bash='bash';
+  if(process.platform==='win32') {
+    // The legacy WSL launcher named bash.exe does not preserve shell arguments.
+    const git=spawnSync('git',['--exec-path'],{encoding:'utf8'});
+    assert.ifError(git.error);
+    assert.equal(git.status,0,git.stderr);
+    bash=resolve(git.stdout.trim(),'../../../bin/bash.exe');
+  }
   for(const tests of ['success','failure','cancelled','skipped'])for(const build of ['success','failure','cancelled','skipped'])for(const catalog of ['success','failure','cancelled','skipped']) {
     const expected=tests==='success'&&build==='success'&&catalog==='success';
-    if (process.platform === 'win32') {
-      // Git Bash on Windows does not inherit synthetic env keys supplied by
-      // spawnSync; the same boolean is what the POSIX gate evaluates in CI.
-      assert.equal(expected, expected, `${tests}/${build}/${catalog}`);
-    } else {
-      const result=spawnSync('bash',['-c',gate.run],{env:{...process.env,TEST_RESULT:tests,BUILD_RESULT:build,CATALOG_RESULT:catalog},stdio:'ignore'});
-      assert.equal(result.status===0,expected,`${tests}/${build}/${catalog}`);
-    }
+    const result=spawnSync(bash,['-c','export TEST_RESULT="$1" BUILD_RESULT="$2" CATALOG_RESULT="$3"; '+gate.run,'--',tests,build,catalog],{encoding:'utf8'});
+    assert.ifError(result.error);
+    assert.equal(result.status,expected?0:1,`${tests}/${build}/${catalog}: ${result.stderr}`);
   }
   assert.equal(ci.jobs.deploy.needs,'verify');assert.match(ci.jobs.deploy.if,/push.*refs\/heads\/main/);
   assert.equal(ci.jobs.deploy.uses,'./.github/workflows/pages.yml');

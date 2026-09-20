@@ -123,7 +123,7 @@ test('one submitted snapshot can be assigned three independent reviewers', async
   assert.deepEqual(thirdPairs, [pair(cards[0])]);
 });
 
-test('reviewer registration is bounded at eight and rejects duplicate identities', async t => {
+test('reviewer registration is bounded and a stage permits only one conflict adjudicator', async t => {
   const f = fixture(t);
   await f.workflow.run('init', {
     actor: '/root', maxAuthors: 6, maxReviewQueue: 6, maxReviewers: 8,
@@ -140,25 +140,25 @@ test('reviewer registration is bounded at eight and rejects duplicate identities
   second.rows[0].status = 'rejected';
   await f.workflow.run('review', {actor: '/root/reviewer_1', batch: job.batch, stage: job.stage, review: first});
   await f.workflow.run('review', {actor: '/root/reviewer_2', batch: job.batch, stage: job.stage, review: second});
-  for (let i = 3; i <= 8; i++) {
-    const reviewer = `/root/reviewer_${i}`;
-    const {packet} = await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer});
-    const report = f.review(cards, 'approved', reviewer);
-    report.rows = [report.rows[0]];
-    fs.writeFileSync(packet.output, JSON.stringify({...report, reviewer, authorReceipt: packet.receipt}));
-    await f.workflow.run('review', {actor: reviewer, batch: job.batch, stage: job.stage, reviewPath: packet.output});
-  }
+  const {packet} = await f.workflow.run('assign-review', {
+    actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_3',
+  });
+  const report = f.review(cards, 'approved', '/root/reviewer_3');
+  report.rows = [report.rows[0]];
+  fs.writeFileSync(packet.output, JSON.stringify({...report, reviewer: '/root/reviewer_3', authorReceipt: packet.receipt}));
+  await f.workflow.run('review', {actor: '/root/reviewer_3', batch: job.batch, stage: job.stage, reviewPath: packet.output});
+  assert.equal((await f.workflow.run('status')).config.registeredReviewers, 3);
   await assert.rejects(
     f.workflow.run('assign-review', {
-      actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_8',
+      actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_3',
     }),
     /already assigned/,
   );
   await assert.rejects(
     f.workflow.run('assign-review', {
-      actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_9',
+      actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_4',
     }),
-    /Reviewer limit reached/,
+    /Stage reviewer limit reached/,
   );
 });
 
@@ -445,4 +445,87 @@ test('a waiting operation acquires the real check lock, while timeout never remo
   assert.equal((await checking).status, 'checked');
   assert.equal((await waiting).stages[0].status, 'checked');
   assert.equal(fs.existsSync(path.join(f.root, 'staged-state/operation.lock')), false);
+});
+
+test('reopen clears stale conflict and semantic dependencies while retaining immutable history', async t => {
+  const f = fixture(t);
+  await f.workflow.run('init', {actor: '/root', maxReviewers: 3, reviewPolicy: 'coordinator-only'});
+  const job = await f.dispatch('scale0', '/root/author');
+  const cards = f.write(job); await f.submit(job);
+  for (const reviewer of ['/root/reviewer_1', '/root/reviewer_2']) {
+    const {packet} = await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer});
+    const report = f.review(cards, 'approved', reviewer);
+    if (reviewer.endsWith('_2')) report.rows[0].status = 'rejected';
+    fs.writeFileSync(packet.output, JSON.stringify({...report, reviewer, authorReceipt: packet.receipt}));
+    await f.workflow.run('review', {actor: reviewer, batch: job.batch, stage: job.stage, reviewPath: packet.output});
+  }
+  await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_3'});
+  const before = JSON.parse(fs.readFileSync(path.join(f.root, 'staged-state/state.json')));
+  assert.ok(before.batches[job.batch].stages[0].conflict);
+  const reopened = await f.workflow.run('reopen', {actor: '/root', batch: job.batch, stage: job.stage, owner: '/root/recovered', reason: 'replace stale semantic review'});
+  assert.equal(reopened.status, 'writing');
+  const after = JSON.parse(fs.readFileSync(path.join(f.root, 'staged-state/state.json')));
+  const stage = after.batches[job.batch].stages[0];
+  assert.equal(stage.conflict, undefined);
+  assert.deepEqual(stage.reviewers, []);
+  assert.deepEqual(stage.reviews, {});
+  assert.ok(stage.reviewHistory?.length);
+  assert.ok(stage.reviewHistory[0].semantics?.conflict?.primaryReceipts);
+});
+
+test('restart-review revokes approved state but preserves immutable history and author delivery', async t => {
+  const f = fixture(t);
+  await f.workflow.run('init', {actor: '/root', maxReviewers: 3, reviewPolicy: 'coordinator-only'});
+  const job = await f.dispatch('scale0', '/root/author');
+  const cards = f.write(job); await f.submit(job);
+  for (const reviewer of ['/root/reviewer_1', '/root/reviewer_2']) {
+    const {packet} = await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer});
+    const report = f.review(cards, 'approved', reviewer);
+    fs.writeFileSync(packet.output, JSON.stringify({...report, reviewer, authorReceipt: packet.receipt}));
+    await f.workflow.run('review', {actor: reviewer, batch: job.batch, stage: job.stage, reviewPath: packet.output});
+  }
+  const finalized = await f.workflow.run('finalize', {actor: '/root', batch: job.batch, stage: job.stage});
+  assert.equal(finalized.status, 'approved');
+  const before = JSON.parse(fs.readFileSync(path.join(f.root, 'staged-state/state.json')));
+  const oldReceipt = before.batches[job.batch].stages[0].delivery.receipt;
+  const restarted = await f.workflow.run('restart-review', {actor: '/root', batch: job.batch, stage: job.stage, reason: 'fresh independent quorum'});
+  assert.equal(restarted.status, 'submitted');
+  assert.equal(restarted.authorReceipt, oldReceipt);
+  const after = JSON.parse(fs.readFileSync(path.join(f.root, 'staged-state/state.json')));
+  const stage = after.batches[job.batch].stages[0];
+  assert.equal(stage.status, 'submitted');
+  assert.deepEqual(stage.reviewers, []);
+  assert.equal(stage.finalization, undefined);
+  assert.ok(stage.reviewHistory?.some(entry => entry.semantics?.finalization));
+  assert.equal(stage.delivery.receipt, oldReceipt);
+});
+
+test('retire-reviewer blocks unfinished assigned work and preserves registry history', async t => {
+  const f = fixture(t);
+  await f.workflow.run('init', {actor: '/root', maxReviewers: 3, reviewPolicy: 'coordinator-only'});
+  const job = await f.dispatch('scale0', '/root/author');
+  const cards = f.write(job); await f.submit(job);
+  const {packet} = await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_1'});
+  await assert.rejects(f.workflow.run('retire-reviewer', {actor: '/root', reviewer: '/root/reviewer_1', reason: 'inactive'}), /unfinished assigned review/);
+  const report = f.review(cards, 'approved', '/root/reviewer_1');
+  fs.writeFileSync(packet.output, JSON.stringify({...report, reviewer: '/root/reviewer_1', authorReceipt: packet.receipt}));
+  await f.workflow.run('review', {actor: '/root/reviewer_1', batch: job.batch, stage: job.stage, reviewPath: packet.output});
+  const retired = await f.workflow.run('retire-reviewer', {actor: '/root', reviewer: '/root/reviewer_1', reason: 'inactive'});
+  assert.equal(retired.retired, true);
+  const state = JSON.parse(fs.readFileSync(path.join(f.root, 'staged-state/state.json')));
+  assert.ok(!state.registeredReviewers.includes('/root/reviewer_1'));
+  assert.ok(state.reviewerRegistryHistory.some(entry => entry.action === 'retired' && entry.reviewer === '/root/reviewer_1'));
+});
+
+test('packet retrieval is read-only and returns the pinned reviewer packet', async t => {
+  const f = fixture(t);
+  await f.workflow.run('init', {actor: '/root', maxReviewers: 3});
+  const job = await f.dispatch('scale0', '/root/author'); f.write(job); await f.submit(job);
+  const assigned = await f.workflow.run('assign-review', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_1'});
+  const statePath = path.join(f.root, 'staged-state/state.json');
+  const before = fs.readFileSync(statePath);
+  const packet = await f.workflow.run('packet', {actor: '/root', batch: job.batch, stage: job.stage, reviewer: '/root/reviewer_1'});
+  const after = fs.readFileSync(statePath);
+  assert.deepEqual(packet, assigned.packet);
+  assert.deepEqual(after, before);
 });
