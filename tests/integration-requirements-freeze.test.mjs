@@ -32,5 +32,5 @@ test('integration requirement snapshot is immutable and partitions the current s
   assert.equal(snapshot.counts.approved, approved.size);
   assert.equal(snapshot.counts.deferred, deferred.size);
   assert.equal(snapshot.counts.open, open.size);
-  assert.match(digest(bytes), /^[a-f0-9]{64}$/u);
+  assert.equal(digest(bytes), 'b36fb12d736a3c9e0b462b19c900a6751cb2452be4c7ef3ec7474a21f7b42d88', 'preserve the original frozen requirement bytes');
 });

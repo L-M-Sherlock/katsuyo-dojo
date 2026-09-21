@@ -12,6 +12,7 @@ import {restoreLearningAssessment} from '../app/lib/assessment-transfer.mjs';
 import {USAGE_CARDS, usageCardStageRequirements} from '../app/lib/usage-cards.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 import {reviewedLexicalSense} from '../app/lib/lexical-usage.mjs';
+import integrationCards from '../app/lib/usage-cards/integration-generated.mjs';
 
 const baseline=JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json',import.meta.url),'utf8'));
 const hash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -24,6 +25,7 @@ const expectedPairs=new Set([
 ]);
 const actionReview=JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json',import.meta.url),'utf8'));
 const actionIds=new Set(actionReview.approvedIds);
+const integrationIds=new Set(integrationCards.map(card=>card.id));
 const actionContexts=new Map((actionReview.contextChanges??[]).map(row=>[row.pair,row]));
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
 let model;
@@ -70,7 +72,7 @@ test('approved intention and action-pair deferrals change only the documented ex
     context:{...e.context,id:e.context.id.replace(/:v\d+$/,':vX')},
   })).sort((a,b)=>a.id.localeCompare(b.id,'en'));
   assert.equal(hash(contexts),baseline.contextsSha256,'unrelated applicability notes stay unchanged');
-  const historical=USAGE_CARDS.filter(card=>!actionIds.has(card.id));
+  const historical=USAGE_CARDS.filter(card=>!actionIds.has(card.id)&&!integrationIds.has(card.id));
   assert.equal(historical.length,baseline.counts.cards);
   assert.equal(hash(historical),baseline.cardsSha256,'no published example is edited or dropped');
 });

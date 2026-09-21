@@ -13,6 +13,8 @@ import {normalizeAnswer} from '../app/lib/answer-analysis.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 import intentionWordCards from '../app/lib/usage-cards/intention-words/index.mjs';
 import actionWordCards from '../app/lib/usage-cards/actions-generated.mjs';
+import integrationWordCards from '../app/lib/usage-cards/integration-generated.mjs';
+const integrationIds = new Set(integrationWordCards.map(card => card.id));
 const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url), 'utf8'));
 const actionIds = new Set(actionReview.approvedIds);
 
@@ -77,7 +79,7 @@ test('reviewed stages retain exact eligible coverage and preserve the original r
   assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice','linking','intentions','actions']}),[]);
   const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
   const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice'),...usageCardStageRequirements('linking'),
-    ...usageCardStageRequirements('intentions'),...usageCardStageRequirements('actions')]);
+    ...usageCardStageRequirements('intentions'),...usageCardStageRequirements('actions'),...integrationWordCards.map(card=>`${card.senseId}/${card.form}`)]);
   const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   assert.deepEqual(actual,expected);
   assert.equal(USAGE_CARDS.length,expected.size);
@@ -92,7 +94,7 @@ test('published action cards match the approved review ledger and leave the hist
   assert.equal(actionWordCards.length, actionReview.approvedCards);
   assert.deepEqual(new Set(actionWordCards.map(card => card.id)), actionIds);
   assert.equal(hash(actionWordCards), actionReview.approvedCardsSha256);
-  const old = USAGE_CARDS.filter(card => !actionIds.has(card.id));
+  const old = USAGE_CARDS.filter(card => !actionIds.has(card.id) && !integrationIds.has(card.id));
   assert.equal(old.length, actionReview.originalCards);
   assert.equal(hash(old), actionReview.originalCardsSha256);
   const approvedPairs = new Set(actionWordCards.map(card => `${card.senseId}/${card.form}`));
@@ -155,7 +157,7 @@ test('published intention batches match the reviewed content and leave all old c
   const ids = new Set(intentionWordCards.map(card=>card.id));
   assert.equal(ids.size,intentionReview.approvedCards);
   assert.equal(intentionWordCards.length,intentionReview.approvedCards);
-  assert.equal(hash(USAGE_CARDS.filter(card=>!ids.has(card.id)&&!actionIds.has(card.id))),intentionReview.originalCardsSha256);
+  assert.equal(hash(USAGE_CARDS.filter(card=>!ids.has(card.id)&&!actionIds.has(card.id)&&!integrationIds.has(card.id))),intentionReview.originalCardsSha256);
   const reviewed = [];
   for(const batch of intentionReview.batches) {
     const cards=(await import(`../app/lib/usage-cards/intention-words/${batch.file}`)).default;

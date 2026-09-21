@@ -38,7 +38,7 @@ node "$SKILL_DIR/scripts/card-workbench.mjs" prepare --project "$PWD" \
 
 创建作者子代理时，显式传入 `model: "gpt-6-astra"`、`reasoning_effort: "low"`、`fork_turns: "none"`；创建审核者时传入 `model: "gpt-6-astra"`、`reasoning_effort: "medium"`、`fork_turns: "none"`。可用资源充足时，可暂以 6 名作者和 8 名审核者建立工作池；这是配置示例，不是长期固定并发数。复用前核对原配置：`followup_task` 不能改变模型或推理强度。作者可在审核队列有容量时继续其他独占分片，但同一代理不得同时审自己的稿件。
 
-综合运用按[三级流水线](staged-workflow.md)执行，当前主代理命令入口为 `scripts/staged-workflow.mjs`。先验证原清单的 `senseId/form/meaning/answer/answerReading` 能否被当前活用器解析；再锁定 3 张 pilot 的精确子集，交审核者按法定人数批准后进入 10–15 张 expansion；最后按最多 15 张的独立补写阶段完成剩余配对。不要给作者整批生成再提交的任务，作者不得写正式卡片。
+综合运用按[三级流水线](staged-workflow.md)执行，当前主代理命令入口为 `scripts/staged-workflow.mjs`。先验证原清单的 `senseId/form/meaning/answer/answerReading` 能否被当前活用器解析；再锁定 3 张 pilot 的精确子集，交审核者按法定人数批准后进入 10–15 张 expansion；最后按最多 5 张的独立补写阶段完成剩余配对。不要给作者整批生成再提交的任务，作者不得写正式卡片。
 
 每个任务必须包含已验证的绝对输入路径、仅有的两个可写路径、实际作者句柄和当前阶段。协调器按作者阶段和待审队列背压扩容：有审核容量时才增加作者，待审队列达到 `maxReviewQueue` 即停止派发并先消化审核。当前默认工作池为 6 个作者阶段、6 个待审阶段和 8 个可登记审核者；作者和审核者的实际并行数由 `maxAuthors`、`maxReviewQueue`、`maxReviewers` 和 `reviewPolicy` 决定，不假定固定上限。每个作者阶段有 lease/heartbeat；失联 owner 继续占用容量，只有 lease 过期后才能由协调器显式 reclaim，并记录原 owner、时间和理由。工作池可以按资源调整配置，但不能静默抢占或把失联 owner 算作完成。旧账本 owner 不是运行句柄，不创建虚构 owner，派发失败应保留事件并显式交接。
 

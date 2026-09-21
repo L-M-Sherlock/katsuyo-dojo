@@ -84,6 +84,26 @@ test('invalid assignment blocks dispatch and records exact pending pairs without
   assert.deepEqual(fs.readFileSync(path.join(f.root, 'demo/00.assignment.json')), before);
 });
 
+test('revoked merge preserves evidence and permits a fresh review before merging again', async t => {
+  const f = fixture(t); await f.w.run('init', {actor: '/root'});
+  const pilot = await f.dispatch('pilot', f.rows.slice(0, 3)), cards = f.write(pilot);
+  await f.submit(pilot); await f.approve(pilot, cards);
+  const expansion = await f.dispatch('expansion', f.rows), expanded = f.write(expansion);
+  await f.submit(expansion); await f.approve(expansion, expanded);
+  const merged = await f.w.run('merge', {actor: '/root', batch: pilot.batch});
+  const before = JSON.parse(fs.readFileSync(merged.output));
+  const options = {actor: '/root', batch: expansion.batch, stage: expansion.stage, reason: 'Reviewer withdrew report validity'};
+  await assert.rejects(f.w.run('invalidate-merge', {...options, actor: '/root/writer'}), /Main agent only/);
+  const withdrawn = await f.w.run('invalidate-merge', options);
+  assert.deepEqual(JSON.parse(fs.readFileSync(withdrawn.backup)), before);
+  assert.equal(fs.existsSync(merged.output), false);
+  await assert.rejects(f.w.run('merge', {actor: '/root', batch: pilot.batch}), /finish reviews/);
+  const state = JSON.parse(fs.readFileSync(path.join(f.root, 'staged-state/state.json')));
+  assert.equal(state.batches[pilot.batch].mergeHistory.length, 1);
+  assert.equal(state.batches[pilot.batch].stages.at(-1).status, 'submitted');
+  assert.equal(state.protected['demo/00.cards.json'], null);
+});
+
 test('isolated authors cannot submit another owner stage or overwrite protected formal files', async t => {
   const f = fixture(t); await f.w.run('init', {actor: '/root'});
   const job = await f.dispatch('pilot', f.rows.slice(0, 3)); f.write(job);

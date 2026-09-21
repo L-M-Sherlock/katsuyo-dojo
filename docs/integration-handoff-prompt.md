@@ -1,5 +1,21 @@
 # 综合应用卡片任务交接 Prompt
 
+## 当前发布范围与后续恢复
+
+2026-09-21 Windows 已完整恢复任务，并准备分批发布 64 个正式合并批次的 949 张新增卡。当前发布范围和开放 245 对见 [发布记录](integration-release.md) 与 [v2 账本](integration-stage-requirements.v2.json)。运行时应为 17,361 张，综合运用 1,056 张；原有 16,412 张未改变。
+
+制作队列继续保持 STOP。恢复前读取任务根 `windows-recovery-open-issues.json` 和当前 `staged-state/state.json`，先重新独立审核被撤回的报告并实质返修模板稿；登记的 pool owner 不能当作活代理。已提交报告只有收到真实完成通知并核验收据后才通过 `acknowledge-reviews.mjs` 放行。后续发布必须保留本次已发布的精确卡对象，重新生成完整证明与 approved/open 分区，不能直接重跑仍要求原始运行时基线的历史导出脚本。
+
+## 历史 macOS 交接快照（不是当前进度）
+
+2026-09-21 的 macOS 任务已经暂停并保存在 `work/integration-macos-20260921`。请同步整个目录，而不是只同步草稿或审核包；目录内的 [WINDOWS-HANDOFF.md](../work/integration-macos-20260921/WINDOWS-HANDOFF.md) 包含跨平台路径重定位、恢复调度和发布门禁。当前新增审核通过 772 对、正式合并 739 对、剩余 422 对，原运行时保持 16,412 张卡不变。暂停原因是本轮作者和审核代理达到模型用量上限；不能把未审核内容计入发布。
+
+Windows 接手后先运行 `node work/integration-macos-20260921/rebase-task-paths.mjs`，确认 `progress.mjs` 数字一致，再按 `WINDOWS-HANDOFF.md` 移除 `STOP` 并启动唯一的 `pool-loop.mjs`。不要运行 `setup.mjs`、删除 `staged-state`，或从聊天记录重建收据。
+
+> 2026-09-21：用户已明确要求忽略 Windows 上的未接入工作，在 macOS 重新完成缺口。当前任务根为 `work/integration-macos-20260921`，从运行时 107 张历史综合代表卡之外的 1,194 对重新开始；旧 Windows 草稿和审核结论不计入本轮批准。
+>
+> 继续本轮时先读取新任务根的 `staged-state/state.json` 与 `baseline/task-origin.json`，检查 `pool.json`、运行中的代理及 `pool-loop.log`，不要同时启动第二个调度循环。原冻结要求 `docs/integration-stage-requirements.v1.json` 保持不变。下文 Windows v2 的阶段优先级仅为历史交接，不应用于新任务；只有新账本的有效独立报告和 finalization receipt 才可用于合并。
+
 你正在 macOS 上继续当前仓库的目标：完成综合应用（integration / `multiStepCompound`）1,301 对的用法卡全覆盖并发布。先在仓库根目录执行 `pwd`，以下命令都假定当前目录就是仓库根目录；不要照抄 Windows 盘符路径。
 
 先读取仓库维护版规则：

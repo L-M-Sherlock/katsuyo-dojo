@@ -446,6 +446,29 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
       }
       const stageId = command === 'merge' ? state.batches[opts.batch]?.stages.at(-1)?.id : opts.stage;
       const {item, stage, current} = stageFor(state, opts.batch, stageId);
+      if (command === 'invalidate-merge') {
+        main(opts.actor);
+        if (!item.merged || !opts.reason?.trim()) fail('Merge invalidation requires a merged batch and reason');
+        if (item.stages.some(needsWork)) fail('Stop all batch writers before invalidating a merge');
+        const bytes = read(current.entry.cards);
+        if (sha(bytes) !== item.merged.hash) fail('Merged file changed before invalidation');
+        const backup = `staged-state/${opts.batch}/invalidated-formal-${crypto.randomUUID()}.json`;
+        fs.mkdirSync(path.dirname(file(backup)), {recursive: true});
+        fs.writeFileSync(file(backup), bytes, {flag: 'wx'});
+        archiveReview(stage, 'invalidate-merge', opts.reason);
+        stage.previousStatuses ??= []; stage.previousStatuses.push({status: stage.status, at: now(), reason: opts.reason});
+        clearReview(stage); stage.status = 'submitted';
+        const record = {at: now(), reason: opts.reason, merged: item.merged, backup};
+        item.mergeHistory ??= []; item.mergeHistory.push(record);
+        // Keep all immutable author/reviewer evidence, but withdraw this formal
+        // candidate so the exporter cannot reuse a revoked language approval.
+        fs.unlinkSync(file(current.entry.cards));
+        state.protected[current.entry.cards] = null;
+        delete item.merged;
+        event(state, 'merge-invalidated', {batch: opts.batch, reason: opts.reason, backup});
+        writeState(state);
+        return {status: stage.status, backup: file(backup), publication: 'Runtime and deployment require separate verification'};
+      }
       if (command === 'heartbeat') {
         if (opts.actor !== stage.owner) fail('Only the active stage owner may heartbeat');
         if (opts.leaseToken !== undefined && opts.leaseToken !== stage.lease?.token) fail('Lease token does not match the active owner');

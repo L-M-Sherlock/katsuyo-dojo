@@ -18,7 +18,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath, pathToFileURL} from 'node:url';
+import {gunzipSync} from 'node:zlib';
 import {readDelivery, digest as deliveryDigest} from '../.agents/skills/write-katsuyo-usage-cards/scripts/delivery-store.mjs';
 import {cardHash, pair, sentenceOf, sha} from '../.agents/skills/write-katsuyo-usage-cards/scripts/staged-quality.mjs';
 
@@ -294,7 +295,8 @@ function normalizeBaseline(root, baseline) {
   if (!Array.isArray(cards) && Array.isArray(cards?.cards)) cards = cards.cards;
   if (!Array.isArray(cards)) fail('baseline must contain a card array');
   const sourceHash = bytes ? digest(bytes) : null;
-  return {cards: structuredClone(cards), sourceHash, objectHash: digest(canonical(cards)), path: sourcePath, historical: true};
+  return {cards: structuredClone(cards), sourceHash, sourceBytes: bytes?.toString('base64') ?? null,
+    objectHash: digest(canonical(cards)), path: sourcePath, historical: true};
 }
 
 function normalizeCall(taskRootOrOptions, project, batches, outputDirectory) {
@@ -309,7 +311,7 @@ export function verifyIntegrationBatches(taskRootOrOptions, project, batches, ou
   const state = readState(taskRoot, options.state);
   const manifest = readManifest(taskRoot);
   const names = (typeof options.batches === 'string' ? [options.batches] : arr(options.batches)).map(batchName);
-  if (!names.length) fail('at least one batch is required');
+  if (!names.length || new Set(names).size !== names.length) fail('at least one unique batch is required');
   const now = typeof options.now === 'function' ? Date.parse(options.now()) : Number(options.now ?? Date.now());
   const nowMs = Number.isFinite(now) ? now : Date.now();
   const proofs = [];
@@ -359,35 +361,66 @@ export function verifyIntegrationBatches(taskRootOrOptions, project, batches, ou
     proofs.push({batch: name, assignment: proofArtifact('assignment', entry.assignment, assignmentBytes, assignment), merged: proofArtifact('merged', entry.cards, mergedBytes, merged),
       assignmentHash, mergedHash, stages: stageProofs});
   }
-  return {schemaVersion: 1, scope: 'integration', taskRoot, batches: proofs, valid: true};
+  return {schemaVersion: 1, scope: 'integration', taskRoot, requiredReviews: Number(state.requiredReviews ?? 2), batches: proofs, valid: true};
+}
+
+/** Read JSON or .json.gz proof bytes through the same parser used by verification.
+ * Supplying bytes lets callers hash and verify exactly one filesystem read.
+ */
+export function readReleaseProof(file, sourceBytes = fs.readFileSync(file)) {
+  let bytes = sourceBytes;
+  if (/\.gz$/iu.test(file)) {
+    try { bytes = gunzipSync(bytes); }
+    catch (error) { fail(`cannot decompress proof ${file}: ${error.message}`); }
+  }
+  return parse(bytes, file);
 }
 
 /** Verify a portable proof after the task root is unavailable. */
 export function verifyReleaseProof(input) {
-  const proof = typeof input === 'string' ? parse(fs.readFileSync(input), input) : input;
+  const proof = typeof input === 'string' ? readReleaseProof(input) : input;
   if (!proof || proof.schemaVersion !== 1 || proof.scope !== 'integration') fail('unsupported release proof');
+  if (!Array.isArray(proof.batches) || !proof.batches.length
+      || new Set(proof.batches.map(batch => batchName(batch.batch))).size !== proof.batches.length) fail('portable proof requires unique nonempty batches');
+  const verifyArtifact = artifact => {
+    if (!artifact?.bytes || !safeRel(artifact.path) || !HEX.test(artifact.hash ?? '')
+        || digest(Buffer.from(artifact.bytes, 'base64')) !== artifact.hash) fail(`portable artifact hash mismatch: ${artifact?.path}`);
+    if (artifact.value !== undefined && !same(parse(Buffer.from(artifact.bytes, 'base64'), artifact.path), artifact.value)) fail(`portable artifact object mismatch: ${artifact.path}`);
+  };
+  const boundArtifact = (delivery, artifact) => {
+    const bound = delivery.artifacts?.[artifact?.path];
+    if (!bound || !same(bound, artifact)) fail(`portable artifact is not bound to delivery: ${artifact?.path}`);
+    return bound.value;
+  };
+  const exactIds = (rows, expected) => Array.isArray(rows) && rows.length === expected.size
+    && new Set(rows.map(row => row?.id)).size === rows.length && rows.every(row => expected.has(row?.id));
   const verifyPortableDelivery = (deliveryProof, label) => {
     if (!deliveryProof?.manifest || !deliveryProof.manifestArtifact) fail(`missing portable ${label} manifest`);
     const delivery = deliveryProof.manifest, manifestArtifact = deliveryProof.manifestArtifact;
+    verifyArtifact(manifestArtifact);
     const manifestBytes = Buffer.from(manifestArtifact.bytes ?? '', 'base64');
     if (!HEX.test(delivery.receipt ?? '') || digest(manifestBytes) !== delivery.receipt
-        || manifestArtifact.hash !== delivery.receipt) fail(`portable ${label} receipt mismatch`);
+        || manifestArtifact.hash !== delivery.receipt || manifestArtifact.path !== delivery.manifest) fail(`portable ${label} receipt mismatch`);
     const manifest = parse(manifestBytes, `${label} manifest`);
     const pinned = {...delivery}; delete pinned.manifest; delete pinned.receipt;
     if (!same(manifest, pinned)) fail(`portable ${label} manifest metadata mismatch`);
     const sourceNames = Object.keys(delivery.files ?? {});
     if (!sourceNames.length || sourceNames.length !== Object.keys(delivery.hashes ?? {}).length
-        || sourceNames.length !== Object.keys(delivery.sourceHashes ?? {}).length) fail(`portable ${label} file set mismatch`);
+        || !same(sorted(sourceNames), sorted(Object.keys(delivery.sourceHashes ?? {})))
+        || !same(sorted(sourceNames), sorted(Object.keys(deliveryProof.artifacts ?? {})))) fail(`portable ${label} file set mismatch`);
     for (const source of sourceNames) {
       const target = delivery.files[source], artifact = deliveryProof.artifacts?.[source];
-      if (!artifact || target !== `${delivery.root}/${path.posix.basename(source)}`
+      if (!artifact || !safeRel(source) || !safeRel(target) || artifact.path !== source
+          || target !== `${delivery.root}/${path.posix.basename(source)}`
           || artifact.hash !== delivery.hashes[target] || artifact.hash !== delivery.sourceHashes[source]
           || digest(Buffer.from(artifact.bytes, 'base64')) !== artifact.hash) fail(`portable ${label} artifact mismatch: ${source}`);
+      verifyArtifact(artifact);
     }
   };
+  const releasedIds = new Set(), releasedPairs = new Set();
   for (const batch of arr(proof.batches)) {
     const assignment = batch.assignment?.value, merged = batch.merged?.value;
-    if (!Array.isArray(assignment) || !Array.isArray(merged) || batch.assignmentHash !== batch.assignment.hash
+    if (!Array.isArray(assignment) || !assignment.length || !Array.isArray(merged) || batch.assignmentHash !== batch.assignment.hash
         || batch.mergedHash !== batch.merged.hash || merged.length !== assignment.length) fail(`portable batch assignment/merge mismatch: ${batch.batch}`);
     const assignmentPairs = assignment.map(rowPair), mergedPairs = merged.map(rowPair);
     if (assignmentPairs.some(pairValue => !pairValue) || new Set(assignmentPairs).size !== assignmentPairs.length
@@ -395,23 +428,34 @@ export function verifyReleaseProof(input) {
         || new Set(merged.map(card => card?.id)).size !== merged.length) {
       fail(`portable batch pair mismatch: ${batch.batch}`);
     }
+    for (const card of merged) {
+      if (!card?.id || releasedIds.has(card.id) || releasedPairs.has(rowPair(card))) fail(`portable duplicate merged card: ${card?.id}`);
+      releasedIds.add(card.id); releasedPairs.add(rowPair(card));
+    }
+    if (!Array.isArray(batch.stages) || !batch.stages.length
+        || new Set(batch.stages.map(stage => stage.stage?.id)).size !== batch.stages.length) fail(`portable stage identity mismatch: ${batch.batch}`);
     const covered = new Set();
+    const approvedByPair = new Map();
     for (const artifact of [batch.assignment, batch.merged, ...arr(batch.stages).flatMap(stage => [stage.draft.scope, stage.draft.cards, stage.draft.notes, stage.draft.readings,
       stage.delivery.manifestArtifact, ...stage.reviews.map(review => [review.reportArtifact, review.delivery.manifestArtifact]).flat(),
       stage.finalization.artifact, stage.finalization.delivery.manifestArtifact])]) {
-      if (!artifact?.bytes || digest(Buffer.from(artifact.bytes, 'base64')) !== artifact.hash) fail(`portable artifact hash mismatch: ${artifact?.path}`);
-      if (artifact.value !== undefined && !same(parse(Buffer.from(artifact.bytes, 'base64'), artifact.path), artifact.value)) fail(`portable artifact object mismatch: ${artifact.path}`);
+      verifyArtifact(artifact);
     }
     for (const stage of arr(batch.stages)) {
       verifyPortableDelivery(stage.delivery, `author ${stage.stage.id}`);
       for (const review of stage.reviews) verifyPortableDelivery(review.delivery, `reviewer ${review.reviewer}`);
       verifyPortableDelivery(stage.finalization.delivery, `finalization ${stage.stage.id}`);
-      if (stage.stage.status !== 'approved') fail(`portable stage is not approved: ${stage.stage.id}`);
+      if (stage.stage.status !== 'approved' || stage.stage.batch !== batch.batch) fail(`portable stage is not approved: ${stage.stage.id}`);
       if (stage.delivery.manifest.receipt !== stage.stage.authorReceipt) fail(`portable author receipt mismatch: ${stage.stage.id}`);
+      for (const artifact of Object.values(stage.draft)) boundArtifact(stage.delivery, artifact);
+      const summary = boundArtifact(stage.finalization.delivery, stage.finalization.artifact);
+      if (!same(summary, stage.finalization.summary)) fail(`portable finalization summary differs from receipt: ${stage.stage.id}`);
       const scope = stage.draft.scope.value, cards = stage.draft.cards.value, notes = stage.draft.notes.value, readings = stage.draft.readings.value;
       if (!Array.isArray(scope) || !Array.isArray(cards) || !Array.isArray(notes) || !readings || !Array.isArray(stage.stage.pairs)
           || stage.stage.scopeHash !== stage.draft.scope.hash || stage.stage.cardSnapshotHash !== stage.draft.cards.hash
-          || cards.length !== stage.stage.pairs.length || notes.length !== cards.length
+          || !cards.length || cards.length !== stage.stage.pairs.length || notes.length !== cards.length
+          || new Set(cards.map(card => card?.id)).size !== cards.length || cards.some(card => !card?.id || card.review !== 'draft')
+          || new Set(stage.stage.pairs).size !== stage.stage.pairs.length
           || !same(sorted(cards.map(rowPair)), sorted(stage.stage.pairs)) || !same(sorted(scope.map(rowPair)), sorted(stage.stage.pairs))) {
         fail(`portable author scope mismatch: ${stage.stage.id}`);
       }
@@ -420,8 +464,17 @@ export function verifyReleaseProof(input) {
         covered.add(pairValue);
       }
       const cardById = new Map(cards.map(card => [card.id, card]));
+      if (!exactIds(notes, new Set(cardById.keys()))) fail(`portable author notes mismatch: ${stage.stage.id}`);
+      const candidateIds = new Set(arr(readings.candidates).map(candidate => candidate.id));
+      if (!Array.isArray(readings.candidates) || candidateIds.size !== readings.candidates.length
+          || [...candidateIds].some(id => !cardById.has(id))) fail(`portable dictionary candidate identity mismatch: ${stage.stage.id}`);
+      const requiredReviews = Number(summary?.requiredReviews);
+      if (!Number.isSafeInteger(requiredReviews) || requiredReviews < 2
+          || (proof.requiredReviews !== undefined && requiredReviews !== proof.requiredReviews)) fail(`portable required review quorum mismatch: ${stage.stage.id}`);
+      if (new Set(stage.reviews.map(review => review.reviewer)).size !== stage.reviews.length) fail(`portable duplicate reviewer: ${stage.stage.id}`);
       for (const review of stage.reviews) {
-        const report = review.reportArtifact.value;
+        const report = boundArtifact(review.delivery, review.reportArtifact);
+        if (!same(report, review.report)) fail(`portable review report differs from receipt: ${review.reviewer}`);
         if (!independentReviewer(stage.stage, review.reviewer) || review.receipt !== review.delivery.manifest.receipt
             || report.reviewer !== review.reviewer || report.selfReview !== false
             || report.authorReceipt !== stage.stage.authorReceipt || report.scopeHash !== stage.stage.scopeHash
@@ -432,47 +485,80 @@ export function verifyReleaseProof(input) {
         const requiresApproval = !stage.stage.conflict || conflict;
         if (!Array.isArray(report.rows) || report.rows.length !== expectedIds.size || new Set(report.rows.map(row => row.id)).size !== report.rows.length
             || report.rows.some(row => !expectedIds.has(row.id) || row.hash !== cardHash(cardById.get(row.id))
-              || (requiresApproval && row.status !== 'approved'))) {
+              || !['approved', 'rejected'].includes(row.status) || (requiresApproval && row.status !== 'approved'))) {
           fail(`portable review card mismatch: ${review.reviewer}`);
         }
         for (const row of report.rows) for (const field of ['sentence', 'reason', 'roles', 'time', 'negation', 'translation', 'reading']) {
           if (typeof row[field] !== 'string' || row[field].trim().length < 2) fail(`portable review field missing: ${review.reviewer}/${row.id}`);
         }
-        const candidateIds = new Set(arr(readings.candidates).map(candidate => candidate.id));
         const expectedCandidateIds = new Set(conflict ? arr(stage.stage.conflict?.candidateIds) : candidateIds);
-        if (!Array.isArray(report.candidates) || report.candidates.length !== expectedCandidateIds.size
-            || report.candidates.some(row => !expectedCandidateIds.has(row.id) || (requiresApproval && row.decision !== 'retain')
+        if (!exactIds(report.candidates, expectedCandidateIds)
+            || report.candidates.some(row => !['retain', 'error'].includes(row.decision) || (requiresApproval && row.decision !== 'retain')
               || typeof row.reason !== 'string' || !row.reason.trim())) fail(`portable review dictionary mismatch: ${review.reviewer}`);
       }
       const conflictReviewer = stage.stage.conflict?.reviewer;
       if (conflictReviewer) {
-        if (stage.reviews.length !== 3 || stage.reviews.filter(review => review.reviewer === conflictReviewer).length !== 1
+        const conflict = stage.stage.conflict;
+        const primary = stage.reviews.filter(review => review.reviewer !== conflictReviewer);
+        if (stage.reviews.length !== requiredReviews + 1 || stage.reviews.filter(review => review.reviewer === conflictReviewer).length !== 1
             || !stage.stage.conflict.cardIds?.length && !stage.stage.conflict.candidateIds?.length) fail(`portable conflict quorum mismatch: ${stage.stage.id}`);
-      } else if (stage.reviews.length !== 2) fail(`portable reviewer quorum mismatch: ${stage.stage.id}`);
-      const summary = stage.finalization.summary;
+        const primaryReceipts = Object.fromEntries(primary.map(review => [review.reviewer, review.receipt]));
+        if (!same(primary.map(review => review.reviewer), conflict.primaryReviewers)
+            || !same(primaryReceipts, conflict.primaryReceipts)
+            || conflict.authorReceipt !== stage.stage.authorReceipt || conflict.scopeHash !== stage.stage.scopeHash
+            || conflict.cardSnapshotHash !== stage.stage.cardSnapshotHash
+            || !same(stage.reviews.find(review => review.reviewer === conflictReviewer).report.primaryReceipts, primaryReceipts)) {
+          fail(`portable conflict dependencies mismatch: ${stage.stage.id}`);
+        }
+        const disputedCards = cards.filter(card => new Set(primary.map(review => review.report.rows.find(row => row.id === card.id).status)).size > 1).map(card => card.id);
+        const disputedCandidates = [...candidateIds].filter(id => new Set(primary.map(review => review.report.candidates.find(row => row.id === id).decision)).size > 1);
+        if (!same(sorted(disputedCards), sorted(arr(conflict.cardIds)))
+            || !same(sorted(disputedCandidates), sorted(arr(conflict.candidateIds)))) fail(`portable conflict scope mismatch: ${stage.stage.id}`);
+        for (const review of primary) {
+          if (review.report.rows.some(row => !disputedCards.includes(row.id) && row.status !== 'approved')
+              || review.report.candidates.some(row => !disputedCandidates.includes(row.id) && row.decision !== 'retain')) {
+            fail(`portable settled review did not approve: ${stage.stage.id}`);
+          }
+        }
+      } else if (stage.stage.conflict || stage.reviews.length !== requiredReviews) fail(`portable reviewer quorum mismatch: ${stage.stage.id}`);
       if (!summary || summary.status !== 'approved' || summary.stage !== stage.stage.id || summary.batch !== batch.batch
           || summary.authorReceipt !== stage.stage.authorReceipt || summary.scopeHash !== stage.stage.scopeHash
           || summary.cardSnapshotHash !== stage.stage.cardSnapshotHash || summary.count !== cards.length) fail(`portable finalization mismatch: ${stage.stage.id}`);
       const receipts = Object.fromEntries(stage.reviews.map(review => [review.reviewer, review.receipt]));
       if (!same(summary.reviewerReceipts, receipts)) fail(`portable finalization reviewer receipts mismatch: ${stage.stage.id}`);
-      if (!Array.isArray(summary.decisions) || summary.decisions.length !== cards.length
+      if (!exactIds(summary.decisions, new Set(cardById.keys()))
           || summary.decisions.some(row => row.status !== 'approved' || row.hash !== cardHash(cardById.get(row.id)))) fail(`portable finalization decisions mismatch: ${stage.stage.id}`);
-      const candidateIds = new Set(arr(readings.candidates).map(candidate => candidate.id));
-      if (!Array.isArray(summary.candidates) || summary.candidates.length !== candidateIds.size
+      if (!exactIds(summary.candidates, candidateIds)
           || summary.candidates.some(row => !candidateIds.has(row.id) || row.decision !== 'retain')) fail(`portable finalization dictionary mismatch: ${stage.stage.id}`);
+      for (const card of cards) {
+        const key = rowPair(card), previous = approvedByPair.get(key);
+        if (previous && !same(previous, card)) fail(`portable approved snapshots disagree for ${key}`);
+        approvedByPair.set(key, card);
+      }
     }
     if (covered.size !== assignmentPairs.length) fail(`portable stage coverage incomplete: ${batch.batch}`);
+    for (const card of merged) {
+      const draft = approvedByPair.get(rowPair(card));
+      if (!draft || !same(card, {...draft, review: 'approved'})) fail(`portable merged card differs from approved snapshot: ${card.id}`);
+    }
   }
   if (proof.release) {
     const bytes = Buffer.from(proof.release.bytes, 'base64');
     if (digest(bytes) !== proof.release.fileHash || !same(parse(bytes, 'release'), proof.release.cards)) fail('portable release hash mismatch');
-    const baseline = arr(proof.baseline?.cards);
-    if (proof.baseline?.objectHash && digest(canonical(baseline)) !== proof.baseline.objectHash) fail('portable baseline object hash mismatch');
-    if (proof.baseline?.sourceBytes && proof.baseline?.sourceHash
-        && digest(Buffer.from(proof.baseline.sourceBytes, 'base64')) !== proof.baseline.sourceHash) fail('portable baseline source hash mismatch');
+    const baseline = proof.baseline?.cards;
+    if (!Array.isArray(baseline) || digest(canonical(baseline)) !== proof.baseline.objectHash) fail('portable baseline object hash mismatch');
+    if (proof.baseline.sourceBytes) {
+      const sourceBytes = Buffer.from(proof.baseline.sourceBytes, 'base64');
+      if (digest(sourceBytes) !== proof.baseline.sourceHash) fail('portable baseline source hash mismatch');
+      const source = parse(sourceBytes, 'baseline');
+      if (!same(Array.isArray(source) ? source : source?.cards, baseline)) fail('portable baseline source object mismatch');
+    }
     if (baseline.length && (!Array.isArray(proof.release.cards) || proof.release.cards.length < baseline.length
         || !same(proof.release.cards.slice(0, baseline.length), baseline))) fail('portable baseline preservation mismatch');
     const baselineIds = new Set(baseline.map(card => card?.id)), baselinePairs = new Set(baseline.map(rowPair));
+    if (baselineIds.size !== baseline.length || baselinePairs.size !== baseline.length
+        || baseline.some(card => !card?.id || !rowPair(card) || card.review !== 'approved')) fail('portable baseline identity mismatch');
+    if (!same(proof.release.cards, [...baseline, ...proof.batches.flatMap(batch => batch.merged.value)])) fail('portable release differs from approved batches and historical baseline');
     for (const batch of arr(proof.batches)) for (const card of arr(batch.merged?.value)) {
       if (baselineIds.has(card?.id) || baselinePairs.has(rowPair(card))) fail(`portable baseline overlap: ${card?.id}`);
     }
@@ -505,10 +591,10 @@ export function exportIntegrationBatches(taskRootOrOptions, project, batches, ou
   const proofPath = path.join(out, 'integration-release-proof.json');
   const release = {path: 'integration-cards.json', fileHash: digest(releaseBytes), bytes: releaseBytes.toString('base64'), cards: releaseCards,
     baseline: {count: baseline.cards.length, sourceHash: baseline.sourceHash, objectHash: baseline.objectHash, protocol3Receipt: null}};
-  const portable = {...proof, release, baseline: {...baseline, cards: baseline.cards, sourceBytes: null}};
+  const portable = {...proof, release, baseline: {...baseline, cards: baseline.cards}};
+  verifyReleaseProof(portable);
   fs.writeFileSync(releasePath, releaseBytes);
   fs.writeFileSync(proofPath, encode(portable));
-  verifyReleaseProof(portable);
   return {releasePath, proofPath, fileHash: release.fileHash, cardCount: releaseCards.length, proof: portable};
 }
 
@@ -525,10 +611,21 @@ export function verifyIntegrationRelease(input) {
 
 function optionsFromArgv(argv) {
   const options = {};
-  for (let i = 0; i < argv.length; i += 2) {
-    const key = argv[i]?.replace(/^--/u, '').replace(/-([a-z])/gu, (_, c) => c.toUpperCase());
-    if (!key || !argv[i + 1]) fail('CLI expects --key value pairs');
-    options[key] = argv[i + 1];
+  const allowed = new Set(['verify', 'help', 'taskRoot', 'project', 'batches', 'proof', 'proofPath',
+    'baseline', 'baselineCards', 'outputDirectory', 'outputDir', 'output']);
+  for (let i = 0; i < argv.length; i++) {
+    if (!argv[i].startsWith('--')) fail(`unexpected CLI argument: ${argv[i]}`);
+    const key = argv[i].slice(2).replace(/-([a-z])/gu, (_, c) => c.toUpperCase());
+    if (!allowed.has(key)) fail(`unknown CLI option: ${argv[i]}`);
+    if (key === 'help') { options.help = true; continue; }
+    if (key === 'verify') {
+      if (argv[i + 1] === 'true' || argv[i + 1] === 'false') options.verify = argv[++i] === 'true';
+      else if (!argv[i + 1] || argv[i + 1].startsWith('--')) options.verify = true;
+      else fail('--verify accepts true or false');
+      continue;
+    }
+    if (!argv[i + 1] || argv[i + 1].startsWith('--')) fail(`missing value for --${key}`);
+    options[key] = argv[++i];
   }
   if (options.batches) options.batches = options.batches.split(',');
   return options;
@@ -537,8 +634,27 @@ function optionsFromArgv(argv) {
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))) {
   try {
     const options = optionsFromArgv(process.argv.slice(2));
-    const result = options.verify ? verifyIntegrationBatches(options) : exportIntegrationBatches(options);
-    process.stdout.write(`${JSON.stringify({valid: true, ...(options.verify ? {batches: result.batches.length} : result)})}\n`);
+    if (options.help) {
+      process.stdout.write('Export: --task-root DIR --batches lane/00,lane/01 [--project DIR_OR_MODULE] [--baseline FILE] [--output-directory DIR]\n'
+        + 'Verify live batches: --verify true --task-root DIR --batches lane/00,lane/01 [--project DIR_OR_MODULE]\n'
+        + 'Verify portable proof: --verify true --proof-path FILE.json[.gz] (no task root or project needed)\n'
+        + 'Live commands load app/lib/usage-cards.mjs from --project, or from the current directory by default.\n');
+    } else {
+      const proofPath = options.proofPath ?? options.proof;
+      const verify = options.verify ?? Boolean(proofPath);
+      if (proofPath && (!verify || options.taskRoot || options.batches || options.project)) fail('portable --proof-path verification cannot be combined with export or live task options');
+      if (!proofPath) {
+        if (!options.taskRoot || !options.batches?.length) fail('live export/verification requires --task-root DIR and --batches lane/00,...; use --proof-path FILE for portable verification');
+        const projectPath = path.resolve(options.project ?? process.cwd());
+        const modulePath = /\.m?js$/iu.test(projectPath) ? projectPath : path.join(projectPath, 'app/lib/usage-cards.mjs');
+        options.project = await import(pathToFileURL(modulePath).href);
+        if (typeof options.project.resolveUsageCard !== 'function') fail(`project module has no resolveUsageCard: ${modulePath}`);
+      }
+      const result = verify ? verifyIntegrationRelease(options) : exportIntegrationBatches(options);
+      process.stdout.write(`${JSON.stringify(verify ? {valid: result.valid, batches: Array.isArray(result.batches) ? result.batches.length : result.batches,
+        ...(result.cards !== undefined ? {cards: result.cards} : {})} : {valid: true, releasePath: result.releasePath, proofPath: result.proofPath,
+        fileHash: result.fileHash, cardCount: result.cardCount})}\n`);
+    }
   } catch (error) {
     process.stderr.write(`${error.stack ?? error}\n`);
     process.exitCode = 1;

@@ -1,13 +1,21 @@
 import { USAGE_CARDS, usageCardIssues, resolveUsageCard, usageCardItem, usageCardClassRequirements, basicUsageCardRequirements, usageCardStageRequirements, usageCardWritingReview } from '../app/lib/usage-cards.mjs';
+import {fileURLToPath} from 'node:url';
+import {auditIntegrationCoverage} from './audit-integration-coverage.mjs';
 
 const strict = !process.argv.includes('--draft');
 const issues = usageCardIssues(USAGE_CARDS, {requireCoverage: strict, requireClassCoverage: strict, requireBasicCoverage: strict, requireStageCoverage: strict ? ['voice', 'linking', 'intentions', 'actions'] : []});
+// Integration can be released in reviewed batches. Its proof and explicit open
+// partition remain mandatory; missing published cards still fail strict audit.
+const integrationCoverage = strict ? await auditIntegrationCoverage({project: fileURLToPath(new URL('../', import.meta.url)),
+  requirements: 'docs/integration-stage-requirements.v2.json', proofPath: 'docs/integration-release-proof.json.gz', strict: true}) : null;
+if (integrationCoverage) issues.push(...integrationCoverage.errors);
 const approved = USAGE_CARDS.filter(card => card.review === 'approved');
 const basic = new Set(basicUsageCardRequirements());
 const voice = new Set(usageCardStageRequirements('voice'));
 const linking = new Set(usageCardStageRequirements('linking'));
 const intentions = new Set(usageCardStageRequirements('intentions'));
 const actions = new Set(usageCardStageRequirements('actions'));
+const integration = new Set(usageCardStageRequirements('integration'));
 console.log(JSON.stringify({cards: USAGE_CARDS.length, approved: approved.length,
   approvedForms: new Set(approved.map(card => card.form)).size,
   approvedFormClasses: new Set(approved.map(card => `${card.form}/${usageCardItem(card.senseId)?.class}`)).size,
@@ -23,6 +31,9 @@ console.log(JSON.stringify({cards: USAGE_CARDS.length, approved: approved.length
   approvedActionPairs: approved.filter(card => actions.has(`${card.senseId}/${card.form}`)).length,
   requiredActionPairs: actions.size,
   missingActionPairs: [...actions].filter(pair => !approved.some(card => `${card.senseId}/${card.form}` === pair)),
+  approvedIntegrationPairs: approved.filter(card => integration.has(`${card.senseId}/${card.form}`)).length,
+  requiredIntegrationPairs: integration.size,
+  openIntegrationPairs: integrationCoverage?.open.count ?? null,
   writingReview: usageCardWritingReview(USAGE_CARDS), issues}, null, 2));
 if (process.argv.includes('--sentences')) for (const card of USAGE_CARDS) {
   const resolved = resolveUsageCard(card);

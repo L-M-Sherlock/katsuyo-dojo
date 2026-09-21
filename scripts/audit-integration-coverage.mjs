@@ -16,13 +16,16 @@
  * with no intersections.  Existing cards are checked for byte-for-byte
  * preservation when --baseline is supplied.  Receipts and expected file
  * hashes are optional in report mode and become blocking with --strict (or
- * when their metadata is supplied).
+ * when their metadata is supplied). --proof-path verifies a portable JSON or
+ * gzip proof and binds the formal integration subset to its exact card objects;
+ * verified historical objects need no invented protocol-3 receipt.
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath, pathToFileURL} from 'node:url';
+import {readReleaseProof, verifyReleaseProof} from './export-integration-batches.mjs';
 
 const HEX = /^[a-f0-9]{64}$/u;
 const fail = message => { throw new Error(message); };
@@ -165,6 +168,54 @@ function setArray(set) { return [...set].sort((a, b) => a.localeCompare(b)); }
 function intersection(a, b) { return new Set([...a].filter(item => b.has(item))); }
 function difference(a, b) { return new Set([...a].filter(item => !b.has(item))); }
 
+function auditProof(file, cards, required, runtime, errors) {
+  const report = {path: file, fileHash: null, chainValid: false, contentMatches: false, valid: false};
+  const verifiedCards = new Map();
+  try {
+    const bytes = fs.readFileSync(file);
+    report.fileHash = digest(bytes);
+    const proof = readReleaseProof(file, bytes);
+    const verified = verifyReleaseProof(proof);
+    if (!Array.isArray(proof.release?.cards)) fail('Formal coverage requires a proof with an exported release');
+    report.chainValid = true;
+    const expected = proof.release.cards;
+    const expectedById = new Map(expected.map(card => [card.id, card]));
+    const currentRequirements = typeof runtime?.usageCardStageRequirements === 'function'
+      ? runtime.usageCardStageRequirements('integration') : [];
+    const integrationPairs = new Set([...required.set, ...currentRequirements, ...expected.map(pairKey)]);
+    const integrationForms = new Set([...integrationPairs].map(pair => pair.slice(pair.lastIndexOf('/') + 1)));
+    const actual = cards.filter(card => expectedById.has(card?.id) || integrationForms.has(card?.form));
+    const actualById = new Map(actual.map(card => [card?.id, card]));
+    const missing = expected.filter(card => !actualById.has(card.id)).map(card => card.id);
+    const extra = actual.filter(card => !expectedById.has(card?.id)).map(card => card?.id ?? '(missing id)');
+    const changed = expected.filter(card => actualById.has(card.id)
+      && JSON.stringify(card) !== JSON.stringify(actualById.get(card.id))).map(card => card.id);
+    const outsideRequirements = expected.map(pairKey).filter(pair => !required.set.has(pair));
+    const objectHash = list => digest(Buffer.from(JSON.stringify([...list].sort((a, b) => String(a?.id).localeCompare(String(b?.id))))));
+    report.contentMatches = !missing.length && !extra.length && !changed.length && actual.length === expected.length;
+    Object.assign(report, {batches: verified.batches, releaseFileHash: proof.release.fileHash, releaseCount: expected.length,
+      historicalCount: proof.baseline.cards.length, protocol3Count: expected.length - proof.baseline.cards.length,
+      sourceCount: actual.length, sourceContentHash: objectHash(actual), releaseContentHash: objectHash(expected),
+      missing, extra, changed, outsideRequirements});
+    if (missing.length) errors.push(`Proof cards missing from formal source: ${missing.join(', ')}`);
+    if (extra.length) errors.push(`Formal integration cards absent from proof: ${extra.join(', ')}`);
+    if (changed.length) errors.push(`Formal integration cards differ from proof: ${changed.join(', ')}`);
+    if (actual.length !== expected.length && !missing.length && !extra.length) errors.push('Formal integration card count differs from proof');
+    if (outsideRequirements.length) errors.push(`Proof release pairs outside frozen requirements: ${outsideRequirements.join(', ')}`);
+    report.valid = report.contentMatches && !outsideRequirements.length;
+    // These exact objects are backed either by the historical baseline or
+    // by the independently reviewed protocol-3 chain. No synthetic receipt
+    // is assigned to historical cards.
+    for (const card of expected) {
+      if (JSON.stringify(card) === JSON.stringify(actualById.get(card.id))) verifiedCards.set(card.id, card);
+    }
+  } catch (error) {
+    report.error = error.message;
+    errors.push(`Integration proof verification failed: ${error.message}`);
+  }
+  return {report, verifiedCards};
+}
+
 /**
  * @param {object} options
  * @param {string} options.project project root
@@ -174,6 +225,7 @@ function difference(a, b) { return new Set([...a].filter(item => !b.has(item)));
  * @param {string} [options.deferred] exact deferred pair ledger
  * @param {string} [options.open] exact open/unresolved pair ledger
  * @param {string} [options.receipts] receipt and expected-hash ledger
+ * @param {string} [options.proofPath] portable release proof; verifies receipts and exact formal content
  * @param {string} [options.runtime] runtime module used for resolving target readings
  * @param {boolean} [options.strict] missing receipt/hash/reading metadata is blocking
  */
@@ -250,6 +302,9 @@ export async function auditIntegrationCoverage(options = {}) {
     if (baselineChanged.length) errors.push(`Baseline cards changed: ${baselineChanged.join(', ')}`);
   }
 
+  const proof = options.proofPath
+    ? auditProof(absolute(root, options.proofPath), cards, required, runtime, errors) : null;
+
   const receiptData = options.receipts && fs.existsSync(absolute(root, options.receipts))
     ? readData(absolute(root, options.receipts)).value : null;
   const receiptMaps = extractReceiptMap(receiptData);
@@ -265,9 +320,11 @@ export async function auditIntegrationCoverage(options = {}) {
     const expected = expectedReading(row.row), actual = cardReading(card, resolver);
     if (expected && !actual) readingMissing.push(card.id ?? row.pair);
     else if (expected && actual && expected !== actual) readingMismatch.push({id: card.id ?? row.pair, expected, actual});
-    const receipt = card.receipt ?? receiptMaps.map.get(card.id) ?? receiptMaps.map.get(row.pair);
-    if (!receipt) receiptMissing.push(card.id ?? row.pair);
-    else if (!HEX.test(receipt)) receiptInvalid.push(card.id ?? row.pair);
+    if (!proof?.verifiedCards.has(card.id)) {
+      const receipt = card.receipt ?? receiptMaps.map.get(card.id) ?? receiptMaps.map.get(row.pair);
+      if (!receipt) receiptMissing.push(card.id ?? row.pair);
+      else if (!HEX.test(receipt)) receiptInvalid.push(card.id ?? row.pair);
+    }
     const expectedCardHash = receiptMaps.cards.get(card.id) ?? receiptMaps.cards.get(row.pair);
     if (expectedCardHash && digest(Buffer.from(JSON.stringify(card))) !== expectedCardHash) receiptHashMismatch.push(card.id ?? row.pair);
   }
@@ -281,7 +338,11 @@ export async function auditIntegrationCoverage(options = {}) {
   const fileHash = digest(cardSource.bytes), expectedFileHash = options.fileHash ?? receiptMaps.files.get(cardSource.path) ?? receiptMaps.files.get(path.relative(root, cardSource.path));
   const fileHashMatches = expectedFileHash ? fileHash === expectedFileHash : null;
   if (expectedFileHash && !fileHashMatches) errors.push(`Formal card file hash mismatch: expected ${expectedFileHash}, got ${fileHash}`);
-  if (strict && !expectedFileHash) errors.push('Missing expected formal card file hash');
+  // A runtime module may combine many independently imported card files, so
+  // its raw bytes cannot equal the dedicated release JSON. An intact proof
+  // binds the complete integration subset by exact objects instead. Explicit
+  // source hashes, when supplied, remain mandatory and are never bypassed.
+  if (strict && !expectedFileHash && !proof?.report.valid) errors.push('Missing expected formal card file hash');
 
   const report = {
     schemaVersion: 1,
@@ -292,7 +353,9 @@ export async function auditIntegrationCoverage(options = {}) {
     open: {count: open.set.size, pairs: setArray(open.set)},
     sets: {union: setArray(union), missing: setArray(missing), extra: setArray(extra), overlap: Object.fromEntries(Object.entries(overlap).map(([name, set]) => [name, setArray(set)]))},
     baseline: baseline ? {path: absolute(root, options.baseline), count: baseline.cards.length, missing: baselineMissing, changed: baselineChanged} : null,
-    integrity: {cardIdentity, structuralIssues, readingMissing, readingMismatch, receiptMissing, receiptInvalid, receiptHashMismatch, expectedFileHash: expectedFileHash ?? null, fileHashMatches},
+    ...(proof ? {proof: proof.report} : {}),
+    integrity: {cardIdentity, structuralIssues, readingMissing, readingMismatch, receiptMissing, receiptInvalid, receiptHashMismatch, expectedFileHash: expectedFileHash ?? null, fileHashMatches,
+      ...(proof ? {fileIntegrityBasis: expectedFileHash ? 'explicit-file-hash' : proof.report.valid ? 'verified-proof-content' : null} : {})},
     valid: errors.length === 0,
     errors,
   };
