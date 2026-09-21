@@ -6,12 +6,18 @@
     "form": "temiruDesireNegativePast",
     "scene": "旅馆住得很舒服，她当时不想试着回家。",
     "before": [
-      { "text": "旅館が快適で、家に", "reading": "りょかんがかいてきで、いえに" }
+      {
+        "text": "旅館が快適で、家に",
+        "reading": "りょかんがかいてきで、いえに"
+      }
     ],
     "after": [
-      { "text": "。", "reading": "。" }
+      {
+        "text": "。",
+        "reading": "。"
+      }
     ],
-    "translation": "旅馆住得很舒服，她当时不想试着回家。",
+    "translation": "住在舒适的旅馆时，她当时并不想试着回家。",
     "review": "draft"
   },
   {
@@ -21,10 +27,16 @@
     "form": "temiruDesirePast",
     "scene": "站在舞台边，她曾想试着唱歌。",
     "before": [
-      { "text": "彼女は", "reading": "かのじょは" }
+      {
+        "text": "彼女は",
+        "reading": "かのじょは"
+      }
     ],
     "after": [
-      { "text": "。", "reading": "。" }
+      {
+        "text": "。",
+        "reading": "。"
+      }
     ],
     "translation": "她曾想试着唱歌。",
     "review": "draft"
@@ -36,10 +48,16 @@
     "form": "temiruDesirePast",
     "scene": "找不到房间时，他曾想试着询问前台。",
     "before": [
-      { "text": "部屋が見つからず、彼は受付に", "reading": "へやがみつからず、かれはうけつけに" }
+      {
+        "text": "部屋が見つからず、彼は受付に",
+        "reading": "へやがみつからず、かれはうけつけに"
+      }
     ],
     "after": [
-      { "text": "。", "reading": "。" }
+      {
+        "text": "。",
+        "reading": "。"
+      }
     ],
     "translation": "找不到房间时，他曾想试着询问前台。",
     "review": "draft"
