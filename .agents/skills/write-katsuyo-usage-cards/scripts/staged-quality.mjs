@@ -37,6 +37,7 @@ export function screenCards(cards, assignment, project, {exact = true, requireRe
   const add = (code, card, detail) => issues.push({code, id: card.id, detail});
   for (const card of cards) {
     const key = pair(card), row = expected.get(key);
+    if (/\?{3,}|\uFFFD/u.test(JSON.stringify(card))) add('encoding-damage', card);
     if (!row) add('outside-assignment', card, key);
     if (seen.has(key)) add('duplicate-pair', card, key);
     seen.add(key);
@@ -46,7 +47,7 @@ export function screenCards(cards, assignment, project, {exact = true, requireRe
     for (const issue of project.usageCardIssues([card])) add('structure', card, issue);
     for (const field of ['scene', 'translation']) {
       if (/[ぁ-ゖァ-ヺ]/u.test(card[field] ?? '')) add(`japanese-${field}`, card);
-      if (/(?:具体场景|具体安排下|某人|某事|这一行动|占位|待补|TODO|placeholder|……)/iu.test(card[field] ?? '')) add(`placeholder-${field}`, card);
+      if (/(?:具体场景|具体安排下|某人|某事|这一行动|该动作|占位|待补|TODO|placeholder|……)/iu.test(card[field] ?? '')) add(`placeholder-${field}`, card);
     }
     if (normalized(card.scene) === normalized(card.translation)) add('translation-copies-scene', card);
     const outside = ['before', 'after'].flatMap(k => Array.isArray(card[k]) ? card[k] : []);

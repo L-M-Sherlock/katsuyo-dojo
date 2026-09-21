@@ -9,9 +9,9 @@ import {USAGE_CARDS, usageCardStageRequirements, usageCardIssues} from '../app/l
 import generated from '../app/lib/usage-cards/integration-generated.mjs';
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
-const proofPath = fileURLToPath(new URL('../docs/integration-release-proof.json.gz', import.meta.url));
+const proofPath = fileURLToPath(new URL('../docs/integration-release-proof.v3.json.gz', import.meta.url));
 const proof = readReleaseProof(proofPath);
-const frozen = JSON.parse(fs.readFileSync(new URL('../docs/integration-stage-requirements.v2.json', import.meta.url)));
+const frozen = JSON.parse(fs.readFileSync(new URL('../docs/integration-stage-requirements.v3.json', import.meta.url)));
 const ids = new Set(generated.map(card => card.id));
 
 test('published integration cards exactly match independent protocol-3 proof and preserve all historical content', () => {
@@ -27,7 +27,7 @@ test('published integration cards exactly match independent protocol-3 proof and
   for (const card of proof.release.cards) assert.deepEqual(byId.get(card.id), card);
 });
 
-test('the published integration partition accounts for every approved and still-open pair', async () => {
+test('the completed integration release covers every eligible pair with no open or deferred gap', async () => {
   const original = JSON.parse(fs.readFileSync(new URL('../docs/integration-stage-requirements.v1.json', import.meta.url)));
   assert.deepEqual(frozen.required, original.required);
   const current = new Set(usageCardStageRequirements('integration'));
@@ -38,11 +38,33 @@ test('the published integration partition accounts for every approved and still-
   assert.equal(new Set(partition).size, partition.length, 'release partitions must not overlap');
   assert.deepEqual(new Set(partition), new Set(original.required));
   for (const name of ['required', 'approved', 'deferred', 'open']) assert.equal(frozen.counts[name], frozen[name].length);
-  assert.equal(frozen.releaseStatus, frozen.open.length ? 'partial' : 'complete');
-  assert.deepEqual(usageCardIssues(USAGE_CARDS), []);
+  assert.equal(frozen.releaseStatus, 'complete');
+  assert.deepEqual(frozen.open, []);
+  assert.deepEqual(frozen.deferred, []);
+  assert.deepEqual(usageCardIssues(USAGE_CARDS, {requireStageCoverage:['integration']}), []);
   const report = await auditIntegrationCoverage({project: fileURLToPath(new URL('../', import.meta.url)),
-    requirements: 'docs/integration-stage-requirements.v2.json', proofPath, strict: true});
+    requirements: 'docs/integration-stage-requirements.v3.json', proofPath, strict: true});
   assert.equal(report.valid, true, report.errors.join('\n'));
   assert.deepEqual(new Set(report.cards.approvedPairs), new Set(frozen.approved));
   assert.deepEqual(new Set(report.open.pairs), new Set(frozen.open));
+});
+
+test('completion adds exactly the previous 245 open pairs without changing published objects', () => {
+  const priorBytes = fs.readFileSync(new URL('../docs/integration-stage-requirements.v2.json', import.meta.url));
+  assert.equal(createHash('sha256').update(priorBytes).digest('hex'), 'b2b3081a95f67ec8f127deed0852b1e7beaf1994e815f0e1b8a1565930e5c563');
+  const priorState = JSON.parse(priorBytes);
+  const oldPath = fileURLToPath(new URL('../' + priorState.proof.path, import.meta.url));
+  assert.equal(createHash('sha256').update(fs.readFileSync(oldPath)).digest('hex'), priorState.proof.sha256);
+  const oldProof = readReleaseProof(oldPath);
+  assert.equal(verifyReleaseProof(oldProof).valid, true);
+  const current = new Map(USAGE_CARDS.map(card => [card.id, card]));
+  for (const old of oldProof.release.cards) assert.deepEqual(current.get(old.id), old);
+  const oldIds = new Set(oldProof.release.cards.map(card => card.id));
+  const added = generated.filter(card => !oldIds.has(card.id));
+  assert.equal(added.length, 245);
+  assert.deepEqual(new Set(added.map(card => `${card.senseId}/${card.form}`)), new Set(priorState.open));
+  const addedIds = new Set(added.map(card => card.id));
+  const priorRuntime = USAGE_CARDS.filter(card => !addedIds.has(card.id));
+  assert.equal(priorRuntime.length, frozen.previousRelease.cards);
+  assert.equal(digest(priorRuntime), frozen.previousRelease.sha256);
 });

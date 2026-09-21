@@ -7,7 +7,7 @@ const issues = usageCardIssues(USAGE_CARDS, {requireCoverage: strict, requireCla
 // Integration can be released in reviewed batches. Its proof and explicit open
 // partition remain mandatory; missing published cards still fail strict audit.
 const integrationCoverage = strict ? await auditIntegrationCoverage({project: fileURLToPath(new URL('../', import.meta.url)),
-  requirements: 'docs/integration-stage-requirements.v2.json', proofPath: 'docs/integration-release-proof.json.gz', strict: true}) : null;
+  requirements: 'docs/integration-stage-requirements.v3.json', proofPath: 'docs/integration-release-proof.v3.json.gz', strict: true}) : null;
 if (integrationCoverage) issues.push(...integrationCoverage.errors);
 const approved = USAGE_CARDS.filter(card => card.review === 'approved');
 const basic = new Set(basicUsageCardRequirements());

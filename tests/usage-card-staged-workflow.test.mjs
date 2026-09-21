@@ -84,6 +84,36 @@ test('invalid assignment blocks dispatch and records exact pending pairs without
   assert.deepEqual(fs.readFileSync(path.join(f.root, 'demo/00.assignment.json')), before);
 });
 
+test('damaged review text cannot be accepted by appending an ID to question marks', async t => {
+  const f=fixture(t); await f.w.run('init',{actor:'/root'});
+  const job=await f.dispatch('pilot',f.rows.slice(0,3)),cards=f.write(job);
+  await f.submit(job);
+  const report=f.review(cards); report.rows[0].reason='???????? '+cards[0].id;
+  await assert.rejects(f.w.run('review',{actor:'/root',batch:job.batch,stage:job.stage,review:report}),/Encoding-damaged review/);
+  cards[0].translation='????';
+  assert.ok(screenCards(cards,f.rows.slice(0,3),f.project).issues.some(issue=>issue.code==='encoding-damage'));
+});
+
+test('a mistakenly reopened superseded failure restores history and the exact published merge', async t => {
+  const f=fixture(t); await f.w.run('init',{actor:'/root'});
+  const pilot=await f.dispatch('pilot',f.rows.slice(0,3)),p=f.write(pilot);
+  await f.submit(pilot); await f.approve(pilot,p);
+  const failed=await f.dispatch('expansion',f.rows),draft=f.write(failed);
+  await f.submit(failed); const report=f.review(draft); report.rows[0].status='rejected';
+  await f.w.run('review',{actor:'/root',batch:failed.batch,stage:failed.stage,review:report});
+  const corrected=await f.dispatch('expansion',f.rows),cards=f.write(corrected);
+  await f.submit(corrected);await f.approve(corrected,cards);
+  const original=await f.w.run('merge',{actor:'/root',batch:pilot.batch});
+  await f.w.run('invalidate-merge',{actor:'/root',batch:failed.batch,stage:failed.stage,reason:'Simulate coordinator error'});
+  await f.w.run('reopen',{actor:'/root',batch:failed.batch,stage:failed.stage,owner:'/root/new_writer',reason:'Simulate erroneous reopen'});
+  const state=JSON.parse(fs.readFileSync(path.join(f.root,'staged-state/state.json')));
+  const history=state.batches[failed.batch].stages.find(s=>s.id===failed.stage).reviewHistory.find(h=>h.status==='rejected');
+  const opts={actor:'/root',batch:failed.batch,stage:failed.stage,history:history.report,reason:'Restore the superseded historical failure'};
+  await assert.rejects(f.w.run('restore-superseded',{...opts,actor:'/root/new_writer'}),/Main agent only/);
+  assert.equal((await f.w.run('restore-superseded',opts)).status,'rejected');
+  assert.equal((await f.w.run('merge',{actor:'/root',batch:failed.batch})).hash,original.hash);
+});
+
 test('revoked merge preserves evidence and permits a fresh review before merging again', async t => {
   const f = fixture(t); await f.w.run('init', {actor: '/root'});
   const pilot = await f.dispatch('pilot', f.rows.slice(0, 3)), cards = f.write(pilot);

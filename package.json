@@ -23,7 +23,7 @@
     "audit:paths": "node scripts/audit-diagnostic-paths.mjs",
     "audit:paths:parallel": "node scripts/audit-diagnostic-paths-parallel.mjs",
     "audit:usage": "node scripts/audit-usage-cards.mjs",
-    "audit:integration": "node scripts/audit-integration-coverage.mjs --requirements docs/integration-stage-requirements.v2.json --proof-path docs/integration-release-proof.json.gz --strict",
+    "audit:integration": "node scripts/audit-integration-coverage.mjs --requirements docs/integration-stage-requirements.v3.json --proof-path docs/integration-release-proof.v3.json.gz --strict",
     "test:integration-release": "node --test tests/integration-release.test.mjs",
     "freeze:integration": "node scripts/freeze-integration-requirements.mjs"
   },

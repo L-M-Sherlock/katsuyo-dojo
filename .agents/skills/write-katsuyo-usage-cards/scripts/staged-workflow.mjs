@@ -446,6 +446,28 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
       }
       const stageId = command === 'merge' ? state.batches[opts.batch]?.stages.at(-1)?.id : opts.stage;
       const {item, stage, current} = stageFor(state, opts.batch, stageId);
+      if (command === 'restore-superseded') {
+        main(opts.actor);
+        if (!opts.reason?.trim()) fail('Restoration requires a documented coordinator correction');
+        const history = stage.reviewHistory?.find(entry => entry.report === opts.history && entry.status === 'rejected');
+        if (!history) fail('Restoration requires a receipt-bound rejected history');
+        const evidence = json(readDelivery(root, history.delivery).get(history.report));
+        if (evidence.status !== 'rejected' || evidence.author.scopeHash !== stage.scopeHash) fail('Restoration history scope mismatch');
+        const later = item.stages.slice(item.stages.indexOf(stage) + 1).filter(s => s.status === 'approved');
+        const covered = new Set(later.flatMap(s => snapshot(s).cards.map(pair)));
+        if (stage.pairs.some(p => !covered.has(p))) fail('A later approved snapshot must cover the superseded stage');
+        archiveReview(stage, 'restore-superseded', opts.reason);
+        for (const key of semanticFields) delete stage[key];
+        Object.assign(stage, evidence.author, evidence.semantics);
+        stage.status = 'rejected';
+        stage.reviewPacketRevision = evidence.packetRevision;
+        delete stage.lease;
+        stage.restorationHistory ??= [];
+        stage.restorationHistory.push({at: now(), reason: opts.reason, history: opts.history});
+        event(state, 'superseded-stage-restored', {batch: opts.batch, stage: stage.id, reason: opts.reason});
+        writeState(state);
+        return {status: stage.status, history: opts.history, publication: 'Merge still required'};
+      }
       if (command === 'invalidate-merge') {
         main(opts.actor);
         if (!item.merged || !opts.reason?.trim()) fail('Merge invalidation requires a merged batch and reason');
@@ -689,6 +711,7 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
           const r = review.rows.find(row => row.id === card.id);
           if (!r || !['approved', 'rejected'].includes(r.status) || r.hash !== cardHash(card) || r.sentence !== sentenceOf(card, project).sentence) fail(`Missing or stale review: ${card.id}`);
           for (const key of ['reason', 'roles', 'time', 'negation', 'translation', 'reading']) if (typeof r[key] !== 'string' || r[key].trim().length < 2) fail(`Missing review ${key}: ${card.id}`);
+          if (Object.values(r).some(value => typeof value === 'string' && /\?{3,}|\uFFFD/u.test(value))) fail(`Encoding-damaged review: ${card.id}`);
           if (reasons.has(r.reason.trim())) fail('Duplicate review reason');
           reasons.add(r.reason.trim());
         }
@@ -707,6 +730,7 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         const candidateIds = new Set((conflictReviewer ? snap.readings.candidates.filter(c => stage.conflict.candidateIds.includes(c.id)) : snap.readings.candidates).map(c => c.id));
         if (!Array.isArray(review.candidates) || review.candidates.length !== candidateIds.size || new Set(review.candidates.map(c => c.id)).size !== candidateIds.size) fail('Adjudicate each dictionary candidate');
         for (const c of review.candidates) if (!candidateIds.has(c.id) || !['retain', 'error'].includes(c.decision) || !c.reason?.trim()) fail('Invalid dictionary adjudication');
+        if (review.candidates.some(c => /\?{3,}|\uFFFD/u.test(c.reason))) fail('Encoding-damaged dictionary adjudication');
         const allPassed = review.rows.every(r => r.status === 'approved') && review.candidates.every(c => c.decision === 'retain');
         stage.reviewOutputPaths ??= {};
         const report = `staged-state/${opts.batch}/${stage.id}.accepted-review-${crypto.randomUUID()}.json`;
