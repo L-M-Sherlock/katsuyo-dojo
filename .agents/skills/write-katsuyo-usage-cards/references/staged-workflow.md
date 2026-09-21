@@ -34,6 +34,7 @@
 | `review --actor /root --batch lane/NN --stage ID --review <判断JSON>` | 兼容旧记录 | 仅用于历史主代理审核记录；新批次不能用它替代法定人数 |
 | `merge --actor /root --batch lane/NN` | 主代理 | 只读取已核验作者／审核快照并检查完整集合，写正式稿 |
 | `invalidate-merge --actor /root --batch lane/NN --stage ID --reason ...` | 主代理 | 审核依据被撤回时，保留原正式稿和审核历史、撤销该批合并，并原子地把受影响阶段退回 submitted；新审核完成前禁止再次合并。产品与发布候选须另行核对撤回 |
+| `restore-superseded --actor /root --batch lane/NN --stage ID --history <原退回记录> --reason ...` | 主代理 | 纠正误重开的历史失败阶段；只恢复有收据绑定的 rejected 状态，并要求后续 approved 快照已覆盖所有配对，随后仍须通过 merge 门禁 |
 | `status` | 主代理 | 查看队列、待处理配对和阶段状态；只有当前实现提供时才使用其他指标输出 |
 
 检查／提交是顺序依赖。命令返回 session_id 时轮询该句柄，不因无新输出重启同一命令。记录实际退出状态，不用分号串联生成、检查、提交。`merge-staged-batch.mjs` 是同一合并门槛的便捷入口，不能接受未经审核的任意数组。
