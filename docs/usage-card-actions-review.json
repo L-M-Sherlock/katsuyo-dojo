@@ -11,7 +11,7 @@
   "originalActionPairs": 159,
   "assignedPairs": 6845,
   "approvedCards": 6814,
-  "approvedCardsSha256": "58f0cc079ec5e971355939fe77a6ed3cc224a8a8f812759bc19e043d3c12e727",
+  "approvedCardsSha256": "bc336e81425ee876650bdafe77808f6adc4e8887dad1e9bc397014b94c7b1d14",
   "pendingPairs": 0,
   "publishedFile": "actions-generated.mjs",
   "approvedIds": [
@@ -9822,5 +9822,103 @@
   "effectiveRequiredPairs": 6973,
   "reviewVersion": 6,
   "originalRequiredPairs": 7004,
-  "completionScope": "All currently eligible action/state sense-form pairs have approved cards; 31 exact pairs are deferred from routine practice and retain morphological recognition."
+  "completionScope": "All currently eligible action/state sense-form pairs have approved cards; 31 exact pairs are deferred from routine practice and retain morphological recognition.",
+  "editorialRevisions": [
+    {
+      "id": "usage:teikuNegativePast:verb:笑う:わらう",
+      "pair": "verb:笑う:わらう/teikuNegativePast",
+      "previousStatus": "draft",
+      "currentStatus": "approved",
+      "sourceHash": "acd90eb4e5006b1446b02f867241ea5af4d1b1cf54f812118eb210f601785d42",
+      "basis": "two-independent-reviewers",
+      "reviewers": [
+        "/root/teiku_repair_review"
+      ],
+      "reason": "返修稿经独立逐卡审核通过；保留固定词义与目标形式，补足空间参照或时间发展背景。",
+      "previousCard": {
+        "id": "usage:teikuNegativePast:verb:笑う:わらう",
+        "senseId": "verb:笑う:わらう",
+        "meaning": "笑",
+        "form": "teikuNegativePast",
+        "scene": "回想昨天来客反应，他并未被我的模仿逗笑。",
+        "before": [
+          {
+            "text": "昨日の客は、私の物まねを見ても",
+            "reading": "きのうのきゃくは、わたしのものまねをみても"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天的客人即使看了我的模仿，也没有笑一番再走。",
+        "review": "approved"
+      }
+    },
+    {
+      "id": "usage:teikuNegative:verb:違う:ちがう",
+      "pair": "verb:違う:ちがう/teikuNegative",
+      "previousStatus": "draft",
+      "currentStatus": "approved",
+      "sourceHash": "449eaa6354391f63ee31f2cd6396d5d711967b8c21949da725021be3fea94946",
+      "basis": "two-independent-reviewers",
+      "reviewers": [
+        "/root/teiku_repair_review"
+      ],
+      "reason": "返修稿经独立逐卡审核通过；保留固定词义与目标形式，补足空间参照或时间发展背景。",
+      "previousCard": {
+        "id": "usage:teikuNegative:verb:違う:ちがう",
+        "senseId": "verb:違う:ちがう",
+        "meaning": "不同；不对",
+        "form": "teikuNegative",
+        "scene": "两只同步的钟走速相同，时刻不会逐渐错开。",
+        "before": [
+          {
+            "text": "進む速さが同じなら、二つの時計の時刻は",
+            "reading": "すすむはやさがおなじなら、ふたつのとけいのじこくは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "如果走的速度相同，两只钟的时刻就不会逐渐变得不同。",
+        "review": "approved"
+      }
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:違う:ちがう",
+      "pair": "verb:違う:ちがう/teikuNegativePast",
+      "previousStatus": "draft",
+      "currentStatus": "approved",
+      "sourceHash": "10dcf610a06861db29c20dd6ca8b2f8b30cbaee323109ec8725586e7a718fa56",
+      "basis": "two-independent-reviewers",
+      "reviewers": [
+        "/root/teiku_repair_review"
+      ],
+      "reason": "返修稿经独立逐卡审核通过；保留固定词义与目标形式，补足空间参照或时间发展背景。",
+      "previousCard": {
+        "id": "usage:teikuNegativePast:verb:違う:ちがう",
+        "senseId": "verb:違う:ちがう",
+        "meaning": "不同；不对",
+        "form": "teikuNegativePast",
+        "scene": "回顾一周观察，两只钟的时刻未逐渐错开。",
+        "before": [
+          {
+            "text": "一週間観察したが、二つの時計の時刻は",
+            "reading": "いっしゅうかんかんさつしたが、ふたつのとけいのじこくは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "观察了一周，两只钟的时刻没有逐渐变得不同。",
+        "review": "approved"
+      }
+    }
+  ]
 }

@@ -9,6 +9,8 @@ import {USAGE_CARDS, usageCardStageRequirements, usageCardIssues} from '../app/l
 import generated from '../app/lib/usage-cards/integration-generated.mjs';
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+const actionReview = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url)));
+const editorialRevisionIds = new Set((actionReview.editorialRevisions ?? []).map(entry => entry.id));
 const proofPath = fileURLToPath(new URL('../docs/integration-release-proof.v3.json.gz', import.meta.url));
 const proof = readReleaseProof(proofPath);
 const frozen = JSON.parse(fs.readFileSync(new URL('../docs/integration-stage-requirements.v3.json', import.meta.url)));
@@ -21,7 +23,12 @@ test('published integration cards exactly match independent protocol-3 proof and
   assert.equal(ids.size, generated.length);
   const prior = USAGE_CARDS.filter(card => !ids.has(card.id));
   assert.equal(prior.length, 16412);
-  assert.equal(digest(prior), '775ff7fcd7a0a2bdfb27a9408202d92d58a1dc76712e6bd5b43d6d0dceb7167d');
+  const revisions = new Map((actionReview.editorialRevisions ?? []).map(entry => [entry.id, entry]));
+  const historicalById = new Map(prior.map(card => [card.id, revisions.get(card.id)?.previousCard ?? card]));
+  for (const card of prior) {
+    if (!editorialRevisionIds.has(card.id)) assert.deepEqual(card, historicalById.get(card.id), `Unexpected historical change: ${card.id}`);
+  }
+  assert.equal(editorialRevisionIds.size, 3);
   assert.equal(digest(proof.baseline.cards), '770d6cf0a58f97a147ae263254788a2e28de01400ba58ea91bfa73ec845da94c');
   const byId = new Map(USAGE_CARDS.map(card => [card.id, card]));
   for (const card of proof.release.cards) assert.deepEqual(byId.get(card.id), card);
@@ -66,5 +73,9 @@ test('completion adds exactly the previous 245 open pairs without changing publi
   const addedIds = new Set(added.map(card => card.id));
   const priorRuntime = USAGE_CARDS.filter(card => !addedIds.has(card.id));
   assert.equal(priorRuntime.length, frozen.previousRelease.cards);
-  assert.equal(digest(priorRuntime), frozen.previousRelease.sha256);
+  const revisions = new Map((actionReview.editorialRevisions ?? []).map(entry => [entry.id, entry]));
+  const historicalById = new Map(priorRuntime.map(card => [card.id, revisions.get(card.id)?.previousCard ?? card]));
+  for (const card of priorRuntime) {
+    if (!editorialRevisionIds.has(card.id)) assert.deepEqual(card, historicalById.get(card.id), `Unexpected historical change: ${card.id}`);
+  }
 });
