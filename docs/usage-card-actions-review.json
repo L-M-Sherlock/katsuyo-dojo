@@ -7,11 +7,11 @@
   "originalCards": 9598,
   "originalCardsSha256": "5f7f9dcef365905069a2d258a7581b5e3974044caf13bda7b74d959e40fdcfcf",
   "originalRequirementSha256": "ed857e5f4158fb5371fe04c8aee870396480d5b2eb59bd40b96206521dce14e9",
-  "requiredPairs": 6973,
+  "requiredPairs": 6972,
   "originalActionPairs": 159,
   "assignedPairs": 6845,
-  "approvedCards": 6814,
-  "approvedCardsSha256": "bc336e81425ee876650bdafe77808f6adc4e8887dad1e9bc397014b94c7b1d14",
+  "approvedCards": 6813,
+  "approvedCardsSha256": "0f6a1b62e2ea4fd0a96ca81dd5f76cf7280a84d52d15f0f52f8c4437c3b65b20",
   "pendingPairs": 0,
   "publishedFile": "actions-generated.mjs",
   "approvedIds": [
@@ -5050,7 +5050,6 @@
     "usage:tekuru:verb:死ぬ:しぬ",
     "usage:teikuPast:verb:死ぬ:しぬ",
     "usage:teikuNegative:verb:死ぬ:しぬ",
-    "usage:teikuNegativePast:verb:死ぬ:しぬ",
     "usage:tekuruPast:verb:死ぬ:しぬ",
     "usage:tekuruNegative:verb:死ぬ:しぬ",
     "usage:tekuruNegativePast:verb:死ぬ:しぬ",
@@ -9816,23 +9815,128 @@
         }
       ],
       "restoreCondition": "取得保持固定词义和完整目标形式的自然例句，主代理复核当前疑点、场景、时态、否定范围、译文和读音，并同步卡片、课程说明及适用性后恢复。"
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:死ぬ:しぬ",
+      "pair": "verb:死ぬ:しぬ/teikuNegativePast",
+      "batch": "post-publication-feedback/20260921",
+      "sentence": "去年は餌を十分に確保したので、動物は以前のように次々と死んでいかなかった。",
+      "scene": "去年备足饲料避免了动物接连死亡",
+      "translation": "去年备足了饲料，动物没有像以前那样接连死去。",
+      "reason": "本轮撤回已发布卡：原句「以前のように次々と死んでいかなかった」的连续事件与否定范围不够自然，先前用语境线索支持保留的判断已撤回。当前没有通过复审的替代卡，暂缓此精确配对的常规出题并保留构形识别；不认定所有语境均不成立，也不限制死ぬ的其他形式。",
+      "sourceHash": "31a589af454f33055615f21ed6e72d9cde99f62e386e4aba5b03c51e847c6628",
+      "senseId": "verb:死ぬ:しぬ",
+      "form": "teikuNegativePast",
+      "status": "deferred",
+      "deferralBasis": "post-publication-review",
+      "reviewVersion": 7,
+      "reviewedAt": "2026-09-21",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 6
+      },
+      "publishedCard": {
+        "id": "usage:teikuNegativePast:verb:死ぬ:しぬ",
+        "senseId": "verb:死ぬ:しぬ",
+        "meaning": "死亡",
+        "form": "teikuNegativePast",
+        "scene": "去年备足饲料避免了动物接连死亡",
+        "before": [
+          {
+            "text": "去年は餌を十分に確保したので、動物は以前のように次々と",
+            "reading": "きょねんはえさをじゅうぶんにかくほしたので、どうぶつはいぜんのようにつぎつぎと"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "去年备足了饲料，动物没有像以前那样接连死去。",
+        "review": "approved"
+      },
+      "publishedHash": "7e0d10fd3c31a6999257f28b99e4beb19855dc42bd6b13ee5594011e6e6dd1e1",
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:死ぬ:しぬ",
+        "senseId": "verb:死ぬ:しぬ",
+        "meaning": "死亡",
+        "form": "teikuNegativePast",
+        "scene": "去年备足饲料避免了动物接连死亡",
+        "before": [
+          {
+            "text": "去年は餌を十分に確保したので、動物は以前のように次々と",
+            "reading": "きょねんはえさをじゅうぶんにかくほしたので、どうぶつはいぜんのようにつぎつぎと"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "去年备足了饲料，动物没有像以前那样接连死去。",
+        "review": "draft"
+      },
+      "attempts": [
+        {
+          "sentence": "去年は餌を十分に確保したので、動物は以前のように次々と死んでいかなかった。",
+          "issue": "两份本轮报告均认为连续死亡这一整体现象的否定范围不稳；复数主体和次々と不构成教学自然度的充分条件。这里只记录一个实际原稿，不把复审次数算作不同场景尝试。",
+          "source": "Published card at 211d086; current review reports retained below"
+        }
+      ],
+      "alternatives": [
+        {
+          "sentence": "去年は餌を十分に確保したので、動物が以前のように次々と死んでいくことはなかった。",
+          "source": "user feedback",
+          "scope": "Whole-event negation; not a replacement card for the fixed teikuNegativePast target"
+        }
+      ],
+      "reviews": [
+        {
+          "agent": "/root/death_teiku_review_a",
+          "report": {
+            "reviewer": "death-teiku-review-a",
+            "cardHash": "7e0d10fd3c31a6999257f28b99e4beb19855dc42bd6b13ee5594011e6e6dd1e1",
+            "sentence": "去年は餌を十分に確保したので、動物は以前のように次々と死んでいかなかった。",
+            "status": "deferred",
+            "reason": "The sentence is structurally parseable, but it is not suitable as a native-level teaching example in this negative form. 次々と normally profiles successive positive occurrences; under 〜ていかなかった the listener must reconstruct a negated continuing/developing event, which makes the scope and intended contrast feel strained. A natural speaker would normally negate the event or phenomenon as a whole: 去年は餌を十分に確保したので、動物が以前のように次々と死んでいくことはなかった。 Depending on the intended proposition, 次々と死ぬようなことはなかった is also available. The issue is specific to this card's wording and does not establish that every teikuNegativePast form is unacceptable: spatial departure/carrying examples remain natural, and time-development negatives require sentence-by-sentence context.",
+            "recommendedScope": "Defer this exact 死ぬ／teikuNegativePast pair and revise the sentence to 〜ていくことはなかった (or 〜死ぬようなことはなかった) before publication. Retain construction recognition and the failure evidence; do not expand the deferral to the entire verb or form family. Re-review any revised card with an immutable new hash."
+          },
+          "reportSha256": "addc841aa38ec88c47267a9c53cc98b89448a4f422990cd22815eb278e40563e"
+        },
+        {
+          "agent": "/root/death_teiku_review_b",
+          "report": {
+            "reviewer": "int_review_death_teiku_b",
+            "cardHash": "7e0d10fd3c31a6999257f28b99e4beb19855dc42bd6b13ee5594011e6e6dd1e1",
+            "sentence": "去年は餌を十分に確保したので、動物は以前のように次々と死んでいかなかった。",
+            "status": "deferred",
+            "reason": "形式构形本身可解析，且ていく的时间发展义并非语法上禁止；但该完整句把次々と（逐个接连发生）直接放在死んでいかなかった的否定前，母语表达明显不顺。否定的对象是此前接连死亡这一整体现象时，通常用「動物が以前のように次々と死んでいくことはなかった」或「次々と死ぬことはなかった」；普通「死ななかった」则表达单纯没有死亡。当前卡的中文意图是避免整体现象，不能仅凭形式合法或复数主体批准。",
+            "recommendedScope": "仅暂缓 verb:死ぬ:しぬ / teikuNegativePast 这一精确词义／形式配对；保留 teiku、teikuPast、teikuNegative 及空间移动类其他配对。若课程必须覆盖该配对，先将例句改为ことはなかった等自然构式后再重新决定是否保留目标形式；否则记录为时间发展否定的自然度缺口。"
+          },
+          "reportSha256": "be00c52aefa946e8dbde7f904bcfd80093b3df8b9208f580211d1fafa506549a"
+        }
+      ],
+      "restoreCondition": "提供保持同一词义和完整teikuNegativePast目标的自然完整句，解决本轮否定范围疑点，经新的双人独立审核后逐对恢复；不把名词化替代表达或重复审阅旧稿当作通过证据。"
     }
   ],
-  "deferredPairs": 31,
-  "effectiveRequiredPairs": 6973,
-  "reviewVersion": 6,
+  "deferredPairs": 32,
+  "effectiveRequiredPairs": 6972,
+  "reviewVersion": 7,
   "originalRequiredPairs": 7004,
-  "completionScope": "All currently eligible action/state sense-form pairs have approved cards; 31 exact pairs are deferred from routine practice and retain morphological recognition.",
+  "completionScope": "All 6,972 currently eligible action/state pairs have approved cards; 32 exact pairs are deferred with morphology retained (22 repeated-failure reviews, 9 explicit user deferrals, 1 post-publication withdrawal).",
   "editorialRevisions": [
     {
       "id": "usage:teikuNegativePast:verb:笑う:わらう",
       "pair": "verb:笑う:わらう/teikuNegativePast",
-      "previousStatus": "draft",
+      "previousStatus": "approved",
       "currentStatus": "approved",
       "sourceHash": "acd90eb4e5006b1446b02f867241ea5af4d1b1cf54f812118eb210f601785d42",
       "basis": "two-independent-reviewers",
       "reviewers": [
-        "/root/teiku_repair_review"
+        "/root/teiku_repair_review",
+        "/root/teiku_repair_review2"
       ],
       "reason": "返修稿经独立逐卡审核通过；保留固定词义与目标形式，补足空间参照或时间发展背景。",
       "previousCard": {
@@ -9854,17 +9958,49 @@
         ],
         "translation": "昨天的客人即使看了我的模仿，也没有笑一番再走。",
         "review": "approved"
-      }
+      },
+      "authorStatus": "draft",
+      "previousHash": "4e61851f2343b34aea5dd51c99d147d301f690d774b58036adb025557ad3997f",
+      "currentHash": "4b66080f998fecb3947634122e52f663abf0125fe375ed835386b18499978115",
+      "reviews": [
+        {
+          "reviewer": "/root/teiku_repair_review",
+          "sourceHash": "46d51a4811cb37475b8392b7483806bd07466856b32641393fab5816cbe65f7a",
+          "entry": {
+            "id": "usage:teikuNegativePast:verb:笑う:わらう",
+            "cardHash": "acd90eb4e5006b1446b02f867241ea5af4d1b1cf54f812118eb210f601785d42",
+            "sentence": "さっき帰った人、私たちのほうを見て笑っていかなかった？",
+            "status": "approved",
+            "reason": "空间离去参照明确：刚回去的人以我们所在处为参照，笑的动作伴随离去。过去否定疑问恰当地询问是否笑着离开，未把否定误解为没有笑；场景与中文保留看向我们、笑着走及确认语气。句法搭配自然，目标形式完整。",
+            "reading": "さっきかえったひと、わたしたちのほうをみてわらっていかなかった？",
+            "translation": "刚才走的那个人，是不是看着我们这边笑着走了？"
+          }
+        },
+        {
+          "reviewer": "/root/teiku_repair_review2",
+          "sourceHash": "46d51a4811cb37475b8392b7483806bd07466856b32641393fab5816cbe65f7a",
+          "entry": {
+            "id": "usage:teikuNegativePast:verb:笑う:わらう",
+            "cardHash": "acd90eb4e5006b1446b02f867241ea5af4d1b1cf54f812118eb210f601785d42",
+            "sentence": "さっき帰った人、私たちのほうを見て笑っていかなかった？",
+            "status": "approved",
+            "reason": "空间路线和参照点清楚：刚才离开的人看向说话人一侧并笑着离去；过去否定疑问确认是否发生，不误作笑わなかった。场景、译文均保留看向、笑与离去及问句范围，句子自然完整。reading 与正文逐段对应（帰った=かえった、私たち=わたしたち、見て=みて、笑っていかなかった=わらっていかなかった）。",
+            "reading": "さっきかえったひと、わたしたちのほうをみてわらっていかなかった？",
+            "translation": "刚才走的那个人，是不是看着我们这边笑着走了？"
+          }
+        }
+      ]
     },
     {
       "id": "usage:teikuNegative:verb:違う:ちがう",
       "pair": "verb:違う:ちがう/teikuNegative",
-      "previousStatus": "draft",
+      "previousStatus": "approved",
       "currentStatus": "approved",
       "sourceHash": "449eaa6354391f63ee31f2cd6396d5d711967b8c21949da725021be3fea94946",
       "basis": "two-independent-reviewers",
       "reviewers": [
-        "/root/teiku_repair_review"
+        "/root/teiku_repair_review",
+        "/root/teiku_repair_review2"
       ],
       "reason": "返修稿经独立逐卡审核通过；保留固定词义与目标形式，补足空间参照或时间发展背景。",
       "previousCard": {
@@ -9886,17 +10022,49 @@
         ],
         "translation": "如果走的速度相同，两只钟的时刻就不会逐渐变得不同。",
         "review": "approved"
-      }
+      },
+      "authorStatus": "draft",
+      "previousHash": "7f99032abdc74912a5bbfd193a008b269e2d8a51a875f23239675c821486b683",
+      "currentHash": "a481288855f5c95b8a145167ce0812bec2c36411f9870ae1f350acf126939131",
+      "reviews": [
+        {
+          "reviewer": "/root/teiku_repair_review",
+          "sourceHash": "46d51a4811cb37475b8392b7483806bd07466856b32641393fab5816cbe65f7a",
+          "entry": {
+            "id": "usage:teikuNegative:verb:違う:ちがう",
+            "cardHash": "449eaa6354391f63ee31f2cd6396d5d711967b8c21949da725021be3fea94946",
+            "sentence": "同じ話でも、人から人へ伝わるうちに、内容が少しずつ違っていかない？",
+            "status": "approved",
+            "reason": "人から人へ传播提供连续时间发展，内容是逐步变得不同的主体，少しずつ明确变化尺度。非过去否定问句用于征求认同，中文“不也会逐渐变得不同吗”与否定范围和词义一致；助词、读音及目标形式均正确。",
+            "reading": "おなじはなしでも、ひとからひとへつたわるうちに、ないようがすこしずつちがっていかない？",
+            "translation": "即使是同一个故事，在人们口耳相传的过程中，内容不也会逐渐变得不同吗？"
+          }
+        },
+        {
+          "reviewer": "/root/teiku_repair_review2",
+          "sourceHash": "46d51a4811cb37475b8392b7483806bd07466856b32641393fab5816cbe65f7a",
+          "entry": {
+            "id": "usage:teikuNegative:verb:違う:ちがう",
+            "cardHash": "449eaa6354391f63ee31f2cd6396d5d711967b8c21949da725021be3fea94946",
+            "sentence": "同じ話でも、人から人へ伝わるうちに、内容が少しずつ違っていかない？",
+            "status": "approved",
+            "reason": "时间发展路线明确：故事在人与人传递的过程中逐步与原内容不同；少しずつ限定变化程度，否定问句是征求认同而非断言未变化。違っていく在此表示内容逐渐变得不同，搭配和译文自然，保留即使、传递过程与逐渐含义。reading 与正文及标点对应。",
+            "reading": "おなじはなしでも、ひとからひとへつたわるうちに、ないようがすこしずつちがっていかない？",
+            "translation": "即使是同一个故事，在人们口耳相传的过程中，内容不也会逐渐变得不同吗？"
+          }
+        }
+      ]
     },
     {
       "id": "usage:teikuNegativePast:verb:違う:ちがう",
       "pair": "verb:違う:ちがう/teikuNegativePast",
-      "previousStatus": "draft",
+      "previousStatus": "approved",
       "currentStatus": "approved",
       "sourceHash": "10dcf610a06861db29c20dd6ca8b2f8b30cbaee323109ec8725586e7a718fa56",
       "basis": "two-independent-reviewers",
       "reviewers": [
-        "/root/teiku_repair_review"
+        "/root/teiku_repair_review",
+        "/root/teiku_repair_review2"
       ],
       "reason": "返修稿经独立逐卡审核通过；保留固定词义与目标形式，补足空间参照或时间发展背景。",
       "previousCard": {
@@ -9918,7 +10086,73 @@
         ],
         "translation": "观察了一周，两只钟的时刻没有逐渐变得不同。",
         "review": "approved"
-      }
+      },
+      "authorStatus": "draft",
+      "previousHash": "2a1103c61b5714dcd67e3c40eb60e8de15ee4dacaaf60fd5852c8ab8381b1173",
+      "currentHash": "3f24d60b36e0dbea3e1f8d307f3b00473f5fc04a31f7fbf52ccc48eaec2cb6eb",
+      "reviews": [
+        {
+          "reviewer": "/root/teiku_repair_review",
+          "sourceHash": "46d51a4811cb37475b8392b7483806bd07466856b32641393fab5816cbe65f7a",
+          "entry": {
+            "id": "usage:teikuNegativePast:verb:違う:ちがう",
+            "cardHash": "10dcf610a06861db29c20dd6ca8b2f8b30cbaee323109ec8725586e7a718fa56",
+            "sentence": "別々の国で暮らすうちに、二人の考え方も少しずつ違っていかなかった？",
+            "status": "approved",
+            "reason": "分别在不同国家生活构成过去的一段发展区间，二人の考え方可自然地在其中逐渐产生差异。过去否定疑问询问当时是否出现该趋势，并非断言没有变化；译文保留逐渐、过去和疑问语气。读音与目标形式完整准确。",
+            "reading": "べつべつのくにでくらすうちに、ふたりのかんがえかたもすこしずつちがっていかなかった？",
+            "translation": "在各自生活在不同国家的那段时间里，你们两人的想法是不是也逐渐变得不同了？"
+          }
+        },
+        {
+          "reviewer": "/root/teiku_repair_review2",
+          "sourceHash": "46d51a4811cb37475b8392b7483806bd07466856b32641393fab5816cbe65f7a",
+          "entry": {
+            "id": "usage:teikuNegativePast:verb:違う:ちがう",
+            "cardHash": "10dcf610a06861db29c20dd6ca8b2f8b30cbaee323109ec8725586e7a718fa56",
+            "sentence": "別々の国で暮らすうちに、二人の考え方も少しずつ違っていかなかった？",
+            "status": "approved",
+            "reason": "过去观察区间由曾在不同国家生活的背景和过去否定疑问明确；二人的想法在该期间逐步产生差异，も及少しずつ的范围清楚。違っていかなかった？表达回顾是否逐渐变得不同，不等同普通違わなかった；译文保留过去确认语气且无额外推断。reading 与正文逐项对应。",
+            "reading": "べつべつのくにでくらすうちに、ふたりのかんがえかたもすこしずつちがっていかなかった？",
+            "translation": "在各自生活在不同国家的那段时间里，你们两人的想法是不是也逐渐变得不同了？"
+          }
+        }
+      ]
+    }
+  ],
+  "editorialWithdrawals": [
+    {
+      "id": "usage:teikuNegativePast:verb:死ぬ:しぬ",
+      "pair": "verb:死ぬ:しぬ/teikuNegativePast",
+      "previousCard": {
+        "id": "usage:teikuNegativePast:verb:死ぬ:しぬ",
+        "senseId": "verb:死ぬ:しぬ",
+        "meaning": "死亡",
+        "form": "teikuNegativePast",
+        "scene": "去年备足饲料避免了动物接连死亡",
+        "before": [
+          {
+            "text": "去年は餌を十分に確保したので、動物は以前のように次々と",
+            "reading": "きょねんはえさをじゅうぶんにかくほしたので、どうぶつはいぜんのようにつぎつぎと"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "去年备足了饲料，动物没有像以前那样接连死去。",
+        "review": "approved"
+      },
+      "previousHash": "7e0d10fd3c31a6999257f28b99e4beb19855dc42bd6b13ee5594011e6e6dd1e1",
+      "insertBeforeId": "usage:tekuruPast:verb:死ぬ:しぬ",
+      "previousStatus": "approved",
+      "currentStatus": "deferred",
+      "basis": "post-publication-review",
+      "reviewers": [
+        "/root/death_teiku_review_a",
+        "/root/death_teiku_review_b"
+      ]
     }
   ]
 }

@@ -10,25 +10,49 @@ import generated from '../app/lib/usage-cards/integration-generated.mjs';
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const actionReview = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url)));
-const editorialRevisionIds = new Set((actionReview.editorialRevisions ?? []).map(entry => entry.id));
+const revisions = new Map(actionReview.editorialRevisions.map(entry => [entry.id, entry]));
+const withdrawals = actionReview.editorialWithdrawals;
 const proofPath = fileURLToPath(new URL('../docs/integration-release-proof.v3.json.gz', import.meta.url));
 const proof = readReleaseProof(proofPath);
 const frozen = JSON.parse(fs.readFileSync(new URL('../docs/integration-stage-requirements.v3.json', import.meta.url)));
 const ids = new Set(generated.map(card => card.id));
 
-test('published integration cards exactly match independent protocol-3 proof and preserve all historical content', () => {
+// Undo only documented later edits, then check the original frozen hash. Do not
+// compare unchanged cards to a baseline constructed from those same cards.
+function historicalView(cards) {
+  assert.deepEqual(new Set(revisions.keys()), new Set([
+    'usage:teikuNegativePast:verb:笑う:わらう',
+    'usage:teikuNegative:verb:違う:ちがう',
+    'usage:teikuNegativePast:verb:違う:ちがう',
+  ]));
+  assert.deepEqual(withdrawals.map(row => row.id), ['usage:teikuNegativePast:verb:死ぬ:しぬ']);
+  const result = cards.map(card => {
+    const revision = revisions.get(card.id);
+    if (!revision) return card;
+    assert.equal(digest(card), revision.currentHash, `Unreviewed edit: ${card.id}`);
+    assert.equal(digest(revision.previousCard), revision.previousHash);
+    return revision.previousCard;
+  });
+  for (const row of withdrawals) {
+    assert.ok(!result.some(card => card.id === row.id), 'Withdrawn card must not be published');
+    assert.equal(digest(row.previousCard), row.previousHash);
+    const index = result.findIndex(card => card.id === row.insertBeforeId);
+    assert.ok(index >= 0, 'Keep the historical ordering anchor');
+    result.splice(index, 0, row.previousCard);
+  }
+  return result;
+}
+
+test('integration proof stays immutable while documented later edits reconstruct the original content hash', () => {
   assert.equal(verifyReleaseProof(proof).valid, true);
   assert.equal(createHash('sha256').update(fs.readFileSync(proofPath)).digest('hex'), frozen.proof.sha256);
   assert.deepEqual(generated, proof.batches.flatMap(batch => batch.merged.value));
   assert.equal(ids.size, generated.length);
   const prior = USAGE_CARDS.filter(card => !ids.has(card.id));
-  assert.equal(prior.length, 16412);
-  const revisions = new Map((actionReview.editorialRevisions ?? []).map(entry => [entry.id, entry]));
-  const historicalById = new Map(prior.map(card => [card.id, revisions.get(card.id)?.previousCard ?? card]));
-  for (const card of prior) {
-    if (!editorialRevisionIds.has(card.id)) assert.deepEqual(card, historicalById.get(card.id), `Unexpected historical change: ${card.id}`);
-  }
-  assert.equal(editorialRevisionIds.size, 3);
+  assert.equal(prior.length, 16411);
+  const historical = historicalView(prior);
+  assert.equal(historical.length, 16412);
+  assert.equal(digest(historical), '775ff7fcd7a0a2bdfb27a9408202d92d58a1dc76712e6bd5b43d6d0dceb7167d');
   assert.equal(digest(proof.baseline.cards), '770d6cf0a58f97a147ae263254788a2e28de01400ba58ea91bfa73ec845da94c');
   const byId = new Map(USAGE_CARDS.map(card => [card.id, card]));
   for (const card of proof.release.cards) assert.deepEqual(byId.get(card.id), card);
@@ -56,7 +80,7 @@ test('the completed integration release covers every eligible pair with no open 
   assert.deepEqual(new Set(report.open.pairs), new Set(frozen.open));
 });
 
-test('completion adds exactly the previous 245 open pairs without changing published objects', () => {
+test('completion retains the previous 245 additions and the frozen prior-release hash after documented edits', () => {
   const priorBytes = fs.readFileSync(new URL('../docs/integration-stage-requirements.v2.json', import.meta.url));
   assert.equal(createHash('sha256').update(priorBytes).digest('hex'), 'b2b3081a95f67ec8f127deed0852b1e7beaf1994e815f0e1b8a1565930e5c563');
   const priorState = JSON.parse(priorBytes);
@@ -72,10 +96,17 @@ test('completion adds exactly the previous 245 open pairs without changing publi
   assert.deepEqual(new Set(added.map(card => `${card.senseId}/${card.form}`)), new Set(priorState.open));
   const addedIds = new Set(added.map(card => card.id));
   const priorRuntime = USAGE_CARDS.filter(card => !addedIds.has(card.id));
-  assert.equal(priorRuntime.length, frozen.previousRelease.cards);
-  const revisions = new Map((actionReview.editorialRevisions ?? []).map(entry => [entry.id, entry]));
-  const historicalById = new Map(priorRuntime.map(card => [card.id, revisions.get(card.id)?.previousCard ?? card]));
-  for (const card of priorRuntime) {
-    if (!editorialRevisionIds.has(card.id)) assert.deepEqual(card, historicalById.get(card.id), `Unexpected historical change: ${card.id}`);
-  }
+  assert.equal(priorRuntime.length, frozen.previousRelease.cards - withdrawals.length);
+  const historical = historicalView(priorRuntime);
+  assert.equal(historical.length, frozen.previousRelease.cards);
+  assert.equal(digest(historical), frozen.previousRelease.sha256);
+});
+
+test('historical verification detects unrelated drift and changes to a reviewed replacement', () => {
+  const prior = USAGE_CARDS.filter(card => !ids.has(card.id));
+  const changed = prior.map((card, index) => index === 0 ? {...card, translation: 'unreviewed'} : card);
+  assert.notEqual(digest(historicalView(changed)), digest(historicalView(prior)));
+  const revisedId = [...revisions.keys()][0];
+  assert.throws(() => historicalView(prior.map(card => card.id === revisedId
+    ? {...card, translation: 'unreviewed'} : card)), /Unreviewed edit/);
 });

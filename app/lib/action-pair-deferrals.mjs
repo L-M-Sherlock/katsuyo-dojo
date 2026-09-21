@@ -2,6 +2,7 @@
 // Evidence and drafts live in docs/usage-card-actions-review.json.
 // Other forms of the same sense retain their own eligibility decisions.
 export const ACTION_PAIR_DEFERRALS = Object.freeze({
+  "verb:死ぬ:しぬ/teikuNegativePast": "本轮撤回已发布卡：原句「以前のように次々と死んでいかなかった」的连续事件与否定范围不够自然，先前用语境线索支持保留的判断已撤回。当前没有通过复审的替代卡，暂缓此精确配对的常规出题并保留构形识别；不认定所有语境均不成立，也不限制死ぬ的其他形式。",
   "verb:終わる:おわる/temiruNegativePast": "经历后才能判断的尝试仍把“实际经历未发生”接成过去否定てみる；主体是断食事件，不能主动试做结束，原肯定发现构式的后项也不支持该过去直陈。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
   "verb:間に合う:まにあう/teokuPast": "报名截止确为后续选拔前提，但在达成赶上时限这一结果外未形成可保留的预备动作；不能把赶得上改成提前报名或早到以取得自然度。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
   "verb:間に合う:まにあう/teokuNegativePast": "相对集合原稿，更换为资格前提仍只陈述未赶上，ておく的事前准备否定在此直陈中无稳定作用；否定条件的获准例不能自动移作本过去形。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",

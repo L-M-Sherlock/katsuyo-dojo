@@ -89,8 +89,8 @@ test('reviewed stages retain exact eligible coverage and preserve the original r
 test('published action cards match the approved review ledger and leave the historical baseline intact', () => {
   const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
   const sourceHash = file => createHash('sha256').update(readFileSync(new URL(file, import.meta.url))).digest('hex');
-  assert.equal(sourceHash('../docs/usage-card-actions-review.json'), 'b2c3ba775040aa0cdc2eb5ef12940d1d8ffa663415153f5ef16d9cc124ab8255');
-  assert.equal(sourceHash('../app/lib/usage-cards/actions-generated.mjs'), '704618280112039abd90536a92988c374af4ac55f49932632bf43d8caeed4b16');
+  assert.equal(sourceHash('../docs/usage-card-actions-review.json'), '1b195bef937989ebe48837136e972006383533939456e9948960af13b330ed52');
+  assert.equal(sourceHash('../app/lib/usage-cards/actions-generated.mjs'), 'e6f4f17d81f9a1bb872b4c545d9c117cd67e8e718b828d1b215d833878ecf87b');
   assert.equal(actionWordCards.length, actionReview.approvedCards);
   assert.deepEqual(new Set(actionWordCards.map(card => card.id)), actionIds);
   assert.equal(hash(actionWordCards), actionReview.approvedCardsSha256);
@@ -106,8 +106,8 @@ test('published action cards match the approved review ledger and leave the hist
   assert.equal(required.size, actionReview.effectiveRequiredPairs);
   assert.equal(pendingPairs.size, 0);
   assert.equal(pendingPairs.size, actionReview.pendingPairs);
-  assert.equal(actionReview.deferredPairs, 31);
-  assert.equal(actionReview.effectiveRequiredPairs, 6973);
+  assert.equal(actionReview.deferredPairs, 32);
+  assert.equal(actionReview.effectiveRequiredPairs, 6972);
   assert.deepEqual(new Set(actionReview.deferred.map(entry => entry.pair)), DEFERRED_ACTION_PAIRS);
   assert.equal(actionReview.complete, true);
   const deferred = new Set(actionReview.deferred.map(entry => entry.pair));
@@ -121,7 +121,7 @@ test('published action cards match the approved review ledger and leave the hist
 });
 
 test('reviewed and user-requested action deferrals remain recognizable at exact-pair scope', () => {
-  assert.equal(DEFERRED_ACTION_PAIRS.size, 31);
+  assert.equal(DEFERRED_ACTION_PAIRS.size, 32);
   for (const pair of DEFERRED_ACTION_PAIRS) {
     const [senseId, form] = pair.split('/');
     const item = usageCardItem(senseId);
@@ -136,7 +136,7 @@ test('reviewed and user-requested action deferrals remain recognizable at exact-
     assert.equal(match.usage.reasonCode,'action-pair-deferred');
     const record=actionReview.deferred.find(row=>row.pair===pair);
     assert.equal(record.reason,usage.reason);
-    assert.ok(record.attempts.length>=(record.deferralBasis==='user-request'?1:2));
+    assert.ok(record.attempts.length>=(['user-request','post-publication-review'].includes(record.deferralBasis)?1:2));
     assert.equal(resolveUsageCard(record.sourceCard),null);
     assert.equal(eligibleVerbForm(item,'past'),true);
   }
