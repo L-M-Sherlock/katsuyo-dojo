@@ -43,7 +43,7 @@ const actionRetired=[...(actionReview.deferred??[])].map(entry=>{
 });
 
 test('approved intention and action-pair deferrals change only the documented exercise catalog entries',()=>{
-  assert.equal(USAGE_REVIEW_VERSION,baseline.reviewVersion+3);
+  assert.equal(USAGE_REVIEW_VERSION,baseline.reviewVersion+4);
   assert.deepEqual(new Set(baseline.retired.map(e=>`${e.senseId}/${e.form}`)),expectedPairs);
   const currentIds=new Set(model.exercises.map(e=>e.id));
   for(const e of [...retired,...actionRetired])assert.ok(!currentIds.has(e.id),e.id);
