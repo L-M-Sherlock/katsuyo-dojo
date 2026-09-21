@@ -1,6 +1,6 @@
 # 综合应用卡片任务交接 Prompt
 
-你正在继续 `D:\Code\katsuyo-dojo` 的目标：完成综合应用（integration / `multiStepCompound`）1,301 对的用法卡全覆盖并发布。
+你正在 macOS 上继续当前仓库的目标：完成综合应用（integration / `multiStepCompound`）1,301 对的用法卡全覆盖并发布。先在仓库根目录执行 `pwd`，以下命令都假定当前目录就是仓库根目录；不要照抄 Windows 盘符路径。
 
 先读取仓库维护版规则：
 
@@ -12,14 +12,16 @@
 
 ## 权威状态
 
-任务根为 `D:\Code\katsuyo-dojo\work\integration-20260920-v2`。不要使用聊天消息中的数量作为状态；每次先读取：
+Windows 主代理曾使用 `work/integration-20260920-v2` 作为任务根。macOS 先检查该目录和 `staged-state/state.json` 是否实际存在；工作目录被 `.gitignore` 忽略，若不存在，不要自行重建或声称恢复了旧账本，应先取得任务快照。不要使用聊天消息中的数量作为状态；每次先读取：
 
-```powershell
-$task = 'D:\Code\katsuyo-dojo\work\integration-20260920-v2'
-Get-Content -Raw "$task\staged-state\state.json"
-node .agents/skills/write-katsuyo-usage-cards/scripts/staged-workflow.mjs status `
-  --project D:\Code\katsuyo-dojo `
-  --task-root $task
+```bash
+set -euo pipefail
+project_root="$PWD"
+task_root="$project_root/work/integration-20260920-v2"
+test -f "$task_root/staged-state/state.json"
+node .agents/skills/write-katsuyo-usage-cards/scripts/staged-workflow.mjs status \
+  --project "$project_root" \
+  --task-root "$task_root"
 ```
 
 冻结范围文件是 `docs/integration-stage-requirements.v1.json`：1,301 对；运行时历史代表卡 107 对；其余仍是开放缺口。当前 v2 工作池只处理 6 个 lane 的 pilot/expansion/remaining，正式合并、运行时接入和发布仍未完成。
@@ -32,13 +34,15 @@ node .agents/skills/write-katsuyo-usage-cards/scripts/staged-workflow.mjs status
 
 取得 packet 的示例：
 
-```powershell
-node .agents/skills/write-katsuyo-usage-cards/scripts/staged-workflow.mjs packet `
-  --project D:\Code\katsuyo-dojo `
-  --task-root D:\Code\katsuyo-dojo\work\integration-20260920-v2 `
-  --actor /root `
-  --batch lane/00 `
-  --stage pilot-01 `
+```bash
+project_root="$PWD"
+task_root="$project_root/work/integration-20260920-v2"
+node .agents/skills/write-katsuyo-usage-cards/scripts/staged-workflow.mjs packet \
+  --project "$project_root" \
+  --task-root "$task_root" \
+  --actor /root \
+  --batch lane/00 \
+  --stage pilot-01 \
   --reviewer /root/actual_review_a
 ```
 
@@ -46,7 +50,7 @@ node .agents/skills/write-katsuyo-usage-cards/scripts/staged-workflow.mjs packet
 
 机械生成可用：
 
-```powershell
+```bash
 node work/integration-20260920-v2/make-review-skeleton.mjs <packet.cards> <packet.output>
 ```
 
@@ -67,9 +71,10 @@ node work/integration-20260920-v2/make-review-skeleton.mjs <packet.cards> <packe
 
 只有所有有效要求都落入 approved 卡、逐对暂缓项有失败证据和恢复条件、开放未决集合准确登记后，才运行：
 
-```powershell
+```bash
+project_root="$PWD"
 node scripts/export-integration-batches.mjs --verify true
-npm run audit:integration -- --project D:\Code\katsuyo-dojo --output integration-coverage.json
+npm run audit:integration -- --project "$project_root" --output integration-coverage.json
 npm run audit:usage
 npm run audit:eligibility
 npm test
