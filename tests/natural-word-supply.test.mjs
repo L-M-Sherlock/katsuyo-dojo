@@ -14,6 +14,7 @@ const voiceReview = JSON.parse(readFileSync(new URL('./fixtures/voice-usage-revi
 const linkingReview = JSON.parse(readFileSync(new URL('./fixtures/linking-usage-review-before.json', import.meta.url), 'utf8'));
 const intentionReview = JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json', import.meta.url), 'utf8'));
 const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url), 'utf8'));
+const naturalnessReview = JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json', import.meta.url), 'utf8'));
 const actionContexts = new Map((actionReview.contextChanges ?? []).map(row => [row.pair, row]));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const identity = item => `${item.domain}:${item.surface}`;
@@ -46,7 +47,7 @@ try {
   model = page.KNOWLEDGE;
   reviewedWords = lexical.REVIEWED_LEXICAL_SENSES;
 } finally { await server.close(); }
-const actionDeferred = (actionReview.deferred ?? []).map(entry => {
+const actionDeferred = [...(actionReview.deferred ?? []), ...naturalnessReview.deferred].map(entry => {
   const exercise = model.registryExercises.find(e => `${reviewedLexicalSense(e.item)?.id}/${e.form}` === entry.pair);
   assert.ok(exercise, entry.pair);
   return {...exercise, context: entry.previousUsage?.context};

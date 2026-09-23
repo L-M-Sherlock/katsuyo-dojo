@@ -10,7 +10,9 @@ import generated from '../app/lib/usage-cards/integration-generated.mjs';
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const actionReview = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url)));
+const naturalnessReview = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-naturalness-20260923.json', import.meta.url)));
 const revisions = new Map(actionReview.editorialRevisions.map(entry => [entry.id, entry]));
+const naturalnessRevisions = new Map(naturalnessReview.approvedRevisions.map(entry => [entry.id, entry]));
 const withdrawals = actionReview.editorialWithdrawals;
 const proofPath = fileURLToPath(new URL('../docs/integration-release-proof.v3.json.gz', import.meta.url));
 const proof = readReleaseProof(proofPath);
@@ -27,6 +29,12 @@ function historicalView(cards) {
   ]));
   assert.deepEqual(withdrawals.map(row => row.id), ['usage:teikuNegativePast:verb:死ぬ:しぬ']);
   const result = cards.map(card => {
+    const naturalness = naturalnessRevisions.get(card.id);
+    if (naturalness) {
+      assert.equal(digest(card), naturalness.currentHash, `Unreviewed naturalness edit: ${card.id}`);
+      assert.equal(digest(naturalness.previousCard), naturalness.previousHash);
+      card = naturalness.previousCard;
+    }
     const revision = revisions.get(card.id);
     if (!revision) return card;
     assert.equal(digest(card), revision.currentHash, `Unreviewed edit: ${card.id}`);
@@ -40,6 +48,13 @@ function historicalView(cards) {
     assert.ok(index >= 0, 'Keep the historical ordering anchor');
     result.splice(index, 0, row.previousCard);
   }
+  for (const row of [...naturalnessReview.deferred].sort((a, b) => a.sourceIndex - b.sourceIndex)) {
+    assert.ok(!result.some(card => card.id === row.id), 'Deferred card must not be published');
+    assert.equal(digest(row.publishedCard), row.publishedHash);
+    const index = result.findIndex(card => card.id === row.insertBeforeId);
+    assert.ok(index >= 0, `Keep the historical ordering anchor: ${row.id}`);
+    result.splice(index, 0, row.publishedCard);
+  }
   return result;
 }
 
@@ -49,7 +64,7 @@ test('integration proof stays immutable while documented later edits reconstruct
   assert.deepEqual(generated, proof.batches.flatMap(batch => batch.merged.value));
   assert.equal(ids.size, generated.length);
   const prior = USAGE_CARDS.filter(card => !ids.has(card.id));
-  assert.equal(prior.length, 16411);
+  assert.equal(prior.length, 16411 - naturalnessReview.deferredCount);
   const historical = historicalView(prior);
   assert.equal(historical.length, 16412);
   assert.equal(digest(historical), '775ff7fcd7a0a2bdfb27a9408202d92d58a1dc76712e6bd5b43d6d0dceb7167d');
@@ -96,7 +111,7 @@ test('completion retains the previous 245 additions and the frozen prior-release
   assert.deepEqual(new Set(added.map(card => `${card.senseId}/${card.form}`)), new Set(priorState.open));
   const addedIds = new Set(added.map(card => card.id));
   const priorRuntime = USAGE_CARDS.filter(card => !addedIds.has(card.id));
-  assert.equal(priorRuntime.length, frozen.previousRelease.cards - withdrawals.length);
+  assert.equal(priorRuntime.length, frozen.previousRelease.cards - withdrawals.length - naturalnessReview.deferredCount);
   const historical = historicalView(priorRuntime);
   assert.equal(historical.length, frozen.previousRelease.cards);
   assert.equal(digest(historical), frozen.previousRelease.sha256);

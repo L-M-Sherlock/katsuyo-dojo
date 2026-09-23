@@ -2,6 +2,7 @@ import basics from './usage-cards/basics.mjs';
 import linking from './usage-cards/linking.mjs';
 import actions from './usage-cards/actions.mjs';
 import actionsGenerated from './usage-cards/actions-generated.mjs';
+import reviewedActionReplacements from './usage-cards/actions-naturalness-20260923.mjs';
 import combinations from './usage-cards/combinations.mjs';
 import integrationWordCards from './usage-cards/integration-generated.mjs';
 import classBasics from './usage-cards/class-basics.mjs';
@@ -18,6 +19,7 @@ import intentionWordCards from './usage-cards/intention-words/index.mjs';
 import { REVIEWED_LEXICAL_SENSES, reviewedLexicalSense } from './lexical-usage.mjs';
 import { ADJECTIVES } from './adjective-catalog.mjs';
 import { assessFormUsage } from './form-eligibility.mjs';
+import { NATURALNESS_DEFERRED_ACTION_PAIRS } from './action-pair-deferrals.mjs';
 import { UNIFIED_COURSES } from './unified-curriculum.mjs';
 import { deriveUnified } from './unified-knowledge.mjs';
 
@@ -28,9 +30,13 @@ import { deriveUnified } from './unified-knowledge.mjs';
 /** @typedef {UsageCard & {target: {text: string, reading: string}}} ResolvedUsageCard */
 
 /** Separate teaching content: never populate this from eligibility `context`. */
-export const USAGE_CARDS = /** @type {UsageCard[]} */ ([...basics, ...linking, ...actions, ...actionsGenerated, ...combinations,
+const actionReplacements = new Map(reviewedActionReplacements.map(card => [card.id, card]));
+const originalCards = [...basics, ...linking, ...actions, ...actionsGenerated, ...combinations,
   ...classBasics, ...classLinking1, ...classLinking2, ...classActions1, ...classActions2, ...classCombinations1, ...classCombinations2,
-  ...basicWordCards, ...voiceWordCards, ...linkingWordCards, ...intentionWordCards, ...integrationWordCards]);
+  ...basicWordCards, ...voiceWordCards, ...linkingWordCards, ...intentionWordCards, ...integrationWordCards];
+export const USAGE_CARDS = /** @type {UsageCard[]} */ (originalCards
+  .filter(card => !NATURALNESS_DEFERRED_ACTION_PAIRS.has(`${card.senseId}/${card.form}`))
+  .map(card => actionReplacements.get(card.id) ?? card));
 export const USAGE_CARD_GROUPS = [
   {id: 'basics', stages: ['basics', 'voice']},
   {id: 'linking', stages: ['linking', 'intentions']},

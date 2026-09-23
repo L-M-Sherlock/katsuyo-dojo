@@ -10,12 +10,13 @@ import {restoreLearningAssessment} from '../app/lib/assessment-transfer.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 
 const review=JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json',import.meta.url),'utf8'));
+const naturalness=JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json',import.meta.url),'utf8'));
 const pair=e=>`${reviewedLexicalSense(e.item)?.id}/${e.form}`;
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
 let model;
 try {model=(await server.ssrLoadModule('/app/page.tsx')).KNOWLEDGE;}
 finally {await server.close();}
-const removed=review.deferred.map(row=>{
+const removed=[...review.deferred,...naturalness.deferred].map(row=>{
   const e=model.registryExercises.find(e=>pair(e)===row.pair);
   assert.ok(e,`Retain morphology: ${row.pair}`);
   return e;
@@ -53,6 +54,13 @@ test('action deferrals retain rejected drafts and affect only the documented sen
     assert.ok(new Set(row.attempts.map(x=>x.sentence)).size>=(singleDraftBasis?1:2),row.pair);
     assert.ok(row.attempts.every(x=>x.issue&&x.source));
     assert.ok(row.restoreCondition&&row.reason);
+  }
+  for(const row of naturalness.deferred){
+    assert.equal(row.sourceCard.review,'draft');
+    assert.equal(`${row.sourceCard.senseId}/${row.sourceCard.form}`,row.pair);
+    assert.equal(createHash('sha256').update(JSON.stringify(row.sourceCard)).digest('hex'),row.sourceHash);
+    assert.equal(row.attempts.length,3,row.pair);
+    assert.ok(row.restoreCondition,row.pair);
   }
   for(const row of review.unresolved)assert.ok(model.exercises.some(e=>pair(e)===row.pair),row.pair);
   const allowed=['verb:来る:くる/teikuPast','verb:終わる:おわる/teokuNegativePast','verb:間に合う:まにあう/teokuNegative'];

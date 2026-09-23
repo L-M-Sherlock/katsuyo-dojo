@@ -13,9 +13,17 @@ import {normalizeAnswer} from '../app/lib/answer-analysis.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 import intentionWordCards from '../app/lib/usage-cards/intention-words/index.mjs';
 import actionWordCards from '../app/lib/usage-cards/actions-generated.mjs';
+import actionSeedCards from '../app/lib/usage-cards/actions.mjs';
+import classActionCards1 from '../app/lib/usage-cards/class-actions-1.mjs';
+import classActionCards2 from '../app/lib/usage-cards/class-actions-2.mjs';
+import reviewedActionReplacements from '../app/lib/usage-cards/actions-naturalness-20260923.mjs';
 import integrationWordCards from '../app/lib/usage-cards/integration-generated.mjs';
 const integrationIds = new Set(integrationWordCards.map(card => card.id));
 const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url), 'utf8'));
+const naturalnessReview = JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json', import.meta.url), 'utf8'));
+const naturalnessDeferred = new Set(naturalnessReview.deferred.map(row => row.pair));
+const naturalnessPrevious = new Map(naturalnessReview.approvedRevisions.map(row => [row.id, row.previousCard]));
+const beforeNaturalness = cards => cards.map(card => naturalnessPrevious.get(card.id) ?? card);
 const actionIds = new Set(actionReview.approvedIds);
 
 const intentionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-intentions-review.json', import.meta.url),'utf8'));
@@ -94,7 +102,7 @@ test('published action cards match the approved review ledger and leave the hist
   assert.equal(actionWordCards.length, actionReview.approvedCards);
   assert.deepEqual(new Set(actionWordCards.map(card => card.id)), actionIds);
   assert.equal(hash(actionWordCards), actionReview.approvedCardsSha256);
-  const old = USAGE_CARDS.filter(card => !actionIds.has(card.id) && !integrationIds.has(card.id));
+  const old = beforeNaturalness(USAGE_CARDS.filter(card => !actionIds.has(card.id) && !integrationIds.has(card.id)));
   assert.equal(old.length, actionReview.originalCards);
   assert.equal(hash(old), actionReview.originalCardsSha256);
   const approvedPairs = new Set(actionWordCards.map(card => `${card.senseId}/${card.form}`));
@@ -103,25 +111,69 @@ test('published action cards match the approved review ledger and leave the hist
   assert.ok([...pendingPairs].every(pair => !approvedPairs.has(pair)));
   const required = new Set(usageCardStageRequirements('actions'));
   const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
-  assert.equal(required.size, actionReview.effectiveRequiredPairs);
+  assert.equal(required.size, actionReview.effectiveRequiredPairs - naturalnessDeferred.size);
   assert.equal(pendingPairs.size, 0);
   assert.equal(pendingPairs.size, actionReview.pendingPairs);
   assert.equal(actionReview.deferredPairs, 32);
   assert.equal(actionReview.effectiveRequiredPairs, 6972);
-  assert.deepEqual(new Set(actionReview.deferred.map(entry => entry.pair)), DEFERRED_ACTION_PAIRS);
+  assert.deepEqual(new Set([...actionReview.deferred.map(entry => entry.pair), ...naturalnessDeferred]), DEFERRED_ACTION_PAIRS);
   assert.equal(actionReview.complete, true);
-  const deferred = new Set(actionReview.deferred.map(entry => entry.pair));
+  const deferred = DEFERRED_ACTION_PAIRS;
   for (const pair of pendingPairs) assert.ok(!covered.has(pair), pair);
-  for (const pair of approvedPairs) assert.ok(required.has(pair), pair);
+  for (const pair of approvedPairs) assert.equal(required.has(pair), !naturalnessDeferred.has(pair), pair);
   assert.ok([...deferred].every(pair=>!required.has(pair)&&!pendingPairs.has(pair)));
   assert.deepEqual(new Set([...covered, ...pendingPairs]), required);
   assert.equal(required.size+deferred.size,actionReview.originalRequiredPairs);
-  assert.equal(covered.size - approvedPairs.size, actionReview.originalActionPairs);
+  assert.equal(covered.size - (approvedPairs.size - naturalnessDeferred.size), actionReview.originalActionPairs);
   assert.ok(actionWordCards.every(card => card.review === 'approved'));
 });
 
+test('the naturalness release replaces only independently approved cards and withdraws nine exact pairs', () => {
+  const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  const historical = new Map([...actionSeedCards, ...actionWordCards, ...classActionCards1, ...classActionCards2]
+    .map(card => [card.id, card]));
+  const current = new Map(USAGE_CARDS.map(card => [card.id, card]));
+  assert.equal(naturalnessReview.scopeCount, 45);
+  assert.equal(naturalnessReview.approvedCount, 36);
+  assert.equal(naturalnessReview.deferredCount, 9);
+  assert.deepEqual(reviewedActionReplacements,
+    naturalnessReview.approvedRevisions.map(row => row.currentCard));
+  const touched = new Set();
+  for (const row of naturalnessReview.approvedRevisions) {
+    assert.ok(!touched.has(row.id), row.id);
+    touched.add(row.id);
+    assert.equal(hash(row.previousCard), row.previousHash);
+    assert.equal(hash(row.currentCard), row.currentHash);
+    assert.deepEqual(historical.get(row.id), row.previousCard);
+    assert.deepEqual(current.get(row.id), row.currentCard);
+    assert.ok(row.authorReceipt && row.reviewReceipt);
+    assert.equal(row.languageReview.status, 'approved');
+    assert.equal(row.languageReview.id, row.id);
+    assert.equal(row.languageReview.hash, row.draftHash);
+  }
+  for (const row of naturalnessReview.deferred) {
+    assert.ok(!touched.has(row.id), row.id);
+    touched.add(row.id);
+    assert.equal(hash(row.publishedCard), row.publishedHash);
+    assert.deepEqual(historical.get(row.id), row.publishedCard);
+    assert.ok(!current.has(row.id), row.id);
+    assert.equal(row.attempts.length, 3);
+    for (const attempt of row.attempts) {
+      assert.ok(attempt.authorReceipt && attempt.reviewReceipt);
+      if (attempt.kind === 'rejected-draft') {
+        assert.equal(attempt.languageReview.status, 'rejected');
+        assert.equal(attempt.languageReview.hash, attempt.cardHash);
+      } else {
+        assert.equal(attempt.kind, 'no-credible-candidate');
+        assert.ok(attempt.author && attempt.route && attempt.authorNote);
+      }
+    }
+  }
+  assert.equal(touched.size, naturalnessReview.scopeCount);
+});
+
 test('reviewed and user-requested action deferrals remain recognizable at exact-pair scope', () => {
-  assert.equal(DEFERRED_ACTION_PAIRS.size, 32);
+  assert.equal(DEFERRED_ACTION_PAIRS.size, actionReview.deferredPairs + naturalnessReview.deferredCount);
   for (const pair of DEFERRED_ACTION_PAIRS) {
     const [senseId, form] = pair.split('/');
     const item = usageCardItem(senseId);
@@ -134,7 +186,8 @@ test('reviewed and user-requested action deferrals remain recognizable at exact-
     const match=recognizeForms(item,conjugate(item.surface,item.class,form),normalizeAnswer).find(r=>r.form===form);
     assert.ok(match,pair);
     assert.equal(match.usage.reasonCode,'action-pair-deferred');
-    const record=actionReview.deferred.find(row=>row.pair===pair);
+    const record=actionReview.deferred.find(row=>row.pair===pair)
+      ?? naturalnessReview.deferred.find(row=>row.pair===pair);
     assert.equal(record.reason,usage.reason);
     assert.ok(record.attempts.length>=(['user-request','post-publication-review'].includes(record.deferralBasis)?1:2));
     assert.equal(resolveUsageCard(record.sourceCard),null);
@@ -157,7 +210,7 @@ test('published intention batches match the reviewed content and leave all old c
   const ids = new Set(intentionWordCards.map(card=>card.id));
   assert.equal(ids.size,intentionReview.approvedCards);
   assert.equal(intentionWordCards.length,intentionReview.approvedCards);
-  assert.equal(hash(USAGE_CARDS.filter(card=>!ids.has(card.id)&&!actionIds.has(card.id)&&!integrationIds.has(card.id))),intentionReview.originalCardsSha256);
+  assert.equal(hash(beforeNaturalness(USAGE_CARDS.filter(card=>!ids.has(card.id)&&!actionIds.has(card.id)&&!integrationIds.has(card.id)))),intentionReview.originalCardsSha256);
   const reviewed = [];
   for(const batch of intentionReview.batches) {
     const cards=(await import(`../app/lib/usage-cards/intention-words/${batch.file}`)).default;

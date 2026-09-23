@@ -24,6 +24,7 @@ const expectedPairs=new Set([
   'verb:分かる:わかる/masenka',
 ]);
 const actionReview=JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json',import.meta.url),'utf8'));
+const naturalnessReview=JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json',import.meta.url),'utf8'));
 const actionIds=new Set(actionReview.approvedIds);
 const integrationIds=new Set(integrationCards.map(card=>card.id));
 const actionContexts=new Map((actionReview.contextChanges??[]).map(row=>[row.pair,row]));
@@ -41,14 +42,21 @@ const actionRetired=[...(actionReview.deferred??[])].map(entry=>{
   assert.ok(exercise,`${entry.pair}: remains in the morphology registry`);
   return {...exercise,context:entry.previousUsage.context};
 });
+const naturalnessRetired=naturalnessReview.deferred.map(entry=>{
+  const exercise=model.registryExercises.find(e=>`${reviewedLexicalSense(e.item)?.id}/${e.form}`===entry.pair);
+  assert.ok(exercise,`${entry.pair}: remains in the morphology registry`);
+  assert.equal(entry.previousUsage.status,'allowed');
+  return {...exercise,context:entry.previousUsage.context};
+});
+const naturalnessPrevious=new Map(naturalnessReview.approvedRevisions.map(row=>[row.id,row.previousCard]));
 
 test('approved intention and action-pair deferrals change only the documented exercise catalog entries',()=>{
   assert.equal(USAGE_REVIEW_VERSION,baseline.reviewVersion+4);
   assert.deepEqual(new Set(baseline.retired.map(e=>`${e.senseId}/${e.form}`)),expectedPairs);
   const currentIds=new Set(model.exercises.map(e=>e.id));
-  for(const e of [...retired,...actionRetired])assert.ok(!currentIds.has(e.id),e.id);
-  const reconstructed=[...model.exercises,...retired,...actionRetired];
-  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length);
+  for(const e of [...retired,...actionRetired,...naturalnessRetired])assert.ok(!currentIds.has(e.id),e.id);
+  const reconstructed=[...model.exercises,...retired,...actionRetired,...naturalnessRetired];
+  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length);
   assert.equal(hash(reconstructed.map(e=>e.id).sort()),baseline.eligibleExerciseIdsSha256,
     'no unrelated exercise may disappear or become eligible');
   // Preserve the frozen historical hash while accounting for the four
@@ -72,7 +80,8 @@ test('approved intention and action-pair deferrals change only the documented ex
     context:{...e.context,id:e.context.id.replace(/:v\d+$/,':vX')},
   })).sort((a,b)=>a.id.localeCompare(b.id,'en'));
   assert.equal(hash(contexts),baseline.contextsSha256,'unrelated applicability notes stay unchanged');
-  const historical=USAGE_CARDS.filter(card=>!actionIds.has(card.id)&&!integrationIds.has(card.id));
+  const historical=USAGE_CARDS.filter(card=>!actionIds.has(card.id)&&!integrationIds.has(card.id))
+    .map(card=>naturalnessPrevious.get(card.id)??card);
   assert.equal(historical.length,baseline.counts.cards);
   assert.equal(hash(historical),baseline.cardsSha256,'no published example is edited or dropped');
 });

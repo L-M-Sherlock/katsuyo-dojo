@@ -1,7 +1,7 @@
 // Exact sense/form restrictions: language review or explicit user deferral.
 // Evidence and drafts live in docs/usage-card-actions-review.json.
 // Other forms of the same sense retain their own eligibility decisions.
-export const ACTION_PAIR_DEFERRALS = Object.freeze({
+const HISTORICAL_ACTION_PAIR_DEFERRALS = Object.freeze({
   "verb:死ぬ:しぬ/teikuNegativePast": "本轮撤回已发布卡：原句「以前のように次々と死んでいかなかった」的连续事件与否定范围不够自然，先前用语境线索支持保留的判断已撤回。当前没有通过复审的替代卡，暂缓此精确配对的常规出题并保留构形识别；不认定所有语境均不成立，也不限制死ぬ的其他形式。",
   "verb:終わる:おわる/temiruNegativePast": "经历后才能判断的尝试仍把“实际经历未发生”接成过去否定てみる；主体是断食事件，不能主动试做结束，原肯定发现构式的后项也不支持该过去直陈。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
   "verb:間に合う:まにあう/teokuPast": "报名截止确为后续选拔前提，但在达成赶上时限这一结果外未形成可保留的预备动作；不能把赶得上改成提前报名或早到以取得自然度。 此精确配对暂缓常规出题；不限制该词的其他形式，也不宣称所有语境均不成立。",
@@ -35,4 +35,20 @@ export const ACTION_PAIR_DEFERRALS = Object.freeze({
   "verb:来る:くる/teikuNegative": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。",
   "verb:来る:くる/teikuNegativePast": "按用户明确要求，尚未通过用法卡审核的此精确配对暂缓常规出题；保留构形识别、候选及语言疑点，取得适合教学的自然例句后可复审恢复。不据此判定所有语境均不成立。"
 });
+// The September 2026 naturalness audit rejected three distinct repairs or
+// documented three separately assigned, unsuccessful repair attempts for each
+// exact pair. This pauses regular questions, not morphology or answer reading.
+export const NATURALNESS_ACTION_PAIR_DEFERRALS = Object.freeze({
+  "verb:届く:とどく/teshimauNegativePast": "原卡及三次不同的返修均未形成自然的「届いてしまわなかった」教学句；暂缓此精确配对的常规出题，取得新用例并通过独立审核后可恢复。",
+  "verb:帰る:かえる/teshimauNegativePast": "三次不同的返修仍未通过过去否定完成形的自然度审核；暂缓此精确配对的常规出题，不限制帰る的其他形式。",
+  "verb:戻る:もどる/teshimauNegativePast": "三次不同的返修仍未通过过去否定完成形的自然度审核；暂缓此精确配对的常规出题，不限制戻る的其他形式。",
+  "verb:手伝う:てつだう/teshimauNegativePast": "三次不同的返修仍因完整句自然度或动作含义不符被拒；暂缓此精确配对的常规出题，不限制手伝う的其他形式。",
+  "verb:信じる:しんじる/teikuNegativePast": "三次不同的返修仍未自然建立过去的信任持续路线；暂缓此精确配对的常规出题，不宣称所有信じる＋ていく用法不成立。",
+  "verb:信じる:しんじる/tekuruNegative": "一张新稿被拒后，两次独立返修检索仍找不到可信的非过去否定教学句；暂缓此精确配对的常规出题，保留词形识别和恢复条件。",
+  "verb:知る:しる/tekuruNegative": "一张新稿被拒后，两次不同路线的返修仍找不到可信的知る＋てこない教学句；暂缓此精确配对的常规出题，不限制知る的其他形式。",
+  "verb:知る:しる/tekuruNegativePast": "一张新稿被拒后，两次不同路线的返修仍找不到可信的知る＋てこなかった教学句；暂缓此精确配对的常规出题，不限制知る的其他形式。",
+  "verb:遅れる:おくれる/teokuNegative": "三次独立返修尝试均未找到能体现准备或状态保留义的可信「遅れておかない」教学句；暂缓此精确配对的常规出题，不限制遅れる的其他形式。",
+});
+export const NATURALNESS_DEFERRED_ACTION_PAIRS = new Set(Object.keys(NATURALNESS_ACTION_PAIR_DEFERRALS));
+export const ACTION_PAIR_DEFERRALS = Object.freeze({...HISTORICAL_ACTION_PAIR_DEFERRALS, ...NATURALNESS_ACTION_PAIR_DEFERRALS});
 export const DEFERRED_ACTION_PAIRS = new Set(Object.keys(ACTION_PAIR_DEFERRALS));

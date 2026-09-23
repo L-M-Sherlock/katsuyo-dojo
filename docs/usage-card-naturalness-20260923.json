@@ -1,0 +1,3641 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "2265405eaa9d6dcf8c1b898cd0a068bb14b510bd",
+  "sourceRuntimeObjectHash": "f30d181b2bf725c4626d0d6cba0ec53dc9914d56d5713195c9ae62433e7b91f4",
+  "sourceCardCount": 17605,
+  "scopeCount": 45,
+  "approvedCount": 36,
+  "deferredCount": 9,
+  "approvedRevisions": [
+    {
+      "id": "usage:teikuNegative:verb:届く:とどく",
+      "senseId": "verb:届く:とどく",
+      "form": "teikuNegative",
+      "previousCard": {
+        "id": "usage:teikuNegative:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "teikuNegative",
+        "scene": "否定落在按计划继续送达。",
+        "before": [
+          {
+            "text": "配送が止まり、荷物は予定どおりには",
+            "reading": "はいそうがとまり、にもつはよていどおりには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "配送中断，包裹没能按计划继续送达。",
+        "review": "approved"
+      },
+      "previousHash": "b5acbb8e8dd4bede71041e7be245335a3fe52680de0b9a0fe1ad4b2ae4a37563",
+      "draftHash": "ed980e2c73dde60ba58e5d05c1faadeae6d6d752403f2e7389cad3a79ee285f9",
+      "currentCard": {
+        "id": "usage:teikuNegative:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "teikuNegative",
+        "scene": "地方居民多轮协商，诉求仍未进入市级讨论。",
+        "before": [
+          {
+            "text": "会合を重ねても、地域からの声は本庁まで",
+            "reading": "かいごうをかさねても、ちいきからのこえはほんちょうまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "即使反复召开地方协商会，居民的声音仍未传到市政府。",
+        "review": "approved"
+      },
+      "currentHash": "7d93762f5e6b53cf6e72fcd38716409c34c7278b65d379f7b495d4665d143216",
+      "authorReceipt": "70b103b31b2a943d1c1f6ac02cbdb70f3ae40d8c72dfff1fc3d00fabf76b63f3",
+      "reviewReceipt": "b6eae05cf751a89d5ce57b3a9c5aa31ae977b8d8458e262c7bf4967f39b48bb5",
+      "reviewer": "/root/repair_easy6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teikuNegative:verb:届く:とどく",
+        "hash": "ed980e2c73dde60ba58e5d05c1faadeae6d6d752403f2e7389cad3a79ee285f9",
+        "status": "approved",
+        "sentence": "会合を重ねても、地域からの声は本庁まで届いていかない。",
+        "reason": "「地域からの声」が協商中提出的意见，「本庁まで」给出传达终点；意见沿机构路径送达属于固定词义中「送达」的延伸，句子没有说意见已被采纳。反复开会为「届いていく」提供持续传递的过程，完整目标在句中成立。",
+        "roles": "地方居民提出意见；意见为到达主体，本庁为接收端。",
+        "time": "反复开会延续到当前；非过去否定描述迄今及今后的传递状况。",
+        "negation": "否定意见向本庁持续传达的过程，并未否定居民曾发言，也不等于本庁拒绝意见。",
+        "translation": "「仍未传到市政府」对应集体意见迄今未送达终点；「即使反复召开」对应「会合を重ねても」。",
+        "reading": "会合／重ねても／地域／声／本庁及目标「とどいていかない」的读音与句段标点相符。"
+      }
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:届く:とどく",
+      "senseId": "verb:届く:とどく",
+      "form": "teikuNegativePast",
+      "previousCard": {
+        "id": "usage:teikuNegativePast:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "teikuNegativePast",
+        "scene": "过去视点和发展否定明确。",
+        "before": [
+          {
+            "text": "昨日は配送が止まり、荷物は予定どおりには",
+            "reading": "きのうははいそうがとまり、にもつはよていどおりには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天配送中断，包裹没能按计划继续送达。",
+        "review": "approved"
+      },
+      "previousHash": "2e4dc0d89d77e153714a0f5068bb2aefc097d864011e55be5e41e17ad5f48f26",
+      "draftHash": "a07d657ceccb9bff4923b6f3e5f510ac5186b300f3385bd7fcd040e81d73d7a9",
+      "currentCard": {
+        "id": "usage:teikuNegativePast:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "teikuNegativePast",
+        "scene": "去年多轮居民协商后，诉求仍未传到市级机关。",
+        "before": [
+          {
+            "text": "昨年は会合を重ねたが、地域からの声は本庁まで",
+            "reading": "さくねんはかいごうをかさねたが、ちいきからのこえはほんちょうまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "去年虽多次召开地方协商会，居民的声音却始终未传到市政府。",
+        "review": "approved"
+      },
+      "currentHash": "da2e05a090f61fd0362efee7fa5823b05488e40bd9e0abe607e6e0b9e455a28d",
+      "authorReceipt": "70b103b31b2a943d1c1f6ac02cbdb70f3ae40d8c72dfff1fc3d00fabf76b63f3",
+      "reviewReceipt": "b6eae05cf751a89d5ce57b3a9c5aa31ae977b8d8458e262c7bf4967f39b48bb5",
+      "reviewer": "/root/repair_easy6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teikuNegativePast:verb:届く:とどく",
+        "hash": "a07d657ceccb9bff4923b6f3e5f510ac5186b300f3385bd7fcd040e81d73d7a9",
+        "status": "approved",
+        "sentence": "昨年は会合を重ねたが、地域からの声は本庁まで届いていかなかった。",
+        "reason": "「昨年」与多轮会合限定了过去一段机构间意见传递过程；「届いていかなかった」否定该过程向本庁发展到终点，与单次包裹未到有别。意见传达仍落在「送达」词义内。",
+        "roles": "居民多次提出意见；地域からの声是传达主体，本庁是终点。",
+        "time": "观察区间是去年多轮协商期间；过去否定不评价今年。",
+        "negation": "否定这段时间内集体意见持续传达到本庁；并不推断居民未发声或市政府未采纳。",
+        "translation": "「却始终未传到市政府」在去年协商这一限定时段内表达未到终点；未把它译为意见从未被提出。",
+        "reading": "昨年／会合／重ねた／地域／声／本庁以及目标「とどいていかなかった」读音对应正文，逗号分界一致。"
+      }
+    },
+    {
+      "id": "usage:tekuruNegative:verb:届く:とどく",
+      "senseId": "verb:届く:とどく",
+      "form": "tekuruNegative",
+      "previousCard": {
+        "id": "usage:tekuruNegative:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "tekuruNegative",
+        "scene": "未出现的趋近结果清楚。",
+        "before": [
+          {
+            "text": "待っているのに、荷物がなかなか",
+            "reading": "まっているのに、にもつがなかなか"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "明明一直等着，包裹却迟迟没有送来。",
+        "review": "approved"
+      },
+      "previousHash": "e52d697f2f99508e3c0b8ba3d19a5f7e6324a952c556e70c282200ca03626477",
+      "draftHash": "87b7b9989499c66084e9b81e0ab42a75de504e7cb91eb3b7049ac8bebcd4eef9",
+      "currentCard": {
+        "id": "usage:tekuruNegative:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "tekuruNegative",
+        "scene": "收件人今天在家等待网购的书送达。",
+        "before": [
+          {
+            "text": "今日は家で待っているのに、注文した本がまだ",
+            "reading": "きょうはいえでまっているのに、ちゅうもんしたほんがまだ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "今天明明在家等着，订的书却还没送来。",
+        "review": "approved"
+      },
+      "currentHash": "fd81aedd2baaa4faf2f97eab1003557e1dc751cfaaad9898726e355a804721a5",
+      "authorReceipt": "70b103b31b2a943d1c1f6ac02cbdb70f3ae40d8c72dfff1fc3d00fabf76b63f3",
+      "reviewReceipt": "b6eae05cf751a89d5ce57b3a9c5aa31ae977b8d8458e262c7bf4967f39b48bb5",
+      "reviewer": "/root/repair_easy6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:tekuruNegative:verb:届く:とどく",
+        "hash": "87b7b9989499c66084e9b81e0ab42a75de504e7cb91eb3b7049ac8bebcd4eef9",
+        "status": "approved",
+        "sentence": "今日は家で待っているのに、注文した本がまだ届いてこない。",
+        "reason": "具体的书作为送达物，等待者所在的家是「来る」的参照点；「まだ」自然限定尚未送到的状态，完整句口吻自然。",
+        "roles": "订购的书是到达主体；在家等待的收件人是趋近的参照人。",
+        "time": "今天等待至说话当下，非过去形与「まだ」一致。",
+        "negation": "只否定截至当前书送达收件处，不否定订购或将来送达。",
+        "translation": "「今天明明在家等着，订的书却还没送来」保留时间、地点和趋近方向。",
+        "reading": "今日／家／待っている／注文／本和目标「とどいてこない」的读音及标点正确。"
+      }
+    },
+    {
+      "id": "usage:tekuruNegativePast:verb:届く:とどく",
+      "senseId": "verb:届く:とどく",
+      "form": "tekuruNegativePast",
+      "previousCard": {
+        "id": "usage:tekuruNegativePast:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "tekuruNegativePast",
+        "scene": "过去未到达当前点。",
+        "before": [
+          {
+            "text": "昨日は待っていたのに、荷物が",
+            "reading": "きのうはまっていたのに、にもつが"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天明明等着，包裹却没有送来。",
+        "review": "approved"
+      },
+      "previousHash": "551fa4f1748f61c1cc26edc645dfa1a26931d6b3a33af5608289eea2f7e29494",
+      "draftHash": "e0efea981454ba9ac1a536a9d191c4eddd62260fe1884fcf356eb6ebe9de3a23",
+      "currentCard": {
+        "id": "usage:tekuruNegativePast:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "tekuruNegativePast",
+        "scene": "昨天收件人在家等网购的书，直到傍晚仍未收到。",
+        "before": [
+          {
+            "text": "昨日は家で待っていたのに、注文した本が夕方になっても",
+            "reading": "きのうはいえでまっていたのに、ちゅうもんしたほんがゆうがたになっても"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天一直等到傍晚，订的书还是没送来。",
+        "review": "approved"
+      },
+      "currentHash": "a8747c95de625078e2e47ffb8046cde9cc849667e795be083f7a5c7bb0dba569",
+      "authorReceipt": "70b103b31b2a943d1c1f6ac02cbdb70f3ae40d8c72dfff1fc3d00fabf76b63f3",
+      "reviewReceipt": "b6eae05cf751a89d5ce57b3a9c5aa31ae977b8d8458e262c7bf4967f39b48bb5",
+      "reviewer": "/root/repair_easy6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:tekuruNegativePast:verb:届く:とどく",
+        "hash": "e0efea981454ba9ac1a536a9d191c4eddd62260fe1884fcf356eb6ebe9de3a23",
+        "status": "approved",
+        "sentence": "昨日は家で待っていたのに、注文した本が夕方になっても届いてこなかった。",
+        "reason": "「家で待っていた」确立收件人一方的趋近视点；「夕方になっても」把过去未送达的观察点设在傍晚，没有暗示今天仍未送到。",
+        "roles": "订购的书是到达主体；在家等待的收件人是趋近参照人。",
+        "time": "昨天在家等到傍晚的过去观察点，与目标过去否定一致。",
+        "negation": "否定截至昨天傍晚书朝收件人送到；不推断此后状态。",
+        "translation": "「昨天一直等到傍晚，订的书还是没送来」保留过去截止点和「来」的趋近义；在家等待的地点已由正面场景交代。",
+        "reading": "昨日／家／待っていた／注文／本／夕方及目标「とどいてこなかった」读音正确，逗号位置对应。"
+      }
+    },
+    {
+      "id": "usage:teokuNegative",
+      "senseId": "verb:読む:よむ",
+      "form": "teokuNegative",
+      "previousCard": {
+        "id": "usage:teokuNegative",
+        "senseId": "verb:読む:よむ",
+        "meaning": "阅读",
+        "form": "teokuNegative",
+        "scene": "不想先入为主，决定不提前看影评。",
+        "before": [
+          {
+            "text": "先入観を持ちたくないので、映画のレビューは",
+            "reading": "せんにゅうかんをもちたくないので、えいがのれびゅーは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "不想先入为主，所以不提前看影评。",
+        "review": "approved"
+      },
+      "previousHash": "dc8b6c040d81136178372d2baf9c165c9c89407dc165e487a0a4ac763333de7f",
+      "draftHash": "91da061a326c840a68541298cf0af1ba9547c03507584423a1118a11e69b85bd",
+      "currentCard": {
+        "id": "usage:teokuNegative",
+        "senseId": "verb:読む:よむ",
+        "meaning": "阅读",
+        "form": "teokuNegative",
+        "scene": "参会者若不预读资料，便难以理解说明会内容。",
+        "before": [
+          {
+            "text": "参加者が資料を",
+            "reading": "さんかしゃがしりょうを"
+          }
+        ],
+        "after": [
+          {
+            "text": "と、説明会の内容が分かりにくい。",
+            "reading": "と、せつめいかいのないようがわかりにくい。"
+          }
+        ],
+        "translation": "参会者如果不预先阅读资料，就难以理解说明会的内容。",
+        "review": "approved"
+      },
+      "currentHash": "1c6e4f061db61408ac8e63d1823938fc839c7be0c3eba1e8402e5ce1b148e5ca",
+      "authorReceipt": "70b103b31b2a943d1c1f6ac02cbdb70f3ae40d8c72dfff1fc3d00fabf76b63f3",
+      "reviewReceipt": "b6eae05cf751a89d5ce57b3a9c5aa31ae977b8d8458e262c7bf4967f39b48bb5",
+      "reviewer": "/root/repair_easy6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teokuNegative",
+        "hash": "91da061a326c840a68541298cf0af1ba9547c03507584423a1118a11e69b85bd",
+        "status": "approved",
+        "sentence": "参加者が資料を読んでおかないと、説明会の内容が分かりにくい。",
+        "reason": "「読んでおかないと」是会前不作准备性阅读时的条件；后项说明其具体后果，清楚区分预读与普通的「読まない」，并未变成「読まないでおく」的主动暂缓阅读。",
+        "roles": "参加者是会前预读的主体；资料是阅读对象，说明会内容是后续理解对象。",
+        "time": "预读应先于说明会发生；主句说明届时理解受影响。",
+        "negation": "否定为说明会事先阅读资料这项准备，在「と」条件内，不断言现实中已有哪位参会者未读。",
+        "translation": "「如果不预先阅读资料，就难以理解说明会的内容」保留条件、准备时间与结果。",
+        "reading": "参加者／資料／説明会／内容／分かりにくい及目标「よんでおかない」读音对应正文；句末标点一致。"
+      }
+    },
+    {
+      "id": "usage:teokuNegativePast",
+      "senseId": "verb:読む:よむ",
+      "form": "teokuNegativePast",
+      "previousCard": {
+        "id": "usage:teokuNegativePast",
+        "senseId": "verb:読む:よむ",
+        "meaning": "阅读",
+        "form": "teokuNegativePast",
+        "scene": "没提前读资料，会议中只好临时确认。",
+        "before": [
+          {
+            "text": "資料を",
+            "reading": "しりょうを"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、会議中に確認した。",
+            "reading": "ので、かいぎちゅうにかくにんした"
+          }
+        ],
+        "translation": "没提前读资料，所以会议中临时确认了。",
+        "review": "approved"
+      },
+      "previousHash": "a8707458e289d4ce47140136f9d8bd5dbe121a29ccbf1555a9d31d104ffbcb15",
+      "draftHash": "6c69b94f4adaddf2016350ad351aa6a5581ee765bd27c428e10c10bfe6776bb8",
+      "currentCard": {
+        "id": "usage:teokuNegativePast",
+        "senseId": "verb:読む:よむ",
+        "meaning": "阅读",
+        "form": "teokuNegativePast",
+        "scene": "没提前读资料，会议中只好临时确认。",
+        "before": [
+          {
+            "text": "資料を",
+            "reading": "しりょうを"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、会議中に確認した。",
+            "reading": "ので、かいぎちゅうにかくにんした。"
+          }
+        ],
+        "translation": "没提前读资料，所以会议中临时确认了。",
+        "review": "approved"
+      },
+      "currentHash": "176463a9e2a733809c89c096007fe7ae4c6c13dd89d49f8cf4c116b5900d060e",
+      "authorReceipt": "70b103b31b2a943d1c1f6ac02cbdb70f3ae40d8c72dfff1fc3d00fabf76b63f3",
+      "reviewReceipt": "b6eae05cf751a89d5ce57b3a9c5aa31ae977b8d8458e262c7bf4967f39b48bb5",
+      "reviewer": "/root/repair_easy6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teokuNegativePast",
+        "hash": "6c69b94f4adaddf2016350ad351aa6a5581ee765bd27c428e10c10bfe6776bb8",
+        "status": "approved",
+        "sentence": "資料を読んでおかなかったので、会議中に確認した。",
+        "reason": "「読んでおかなかった」指会前没有预读；会中核对提供后续需要与结果，因果关系自然，不把目标误读为普通没读或从未读。",
+        "roles": "省略的说话人是预读与会中核对的主体；资料是阅读对象。",
+        "time": "未预读发生在会议前，确认发生在会议中，目标过去否定吻合。",
+        "negation": "否定事前准备性阅读，不推断会议后是否读过资料。",
+        "translation": "「没提前读资料，所以会议中临时确认了」对应准备欠缺及会中核对；「临时」由会中补查语境支持。",
+        "reading": "資料／会議中／確認及目标「よんでおかなかった」读音正确，句末句号已在 reading 中。"
+      }
+    },
+    {
+      "id": "usage:teikuNegative:verb:する:する",
+      "senseId": "verb:する:する",
+      "form": "teikuNegative",
+      "previousCard": {
+        "id": "usage:teikuNegative:verb:する:する",
+        "senseId": "verb:する:する",
+        "meaning": "做",
+        "form": "teikuNegative",
+        "scene": "今天太累，不继续做这项工作",
+        "before": [
+          {
+            "text": "今日は疲れたので、この仕事を",
+            "reading": "きょうはつかれたので、このしごとを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "今天累了，不继续做这项工作。",
+        "review": "approved"
+      },
+      "previousHash": "392e52b5860173404bfb53a7a0784038bbe7177225c6b43237789e7292c6ad14",
+      "draftHash": "b1219cc83309c746be6c586a6aeb1f8b288afb65dbfc675768c3cfe91eee405c",
+      "currentCard": {
+        "id": "usage:teikuNegative:verb:する:する",
+        "senseId": "verb:する:する",
+        "meaning": "做",
+        "form": "teikuNegative",
+        "scene": "调动前最后一天，他没整理资料就离开原部门。",
+        "before": [
+          {
+            "text": "異動最終日の退勤時、彼は部の書類の整理を",
+            "reading": "いどうさいしゅうびのたいきんじ、かれはぶのしょるいのせいりを"
+          }
+        ],
+        "after": [
+          {
+            "text": "まま、元の部署を離れた。",
+            "reading": "まま、もとのぶしょをはなれた。"
+          }
+        ],
+        "translation": "调动前最后一天，他没有整理部门文件便离开了原部门。",
+        "review": "approved"
+      },
+      "currentHash": "9c22e9583898bcb55dd015012f8955aad02ea1d32ec3ac1615a099d833e165d6",
+      "authorReceipt": "a86743d83336864aefdbf3cf427ef902bc32d34c00dfbe0d7b48db9af005f147",
+      "reviewReceipt": "ba5abdd975e03f6210402552383edaab45cb187489ffee8baed1b78cb5a07505",
+      "reviewer": "/root/repair_semantic6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teikuNegative:verb:する:する",
+        "hash": "b1219cc83309c746be6c586a6aeb1f8b288afb65dbfc675768c3cfe91eee405c",
+        "status": "approved",
+        "sentence": "異動最終日の退勤時、彼は部の書類の整理をしていかないまま、元の部署を離れた。",
+        "reason": "「書類の整理をしていかないまま、元の部署を離れた」は退勤・離任地点を基点に、整理せず去ったことを表す。単純な未実施より「去る際にしていかなかった」視点がある。",
+        "roles": "彼是整理部门文件并离开原部门的人；对象是書類の整理。",
+        "time": "异动前最后一个工作日下班时；主句的離れた在过去。",
+        "negation": "未在离开前完成整理；没有表达能力不足或今后不再整理。",
+        "translation": "中文保留了未整理即离开的先后关系，与否定范围一致。",
+        "reading": "いどうさいしゅうび、たいきんじ、ぶ、しょるい、せいり、もと、ぶしょ、はなれた均与正文相符；最終日读さいしゅうび。"
+      }
+    },
+    {
+      "id": "usage:tekuruNegative:verb:始める:はじめる",
+      "senseId": "verb:始める:はじめる",
+      "form": "tekuruNegative",
+      "previousCard": {
+        "id": "usage:tekuruNegative:verb:始める:はじめる",
+        "senseId": "verb:始める:はじめる",
+        "meaning": "开始",
+        "form": "tekuruNegative",
+        "scene": "人在办公室，说明去实验室也暂不开实验。",
+        "before": [
+          {
+            "text": "責任者が来るまで、実験室で実験を",
+            "reading": "せきにんしゃがくるまで、じっけんしつでじっけんを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "负责人到来前，我不去实验室开始实验再回来。",
+        "review": "approved"
+      },
+      "previousHash": "008c7cf617896e4118ad2213426aa1c2f29fb65c161d803d4a8361c79658b1ed",
+      "draftHash": "2ffacf08689dcd2273744d9afa138dd7ab21fdca20e281532e3ae913f2e20527",
+      "currentCard": {
+        "id": "usage:tekuruNegative:verb:始める:はじめる",
+        "senseId": "verb:始める:はじめる",
+        "meaning": "开始",
+        "form": "tekuruNegative",
+        "scene": "同事请我去隔壁启动演示再回前台，我想留下而拒绝。",
+        "before": [
+          {
+            "text": "同僚に「隣の実演室でデモ映像の再生を始めてきて」と頼まれたが、私は受付にいたいので、「今日はそれを",
+            "reading": "どうりょうに「となりのじつえんしつででもえいぞうのさいせいをはじめてきて」とたのまれたが、わたしはうけつけにいたいので、「きょうはそれを"
+          }
+        ],
+        "after": [
+          {
+            "text": "」と断った。",
+            "reading": "」とことわった。"
+          }
+        ],
+        "translation": "同事让我去隔壁演示室启动演示视频再回来，但我想留在前台，便拒绝说今天不去启动它再回来。",
+        "review": "approved"
+      },
+      "currentHash": "75bef1fe76cf6acb52c056854c50fb74e2b68d5e9099c171b0e99e61e4348347",
+      "authorReceipt": "a86743d83336864aefdbf3cf427ef902bc32d34c00dfbe0d7b48db9af005f147",
+      "reviewReceipt": "ba5abdd975e03f6210402552383edaab45cb187489ffee8baed1b78cb5a07505",
+      "reviewer": "/root/repair_semantic6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:tekuruNegative:verb:始める:はじめる",
+        "hash": "2ffacf08689dcd2273744d9afa138dd7ab21fdca20e281532e3ae913f2e20527",
+        "status": "approved",
+        "sentence": "同僚に「隣の実演室でデモ映像の再生を始めてきて」と頼まれたが、私は受付にいたいので、「今日はそれを始めてこない」と断った。",
+        "reason": "隔壁演示室需有人启动视频，执行者随后回到前台，构成「再生を始めてくる」可信的短程往返。引语「今日はそれを始めてこない」虽是直接而强硬的拒绝，前面的请求、本人想留在前台及「断った」使其语用成立。",
+        "roles": "同僚提出请求；私是可选择是否执行的启动者；それ指代演示视频的播放。",
+        "time": "今天收到差事时说出非过去否定，针对接下来的一次往返。",
+        "negation": "明确表示不去启动播放再回来；「いたい」说明本人选择，未说不能离岗或不能启动。",
+        "translation": "中文保留请求、留在前台的动机和拒绝往返差事的内容；没有误译为能力否定。",
+        "reading": "同僚、隣、実演室、デモ映像、再生、始める、頼まれた、私、受付、今日、断った的读音均合语境；私读わたし成立。"
+      }
+    },
+    {
+      "id": "usage:tekuruNegativePast:verb:待つ:まつ",
+      "senseId": "verb:待つ:まつ",
+      "form": "tekuruNegativePast",
+      "previousCard": {
+        "id": "usage:tekuruNegativePast:verb:待つ:まつ",
+        "senseId": "verb:待つ:まつ",
+        "meaning": "等待",
+        "form": "tekuruNegativePast",
+        "scene": "回顾自己解决困难的经历，从未只等别人帮忙。",
+        "before": [
+          {
+            "text": "私はこれまで、ただ人の助けを",
+            "reading": "わたしはこれまで、ただひとのたすけを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "到现在为止，我并没有只是等待别人的帮助。",
+        "review": "approved"
+      },
+      "previousHash": "1d608b2dbfa06de40f5e33435886b17a8cdcffe38947b112fbbecdbc5e2704f5",
+      "draftHash": "f0e393a8289291157cb5314751aad9054963dd5784f9776943aa95d07c03ab7c",
+      "currentCard": {
+        "id": "usage:tekuruNegativePast:verb:待つ:まつ",
+        "senseId": "verb:待つ:まつ",
+        "meaning": "等待",
+        "form": "tekuruNegativePast",
+        "scene": "道路开通那天，村民此前一直自行除雪，并非坐等救援。",
+        "before": [
+          {
+            "text": "道路が開通した日、住民はそれまで救援をじっと",
+            "reading": "どうろがかいつうしたひ、じゅうみんはそれまできゅうえんをじっと"
+          }
+        ],
+        "after": [
+          {
+            "text": "。自分たちで雪かきをし、食料を分け合っていた。",
+            "reading": "。じぶんたちでゆきかきをし、しょくりょうをわけあっていた。"
+          }
+        ],
+        "translation": "道路开通那天，村民此前一直没有坐等救援，而是自行除雪、互相分发食物。",
+        "review": "approved"
+      },
+      "currentHash": "92559d128512cbcbea41e3858962e440984fa294ae8be76c26aa7e813be87b6b",
+      "authorReceipt": "a86743d83336864aefdbf3cf427ef902bc32d34c00dfbe0d7b48db9af005f147",
+      "reviewReceipt": "ba5abdd975e03f6210402552383edaab45cb187489ffee8baed1b78cb5a07505",
+      "reviewer": "/root/repair_semantic6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:tekuruNegativePast:verb:待つ:まつ",
+        "hash": "f0e393a8289291157cb5314751aad9054963dd5784f9776943aa95d07c03ab7c",
+        "status": "approved",
+        "sentence": "道路が開通した日、住民はそれまで救援をじっと待ってこなかった。自分たちで雪かきをし、食料を分け合っていた。",
+        "reason": "「それまで救援をじっと待ってこなかった」以道路开通日回顾此前持续状态，后句的除雪和分食具体支持没有消极坐等。",
+        "roles": "住民是等待与主动除雪、分食的同一主体；救援是等待对象。",
+        "time": "道路开通之日是过去观察终点；それまで涵盖此前一段时间。",
+        "negation": "否定此前一直坐等的经过，不推出救援从未到达。",
+        "translation": "中文的「此前一直没有坐等」和后续行动对应原句。",
+        "reading": "道路、開通、日、住民、救援、待つ、自分、雪かき、食料、分け合う的读音与句义相符。"
+      }
+    },
+    {
+      "id": "usage:teoruNegativePast:verb:包む:つつむ",
+      "senseId": "verb:包む:つつむ",
+      "form": "teoruNegativePast",
+      "previousCard": {
+        "id": "usage:teoruNegativePast:verb:包む:つつむ",
+        "senseId": "verb:包む:つつむ",
+        "meaning": "包裹",
+        "form": "teoruNegativePast",
+        "scene": "童话老管家回忆国王到时披风尚未包装。",
+        "before": [
+          {
+            "text": "王が来た時、マントはまだ",
+            "reading": "おうがきたとき、マントはまだ"
+          }
+        ],
+        "after": [
+          {
+            "text": "のじゃ。"
+          }
+        ],
+        "translation": "国王来时，披风还没有包装。",
+        "review": "approved"
+      },
+      "previousHash": "c7fb49394fae800d7f2a9a1a31f787deaa86e1f60cca53f8c4cc13236ddfc1b2",
+      "draftHash": "00ab6e8385142ae8f35b0c54a2219d801ed11ac516321d67403e25a60f268aaf",
+      "currentCard": {
+        "id": "usage:teoruNegativePast:verb:包む:つつむ",
+        "senseId": "verb:包む:つつむ",
+        "meaning": "包裹",
+        "form": "teoruNegativePast",
+        "scene": "昔话叙述：魔女来时，王子没有用披风包住小鸟。",
+        "before": [
+          {
+            "text": "祖母は子どもたちに昔話を語った。「魔女が来た時、王子は小鳥をマントで",
+            "reading": "そぼはこどもたちにむかしばなしをかたった。「まじょがきたとき、おうじはことりをまんとで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。」",
+            "reading": "。」"
+          }
+        ],
+        "translation": "祖母给孩子们讲昔话：“魔女来时，王子并没有用披风包住小鸟。”",
+        "note": "引号内采用昔話の語り口。",
+        "review": "approved"
+      },
+      "currentHash": "4d654684299df7d0812253e3143f9439c3c7f31aabf6bfdb807ed055eda27e32",
+      "authorReceipt": "a86743d83336864aefdbf3cf427ef902bc32d34c00dfbe0d7b48db9af005f147",
+      "reviewReceipt": "ba5abdd975e03f6210402552383edaab45cb187489ffee8baed1b78cb5a07505",
+      "reviewer": "/root/repair_semantic6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teoruNegativePast:verb:包む:つつむ",
+        "hash": "00ab6e8385142ae8f35b0c54a2219d801ed11ac516321d67403e25a60f268aaf",
+        "status": "approved",
+        "sentence": "祖母は子どもたちに昔話を語った。「魔女が来た時、王子は小鳥をマントで包んでおらなかった。」",
+        "reason": "昔话引语使裸形「包んでおらなかった」的叙述口吻有依据；王子用披风包小鸟的论元和动作均自然，否定当时的包裹状态。",
+        "roles": "祖母是讲述者；王子是包裹动作的施事，小鸟是对象，披风是工具。",
+        "time": "魔女来到时的故事过去时点。",
+        "negation": "否定当时正在包裹或已包住的状态，不把小鸟写成施事。",
+        "translation": "中文保留王子、披风、小鸟和过去否定；「包住」符合语境。",
+        "reading": "祖母读そぼ、昔話读むかしばなし、魔女读まじょ、小鳥读ことり、包んで读つつんで；其余读音和标点对应。"
+      }
+    },
+    {
+      "id": "usage:teoruNegativePast:verb:寝る:ねる",
+      "senseId": "verb:寝る:ねる",
+      "form": "teoruNegativePast",
+      "previousCard": {
+        "id": "usage:teoruNegativePast:verb:寝る:ねる",
+        "senseId": "verb:寝る:ねる",
+        "meaning": "睡觉",
+        "form": "teoruNegativePast",
+        "scene": "老人说昨晚没有睡好。",
+        "before": [
+          {
+            "text": "祖父は「昨夜はよく",
+            "reading": "そふは「さくやはよく"
+          }
+        ],
+        "after": [
+          {
+            "text": "」と言った。",
+            "reading": "」といった"
+          }
+        ],
+        "translation": "祖父说：“我昨晚没睡好。”",
+        "note": "ておらなかった的传统口吻形式。",
+        "review": "approved"
+      },
+      "previousHash": "5d7e2d6c8e011757f868f4ddf5fee05810af9fb1ae030ab2e017b06a9164d767",
+      "draftHash": "85109b8901a9a5e901feb866f1f8b2ff3dfc5fbb25f20e1a0638735f8f2bae97",
+      "currentCard": {
+        "id": "usage:teoruNegativePast:verb:寝る:ねる",
+        "senseId": "verb:寝る:ねる",
+        "meaning": "睡觉",
+        "form": "teoruNegativePast",
+        "scene": "故事里过了午夜，门卫仍未入睡。",
+        "before": [
+          {
+            "text": "祖父は昔話の中の門番について、子どもにこう話した。「真夜中を過ぎても、門番はまだ",
+            "reading": "そふはむかしばなしのなかのもんばんについて、こどもにこうはなした。「まよなかをすぎても、もんばんはまだ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。」",
+            "reading": "。」"
+          }
+        ],
+        "translation": "祖父给孩子讲起昔话里的门卫：“过了午夜，门卫仍没有睡着。”",
+        "note": "引号内为昔話中的叙述，否定过去时点的睡眠状态。",
+        "review": "approved"
+      },
+      "currentHash": "50730a4ea5ac066051a47a812b9949024cf2d6bc67de3059ed4cea03d54980bb",
+      "authorReceipt": "a86743d83336864aefdbf3cf427ef902bc32d34c00dfbe0d7b48db9af005f147",
+      "reviewReceipt": "ba5abdd975e03f6210402552383edaab45cb187489ffee8baed1b78cb5a07505",
+      "reviewer": "/root/repair_semantic6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teoruNegativePast:verb:寝る:ねる",
+        "hash": "85109b8901a9a5e901feb866f1f8b2ff3dfc5fbb25f20e1a0638735f8f2bae97",
+        "status": "approved",
+        "sentence": "祖父は昔話の中の門番について、子どもにこう話した。「真夜中を過ぎても、門番はまだ寝ておらなかった。」",
+        "reason": "祖父讲昔话的框架使「寝ておらなかった」的文学叙述语体合适；「真夜中を過ぎても」「まだ」共同定位门番尚未入睡。",
+        "roles": "祖父是讲述者，门番是睡眠状态的主体。",
+        "time": "故事中过了午夜的过去观察时点。",
+        "negation": "否定该时点的睡眠状态，不涉及睡眠能力或质量。",
+        "translation": "「仍没有睡着」准确表达まだ寝ておらなかった。",
+        "reading": "祖父、昔話、門番、子ども、真夜中、過ぎても及目标寝ておらなかった的读音均对应正文。"
+      }
+    },
+    {
+      "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
+      "senseId": "verb:騒ぐ:さわぐ",
+      "form": "temiruNegative",
+      "previousCard": {
+        "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
+        "senseId": "verb:騒ぐ:さわぐ",
+        "meaning": "吵闹",
+        "form": "temiruNegative",
+        "scene": "排练时弟弟怕打扰邻居，不试演吵闹。",
+        "before": [
+          {
+            "text": "弟は近所迷惑を気にして、練習でも大声では",
+            "reading": "おとうとはきんじょめいわくをきにして、れんしゅうでもおおごえでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "弟弟担心打扰邻居，即使排练也不尝试大声吵闹。",
+        "review": "approved"
+      },
+      "previousHash": "0ba9b5304c165b111390fa88ebf7b38c2fd0f3ba42dcc29ee0a083ce435a2c7b",
+      "draftHash": "f08a06c4163aab101c07eecf48572c2ce4151d0b84ac56259b121c771f436914",
+      "currentCard": {
+        "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
+        "senseId": "verb:騒ぐ:さわぐ",
+        "meaning": "吵闹",
+        "form": "temiruNegative",
+        "scene": "音响人员在新隔音室里试着制造声音来测隔音。",
+        "before": [
+          {
+            "text": "音響担当は、新設した防音室で少し",
+            "reading": "おんきょうたんとうは、しんせつしたぼうおんしつですこし"
+          }
+        ],
+        "after": [
+          {
+            "text": "と、遮音性を確かめられない。",
+            "reading": "と、しゃおんせいをたしかめられない。"
+          }
+        ],
+        "translation": "音响负责人若不在新建的隔音室里试着制造点动静，就无法确认其隔音性能。",
+        "review": "approved"
+      },
+      "currentHash": "1a936c42e51e99b181519502b084e7960b2d701a4008b130fb59f72dbd3beb90",
+      "authorReceipt": "a86743d83336864aefdbf3cf427ef902bc32d34c00dfbe0d7b48db9af005f147",
+      "reviewReceipt": "ba5abdd975e03f6210402552383edaab45cb187489ffee8baed1b78cb5a07505",
+      "reviewer": "/root/repair_semantic6_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
+        "hash": "f08a06c4163aab101c07eecf48572c2ce4151d0b84ac56259b121c771f436914",
+        "status": "approved",
+        "sentence": "音響担当は、新設した防音室で少し騒いでみないと、遮音性を確かめられない。",
+        "reason": "在防音室里试着发出较大动静来检查隔音，给「騒いでみる」提供了可控制、可观察的试做；条件句接「確かめられない」自然。",
+        "roles": "音響担当是试着制造动静并检查遮音性的人。",
+        "time": "一般测试条件，非过去形未宣称测试已实施。",
+        "negation": "「騒いでみないと」否定试做并提出必要条件，既非禁止吵闹也非试了却失败。",
+        "translation": "中文用「若不试着制造点动静」保留试做否定和条件关系。",
+        "reading": "音響担当、新設、防音室、騒いで、遮音性、確かめられない的读音与正文、语境相符。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:押す:おす",
+      "senseId": "verb:押す:おす",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:押す:おす",
+        "senseId": "verb:押す:おす",
+        "meaning": "按；推",
+        "form": "teshimauNegativePast",
+        "scene": "昨天测试只按了三个键，其余按钮没有碰。",
+        "before": [
+          {
+            "text": "昨日はボタンを全部",
+            "reading": "きのうはボタンをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。三つだけ押した。",
+            "reading": "。みっつだけおした。"
+          }
+        ],
+        "translation": "昨天没有把按钮全部按下，只按了三个。",
+        "review": "approved"
+      },
+      "previousHash": "2405cba80134909ca1d81e393e683d7ac2f765a0ba3eda89d4d0a6ee4630b016",
+      "draftHash": "d745bf609f8a595ba6347ca8bf60815f05520cc18f9f000ad49a806f31644c1a",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:押す:おす",
+        "senseId": "verb:押す:おす",
+        "meaning": "按；推",
+        "form": "teshimauNegativePast",
+        "scene": "机器突然停机，检修同事回想刚才操作。",
+        "before": [
+          {
+            "text": "機械が急に止まったけど、点検中に非常停止ボタンを誤って",
+            "reading": "きかいがきゅうにとまったけど、てんけんちゅうにひじょうていしボタンをあやまって"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "机器刚才突然停了；检修时，你有没有误按紧急停止按钮？",
+        "review": "approved"
+      },
+      "currentHash": "b64245021c53063293d424078d8409d1016368b6a908bf506e9a35090e76c899",
+      "authorReceipt": "6f210f69b142c26b9f4ba8197d5245ab26e460c5cbbed452851e156371b37e04",
+      "reviewReceipt": "db84e9b98d4aa3d066fcb11a1c4dbca6930bbdf146ae8d20a66576acad4e38ac",
+      "reviewer": "/root/repair_completion_pilot_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:押す:おす",
+        "hash": "d745bf609f8a595ba6347ca8bf60815f05520cc18f9f000ad49a806f31644c1a",
+        "status": "approved",
+        "sentence": "機械が急に止まったけど、点検中に非常停止ボタンを誤って押してしまわなかった？",
+        "reason": "停机使误触急停按钮成为可追问的具体失误；「誤って押してしまわなかった？」询问该不希望的动作是否已经发生，译文“有没有误按”保留疑问，不把事故原因说成已确认。",
+        "roles": "检修负责人向刚操作设备的同事追问；同事是可能按按钮的人，按钮是「押す」的宾语。",
+        "time": "「急に止まった」「点検中」把停机与可能误按定位在刚才的检修过程。",
+        "negation": "过去否定疑问询问意外按下这一结果是否发生；不等于断言没有按。",
+        "translation": "“机器刚才突然停了”“检修时有没有误按紧急停止按钮”对应句中事件和提问，未添能力或确定因果。",
+        "reading": "機械=きかい、点検中=てんけんちゅう、非常停止=ひじょうていし、誤って=あやまって；目标押してしまわなかった=おしてしまわなかった。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:乗る:のる",
+      "senseId": "verb:乗る:のる",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:乗る:のる",
+        "senseId": "verb:乗る:のる",
+        "meaning": "乘坐",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只坐了部分游乐设施，今天还想继续玩。",
+        "before": [
+          {
+            "text": "昨日は園内の乗り物に全部は",
+            "reading": "きのうはえんないののりものにぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。残りは",
+            "reading": "。のこりは"
+          },
+          {
+            "text": "今日",
+            "reading": "きょう"
+          },
+          {
+            "text": "楽しむ。",
+            "reading": "たのしむ。"
+          }
+        ],
+        "translation": "昨天没有把园内的游乐设施全坐完，剩下的今天玩。",
+        "review": "approved"
+      },
+      "previousHash": "ea3d4799da7bf2bfb1153c3da5a62d9b72ad89476d33da85c3fc323243b852d7",
+      "draftHash": "6e6059224b26482067eb4b55077c0d41a859b1da2273736a805d50713db017b2",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:乗る:のる",
+        "senseId": "verb:乗る:のる",
+        "meaning": "乘坐",
+        "form": "teshimauNegativePast",
+        "scene": "同伴刚才走错站台，你确认他是否搭错方向。",
+        "before": [
+          {
+            "text": "さっき別のホームに行ってたけど、反対方向の電車に",
+            "reading": "さっきべつのホームにいってたけど、はんたいほうこうのでんしゃに"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "你刚才去了另一侧站台，是不是搭上反方向的电车了？",
+        "review": "approved"
+      },
+      "currentHash": "d1d09a6a52c3b596c4dcb6040ca3269867b85efc0ac33e07e98d2a46a9d9d593",
+      "authorReceipt": "6f210f69b142c26b9f4ba8197d5245ab26e460c5cbbed452851e156371b37e04",
+      "reviewReceipt": "db84e9b98d4aa3d066fcb11a1c4dbca6930bbdf146ae8d20a66576acad4e38ac",
+      "reviewer": "/root/repair_completion_pilot_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:乗る:のる",
+        "hash": "6e6059224b26482067eb4b55077c0d41a859b1da2273736a805d50713db017b2",
+        "status": "approved",
+        "sentence": "さっき別のホームに行ってたけど、反対方向の電車に乗ってしまわなかった？",
+        "reason": "走到别的站台后询问是否误乘反方向列车，误乘的完成结果适合「乗ってしまう」；「乗ってしまわなかった？」仍是向旅伴核实的疑问，中文“是不是搭上……了”没有断言他已坐错车。",
+        "roles": "同行旅伴问走错站台的同伴；同伴是可能乘车者，反方向的电车以「に」标出乘坐对象。",
+        "time": "「さっき」「行ってた」指刚才到其他站台，目标过去形指其后的可能误乘。",
+        "negation": "否定疑问作用于是否误乘该电车，不表示列车未运行或同伴完全没乘车。",
+        "translation": "“去了另一侧站台”“是不是搭上反方向的电车”与日语的别处站台、反方向列车及疑问相符。",
+        "reading": "別=べつ、行ってた=いってた、反対方向=はんたいほうこう、電車=でんしゃ；目标乗ってしまわなかった=のってしまわなかった。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:出す:だす",
+      "senseId": "verb:出す:だす",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:出す:だす",
+        "senseId": "verb:出す:だす",
+        "meaning": "拿出；提交",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只提交表格第一页，附件还没交。",
+        "before": [
+          {
+            "text": "昨日は書類を全部",
+            "reading": "きのうはしょるいをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。添付資料はまだ出していない。",
+            "reading": "。てんぷしりょうはまだだしていない。"
+          }
+        ],
+        "translation": "昨天没有把文件全部提交，附件资料还没交。",
+        "review": "approved"
+      },
+      "previousHash": "c210563737e91b6872a9fda44d85626c5d9dca285d6f1d725524232d87c49b3a",
+      "draftHash": "326d7e9b0555f82cf9630b3b20be4096667137a099acde5617da1c5b16a15865",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:出す:だす",
+        "senseId": "verb:出す:だす",
+        "meaning": "拿出；提交",
+        "form": "teshimauNegativePast",
+        "scene": "客户收到版本不符的文件，你询问负责寄送的助理。",
+        "before": [
+          {
+            "text": "先方から「バージョンが違う」と連絡が来たよ。修正前の原稿を先方に",
+            "reading": "せんぽうから「バージョンがちがう」とれんらくがきたよ。しゅうせいまえのげんこうをせんぽうに"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "客户来信说版本不对；你不会是把修改前的稿子交给对方了吧？",
+        "review": "approved"
+      },
+      "currentHash": "4810239ac8c71120ab9f83c6f5fa8c99e16577c6e38a7f0655ffe752ffa9b5f5",
+      "authorReceipt": "6f210f69b142c26b9f4ba8197d5245ab26e460c5cbbed452851e156371b37e04",
+      "reviewReceipt": "db84e9b98d4aa3d066fcb11a1c4dbca6930bbdf146ae8d20a66576acad4e38ac",
+      "reviewer": "/root/repair_completion_pilot_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:出す:だす",
+        "hash": "326d7e9b0555f82cf9630b3b20be4096667137a099acde5617da1c5b16a15865",
+        "status": "approved",
+        "sentence": "先方から「バージョンが違う」と連絡が来たよ。修正前の原稿を先方に出してしまわなかった？",
+        "reason": "客户指出版本错误后，负责人追问助理是否把修正前的原稿交了出去；「原稿を先方に出す」保留本词“提交”义，过去否定疑问表达对错误提交的担忧而非已证实助理出错。",
+        "roles": "项目负责人询问负责交付的助理；助理可能提交旧稿，先方是接收者，原稿是「出す」的宾语。",
+        "time": "客户来信在后，疑问追溯此前向客户提交文件的动作；「修正前」明确旧稿版本。",
+        "negation": "「出してしまわなかった？」询问不该发生的旧稿提交是否发生；不是陈述“未提交”。",
+        "translation": "“客户来信说版本不对”“你不会是把修改前的稿子交给对方了吧”保留版本、对象和担忧的疑问语气。",
+        "reading": "先方=せんぽう、違う=ちがう、連絡=れんらく、来た=きた、修正前=しゅうせいまえ、原稿=げんこう；目标出してしまわなかった=だしてしまわなかった。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:座る:すわる",
+      "senseId": "verb:座る:すわる",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:座る:すわる",
+        "senseId": "verb:座る:すわる",
+        "meaning": "坐",
+        "form": "teshimauNegativePast",
+        "scene": "昨天拍照时后排仍站着，没有所有人都坐下。",
+        "before": [
+          {
+            "text": "昨日の撮影では全員が",
+            "reading": "きのうのさつえいではぜんいんが"
+          }
+        ],
+        "after": [
+          {
+            "text": "。後列は立ったままだった。",
+            "reading": "。こうれつはたったままだった。"
+          }
+        ],
+        "translation": "昨天拍照时没有所有人都坐下，后排仍站着。",
+        "review": "approved"
+      },
+      "previousHash": "e81a29ce86a29300d9e183ad98b1793edaa2a97cd39d0e3503d2fd1dd3ac4f13",
+      "draftHash": "5ea5a973b585138cf5d3972e22aa6faaa0ed917057b3cd5b0c7ef58873d5bcaa",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:座る:すわる",
+        "senseId": "verb:座る:すわる",
+        "meaning": "坐",
+        "form": "teshimauNegativePast",
+        "scene": "同伴裤子沾了白漆，你指着刚刷过的长椅。",
+        "before": [
+          {
+            "text": "ズボンに白いペンキが付いてるね。あの塗りたてのベンチに",
+            "reading": "ズボンにしろいペンキがついてるね。あのぬりたてのベンチに"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "你裤子上沾了白漆；坐到刚刷好的长椅上了吗？",
+        "review": "approved"
+      },
+      "currentHash": "aa0b019616102ec6e560959d03c0b1112f2232647d249a1ccb92267b549e6118",
+      "authorReceipt": "6f210f69b142c26b9f4ba8197d5245ab26e460c5cbbed452851e156371b37e04",
+      "reviewReceipt": "db84e9b98d4aa3d066fcb11a1c4dbca6930bbdf146ae8d20a66576acad4e38ac",
+      "reviewer": "/root/repair_completion_pilot_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:座る:すわる",
+        "hash": "5ea5a973b585138cf5d3972e22aa6faaa0ed917057b3cd5b0c7ef58873d5bcaa",
+        "status": "approved",
+        "sentence": "ズボンに白いペンキが付いてるね。あの塗りたてのベンチに座ってしまわなかった？",
+        "reason": "裤子沾白漆为追问是否坐过刚刷漆的长椅提供具体线索；「ベンチに座ってしまわなかった？」问可能发生的失误，译文用问号保留不确定性，没有把沾漆直接等同于坐过。",
+        "roles": "朋友向裤子沾漆的同伴发问；同伴是可能坐下的人，长椅以「に」标出落座处。",
+        "time": "「付いてる」是当前观察，目标过去形追问刚才可能坐到椅子的动作；「塗りたて」说明漆当时新刷。",
+        "negation": "过去否定疑问询问意外坐上去是否发生，不是已确认没坐；「しまう」带不愿发生的结果语感。",
+        "translation": "“裤子上沾了白漆”“坐到刚刷好的长椅上了吗”与观察和疑问对应；未将可能原因写成事实。",
+        "reading": "白い=しろい、付いてる=ついてる、塗りたて=ぬりたて；目标座ってしまわなかった=すわってしまわなかった。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:もらう:もらう",
+      "senseId": "verb:もらう:もらう",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:もらう:もらう",
+        "senseId": "verb:もらう:もらう",
+        "meaning": "得到",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只拿了一份资料，没有把桌上的全领走。",
+        "before": [
+          {
+            "text": "昨日は資料を全部",
+            "reading": "きのうはしりょうをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。必要な一枚だけもらった。",
+            "reading": "。ひつようないちまいだけもらった。"
+          }
+        ],
+        "translation": "昨天没有把资料全部拿走，只拿了需要的一张。",
+        "review": "approved"
+      },
+      "previousHash": "89980a3945399e560937696958d99f51b667b80239140b06f122395a18b66ea2",
+      "draftHash": "6e1f5dc6170b50378bdff4e6d3c8498d6d1aeedc31fd3fe9d73e3b9790941dff",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:もらう:もらう",
+        "senseId": "verb:もらう:もらう",
+        "meaning": "得到",
+        "form": "teshimauNegativePast",
+        "scene": "签到处工作人员核对参加者是否多领了邻座那份。",
+        "before": [
+          {
+            "text": "受付で配布資料を自分の分だけでなく、隣の参加者の分まで",
+            "reading": "うけつけではいふしりょうをじぶんのぶんだけでなく、となりのさんかしゃのぶんまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "你在签到处领资料时，该不会连邻座那位参加者的份也一起领到了吧？",
+        "review": "approved"
+      },
+      "currentHash": "58429ea1c18ccc1029009a0ea85f76d84fc646178e1f6ffa2c5ab94a1e57d353",
+      "authorReceipt": "96a9213c9db598089885cc0b1042c8c2533d98b6d9a7a68b2ec098aefb60cbf1",
+      "reviewReceipt": "f0e4d2492abb5deb9edf50e13c992bf6c20c74fe8de30b5c75daaf8c9c34a0cf",
+      "reviewer": "/root/repair_completion_a_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:もらう:もらう",
+        "hash": "6e1f5dc6170b50378bdff4e6d3c8498d6d1aeedc31fd3fe9d73e3b9790941dff",
+        "status": "approved",
+        "sentence": "受付で配布資料を自分の分だけでなく、隣の参加者の分までもらってしまわなかった？",
+        "reason": "「隣の参加者の分までもらう」保持“得到”的固定词义，额外领取别人那份是明确的不希望结果；签到处人员向刚领资料者追问，过去否定疑问在此可自然确认是否误领。",
+        "roles": "签到处工作人员问领取资料的参加者；参加者从工作人员处领资料，邻座者是额外那份的归属者。",
+        "time": "活动签到领取资料之后回问，动作已可能发生；「てしまわなかった？」回顾刚才的误领。",
+        "negation": "担忧式过去否定疑问询问是否连邻座那份也领了，未断言误领已发生。",
+        "translation": "“该不会连邻座那份也一起领到了吧”保留疑问与多领对象，和日语一致。",
+        "reading": "受付=うけつけ、配布資料=はいふしりょう、自分の分=じぶんのぶん、隣の参加者=となりのさんかしゃ；目标「もらってしまわなかった」及标点读音正确。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:並ぶ:ならぶ",
+      "senseId": "verb:並ぶ:ならぶ",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:並ぶ:ならぶ",
+        "senseId": "verb:並ぶ:ならぶ",
+        "meaning": "排队；排列",
+        "form": "teshimauNegativePast",
+        "scene": "有几位队员来晚了，没有全体排好队。",
+        "before": [
+          {
+            "text": "あの時は参加者が全員は",
+            "reading": "あのときはさんかしゃがぜんいんは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。遅れた三人はまだ会場にいなかった。",
+            "reading": "。おくれたさんにんはまだかいじょうにいなかった。"
+          }
+        ],
+        "translation": "那时参加者没有全部排好队，迟到的三个人还没到会场。",
+        "review": "approved"
+      },
+      "previousHash": "29f23931bdb1129187134b0b802fd06f1c5d593be220483ac3da8ba733f177e7",
+      "draftHash": "cc996b45fc9cb2f217353b8e12da974acd9395da8aad561120f9bde2ca5b4604",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:並ぶ:ならぶ",
+        "senseId": "verb:並ぶ:ならぶ",
+        "meaning": "排队；排列",
+        "form": "teshimauNegativePast",
+        "scene": "影厅号码相近，担心同伴排进了另一部电影的队伍。",
+        "before": [
+          {
+            "text": "昨日、スクリーン番号を見間違えて、別の映画の列に",
+            "reading": "きのう、スクリーンばんごうをみまちがえて、べつのえいがのれつに"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "你昨天该不会看错影厅号，排到了另一部电影的队伍里吧？",
+        "review": "approved"
+      },
+      "currentHash": "03ae7b4565a2c7341b9de50584233fd63852b8676c5c5eb85eeadfba60824032",
+      "authorReceipt": "96a9213c9db598089885cc0b1042c8c2533d98b6d9a7a68b2ec098aefb60cbf1",
+      "reviewReceipt": "f0e4d2492abb5deb9edf50e13c992bf6c20c74fe8de30b5c75daaf8c9c34a0cf",
+      "reviewer": "/root/repair_completion_a_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:並ぶ:ならぶ",
+        "hash": "cc996b45fc9cb2f217353b8e12da974acd9395da8aad561120f9bde2ca5b4604",
+        "status": "approved",
+        "sentence": "昨日、スクリーン番号を見間違えて、別の映画の列に並んでしまわなかった？",
+        "reason": "「別の映画の列に並ぶ」明确采用排队义；看错影厅号导致排错队是具体的意外结果，同行者问同伴「並んでしまわなかった？」合乎追问语境。",
+        "roles": "同行者向持票的同伴询问；同伴是可能看错号码并排入另一队的人。",
+        "time": "「昨日」把看号、排队和追问中的目标过去形定位在昨天。",
+        "negation": "过去否定疑问询问是否误排，不把未排错当作既定事实。",
+        "translation": "“该不会看错影厅号，排到另一部电影的队伍里吧”保留了误排的疑问和两个事件的关系。",
+        "reading": "昨日=きのう、番号=ばんごう、見間違えて=みまちがえて、別の映画の列=べつのえいがのれつ；目标「ならんでしまわなかった」正确。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:付ける:つける",
+      "senseId": "verb:付ける:つける",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:付ける:つける",
+        "senseId": "verb:付ける:つける",
+        "meaning": "附上；打开",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只贴了两张标签，没有把装饰全贴上。",
+        "before": [
+          {
+            "text": "昨日は札を全部",
+            "reading": "きのうはふだをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。二枚だけ付けた。",
+            "reading": "。にまいだけつけた。"
+          }
+        ],
+        "translation": "昨天没有把标签全部贴上，只贴了两张。",
+        "review": "approved"
+      },
+      "previousHash": "38d86305883ac5c63b1d88857e872b6d18fc4c46f969ecbc10982c6bd9c7fdd6",
+      "draftHash": "6b91af9f2470390f786bbc6ab4283aea1eb26796e9eb62f85da8448d4677f73c",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:付ける:つける",
+        "senseId": "verb:付ける:つける",
+        "meaning": "附上；打开",
+        "form": "teshimauNegativePast",
+        "scene": "限定商品价签与收银价不符，店长追问昨晚贴标员。",
+        "before": [
+          {
+            "text": "値札の価格とレジの表示が違うけど、昨日、限定品に通常品の値札を",
+            "reading": "ねふだのかかくとレジのひょうじがちがうけど、きのう、げんていひんにつうじょうひんのねふだを"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "价签价格和收银台显示不一致；你昨天该不会把普通款价签贴到了限定款上吧？",
+        "review": "approved"
+      },
+      "currentHash": "4ffad7066a9a616b3331ad020cea562f7f7cb2cf592191b4618dfe533355ecbe",
+      "authorReceipt": "96a9213c9db598089885cc0b1042c8c2533d98b6d9a7a68b2ec098aefb60cbf1",
+      "reviewReceipt": "f0e4d2492abb5deb9edf50e13c992bf6c20c74fe8de30b5c75daaf8c9c34a0cf",
+      "reviewer": "/root/repair_completion_a_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:付ける:つける",
+        "hash": "6b91af9f2470390f786bbc6ab4283aea1eb26796e9eb62f85da8448d4677f73c",
+        "status": "approved",
+        "sentence": "値札の価格とレジの表示が違うけど、昨日、限定品に通常品の値札を付けてしまわなかった？",
+        "reason": "「限定品に通常品の値札を付ける」是把标签附上商品，不滑向“打开”义；价签与收银价不符使贴错签成为具体可疑结果，店长的过去否定疑问自然。",
+        "roles": "店长问昨晚贴价签的店员；店员可能把普通品价签贴在限定品上。",
+        "time": "「昨日」对应店员贴签时点，现时价格不符引发回顾追问。",
+        "negation": "「付けてしまわなかった？」询问是否不慎贴错，未宣称错误已被证实。",
+        "translation": "中文同时保留价格不符的现状、昨天贴错价签的疑问及对象方向。",
+        "reading": "値札=ねふだ、価格=かかく、表示=ひょうじ、限定品=げんていひん、通常品=つうじょうひん；目标「つけてしまわなかった」正确。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:会う:あう",
+      "senseId": "verb:会う:あう",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:会う:あう",
+        "senseId": "verb:会う:あう",
+        "meaning": "见面",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只面谈了三人，剩余两人今天才见。",
+        "before": [
+          {
+            "text": "昨日は候補者全員には",
+            "reading": "きのうはこうほしゃぜんいんには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。残りの二人には",
+            "reading": "。のこりのふたりには"
+          },
+          {
+            "text": "今日",
+            "reading": "きょう"
+          },
+          {
+            "text": "会う。",
+            "reading": "あう。"
+          }
+        ],
+        "translation": "昨天没有见完所有候选人，剩下两人今天见。",
+        "review": "approved"
+      },
+      "previousHash": "0bcb03e285fa714af25931be5c2498284f0ae05946d90ab4b639422e5bd96d4f",
+      "draftHash": "7a09fcb193c15089293d0c0c81b29092c128bc0c01b6048c0a78ac5f22878488",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:会う:あう",
+        "senseId": "verb:会う:あう",
+        "meaning": "见面",
+        "form": "teshimauNegativePast",
+        "scene": "朋友担心同伴回家途中，偶遇难相处的前上司。",
+        "before": [
+          {
+            "text": "昨日、帰宅途中に駅前で苦手な元上司にばったり",
+            "reading": "きのう、きたくとちゅうにえきまえでにがてなもとじょうしにばったり"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "你昨天回家途中该不会在车站前偶遇了那位难打交道的前上司吧？",
+        "review": "approved"
+      },
+      "currentHash": "ef245b0a6563dd25a618d9908f5cb817ad6c815e3f01f129375ea612d787455e",
+      "authorReceipt": "96a9213c9db598089885cc0b1042c8c2533d98b6d9a7a68b2ec098aefb60cbf1",
+      "reviewReceipt": "f0e4d2492abb5deb9edf50e13c992bf6c20c74fe8de30b5c75daaf8c9c34a0cf",
+      "reviewer": "/root/repair_completion_a_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:会う:あう",
+        "hash": "7a09fcb193c15089293d0c0c81b29092c128bc0c01b6048c0a78ac5f22878488",
+        "status": "approved",
+        "sentence": "昨日、帰宅途中に駅前で苦手な元上司にばったり会ってしまわなかった？",
+        "reason": "「苦手な元上司にばったり会う」仍是与特定人偶遇；不想碰到的人物使「会ってしまう」的意外、遗憾语感成立，朋友向当事人确认是否发生的疑问自然。",
+        "roles": "朋友问昨天路过车站的同伴；同伴是可能偶遇前上司的人，元上司是会面的对象。",
+        "time": "「昨日、帰宅途中に駅前で」界定昨天回家途中的一次偶遇。",
+        "negation": "过去否定疑问问是否碰巧遇见，不表述“没有见到”这个事实。",
+        "translation": "“该不会……偶遇了……吧”保留担心式提问、对象和地点时间。",
+        "reading": "帰宅途中=きたくとちゅう、駅前=えきまえ、苦手=にがて、元上司=もとじょうし；目标「会ってしまわなかった」读作「あってしまわなかった」，正确。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:作る:つくる",
+      "senseId": "verb:作る:つくる",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:作る:つくる",
+        "senseId": "verb:作る:つくる",
+        "meaning": "制作",
+        "form": "teshimauNegativePast",
+        "scene": "昨天模型只完成了车身，车轮还没装好。",
+        "before": [
+          {
+            "text": "昨日は模型を最後までは",
+            "reading": "きのうはもけいをさいごまでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。車輪はまだ付いていない。",
+            "reading": "。しゃりんはまだついていない。"
+          }
+        ],
+        "translation": "昨天没有把模型做到最后，车轮还没装上。",
+        "review": "approved"
+      },
+      "previousHash": "3058ad46310580c9b13b3c85bae7429e5fcbbb68abdb97d5d673f49ceefe6709",
+      "draftHash": "f9e10e79d655703c169def3ff09bfd3ed3faa0c61ac8a72939bce3f2269bd8f7",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:作る:つくる",
+        "senseId": "verb:作る:つくる",
+        "meaning": "制作",
+        "form": "teshimauNegativePast",
+        "scene": "试制品宽度低于规格，负责人追问新人是否看错尺寸。",
+        "before": [
+          {
+            "text": "昨日、図面の寸法を読み違えて、規定より幅の狭い試作品を",
+            "reading": "きのう、ずめんのすんぽうをよみちがえて、きていよりはばのせまいしさくひんを"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "你昨天该不会看错图纸尺寸，做出了比规格更窄的试制品吧？",
+        "review": "approved"
+      },
+      "currentHash": "562f772969a1bbc5b3813d05d71d93b40a5df1a0693a7cc9b8ac7a15e73e08af",
+      "authorReceipt": "96a9213c9db598089885cc0b1042c8c2533d98b6d9a7a68b2ec098aefb60cbf1",
+      "reviewReceipt": "f0e4d2492abb5deb9edf50e13c992bf6c20c74fe8de30b5c75daaf8c9c34a0cf",
+      "reviewer": "/root/repair_completion_a_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:作る:つくる",
+        "hash": "f9e10e79d655703c169def3ff09bfd3ed3faa0c61ac8a72939bce3f2269bd8f7",
+        "status": "approved",
+        "sentence": "昨日、図面の寸法を読み違えて、規定より幅の狭い試作品を作ってしまわなかった？",
+        "reason": "「規定より幅の狭い試作品を作る」符合“制作”义；误读图纸后做出尺寸不合规格的成品是具体的不希望结果，负责人向新人追问的疑问可自然承载目标形。",
+        "roles": "发现尺寸异常的负责人问负责试制的新人；新人是可能读错图纸并制作试制品的人。",
+        "time": "「昨日」指图纸读取及试制发生的过去时段，成品异常触发事后确认。",
+        "negation": "「作ってしまわなかった？」询问错误成品是否做出，未断言已经做出或仅仅未做完。",
+        "translation": "“该不会看错图纸尺寸，做出了比规格更窄的试制品吧”保留结果疑问和宽度偏差。",
+        "reading": "図面=ずめん、寸法=すんぽう、読み違えて=よみちがえて、規定=きてい、試作品=しさくひん；目标「つくってしまわなかった」正确。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:信じる:しんじる",
+      "senseId": "verb:信じる:しんじる",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teshimauNegativePast",
+        "scene": "昨天听完传言仍保留怀疑，没有全部相信。",
+        "before": [
+          {
+            "text": "昨日聞いた話を全部は",
+            "reading": "きのうきいたはなしをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。疑わしい点は保留した。",
+            "reading": "。うたがわしいてんはほりゅうした。"
+          }
+        ],
+        "translation": "没有把昨天听到的话全部相信，有疑点的部分保留了判断。",
+        "review": "approved"
+      },
+      "previousHash": "23dcceaef995ab1b67ef5f45d91dabb33f2f7224c922596826dbe6a28d92985c",
+      "draftHash": "79148f4bd91c49cf02b89f16217b56ee297d19082cc33e54fe95299229d9f779",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teshimauNegativePast",
+        "scene": "玩笑讲完后，担心田中把它当成真事。",
+        "before": [
+          {
+            "text": "さっきの冗談を、田中さんは本当の話だと",
+            "reading": "さっきのじょうだんを、たなかさんはほんとうのはなしだと"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "田中该不会把刚才的玩笑当真了吧？",
+        "review": "approved"
+      },
+      "currentHash": "969250bd9f65e0502ef427b1b3b2b51952a551d25dd27bd16f09832d37c72346",
+      "authorReceipt": "e99e632c8e319cbc6b71062c7ebc05326eed95b5eb6a8c6d83e46390aa890971",
+      "reviewReceipt": "ffe2f675097673ed3ec4dd7b17d6c2f2327688d93167650c03721b5962731418",
+      "reviewer": "/root/repair_completion_b_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:信じる:しんじる",
+        "hash": "79148f4bd91c49cf02b89f16217b56ee297d19082cc33e54fe95299229d9f779",
+        "status": "approved",
+        "sentence": "さっきの冗談を、田中さんは本当の話だと信じてしまわなかった？",
+        "reason": "问句自然地向在场同伴确认田中是否意外信以为真；既有原稿维持批准。",
+        "roles": "说话者讲了玩笑，向了解田中反应的同伴询问；田中是可能误信的人。",
+        "time": "玩笑讲完后，回问刚才田中的反应。",
+        "negation": "过去否定疑问表达对误信结果的担心，不断言田中没有相信。",
+        "translation": "‘该不会……当真了吧’保留疑问及担忧，符合完整句。",
+        "reading": "冗談、本当、話、田中及目标形读音均与语境相合。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:入る:はいる",
+      "senseId": "verb:入る:はいる",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:入る:はいる",
+        "senseId": "verb:入る:はいる",
+        "meaning": "进入",
+        "form": "teshimauNegativePast",
+        "scene": "昨天进场后仍有两人留在门外等迟到者。",
+        "before": [
+          {
+            "text": "昨日は会場に全員は",
+            "reading": "きのうはかいじょうにぜんいんは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。二人は入口に残った。",
+            "reading": "。ふたりはいりぐちにのこった。"
+          }
+        ],
+        "translation": "昨天大家没有全部进入会场，两个人留在了入口。",
+        "review": "approved"
+      },
+      "previousHash": "ef8b814ae642b671ef93729f15aaf3e6d3e83351a5d7b3acef245197c95b7931",
+      "draftHash": "9d1ecd90a35348a8faf973df9c8845e9c0e3751e4182dcebe0de79e33e71ca51",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:入る:はいる",
+        "senseId": "verb:入る:はいる",
+        "meaning": "进入",
+        "form": "teshimauNegativePast",
+        "scene": "施工区入口敞开，担心同伴误闯禁区。",
+        "before": [
+          {
+            "text": "工事区画のゲートが開いていたけど、君は立入禁止区域に",
+            "reading": "こうじくかくのゲートがあいていたけど、きみはたちいりきんしくいきに"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "施工区入口开着；你该不会误进禁区了吧？",
+        "review": "approved"
+      },
+      "currentHash": "b7cc3014ff78afc95e7599978c46083b1e8b644606a7cc876bc64cd0f86be64e",
+      "authorReceipt": "e99e632c8e319cbc6b71062c7ebc05326eed95b5eb6a8c6d83e46390aa890971",
+      "reviewReceipt": "ffe2f675097673ed3ec4dd7b17d6c2f2327688d93167650c03721b5962731418",
+      "reviewer": "/root/repair_completion_b_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:入る:はいる",
+        "hash": "9d1ecd90a35348a8faf973df9c8845e9c0e3751e4182dcebe0de79e33e71ca51",
+        "status": "approved",
+        "sentence": "工事区画のゲートが開いていたけど、君は立入禁止区域に入ってしまわなかった？",
+        "reason": "面对入口敞开的情形，询问同行者是否误入禁区，搭配和论元成立；既有原稿维持批准。",
+        "roles": "说话者向刚经过施工区的同行者询问；君是可能进入禁区的人。",
+        "time": "看到门曾开着后，回问同行者刚才的行动。",
+        "negation": "过去否定疑问确认不愿发生的误入，不陈述未进入。",
+        "translation": "‘该不会误进禁区了吧’对应担忧的疑问。",
+        "reading": "ゲートが開いていた的開いて读あいて；立入禁止区域与入って的读音均正确。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:出かける:でかける",
+      "senseId": "verb:出かける:でかける",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:出かける:でかける",
+        "senseId": "verb:出かける:でかける",
+        "meaning": "出门",
+        "form": "teshimauNegativePast",
+        "scene": "昨天外勤时还有两人留守，人员没有全部出门。",
+        "before": [
+          {
+            "text": "昨日はスタッフ全員は",
+            "reading": "きのうはスタッフぜんいんは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。二人は事務所に残った。",
+            "reading": "。ふたりはじむしょにのこった。"
+          }
+        ],
+        "translation": "昨天工作人员没有全部出门，有两人留在了办公室。",
+        "review": "approved"
+      },
+      "previousHash": "3af93920342d6cb4c539b6ef2ef69f303b2dcf167a2670d3455d072e9243f00c",
+      "draftHash": "12f2a3f5addfa49f407d1c458afe7a27ff879cd678030bedb8fba9a95e8d66a1",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:出かける:でかける",
+        "senseId": "verb:出かける:でかける",
+        "meaning": "出门",
+        "form": "teshimauNegativePast",
+        "scene": "带文件上门，担心他今早已经出门。",
+        "before": [
+          {
+            "text": "書類を渡しに来たんだけど、お父さんは今朝もう",
+            "reading": "しょるいをわたしにきたんだけど、おとうさんはけさもう"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "我来给你父亲送文件；他今早该不会已经出门了吧？",
+        "review": "approved"
+      },
+      "currentHash": "5d7acc7d1178f1b9308cbaedd299f7ac5e7437b7ba809a49176d9680c6c3e127",
+      "authorReceipt": "e99e632c8e319cbc6b71062c7ebc05326eed95b5eb6a8c6d83e46390aa890971",
+      "reviewReceipt": "ffe2f675097673ed3ec4dd7b17d6c2f2327688d93167650c03721b5962731418",
+      "reviewer": "/root/repair_completion_b_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:出かける:でかける",
+        "hash": "12f2a3f5addfa49f407d1c458afe7a27ff879cd678030bedb8fba9a95e8d66a1",
+        "status": "approved",
+        "sentence": "書類を渡しに来たんだけど、お父さんは今朝もう出かけてしまわなかった？",
+        "reason": "送文件的人向家人确认父亲是否已经出门，提问动机清楚；既有原稿维持批准。",
+        "roles": "说话者来送文件，听者是能告知父亲行踪的家人，父亲是出门者。",
+        "time": "今早送文件时，询问父亲今早较早时是否已经出门。",
+        "negation": "过去否定疑问询问可能已发生的出门，不断言尚未出门。",
+        "translation": "‘该不会已经出门了吧’保留疑问和今早时间。",
+        "reading": "お父さん应读おとうさん；今朝、書類、渡し、来た及目标形读音正确。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:始まる:はじまる",
+      "senseId": "verb:始まる:はじまる",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:始まる:はじまる",
+        "senseId": "verb:始まる:はじまる",
+        "meaning": "开始",
+        "form": "teshimauNegativePast",
+        "scene": "部分赛场延迟，正午前没有全部开始比赛。",
+        "before": [
+          {
+            "text": "正午までには、全試合が",
+            "reading": "しょうごまでには、ぜんしあいが"
+          }
+        ],
+        "after": [
+          {
+            "text": "。雨で延期された試合もあった。",
+            "reading": "。あめでえんきされたしあいもあった。"
+          }
+        ],
+        "translation": "到正午为止，比赛没有全部开始，还有因雨延期的比赛。",
+        "review": "approved"
+      },
+      "previousHash": "aba6ca9cca971fc7192cb6b1d5c22984ee11c8d9f3be85aac020948034239642",
+      "draftHash": "3910d17ec75d6ddfcc338343a9c6934a206b9d2f619a075dbc561f28d54f6a1f",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:始まる:はじまる",
+        "senseId": "verb:始まる:はじまる",
+        "meaning": "开始",
+        "form": "teshimauNegativePast",
+        "scene": "次日与同行回顾，核对昨天讲座是否提前开场。",
+        "before": [
+          {
+            "text": "昨日の講演会は、予定より早く",
+            "reading": "きのうのこうえんかいは、よていよりはやく"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "昨天的讲座该不会比预定时间更早开始了吧？",
+        "review": "approved"
+      },
+      "currentHash": "d9b8e397737072bac6ac99f187c23a0c74a3da0a7fe6add8e52110212042c54a",
+      "authorReceipt": "e99e632c8e319cbc6b71062c7ebc05326eed95b5eb6a8c6d83e46390aa890971",
+      "reviewReceipt": "ffe2f675097673ed3ec4dd7b17d6c2f2327688d93167650c03721b5962731418",
+      "reviewer": "/root/repair_completion_b_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:始まる:はじまる",
+        "hash": "3910d17ec75d6ddfcc338343a9c6934a206b9d2f619a075dbc561f28d54f6a1f",
+        "status": "approved",
+        "sentence": "昨日の講演会は、予定より早く始まってしまわなかった？",
+        "reason": "次日向同行者回顾昨天这场讲座的开场时点，确认是否意外提前开始；完整问句可成立，未把自动词拟成人为施事。",
+        "roles": "听众向一同参加、知道开场情况的同行者询问；講演会是开始的事件主体，无人为施事。",
+        "time": "提问在次日；昨日の講演会限定被回顾的昨天那一场，予定より早く限定其开场时点。",
+        "negation": "始まってしまわなかった？是否定过去疑问，在此确认提前开始这一意外结果，不表示讲座没有开始，也不扩展到其他场次。",
+        "translation": "‘昨天的讲座该不会比预定时间更早开始了吧？’保留时点、意外感和疑问，未断言实际结果。",
+        "reading": "昨日きのう、講演会こうえんかい、予定よてい、早くはやく及始まってはじまって读音正确。"
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:学ぶ:まなぶ",
+      "senseId": "verb:学ぶ:まなぶ",
+      "form": "teshimauNegativePast",
+      "previousCard": {
+        "id": "usage:teshimauNegativePast:verb:学ぶ:まなぶ",
+        "senseId": "verb:学ぶ:まなぶ",
+        "meaning": "学习",
+        "form": "teshimauNegativePast",
+        "scene": "昨天学到第二章就停下，后三章今天继续。",
+        "before": [
+          {
+            "text": "昨日は全五章を",
+            "reading": "きのうはぜんごしょうを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。残りの三章は今日学ぶ。",
+            "reading": "。のこりのさんしょうはきょうまなぶ。"
+          }
+        ],
+        "translation": "昨天没有把五章全部学完，剩下三章今天学。",
+        "review": "approved"
+      },
+      "previousHash": "5fd174d65836e25388a0f7299b274d1875bc8e1fca53efc20128c98795ee658d",
+      "draftHash": "eddc6334218d6f28746d5093ae56eb3e3cde43b47b59a66eaf4ac63740569e44",
+      "currentCard": {
+        "id": "usage:teshimauNegativePast:verb:学ぶ:まなぶ",
+        "senseId": "verb:学ぶ:まなぶ",
+        "meaning": "学习",
+        "form": "teshimauNegativePast",
+        "scene": "培训资料被发现有误，询问同学是否学错步骤。",
+        "before": [
+          {
+            "text": "研修資料に誤りが見つかった。君は、その誤った操作手順を",
+            "reading": "けんしゅうしりょうにあやまりがみつかった。きみは、そのあやまったそうさてじゅんを"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "培训资料被发现有误；你该不会学了那套错误的操作步骤吧？",
+        "review": "approved"
+      },
+      "currentHash": "16b2e0ba67401d2b6a9667370149ef95759ede9d447d920057874738a41fe237",
+      "authorReceipt": "e99e632c8e319cbc6b71062c7ebc05326eed95b5eb6a8c6d83e46390aa890971",
+      "reviewReceipt": "ffe2f675097673ed3ec4dd7b17d6c2f2327688d93167650c03721b5962731418",
+      "reviewer": "/root/repair_completion_b_rev2_review",
+      "revision": 2,
+      "languageReview": {
+        "id": "usage:teshimauNegativePast:verb:学ぶ:まなぶ",
+        "hash": "eddc6334218d6f28746d5093ae56eb3e3cde43b47b59a66eaf4ac63740569e44",
+        "status": "approved",
+        "sentence": "研修資料に誤りが見つかった。君は、その誤った操作手順を学んでしまわなかった？",
+        "reason": "资料有误后询问新同事是否学到错误步骤，学ぶ仍取学习方法义；既有原稿维持批准。",
+        "roles": "发现错误的培训同伴向使用过资料的新同事询问；君是学习步骤的人。",
+        "time": "发现资料错误后，回问此前学习资料时的情况。",
+        "negation": "过去否定疑问确认是否意外学错，不断言没有学习。",
+        "translation": "‘该不会学了那套错误的操作步骤吧’准确表达疑问与对象。",
+        "reading": "研修資料、誤り、操作手順和目标学んで读音均正确。"
+      }
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:役立つ:やくだつ",
+      "senseId": "verb:役立つ:やくだつ",
+      "form": "teikuNegativePast",
+      "previousCard": {
+        "id": "usage:teikuNegativePast:verb:役立つ:やくだつ",
+        "senseId": "verb:役立つ:やくだつ",
+        "meaning": "有用；起作用",
+        "form": "teikuNegativePast",
+        "scene": "回顾停止更新后旧名册逐年失去实际用处。",
+        "before": [
+          {
+            "text": "名簿の更新をやめると、その情報は後の活動に",
+            "reading": "めいぼのこうしんをやめると、そのじょうほうはのちのかつどうに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "停止更新名册后，其中的信息没有继续在后来的活动中发挥作用。",
+        "review": "approved"
+      },
+      "previousHash": "55982cbd4f43c447471a2a24a37817fb14b18c63d9e94c09c623f3246624e16b",
+      "draftHash": "20c5971df398fb131e5e72e6c1c0f1300feae7c3f7e58564ad7ac76d9afef60e",
+      "currentCard": {
+        "id": "usage:teikuNegativePast:verb:役立つ:やくだつ",
+        "senseId": "verb:役立つ:やくだつ",
+        "meaning": "有用；起作用",
+        "form": "teikuNegativePast",
+        "scene": "灾情记录被寄望支援后续避难规划，但各地地形不同。",
+        "before": [
+          {
+            "text": "被害記録は後続地区の避難計画の支えになると期待されたが、地形が地区ごとに異なり、各地で案を練る過程では",
+            "reading": "ひがいきろくはこうぞくちくのひなんけいかくのささえになるときたいされたが、ちけいがちくごとにことなり、かくちであんをねるかていでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "原本期待灾情记录能支撑后续地区的避难计划，但在各地逐步拟订方案的过程中，预期效用并未逐步显现。",
+        "review": "approved"
+      },
+      "currentHash": "9211b3e3ba439dc532e0d29de58c34f32e3a44d691c89265bb3985be26633d5a",
+      "authorReceipt": "02e3af7629848d102f83ad297faf0d2761beafc171970ca61ea928b53c438a72",
+      "reviewReceipt": "cf986b82c4e197d173961ca249fee9086ad5c24d447259b076e687dbe68c9cae",
+      "reviewer": "/root/repair_evidence_other_rev5_review",
+      "revision": 5,
+      "languageReview": {
+        "id": "usage:teikuNegativePast:verb:役立つ:やくだつ",
+        "hash": "20c5971df398fb131e5e72e6c1c0f1300feae7c3f7e58564ad7ac76d9afef60e",
+        "status": "approved",
+        "sentence": "被害記録は後続地区の避難計画の支えになると期待されたが、地形が地区ごとに異なり、各地で案を練る過程では役立っていかなかった。",
+        "reason": "预期作为后续地区规划的支撑，与各地区逐步拟订方案时未发挥预期作用形成可理解的时间对照；「役立つ」保留起作用的词义，过去否定落在后续使用过程。",
+        "roles": [
+          "灾情记录：被期待成为后续地区规划的资料。",
+          "各地规划者：在各自的地形条件下拟订避难计划。"
+        ],
+        "time": "记录产生之后、各地过去逐步拟订方案的过程。",
+        "negation": "预期用途没有在后续实践中逐渐实现；不表示先有用后失效。",
+        "translation": "中文保留预期与实际效用未逐步显现的对照，未把过去否定扩大为永远无用。",
+        "reading": "ひがいきろく／こうぞくちく／ひなんけいかく／ちけい／かてい及目标やくだっていかなかった均正确。"
+      }
+    },
+    {
+      "id": "usage:tekuruNegative:verb:役立つ:やくだつ",
+      "senseId": "verb:役立つ:やくだつ",
+      "form": "tekuruNegative",
+      "previousCard": {
+        "id": "usage:tekuruNegative:verb:役立つ:やくだつ",
+        "senseId": "verb:役立つ:やくだつ",
+        "meaning": "有用；起作用",
+        "form": "tekuruNegative",
+        "scene": "练习很久却发现死记公式仍未帮助解题。",
+        "before": [
+          {
+            "text": "公式を暗記するだけでは、応用問題で",
+            "reading": "こうしきをあんきするだけでは、おうようもんだいで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "光背诵公式，在应用题中还是派不上用场。",
+        "review": "approved"
+      },
+      "previousHash": "97718441ffce628a0d8dfa4ac883a99fd69e0a5afe4063be668a40d6afb76605",
+      "draftHash": "e85296e6a1e40200402f945a0e49963186f49caf09a4e9abb3877d20a3aa3eda",
+      "currentCard": {
+        "id": "usage:tekuruNegative:verb:役立つ:やくだつ",
+        "senseId": "verb:役立つ:やくだつ",
+        "meaning": "有用；起作用",
+        "form": "tekuruNegative",
+        "scene": "记录表投入使用半年，现场决策仍看不出它的实际效用。",
+        "before": [
+          {
+            "text": "運用開始から半年たつのに、記録表の情報は毎日の現場判断に",
+            "reading": "うんようかいしからはんとしたつのに、きろくひょうのじょうほうはまいにちのげんばはんだんに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "投入使用已经半年，记录表的信息却至今未能对每天的现场判断产生实际帮助。",
+        "review": "approved"
+      },
+      "currentHash": "9b28bc068e8a1c9c88f9b79b8f8443f1be4b1698a486195ace81a1159b3c0ace",
+      "authorReceipt": "02e3af7629848d102f83ad297faf0d2761beafc171970ca61ea928b53c438a72",
+      "reviewReceipt": "cf986b82c4e197d173961ca249fee9086ad5c24d447259b076e687dbe68c9cae",
+      "reviewer": "/root/repair_evidence_other_rev5_review",
+      "revision": 5,
+      "languageReview": {
+        "id": "usage:tekuruNegative:verb:役立つ:やくだつ",
+        "hash": "e85296e6a1e40200402f945a0e49963186f49caf09a4e9abb3877d20a3aa3eda",
+        "status": "approved",
+        "sentence": "運用開始から半年たつのに、記録表の情報は毎日の現場判断に役立ってこない。",
+        "reason": "运用半年、每天反复检验，建立效用原应朝当前显现的观察路线；非过去否定陈述当前仍看不到这项效用，且保留「役立つ」的起作用词义。",
+        "roles": [
+          "记录表的信息：预期能帮助现场判断。",
+          "现场人员：每天依据实际情况作判断，并观察信息是否有用。"
+        ],
+        "time": "投入使用半年后的当前，以每天的现场判断为反复观察点。",
+        "negation": "信息的实际帮助尚未显现到当前，不推断未来也不会有用。",
+        "translation": "译文「至今未能……产生实际帮助」覆盖当前观察点与尚未显效的意思。",
+        "reading": "うんようかいし／はんとし／きろくひょう／げんばはんだん及目标やくだってこない均正确。"
+      }
+    },
+    {
+      "id": "usage:tekuruNegative:verb:終わる:おわる",
+      "senseId": "verb:終わる:おわる",
+      "form": "tekuruNegative",
+      "previousCard": {
+        "id": "usage:tekuruNegative:verb:終わる:おわる",
+        "senseId": "verb:終わる:おわる",
+        "meaning": "结束",
+        "form": "tekuruNegative",
+        "scene": "已经连续复习几天，积压的习题却迟迟不见做完。",
+        "before": [
+          {
+            "text": "毎日机に向かっているのに、たまった課題がなかなか",
+            "reading": "まいにちつくえにむかっているのに、たまったかだいがなかなか"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "虽然每天都坐在桌前做，积压的课题却迟迟未见陆续完成。",
+        "review": "approved"
+      },
+      "previousHash": "f6b961d9402373ab73fa9dcff075a83180005aae527cb3072b114055c2a12ef7",
+      "draftHash": "0388d025cc3e92d1467f2329eedfc95418d41cd79398e123fdf378e76e73a291",
+      "currentCard": {
+        "id": "usage:tekuruNegative:verb:終わる:おわる",
+        "senseId": "verb:終わる:おわる",
+        "meaning": "结束",
+        "form": "tekuruNegative",
+        "scene": "五家分店上午同时开始访谈，中午三场结束，另两场仍在进行。",
+        "before": [
+          {
+            "text": "午前、五つの支店で同時に始めた聞き取りは、正午までに三件が終わってきたが、残る二件はまだ",
+            "reading": "ごぜん、いつつのしてんでどうじにはじめたききとりは、しょうごまでにさんけんがおわってきたが、のこるにけんはまだ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "上午五家分店同时开始的访谈，截至中午已有三场结束，但剩下两场还没有结束。",
+        "note": "五场访谈都已开始；三场已结束，否定的是另两场的结束进度到当前仍未显现。",
+        "review": "approved"
+      },
+      "currentHash": "1d93e14fc07521c1ed65cf8dd6888f02d8bc4d61e8191c27cddaf068a1972375",
+      "authorReceipt": "197915a8450fd81cbfb14d6fd3a3f21dc42321ba82451f35dc9b87590affb834",
+      "reviewReceipt": "f58c2ef0d993388d3c8129cf13702652e12f44ebc21bde099526944c5da49005",
+      "reviewer": "/root/repair_evidence_direction_rev3_review",
+      "revision": 3,
+      "languageReview": {
+        "id": "usage:tekuruNegative:verb:終わる:おわる",
+        "hash": "0388d025cc3e92d1467f2329eedfc95418d41cd79398e123fdf378e76e73a291",
+        "status": "approved",
+        "sentence": "午前、五つの支店で同時に始めた聞き取りは、正午までに三件が終わってきたが、残る二件はまだ終わってこない。",
+        "reason": "五场独立访谈都已开始，前半句明确三场结束逐项显现；后半句把剩余两场尚未进入已结束组的进展放在同一个当前观察点，集合与对比使时间方向的否定可辨。",
+        "roles": {
+          "speaker": "汇总五家支店访谈进度的负责人。",
+          "listener": "接收进度报告的各支店联络人。"
+        },
+        "time": "上午共同开始，到正午已有三场结束；「まだ」以当前核对点观察剩余两场。",
+        "negation": "否定的是另两场的结束尚未显现到当前，并未否认五场已经开始，也未否认三场已经结束。",
+        "translation": "译文正确保留五场、三场已结束、两场尚未结束及中午时点；日语中逐项显现的进度由前半句补足。",
+        "reading": "句段及目标「おわってこない」读音匹配；五つ、三件、二件等读法与语境相符。"
+      }
+    },
+    {
+      "id": "usage:tekuruNegativePast:verb:終わる:おわる",
+      "senseId": "verb:終わる:おわる",
+      "form": "tekuruNegativePast",
+      "previousCard": {
+        "id": "usage:tekuruNegativePast:verb:終わる:おわる",
+        "senseId": "verb:終わる:おわる",
+        "meaning": "结束",
+        "form": "tekuruNegativePast",
+        "scene": "到昨天仍反复返工，积压的修理任务迟迟未见收尾。",
+        "before": [
+          {
+            "text": "昨日まではやり直しが多く、たまった修理がなかなか",
+            "reading": "きのうまではやりなおしがおおく、たまったしゅうりがなかなか"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "截至昨天一直反复返工，积压的修理任务迟迟未见陆续完成。",
+        "review": "approved"
+      },
+      "previousHash": "7f380b98fa0e0f3c5c603a4eb0b7a9cfaf0d0775e8a9f8699e34ce3fbb25710f",
+      "draftHash": "5d32f00a2460d06204545467338b6201fee34e832b411114dfbf7861db27b052",
+      "currentCard": {
+        "id": "usage:tekuruNegativePast:verb:終わる:おわる",
+        "senseId": "verb:終わる:おわる",
+        "meaning": "结束",
+        "form": "tekuruNegativePast",
+        "scene": "昨日四会场同时开始辩论，至三点仍有两场未结束。",
+        "before": [
+          {
+            "text": "昨日、四会場で同時に始まった公開討論は、正午までに二会場で終わってきたが、午後三時になっても残る二会場ではまだ討論が",
+            "reading": "きのう、よんかいじょうでどうじにはじまったこうかいとうろんは、しょうごまでににかいじょうでおわってきたが、ごごさんじになってものこるにかいじょうではまだとうろんが"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天四个会场同时开始公开讨论；到中午已有两个会场结束，但截至下午三点，另两个会场的讨论仍未结束。",
+        "note": "四场都已开始、两场已结束；否定另两场截至过去时点尚未结束的进展。",
+        "review": "approved"
+      },
+      "currentHash": "b9b42813eddf76e864c44fe05f2877fb5f47097d1a1e77d7486abc4aaf2efd14",
+      "authorReceipt": "197915a8450fd81cbfb14d6fd3a3f21dc42321ba82451f35dc9b87590affb834",
+      "reviewReceipt": "f58c2ef0d993388d3c8129cf13702652e12f44ebc21bde099526944c5da49005",
+      "reviewer": "/root/repair_evidence_direction_rev3_review",
+      "revision": 3,
+      "languageReview": {
+        "id": "usage:tekuruNegativePast:verb:終わる:おわる",
+        "hash": "5d32f00a2460d06204545467338b6201fee34e832b411114dfbf7861db27b052",
+        "status": "approved",
+        "sentence": "昨日、四会場で同時に始まった公開討論は、正午までに二会場で終わってきたが、午後三時になっても残る二会場ではまだ討論が終わってこなかった。",
+        "reason": "四场讨论均已开始；中午已有两场结束，三点时另两场仍未结束。前后两组对照提供了结束事件逐项出现的时间轴，过去否定以三点为观察点，符合课程的进展义。",
+        "roles": {
+          "speaker": "回顾昨天各会场进度的协调人。",
+          "listener": "负责四个会场的工作人员或报告读者。"
+        },
+        "time": "昨日开场、正午完成两场、下午三点核对余下两场，过去观察点明确。",
+        "negation": "过去否定只作用于余下两场的结束进展；并不否定它们已开场，也不否定另外两场中午前结束。",
+        "translation": "译文正确区分正午和下午三点，并保留二加二的进度；“仍未结束”与句末否定相符。",
+        "reading": "句段及目标「おわってこなかった」读音匹配；四会場、二会場、午後三時等读法相符。"
+      }
+    },
+    {
+      "id": "usage:teokuNegative:verb:信じる:しんじる",
+      "senseId": "verb:信じる:しんじる",
+      "form": "teokuNegative",
+      "previousCard": {
+        "id": "usage:teokuNegative:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teokuNegative",
+        "scene": "合作前得先信任对方的诚意，才能放心托付。",
+        "before": [
+          {
+            "text": "共同作業を始める前に、相手の誠実さを",
+            "reading": "きょうどうさぎょうをはじめるまえに、あいてのせいじつさを"
+          }
+        ],
+        "after": [
+          {
+            "text": "と、安心して仕事を任せられない。",
+            "reading": "と、あんしんしてしごとをまかせられない。"
+          }
+        ],
+        "translation": "开始共同工作之前，如果不先相信对方的诚意，就无法放心把工作交给他。",
+        "review": "approved"
+      },
+      "previousHash": "fcae560eac3d57181bd4271c368816b975431bfc77a90d6975729ce6bac7756e",
+      "draftHash": "4884e27c04087d0b89f0fb191eac405638622913d5706117afa97cf150dcc0ad",
+      "currentCard": {
+        "id": "usage:teokuNegative:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teokuNegative",
+        "scene": "负责人按工程师估算决定试制件订购量。",
+        "before": [
+          {
+            "text": "試作部品の発注量は、現場の技術者が出した見積もりを",
+            "reading": "しさくぶひんのはっちゅうりょうは、げんばのぎじゅつしゃがだしたみつもりを"
+          }
+        ],
+        "after": [
+          {
+            "text": "と決められない。",
+            "reading": "ときめられない。"
+          }
+        ],
+        "translation": "如果不先相信现场技术员给出的估算，就无法确定试制零件的订购量。",
+        "review": "approved"
+      },
+      "currentHash": "457eeb9ce5bf3c15ef877e83b6d0af0308d3ae3d12e6c67f1c995acb4eeb3d23",
+      "authorReceipt": "68a521698d769bd7e2e080b51993e2d93dab5868e9197a1263bb4204c07b9075",
+      "reviewReceipt": "6d26be1b0a426e363c699fce73b4ffdbd4092a9502ecd1812109384ff70372eb",
+      "reviewer": "/root/repair_evidence_teoku_rev3_review",
+      "revision": 3,
+      "languageReview": {
+        "id": "usage:teokuNegative:verb:信じる:しんじる",
+        "hash": "4884e27c04087d0b89f0fb191eac405638622913d5706117afa97cf150dcc0ad",
+        "status": "approved",
+        "sentence": "試作部品の発注量は、現場の技術者が出した見積もりを信じておかないと決められない。",
+        "reason": "完整句将先采信现场技术员估算作为确定试制部件订购量的前提；「信じておかないと」的否定落在事先采信，符合本课准备义。数量估算与发注量的关系具体，译文未把相信改作执行。",
+        "roles": [
+          "省略的判断主体是决定订购量的负责人。",
+          "现场技术员提供估算，估算内容是「信じる」的宾语；负责人需先接受它再决定数量。"
+        ],
+        "time": "确定发注量之前须先采信估算；「ないと決められない」描述当前决策的必要条件。",
+        "negation": "否定预先采信这一准备动作；不是说估算不存在，也不是断言今后永不相信。",
+        "translation": "译文对应条件、对象和发注量；“先相信”准确保留「ておく」的前置准备。",
+        "reading": "試作部品・発注量・現場・技術者・見積もり・決められない及目标「信じておかない」的注音与语境相符。"
+      }
+    },
+    {
+      "id": "usage:teokuNegativePast:verb:信じる:しんじる",
+      "senseId": "verb:信じる:しんじる",
+      "form": "teokuNegativePast",
+      "previousCard": {
+        "id": "usage:teokuNegativePast:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teokuNegativePast",
+        "scene": "计划受阻后，后悔没早点相信朋友的警告。",
+        "before": [
+          {
+            "text": "あの時、友人の警告を",
+            "reading": "あのとき、ゆうじんのけいこくを"
+          }
+        ],
+        "after": [
+          {
+            "text": "ことを後悔している。",
+            "reading": "ことをこうかいしている。"
+          }
+        ],
+        "translation": "现在很后悔当时没有提前相信朋友的警告。",
+        "review": "approved"
+      },
+      "previousHash": "ddbab9cd2dc16fd36a45b479446238000862cd7db1bbf772df6e7f042b11d0a8",
+      "draftHash": "522dcd903e55c89e0c03ea5ab3a4e7b9dbe7ad85b34a82cec4f05598ee4d62b4",
+      "currentCard": {
+        "id": "usage:teokuNegativePast:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teokuNegativePast",
+        "scene": "生产线停运后，负责人后悔没采信技师的维修说明。",
+        "before": [
+          {
+            "text": "機械がまだ動いていた頃、修理が必要だという技師の説明を",
+            "reading": "きかいがまだうごいていたころ、しゅうりがひつようだというぎしのせつめいを"
+          }
+        ],
+        "after": [
+          {
+            "text": "ことを、ライン停止後に後悔した。",
+            "reading": "ことを、らいんていしごにこうかいした。"
+          }
+        ],
+        "translation": "生产线停下后，负责人后悔当时没有先相信设备还在运转时技师关于需要维修的说明。",
+        "review": "approved"
+      },
+      "currentHash": "842418b8bb377e62f3d8afc85b7ca393689019c49795b22551bee3bc698ff3f2",
+      "authorReceipt": "68a521698d769bd7e2e080b51993e2d93dab5868e9197a1263bb4204c07b9075",
+      "reviewReceipt": "6d26be1b0a426e363c699fce73b4ffdbd4092a9502ecd1812109384ff70372eb",
+      "reviewer": "/root/repair_evidence_teoku_rev3_review",
+      "revision": 3,
+      "languageReview": {
+        "id": "usage:teokuNegativePast:verb:信じる:しんじる",
+        "hash": "522dcd903e55c89e0c03ea5ab3a4e7b9dbe7ad85b34a82cec4f05598ee4d62b4",
+        "status": "approved",
+        "sentence": "機械がまだ動いていた頃、修理が必要だという技師の説明を信じておかなかったことを、ライン停止後に後悔した。",
+        "reason": "过去未先相信维修必要性的说明，事后因生产线停止而后悔，准备动作与后果有明确联系；「信じておかなかったことを後悔した」作为后悔对象自然，仍保持“相信”义。",
+        "roles": [
+          "省略的采信及追悔主体是生产线负责人。",
+          "技师提出设备需要维修的说明，该说明是「信じる」的对象；机器和生产线是背景与后果。"
+        ],
+        "time": "「機械がまだ動いていた頃」限定本可采信的过去时点；「ライン停止後」是事后追悔的观察时点。",
+        "negation": "「信じておかなかった」否定过去未完成的预先采信，不等同于未维修，也不表示现在仍不相信。",
+        "translation": "译文包含停线后追悔、机器仍运行时及技师的维修说明，未将信任偷换为执行维修。",
+        "reading": "機械・動いていた頃・修理・必要・技師・説明・停止後・後悔した及目标「信じておかなかった」的注音与语境相符。"
+      }
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:できる:できる",
+      "senseId": "verb:できる:できる",
+      "form": "teikuNegativePast",
+      "previousCard": {
+        "id": "usage:teikuNegativePast:verb:できる:できる",
+        "senseId": "verb:できる:できる",
+        "meaning": "能够；完成",
+        "form": "teikuNegativePast",
+        "scene": "零件供给中断后，模型后半部没逐渐做出来。",
+        "before": [
+          {
+            "text": "部品が届かず、模型の後半はその後",
+            "reading": "ぶひんがとどかず、もけいのこうはんはそのご"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "零件没有送到，模型的后半部分此后没能逐步成形。",
+        "review": "approved"
+      },
+      "previousHash": "f68a36e9847d7de3081a8411194602bba3d3e27c8c57fabfc00cf10755592788",
+      "draftHash": "0e426040ef119346dac89a691d0f6691b288a9acedfde212a397497d3f28e038",
+      "currentCard": {
+        "id": "usage:teikuNegativePast:verb:できる:できる",
+        "senseId": "verb:できる:できる",
+        "meaning": "能够；完成",
+        "form": "teikuNegativePast",
+        "scene": "车站前改建后，新店没有如预期陆续出现。",
+        "before": [
+          {
+            "text": "駅前の再開発で店が増えると期待されたが、人口流出が続き、整備後の五年間、新しい店はほとんど",
+            "reading": "えきまえのさいかいはつでみせがふえるときたいされたが、じんこうりゅうしゅつがつづき、せいびごのごねんかん、あたらしいみせはほとんど"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "人们原以为车站前的开发会带来更多商店，但人口持续外流，整修后的五年间几乎没有新店陆续出现。",
+        "review": "approved"
+      },
+      "currentHash": "003182ae1db98f01bdae283e88bcb6544f33247dc9cbb94e6a966d501d2c5a77",
+      "authorReceipt": "5ca33a71f0e0f06e598a061fa6e7ebe79c9143a4346bef68accca2bff70caabf",
+      "reviewReceipt": "a120ee8ab50ab3833ce39d9839c5d0b65d54c5776057f788002fcf822a2b86c8",
+      "reviewer": "/root/repair_evidence_teiku_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teikuNegativePast:verb:できる:できる",
+        "hash": "0e426040ef119346dac89a691d0f6691b288a9acedfde212a397497d3f28e038",
+        "status": "approved",
+        "sentence": "駅前の再開発で店が増えると期待されたが、人口流出が続き、整備後の五年間、新しい店はほとんどできていかなかった。",
+        "reason": "「店ができる」取商店建成、出现的完成义，主语是五年间可能陆续出现的多家新店，并非店铺具有某种能力。「増えると期待された」与整修后五年建立向后发展的预期；「ほとんどできていかなかった」否定预期的持续出现，允许少数新店出现。整句在此发展回顾语境下可读通。",
+        "roles": "地方报道者回顾车站前商店变化；新店是逐个形成、出现的主体，没有能力主体误置。",
+        "time": "整修后的过去五年，是「ていく」观察到的后续发展区间。",
+        "negation": "ほとんど＋できていかなかった＝预期的商店接续出现几乎未发生；不等于没有任何店，也不等于不能开店。",
+        "translation": "译文用「几乎没有新店陆续出现」保留程度否定和发展视点，且与人口外流背景一致。",
+        "reading": "全文读音与正文及目标「できていかなかった」相符。"
+      }
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:咲く:さく",
+      "senseId": "verb:咲く:さく",
+      "form": "teikuNegativePast",
+      "previousCard": {
+        "id": "usage:teikuNegativePast:verb:咲く:さく",
+        "senseId": "verb:咲く:さく",
+        "meaning": "开花",
+        "form": "teikuNegativePast",
+        "scene": "回忆突然转冷的春天，后面的花蕾未再继续开放。",
+        "before": [
+          {
+            "text": "急に寒くなり、後のつぼみは",
+            "reading": "きゅうにさむくなり、あとのつぼみは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "突然转冷后，后面的花蕾没有继续开放。",
+        "review": "approved"
+      },
+      "previousHash": "ee64e5d90e1a06cfec2f98ad051e51c1805e672813e75d24f8d5a318d0917f5f",
+      "draftHash": "c91ddabe513a49e5d93a5118d03c8ac81aa6fe71be5466b0b62285341fe5f9f5",
+      "currentCard": {
+        "id": "usage:teikuNegativePast:verb:咲く:さく",
+        "senseId": "verb:咲く:さく",
+        "meaning": "开花",
+        "form": "teikuNegativePast",
+        "scene": "园丁记录低温年份里一株植物的开花次序。",
+        "before": [
+          {
+            "text": "この株は例年、下のつぼみから次々と花が咲いていく。ところが去年は冷え込みが続き、開花期の終わりまで観察しても、花は下から順に",
+            "reading": "このかぶはれいねん、したのつぼみからつぎつぎとはながさいていく。ところがきょねんはひえこみがつづき、かいかきのおわりまでかんさつしても、はなはしたからじゅんに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "这株植物通常从较低处的花蕾开始接连开花；可去年气温偏低，到花期观察结束，花朵并没有按从下到上的顺序依次开放。",
+        "review": "approved"
+      },
+      "currentHash": "2345177eb8419651c15285dd3f506f9296b437ad84dbfd24db0245721c01ddf5",
+      "authorReceipt": "5ca33a71f0e0f06e598a061fa6e7ebe79c9143a4346bef68accca2bff70caabf",
+      "reviewReceipt": "a120ee8ab50ab3833ce39d9839c5d0b65d54c5776057f788002fcf822a2b86c8",
+      "reviewer": "/root/repair_evidence_teiku_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teikuNegativePast:verb:咲く:さく",
+        "hash": "c91ddabe513a49e5d93a5118d03c8ac81aa6fe71be5466b0b62285341fe5f9f5",
+        "status": "approved",
+        "sentence": "この株は例年、下のつぼみから次々と花が咲いていく。ところが去年は冷え込みが続き、開花期の終わりまで観察しても、花は下から順に咲いていかなかった。",
+        "reason": "先给出该株通常由下向上接连开花的基线，再以去年持续低温及花期结束为观察范围；「花は下から順に咲いていかなかった」自然地否定预期的开花顺序及其持续展开。主语是同一植株上的多朵花，不是把单朵花蕾的开放硬解释为反复动作。",
+        "roles": "园丁在花期后叙述同株多朵花的开花次序；花是「咲く」的主体。",
+        "time": "去年低温期间至花期结束，过去观察点明确。",
+        "negation": "否定从下向上的连续开花序列；并未断言一朵也未开。",
+        "translation": "译文明确「并没有按从下到上的顺序依次开放」，与日语否定范围相符；「气温偏低」对应冷え込み。",
+        "reading": "正文及目标「咲いていかなかった／さいていかなかった」读音相符。"
+      }
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:始める:はじめる",
+      "senseId": "verb:始める:はじめる",
+      "form": "teikuNegativePast",
+      "previousCard": {
+        "id": "usage:teikuNegativePast:verb:始める:はじめる",
+        "senseId": "verb:始める:はじめる",
+        "meaning": "开始",
+        "form": "teikuNegativePast",
+        "scene": "资金减少后，公司没有继续陆续启动项目。",
+        "before": [
+          {
+            "text": "予算が減り、その後は新しい企画を次々に",
+            "reading": "よさんがへり、そのごはあたらしいきかくをつぎつぎに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "预算减少后，便没有再接连启动新项目。",
+        "review": "approved"
+      },
+      "previousHash": "0c453097371811aeb17d305d868b5fe94e9b343bf7fd32a822880f2b314f94c8",
+      "draftHash": "88cccf05d7e595465347c72fc9c634b4e7dfc1ffb6889490bc3075addf827d44",
+      "currentCard": {
+        "id": "usage:teikuNegativePast:verb:始める:はじめる",
+        "senseId": "verb:始める:はじめる",
+        "meaning": "开始",
+        "form": "teikuNegativePast",
+        "scene": "三年计划的儿童食堂，后两年几乎没启动新点。",
+        "before": [
+          {
+            "text": "市は三年計画で、市内の各地区に子ども食堂を順に設ける予定だった。初年度は二か所で活動を始めたが、運営費が足りず、二年目以降は新しい食堂をほとんど",
+            "reading": "しはさんねんけいかくで、しないのかくちくにこどもしょくどうをじゅんにもうけるよていだった。しょねんどはにかしょでかつどうをはじめたが、うんえいひがたりず、にねんめいこうはあたらしいしょくどうをほとんど"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "市里原计划用三年在各地区依次设立儿童食堂。首年在两处开始运营，但经费不足，第二年以后几乎没有继续开办新的食堂。",
+        "review": "approved"
+      },
+      "currentHash": "1876efd53759c8b0d08a6e1c744a56137e07a235e82d75e5372a24af235a6da2",
+      "authorReceipt": "5ca33a71f0e0f06e598a061fa6e7ebe79c9143a4346bef68accca2bff70caabf",
+      "reviewReceipt": "a120ee8ab50ab3833ce39d9839c5d0b65d54c5776057f788002fcf822a2b86c8",
+      "reviewer": "/root/repair_evidence_teiku_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teikuNegativePast:verb:始める:はじめる",
+        "hash": "88cccf05d7e595465347c72fc9c634b4e7dfc1ffb6889490bc3075addf827d44",
+        "status": "approved",
+        "sentence": "市は三年計画で、市内の各地区に子ども食堂を順に設ける予定だった。初年度は二か所で活動を始めたが、運営費が足りず、二年目以降は新しい食堂をほとんど始めていかなかった。",
+        "reason": "「子ども食堂を始める」可指开办一个新食堂；三年计划、按地区设置与首年两个地点实际启动，使后续逐个开办新点的路线具体。「二年目以降…ほとんど始めていかなかった」在该计划回顾中否定持续推开新点，而非否定首年的启动；虽比单纯「始めなかった」带更明确的推进视点，但这里有足够支撑。",
+        "roles": "市政项目一方原拟按地区开办儿童食堂；省略的后续施事承接市，宾语是可分别启动的新食堂。",
+        "time": "初年度已启动两处；二年目以降是过去计划的后续观察区间。",
+        "negation": "ほとんど限定后两年新点启动的数量，保留少数可能；否定的是按计划继续启动，而非首年两处。",
+        "translation": "译文的「几乎没有继续开办新的食堂」保留了数量程度与后续推进；首年两处活动启动另行表达。",
+        "reading": "「初年度」此处读「しょねんど」；其余正文和目标「始めていかなかった／はじめていかなかった」读音相符。"
+      }
+    },
+    {
+      "id": "usage:teikuNegative:verb:信じる:しんじる",
+      "senseId": "verb:信じる:しんじる",
+      "form": "teikuNegative",
+      "previousCard": {
+        "id": "usage:teikuNegative:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teikuNegative",
+        "scene": "虚假传闻已澄清，今后不再继续相信它。",
+        "before": [
+          {
+            "text": "事実ではないと分かったので、今後はそのうわさを",
+            "reading": "じじつではないとわかったので、こんごはそのうわさを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "已经知道那不是事实，所以今后不再继续相信那个传闻。",
+        "review": "approved"
+      },
+      "previousHash": "305528dbc3706cde69687e34da573c694c124b37f8b9b28bbbbdc7bc81cbd8a2",
+      "draftHash": "131e92a8285494d62a7a9b0c962058c31e42730eaa4a82d66475c3dbf64a5230",
+      "currentCard": {
+        "id": "usage:teikuNegative:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teikuNegative",
+        "scene": "预测值屡次失准，分析团队决定今后核实后再采信。",
+        "before": [
+          {
+            "text": "分析チームはこれまでその会社の予測値を信じてきたが、外れが続いたため、来期以降は実績と照合し、未確認の予測をそのまま",
+            "reading": "ぶんせきチームはこれまでそのかいしゃのよそくちをしんじてきたが、はずれがつづいたため、らいきいこうはじっせきとしょうごうし、みかくにんのよそくをそのまま"
+          }
+        ],
+        "after": [
+          {
+            "text": "方針にした。",
+            "reading": "ほうしんにした。"
+          }
+        ],
+        "translation": "分析团队过去一直相信那家公司的预测值，但屡次出错后，决定从下一期起先与实际结果核对，不再照单相信未经核实的预测。",
+        "review": "approved"
+      },
+      "currentHash": "7bc99636efbeb2b77852fc8e30700c72e51f487e2d2a8d576abf7cec5e861a21",
+      "authorReceipt": "5ca33a71f0e0f06e598a061fa6e7ebe79c9143a4346bef68accca2bff70caabf",
+      "reviewReceipt": "a120ee8ab50ab3833ce39d9839c5d0b65d54c5776057f788002fcf822a2b86c8",
+      "reviewer": "/root/repair_evidence_teiku_review",
+      "revision": 1,
+      "languageReview": {
+        "id": "usage:teikuNegative:verb:信じる:しんじる",
+        "hash": "131e92a8285494d62a7a9b0c962058c31e42730eaa4a82d66475c3dbf64a5230",
+        "status": "approved",
+        "sentence": "分析チームはこれまでその会社の予測値を信じてきたが、外れが続いたため、来期以降は実績と照合し、未確認の予測をそのまま信じていかない方針にした。",
+        "reason": "先以「信じてきた」交代长期采信同一来源，再以屡次预测落空和「来期以降…方針にした」建立向未来反复审查的视点。「未確認の予測をそのまま信じていかない」表示今后不再持续照单采信，并非单次传闻的普通不信；与固定「相信」词义相符。",
+        "roles": "分析团队是相信与调整方针的主体；对象是该公司后续未经核对的预测。",
+        "time": "过去持续采信与来期以后的逐期方针形成清楚的前后视点。",
+        "negation": "不再持续无条件相信未经核实的预测；并不说所有预测必假或永远不相信该公司。",
+        "translation": "译文保留既往相信、今后核对及不再照单相信的区分；没有把方针写成已发生的未来事实。",
+        "reading": "全文及目标「信じていかない／しんじていかない」读音相符。"
+      }
+    }
+  ],
+  "deferred": [
+    {
+      "id": "usage:teshimauNegativePast:verb:届く:とどく",
+      "pair": "verb:届く:とどく/teshimauNegativePast",
+      "initialAuditStatus": "revise",
+      "reason": "原卡及三次不同的返修均未形成自然的「届いてしまわなかった」教学句；暂缓此精确配对的常规出题，取得新用例并通过独立审核后可恢复。",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      },
+      "publishedCard": {
+        "id": "usage:teshimauNegativePast:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只有一件送达，剩下的包裹还在路上。",
+        "before": [
+          {
+            "text": "昨日は荷物が全部",
+            "reading": "きのうはにもつがぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。残りは輸送中だった。",
+            "reading": "。のこりはゆそうちゅうだった。"
+          }
+        ],
+        "translation": "昨天包裹没有全部送到，剩下的还在运输中。",
+        "review": "approved"
+      },
+      "publishedHash": "eeb7004bcd74387a3796a9d7fcba49d0895cb18a98016f3588260b3713ffb42b",
+      "sourceCard": {
+        "id": "usage:teshimauNegativePast:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只有一件送达，剩下的包裹还在路上。",
+        "before": [
+          {
+            "text": "昨日は荷物が全部",
+            "reading": "きのうはにもつがぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。残りは輸送中だった。",
+            "reading": "。のこりはゆそうちゅうだった。"
+          }
+        ],
+        "translation": "昨天包裹没有全部送到，剩下的还在运输中。",
+        "review": "draft"
+      },
+      "sourceHash": "1a90b856bebc261834175846b54731bcc860aed323d17c5923bc58d2e9ca0caa",
+      "sourceIndex": 4178,
+      "insertBeforeId": "usage:teshimau:verb:動く:うごく",
+      "deferralBasis": "three-failed-repair-attempts",
+      "restoreCondition": "取得固定词义与完整目标下的可信自然用例，并有新卡通过独立语言审核后逐对恢复。",
+      "attempts": [
+        {
+          "revision": 1,
+          "kind": "rejected-draft",
+          "authorReceipt": "0b7b63d423019f9fe22676674cf1d4c79c16eafc43a5147b34b0580996063a20",
+          "cardHash": "1399ad035bb8c4d16cc721f7a34eab0ec9b8ff2418a4b297e271a895e1bac2a1",
+          "reviewReceipt": "dad29f835877903630e019e0e1d22a1d65091a7e6b0eed4965af92f9d76a0bbd",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:届く:とどく",
+            "hash": "1399ad035bb8c4d16cc721f7a34eab0ec9b8ff2418a4b297e271a895e1bac2a1",
+            "status": "rejected",
+            "sentence": "夕方指定の荷物なのに、午前中にはもう届いてしまわなかった？",
+            "reason": "「夕方指定なのに午前中にはもう」という文脈は予想外の早着を疑っているが、「届いてしまわなかった？」は「結局届かなかったのでは」の否定側にも聞こえ、早着を確認する自然な問いとして安定しない。四句共通の否定過去疑問テンプレートに依存している。",
+            "roles": "荷物が届く主体という自動詞の扱いは正しい。",
+            "time": "午前中と夕方指定の対比は明確。",
+            "negation": "意図は早着の有無の確認だが、目標形の否定と中国語の肯定事象を疑う訳の対応が不安定。",
+            "translation": "中文疑问保留了未确定性，但日文疑问の否定含意を十分に表せていない。",
+            "reading": "「夕方指定」「荷物」「午前中」「届いてしまわなかった」の読みは正しい。"
+          }
+        },
+        {
+          "revision": 2,
+          "kind": "rejected-draft",
+          "authorReceipt": "89aefdfd7e56c7c73a63aeea7f9e31fa947109ece5a9209d1e5ed4caf130d28e",
+          "cardHash": "577a78d7c9d27935ba2218e907a7bdfaac6d79f6a21581f9c9cb21f761db92b6",
+          "reviewReceipt": "45cea38373e52da224c979a7a737e529cf1f87f51141816c702f85035d5879d6",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:届く:とどく",
+            "hash": "577a78d7c9d27935ba2218e907a7bdfaac6d79f6a21581f9c9cb21f761db92b6",
+            "status": "rejected",
+            "sentence": "締切前に郵送したはずの申請書は、結局窓口に届いてしまわなかったの？",
+            "reason": "受理记录缺失后询问材料是否送达，通常会说「届かなかったのですか／届いていなかったのですか」。这里的「届いてしまわなかった」把意外完成的「しまう」放进未送达的否定结果，整句不自然；申请人对窗口职员说「の？」也与设定关系不合。不能仅以否定结果在语义上可理解就作为教学例句收录。",
+            "roles": {
+              "speaker": "申请人，向窗口职员询问申报材料的收件情况；现有句尾过于随便。",
+              "listener": "负责受理材料的窗口职员。",
+              "subject": "申請書是届く的移动主体，窓口是到达点；自动词论元本身正确。"
+            },
+            "time": "截止前寄出、截止后查询；「結局」询问预期送达是否最终未发生，时间线可以理解。",
+            "negation": "形态上否定到达结果，但该场景的普通未送达不自然地使用了「てしまわなかった」；问句没有足以支持其特殊语气的语境。",
+            "translation": "中文保留了否定疑问和最终未送达的时间结果，但它不能弥补日语完整句的自然度与语体问题。",
+            "reading": "正文、目标「届いてしまわなかった」及各段假名和标点均对应，未见读音错误。"
+          }
+        },
+        {
+          "revision": 3,
+          "kind": "rejected-draft",
+          "authorReceipt": "91ecf611623bc845edf85130b11c48cdab51ff8c68f82778fdb3164589ac37b7",
+          "cardHash": "2ff2c4128ebf2f6caf34c6aa95c5f2be0a92ce0a1144042124dffd0a91d8f24e",
+          "reviewReceipt": "18562a73c7518be5d2cc42fb886d74b31fde3e2e25f70ec81efb9ee79e491b7d",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:届く:とどく",
+            "hash": "2ff2c4128ebf2f6caf34c6aa95c5f2be0a92ce0a1144042124dffd0a91d8f24e",
+            "status": "rejected",
+            "sentence": "幼児がストーブに手を伸ばしたが、柵のおかげで、指先は熱い部分に届いてしまわなかった。",
+            "reason": "「指先が熱い部分に届く」は物理的な到達として理解できる。しかし柵で接触を防いだ事実を報告する文末の「届いてしまわなかった」は不自然に響く。ここでは「届かなかった」または「届かずに済んだ」が自然で、どちらも固定の目標形とは異なる。危険な肯定結果を想像できることだけでは、過去否定のこの直陈を教材として採れない。",
+            "roles": [
+              "幼児が手を伸ばす人で、指先が「届く」の主体。",
+              "ストーブの熱い部分が到達先で、柵が間に入る。"
+            ],
+            "time": "柵がある状態で幼児が手を伸ばした過去の一場面を回顧している。",
+            "negation": "文意は指先が熱部に到達しなかったこと。意外な到達の不成立を表そうとしているが、否定形の選択が自然でない。",
+            "translation": "中文与未接触的事実和时间大致相符；「指尖没够到」没有额外的完成范围问题。",
+            "reading": "幼児・伸ばした・柵・指先・熱い部分・届いてしまわなかった的读音均与正文和词义相符。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:帰る:かえる",
+      "pair": "verb:帰る:かえる/teshimauNegativePast",
+      "initialAuditStatus": "uncertain",
+      "reason": "三次不同的返修仍未通过过去否定完成形的自然度审核；暂缓此精确配对的常规出题，不限制帰る的其他形式。",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      },
+      "publishedCard": {
+        "id": "usage:teshimauNegativePast:verb:帰る:かえる",
+        "senseId": "verb:帰る:かえる",
+        "meaning": "回去",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚散场后仍有客人留下继续聊天。",
+        "before": [
+          {
+            "text": "昨夜は客が全員",
+            "reading": "さくやはきゃくがぜんいん"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、残った人ともう少し話した。",
+            "reading": "ので、のこったひとともうすこしはなした。"
+          }
+        ],
+        "translation": "昨晚客人没有全部回去，我又和留下的人聊了一会儿。",
+        "review": "approved"
+      },
+      "publishedHash": "68113668d2b90acd8fa2116540f5e0d4823a0d7feb772fcc72aebed145aca4a9",
+      "sourceCard": {
+        "id": "usage:teshimauNegativePast:verb:帰る:かえる",
+        "senseId": "verb:帰る:かえる",
+        "meaning": "回去",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚散场后仍有客人留下继续聊天。",
+        "before": [
+          {
+            "text": "昨夜は客が全員",
+            "reading": "さくやはきゃくがぜんいん"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、残った人ともう少し話した。",
+            "reading": "ので、のこったひとともうすこしはなした。"
+          }
+        ],
+        "translation": "昨晚客人没有全部回去，我又和留下的人聊了一会儿。",
+        "review": "draft"
+      },
+      "sourceHash": "c406ab854bb02108dfc94cd967a551f5df228a87d7f709d7c67851965c041ae3",
+      "sourceIndex": 3713,
+      "insertBeforeId": "usage:teshimau:verb:呼ぶ:よぶ",
+      "deferralBasis": "three-failed-repair-attempts",
+      "restoreCondition": "取得固定词义与完整目标下的可信自然用例，并有新卡通过独立语言审核后逐对恢复。",
+      "attempts": [
+        {
+          "revision": 1,
+          "kind": "rejected-draft",
+          "authorReceipt": "0b7b63d423019f9fe22676674cf1d4c79c16eafc43a5147b34b0580996063a20",
+          "cardHash": "ee41c39721fae7ac1a8dad458ba2978435ba11006839a398fd02d43917eb126f",
+          "reviewReceipt": "dad29f835877903630e019e0e1d22a1d65091a7e6b0eed4965af92f9d76a0bbd",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:帰る:かえる",
+            "hash": "ee41c39721fae7ac1a8dad458ba2978435ba11006839a398fd02d43917eb126f",
+            "status": "rejected",
+            "sentence": "宴会はまだ続いていたのに、あのお客さんは先に帰ってしまわなかった？",
+            "reason": "上着がないことから早退を疑うなら「先に帰ってしまわなかった？」は肯定事象を尋ねるために否定過去疑問を機械的に使った印象が強い。さらに宴会がまだ続く場面なのに「宴会はまだ続いていた」と過去に置き、発話時点とずれる。",
+            "roles": "客が自分で帰るという主語・方向は合う。",
+            "time": "場面は宴会中だが「続いていた」は過去の宴会を振り返る形で不一致。",
+            "negation": "「帰ってしまわなかった？」では早退が実際に起きたかという意図が安定して伝わらない。",
+            "translation": "「是不是先回去了」は作者の意図に沿うが、日本語の時点と否定疑問の含意を解消しない。",
+            "reading": "「宴会」「続いていた」「お客さん」「帰ってしまわなかった」の読みは正しい。"
+          }
+        },
+        {
+          "revision": 2,
+          "kind": "rejected-draft",
+          "authorReceipt": "89aefdfd7e56c7c73a63aeea7f9e31fa947109ece5a9209d1e5ed4caf130d28e",
+          "cardHash": "b5e340bb1e99b7acd585dc792bc4787e464ba06125a2eb0007ef34947b9ad5f9",
+          "reviewReceipt": "45cea38373e52da224c979a7a737e529cf1f87f51141816c702f85035d5879d6",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:帰る:かえる",
+            "hash": "b5e340bb1e99b7acd585dc792bc4787e464ba06125a2eb0007ef34947b9ad5f9",
+            "status": "rejected",
+            "sentence": "母から聞いたけど、終電が運休した夜、お父さんは出張先から家に帰ってしまわなかったって本当？",
+            "reason": "设定是孩子向告知此事的母亲核实，却当面说「母から聞いたけど」，视点不通；若是向第三人确认，场景与角色须重写。末班车停运导致父亲留在出差地时，「帰ってしまわなかった」也不像自然的未归家转述；通常会说「帰らなかった／帰れなかったって本当？」。固定目标形虽合构形，当前完整句不宜教学。",
+            "roles": {
+              "speaker": "孩子，据设定正在向母亲本人核实。",
+              "listener": "母亲本人，因此「母から聞いた」的第三人称来源说法不合此对话。",
+              "subject": "父亲是帰る的主体；出張先为起点、家为归处，移动关系成立。"
+            },
+            "time": "末班车停运的过去一晚，事后转述确认；句内过去时点明确。",
+            "negation": "转述框架表面询问「没有回家」是否属实，但「帰ってしまわなかった」不能自然承载此处因停运而未回的叙述；若着重不能回，还涉及能力否定。",
+            "translation": "译文表达了作者意图中的未归家确认，但日语中的转述视点和目标形语气不支持将其作为自然对等句。",
+            "reading": "「母」はは、「終電」しゅうでん、「お父さん」おとうさん、「帰ってしまわなかった」かえってしまわなかった均正确；词典将「お父さん」错切为お＋父（ちち）さん。"
+          }
+        },
+        {
+          "revision": 3,
+          "kind": "rejected-draft",
+          "authorReceipt": "91ecf611623bc845edf85130b11c48cdab51ff8c68f82778fdb3164589ac37b7",
+          "cardHash": "f09a71b9e48f26e36b2093ad295fac0b833c0a94389b19480f3cd7bc953fd524",
+          "reviewReceipt": "18562a73c7518be5d2cc42fb886d74b31fde3e2e25f70ec81efb9ee79e491b7d",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:帰る:かえる",
+            "hash": "f09a71b9e48f26e36b2093ad295fac0b833c0a94389b19480f3cd7bc953fd524",
+            "status": "rejected",
+            "sentence": "祖母が余震の続く夜に傾いた自宅へ帰ってしまわなかったのは、賢明な判断だった。避難所で一晩過ごした。",
+            "reason": "危険な家へ戻らない判断を評価するなら「帰らなかったのは、賢明な判断だった」または「帰らずに済んだ」が自然。「帰ってしまわなかったのは」は、望ましくない帰宅という肯定形に付く「しまう」を否定しただけの形に見え、この評価文では据わりが悪い。避難所滞在の説明も目標形の不自然さを解消しない。",
+            "roles": [
+              "祖母が帰る／帰らない行為の主体。",
+              "傾いた自宅が帰着先で、避難所は一晩とどまった場所。"
+            ],
+            "time": "余震が続いた過去の夜に帰宅を見送り、その後を回顧する。",
+            "negation": "否定対象はその夜の危険な帰宅。結果が起きなかったという筋は明瞭だが「帰ってしまわなかった」の直陈は不自然。",
+            "translation": "中文准确说明没有返家和避难所过夜；「明智的选择」对应评价句。",
+            "reading": "避難所の「ひなんじょ」と一晩の「ひとばん」はこの文脈で正しい。その他の读音和标点也对应正文。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:戻る:もどる",
+      "pair": "verb:戻る:もどる/teshimauNegativePast",
+      "initialAuditStatus": "revise",
+      "reason": "三次不同的返修仍未通过过去否定完成形的自然度审核；暂缓此精确配对的常规出题，不限制戻る的其他形式。",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      },
+      "publishedCard": {
+        "id": "usage:teshimauNegativePast:verb:戻る:もどる",
+        "senseId": "verb:戻る:もどる",
+        "meaning": "返回",
+        "form": "teshimauNegativePast",
+        "scene": "当时留了人值守，没有全员返回宿舍。",
+        "before": [
+          {
+            "text": "当番が残り、全員が寮に",
+            "reading": "とうばんがのこり、ぜんいんがりょうに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "值班人员留下了，没有所有人都回到宿舍。",
+        "review": "approved"
+      },
+      "publishedHash": "42b0761f1ebfcab3c7984a568613ba9df4c0ebd56ccd2923a27b91f29c28f1a2",
+      "sourceCard": {
+        "id": "usage:teshimauNegativePast:verb:戻る:もどる",
+        "senseId": "verb:戻る:もどる",
+        "meaning": "返回",
+        "form": "teshimauNegativePast",
+        "scene": "当时留了人值守，没有全员返回宿舍。",
+        "before": [
+          {
+            "text": "当番が残り、全員が寮に",
+            "reading": "とうばんがのこり、ぜんいんがりょうに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "值班人员留下了，没有所有人都回到宿舍。",
+        "review": "draft"
+      },
+      "sourceHash": "f9950bf0c5abc350a3b998cbe33d41a5c8d636b8557582afda0440251c1fbc5d",
+      "sourceIndex": 3898,
+      "insertBeforeId": "usage:teshimau:verb:喜ぶ:よろこぶ",
+      "deferralBasis": "three-failed-repair-attempts",
+      "restoreCondition": "取得固定词义与完整目标下的可信自然用例，并有新卡通过独立语言审核后逐对恢复。",
+      "attempts": [
+        {
+          "revision": 1,
+          "kind": "rejected-draft",
+          "authorReceipt": "0b7b63d423019f9fe22676674cf1d4c79c16eafc43a5147b34b0580996063a20",
+          "cardHash": "7db55e60ba812ae4b4cfd11d77ce4cfb64ecbfb40db1978d5f478480088beae1",
+          "reviewReceipt": "dad29f835877903630e019e0e1d22a1d65091a7e6b0eed4965af92f9d76a0bbd",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:戻る:もどる",
+            "hash": "7db55e60ba812ae4b4cfd11d77ce4cfb64ecbfb40db1978d5f478480088beae1",
+            "status": "rejected",
+            "sentence": "夜の見回り中、当番の人が持ち場にいないけど、もう寮に戻ってしまわなかった？",
+            "reason": "「もう寮に戻ってしまわなかった？」は、持ち場にいないことから帰寮を疑う文脈で否定過去疑問を一律に使っており、帰寮したのか未帰寮なのか焦点が揺れる。「夜の見回り中」だけでは当番者が巡回で持ち場を離れた可能性も残り、帰寮という推論が弱い。",
+            "roles": "当番者が寮へ戻る自動詞の方向づけは合う。",
+            "time": "夜間、持ち場不在の後という時点は読み取れる。",
+            "negation": "否定過去疑問が「すでに戻ったのでは」の確認として不安定。",
+            "translation": "「是不是已经回宿舍了」は肯定の帰寮を疑う訳で、日本語の否定疑問の焦点とずれる。",
+            "reading": "「夜の見回り中」「当番」「持ち場」「寮」「戻ってしまわなかった」の読みは正しい。"
+          }
+        },
+        {
+          "revision": 2,
+          "kind": "rejected-draft",
+          "authorReceipt": "89aefdfd7e56c7c73a63aeea7f9e31fa947109ece5a9209d1e5ed4caf130d28e",
+          "cardHash": "7e182c3479fd024db36289e7e902580c29a1cad1da0246042d0bdac4ccd30189",
+          "reviewReceipt": "45cea38373e52da224c979a7a737e529cf1f87f51141816c702f85035d5879d6",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:戻る:もどる",
+            "hash": "7e182c3479fd024db36289e7e902580c29a1cad1da0246042d0bdac4ccd30189",
+            "status": "rejected",
+            "sentence": "雨は昨夜止んだのに、川の水位は朝までに普段の高さに戻ってしまわなかったのか？",
+            "reason": "「川の水位が普段の高さに戻る」可以理解，雨停后仍未回落也适合问「戻らなかったのか」。但避难指示未解除、水位恢复为可取结果的语境里，「戻ってしまわなかった」给恢复套上「しまう」的意外完成色彩，再否定它，听来很别扭；「のに」更凸显本来盼望回落。当前句没有能支撑该目标形的评价或预期反转。",
+            "roles": {
+              "speaker": "应急值班人员，核对观测结果。",
+              "listener": "河道水位观测员。",
+              "subject": "川の水位是自动词戻る的变化主体，普段の高さ是回到的基准。"
+            },
+            "time": "雨在昨夜停止，观察截至次日早晨；「朝までに」给结果设定截止点。",
+            "negation": "表面否定水位恢复到平常高度的完成结果；本场景直接否定「戻る」较自然，目标形的「しまう」评价与场景不合。",
+            "translation": "译文如实给出到早晨仍未恢复的疑问，没有明显误译；退回原因是日语构式与情境不合。",
+            "reading": "「昨夜」さくや、「水位」すいい、「普段」ふだん、「戻ってしまわなかった」もどってしまわなかった等读音与原句对应，未见错误。"
+          }
+        },
+        {
+          "revision": 3,
+          "kind": "rejected-draft",
+          "authorReceipt": "91ecf611623bc845edf85130b11c48cdab51ff8c68f82778fdb3164589ac37b7",
+          "cardHash": "02c213cdcf97e5141f24b4da8f6c625b636a991175ee28991dd7167465aebd54",
+          "reviewReceipt": "18562a73c7518be5d2cc42fb886d74b31fde3e2e25f70ec81efb9ee79e491b7d",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:戻る:もどる",
+            "hash": "02c213cdcf97e5141f24b4da8f6c625b636a991175ee28991dd7167465aebd54",
+            "status": "rejected",
+            "sentence": "健診で血圧が高めと分かってから、父は早寝を続け、以前の夜更かしの習慣に戻ってしまわなかった。",
+            "reason": "「以前の夜更かしの習慣に戻る」は成立し、元の悪習へ戻る肯定結果なら「戻ってしまう」も自然。ただし早寝を続けた事実に続けて「戻ってしまわなかった」と直陈すると、「戻らなかった」や「戻ることはなかった」を回りくどく言い換えた印象が強い。悪い反動を避けた背景だけでは、この過去否定を自然な教学例文にできない。",
+            "roles": [
+              "父が早寝を続ける人で、「戻る」の主体。",
+              "以前の夜更かしの習慣が戻る先で、血圧の健診結果が生活変更の契機。"
+            ],
+            "time": "健診後に早寝を始め、ある期間続けた時点から過去を回顧している。",
+            "negation": "否定対象は旧習慣への復帰で、早寝行動そのものではない。否定範囲は译文と合うが、目标形が不自然。",
+            "translation": "中文的持续早睡和未回到旧习惯与句意一致；「又」提示反弹，并未误译成未曾熬夜。",
+            "reading": "健診・血圧・早寝・夜更かし・習慣・戻ってしまわなかった的读音均正确。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:手伝う:てつだう",
+      "pair": "verb:手伝う:てつだう/teshimauNegativePast",
+      "initialAuditStatus": "revise",
+      "reason": "三次不同的返修仍因完整句自然度或动作含义不符被拒；暂缓此精确配对的常规出题，不限制手伝う的其他形式。",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      },
+      "publishedCard": {
+        "id": "usage:teshimauNegativePast:verb:手伝う:てつだう",
+        "senseId": "verb:手伝う:てつだう",
+        "meaning": "帮忙",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只帮朋友搬了前几箱，之后有事离开。",
+        "before": [
+          {
+            "text": "昨日は引っ越しを最後までは",
+            "reading": "きのうはひっこしをさいごまでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。途中で用事があって帰った。",
+            "reading": "。とちゅうでようじがあってかえった。"
+          }
+        ],
+        "translation": "昨天没有帮着搬家一直帮到最后，中途有事就回去了。",
+        "review": "approved"
+      },
+      "publishedHash": "a2814e1c54e3568c08a2617e2a302198a6eca361232a115116ab206c2d0b1a10",
+      "sourceCard": {
+        "id": "usage:teshimauNegativePast:verb:手伝う:てつだう",
+        "senseId": "verb:手伝う:てつだう",
+        "meaning": "帮忙",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只帮朋友搬了前几箱，之后有事离开。",
+        "before": [
+          {
+            "text": "昨日は引っ越しを最後までは",
+            "reading": "きのうはひっこしをさいごまでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。途中で用事があって帰った。",
+            "reading": "。とちゅうでようじがあってかえった。"
+          }
+        ],
+        "translation": "昨天没有帮着搬家一直帮到最后，中途有事就回去了。",
+        "review": "draft"
+      },
+      "sourceHash": "ffcdc8538b8c31fdec4567d4850fe517a378f34774c18794c51a648aaa981d82",
+      "sourceIndex": 3793,
+      "insertBeforeId": "usage:teshimau:verb:拾う:ひろう",
+      "deferralBasis": "three-failed-repair-attempts",
+      "restoreCondition": "取得固定词义与完整目标下的可信自然用例，并有新卡通过独立语言审核后逐对恢复。",
+      "attempts": [
+        {
+          "revision": 1,
+          "kind": "rejected-draft",
+          "authorReceipt": "0b7b63d423019f9fe22676674cf1d4c79c16eafc43a5147b34b0580996063a20",
+          "cardHash": "5f2489074af10c92966f514764708ac067e0d61a01fb50704096c114512c83f6",
+          "reviewReceipt": "dad29f835877903630e019e0e1d22a1d65091a7e6b0eed4965af92f9d76a0bbd",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:手伝う:てつだう",
+            "hash": "5f2489074af10c92966f514764708ac067e0d61a01fb50704096c114512c83f6",
+            "status": "rejected",
+            "sentence": "自分でやる約束の宿題なのに、急に字がきれいになったね。お父さんが手伝ってしまわなかった？",
+            "reason": "字が急にきれいになったことから父親の介入を疑うなら、「お父さんが手伝ってしまわなかった？」は同じ否定過去疑問テンプレートで肯定の違反事象を問う不安定な言い方。筆跡の変化は父親が書いた可能性を示すが、単なる「宿題を手伝う」との関係も弱い。",
+            "roles": "父親が手伝い、子どもが受ける関係は文脈上分かる。「お父さん」は聞き手の父親を指せる。",
+            "time": "宿題を提出した後に字を見たという場面と過去形は合う。",
+            "negation": "違反して手伝ったかを疑う意図と「手伝ってしまわなかった？」の否定側の焦点が不安定。",
+            "translation": "「是不是还是帮忙做了」は肯定の介入を疑う訳で、元の問いより踏み込んでいる。",
+            "reading": "「お父さん」は「おとうさん」が正しい。UniDic の「おちちさん」は誤分割であり、ほかの読みも正しい。"
+          }
+        },
+        {
+          "revision": 2,
+          "kind": "rejected-draft",
+          "authorReceipt": "89aefdfd7e56c7c73a63aeea7f9e31fa947109ece5a9209d1e5ed4caf130d28e",
+          "cardHash": "5db13abca2e2e6e7a276ac72eb2497057cabb80bf631a901ea0821097f02d859",
+          "reviewReceipt": "45cea38373e52da224c979a7a737e529cf1f87f51141816c702f85035d5879d6",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:手伝う:てつだう",
+            "hash": "5db13abca2e2e6e7a276ac72eb2497057cabb80bf631a901ea0821097f02d859",
+            "status": "rejected",
+            "sentence": "友人に手を貸す約束だったのに、引っ越し当日に急な残業が入って、結局荷造りを手伝ってしまわなかったんだ？",
+            "reason": "「荷造りを手伝う」和加班妨碍帮忙的因果关系成立；但这段回问通常是「結局荷造りを手伝わなかったんだ？」。这里「手伝ってしまわなかった」将「しまう」的做完或意外做了之感加到未提供帮助上，缺少与之相配的完成范围或反转期待，听来牵强。前项「友人に手を貸す約束だった」也没有说明是听话人作了承诺，面对听话人说时指向稍弱。",
+            "roles": {
+              "speaker": "共同朋友，事后询问原定的搬家帮手。",
+              "listener": "因临时加班而可能未能帮忙的人，也是手伝う的潜在施事。",
+              "beneficiary": "搬家的友人受助；荷造り是所帮的具体任务，宾语搭配正确。"
+            },
+            "time": "承诺在先，搬家当天发生临时加班，事后核实帮忙结果；顺序清楚。",
+            "negation": "作者意图是最终未帮忙；句中目标虽可形态上否定帮助结果，但该背景不自然地要求「手伝ってしまわなかった」。",
+            "translation": "中文保留承诺、加班和未帮忙的疑问，但只能对应普通「手伝わなかった」的直观说法，不能说明日语目标句自然。",
+            "reading": "「手を貸す」てをかす、「荷造り」にづくり、「手伝ってしまわなかった」てつだってしまわなかった等读音与原句对应，未见错误。"
+          }
+        },
+        {
+          "revision": 3,
+          "kind": "rejected-draft",
+          "authorReceipt": "91ecf611623bc845edf85130b11c48cdab51ff8c68f82778fdb3164589ac37b7",
+          "cardHash": "2fc9bf2b928de5dbe2812048bef12108e06d232a43392e5ca98a1de52709fe63",
+          "reviewReceipt": "18562a73c7518be5d2cc42fb886d74b31fde3e2e25f70ec81efb9ee79e491b7d",
+          "languageReview": {
+            "id": "usage:teshimauNegativePast:verb:手伝う:てつだう",
+            "hash": "2fc9bf2b928de5dbe2812048bef12108e06d232a43392e5ca98a1de52709fe63",
+            "status": "rejected",
+            "sentence": "娘が算数の宿題で行き詰まり、答えを聞いてきた。父はつい教えそうになったが、娘が自分で考える機会を残すため、宿題を手伝ってしまわなかった。",
+            "reason": "「宿題を手伝う」自体は自然だが、「答えを教えそうになった」ことと宿題を手伝うことは同一ではない。教えすぎや代答を避けたという意図を、無限定の「手伝ってしまわなかった」が示すのは難しく、文末も「手伝わなかった」「手伝わずに済んだ」の方が自然。訳文の「替她做作业」は手伝うより強い代行を含み、目標詞義との対応もずれる。",
+            "roles": [
+              "娘が宿題をして答えを尋ねる人で、援助の受け手。",
+              "父が教えそうになる人、かつ「手伝う」の主体。宿題が援助対象。"
+            ],
+            "time": "娘が行き詰まって質問した過去の場面を、父の対応とともに回顧している。",
+            "negation": "文法上は父が宿題を手伝う行為を否定するが、代答や過度の援助だけを否定する表現にはなっていない。",
+            "translation": "前半は概ね一致する一方、「没有帮她做作业」は代行の含みがあり、原文の「手伝う」より強い。",
+            "reading": "算数・宿題・行き詰まり・機会・手伝ってしまわなかったなどの读音和句读点は正文に对应する。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "usage:teikuNegativePast:verb:信じる:しんじる",
+      "pair": "verb:信じる:しんじる/teikuNegativePast",
+      "initialAuditStatus": "conflict",
+      "reason": "三次不同的返修仍未自然建立过去的信任持续路线；暂缓此精确配对的常规出题，不宣称所有信じる＋ていく用法不成立。",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      },
+      "publishedCard": {
+        "id": "usage:teikuNegativePast:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teikuNegativePast",
+        "scene": "回顾调查揭露之后，人们没有继续相信宣传。",
+        "before": [
+          {
+            "text": "調査でうそが分かった後、人々は宣伝を",
+            "reading": "ちょうさでうそがわかったあと、ひとびとはせんでんを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "调查揭露了谎言，人们此后没有继续相信宣传。",
+        "review": "approved"
+      },
+      "publishedHash": "952585cf186efdeec837eb5cf2ede0e08005f5c7190b5e9c51eb4f43010f991f",
+      "sourceCard": {
+        "id": "usage:teikuNegativePast:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "teikuNegativePast",
+        "scene": "回顾调查揭露之后，人们没有继续相信宣传。",
+        "before": [
+          {
+            "text": "調査でうそが分かった後、人々は宣伝を",
+            "reading": "ちょうさでうそがわかったあと、ひとびとはせんでんを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "调查揭露了谎言，人们此后没有继续相信宣传。",
+        "review": "draft"
+      },
+      "sourceHash": "a77266d30d149271a33d93cca68801c6b3f81de4cf3e28e8b0aade08cf3a3575",
+      "sourceIndex": 6159,
+      "insertBeforeId": "usage:tekuruPast:verb:信じる:しんじる",
+      "deferralBasis": "three-failed-repair-attempts",
+      "restoreCondition": "取得固定词义与完整目标下的可信自然用例，并有新卡通过独立语言审核后逐对恢复。",
+      "attempts": [
+        {
+          "revision": 1,
+          "kind": "rejected-draft",
+          "authorReceipt": "5248558aa676758ddece93780f9796a7370797b9288aa1c009134cd39273c3a0",
+          "cardHash": "f2f710b0ad0522e7ca0fd2f726d03a73e073eb28f307a4f790f0086b954bc2dc",
+          "reviewReceipt": "bcb7770c13c697e740c73e878d7b591409653e42d6503af2366fc35a1b7691e6",
+          "languageReview": {
+            "id": "usage:teikuNegativePast:verb:信じる:しんじる",
+            "hash": "f2f710b0ad0522e7ca0fd2f726d03a73e073eb28f307a4f790f0086b954bc2dc",
+            "status": "rejected",
+            "sentence": "当時の記録によると、補償協議の期間中も、住民側は会社の説明を信じていかなかった。",
+            "reason": "场景说居民一方始终不信任说明，完整句的「信じていかなかった」却把信任设为从过去某点向后维持的发展路线；协商持续并不自动形成这条路线。若本意只是整个协商期不相信，普通「信じなかった」更贴切；若本意是没有继续相信，则需明确先前的信任及其后的变化。当前句和场景不能共同支撑固定目标的自然读法。",
+            "roles": "居民一方是相信的主体，公司说明是被相信的对象；叙述者回看记录。",
+            "time": "协商期是过去区间，但缺少此前已建立的信任及其向后的发展起点。",
+            "negation": "目标否定过去区间内信任向后延续，不等同于从未相信。",
+            "translation": "译文的“没有继续相信”暗示此前曾相信，与场景的“始终不信任”冲突；日语也未交代此前信任。",
+            "reading": "句段读音与正文对应；目标读音「しんじていかなかった」正确。"
+          }
+        },
+        {
+          "revision": 2,
+          "kind": "rejected-draft",
+          "authorReceipt": "696e36bc32408f9e6da5225b653e0e31adbb777a939b144a942edebd4a13a756",
+          "cardHash": "b34b181b27f41379f7a27b96c30708bdc9e86b749f0117d6b504e49c5b696b6d",
+          "reviewReceipt": "d1598a293ab0dd4b8c970390077d246df074848656f5eb0bb70f15c6522cf471",
+          "languageReview": {
+            "id": "usage:teikuNegativePast:verb:信じる:しんじる",
+            "hash": "b34b181b27f41379f7a27b96c30708bdc9e86b749f0117d6b504e49c5b696b6d",
+            "status": "rejected",
+            "sentence": "説明会では住民も会社の安全説明を信じたが、その後の水質調査で基準超過が続き、住民側は会社の説明を信じていかなかった。",
+            "reason": "先に信じた事実と後の反証は明確になったが、「基準超過が続き、説明を信じていかなかった」は、実際の信頼が失われた転換を不自然に継続否定で表す。ここで普通に伝えるのは「信じなくなった／信じ続けなかった」であり、固定形「信じていかなかった」が示す、以後も信じる方針を保って進むかという視点が本文に十分立たない。固定配对そのものが不可能とは断定しない。",
+            "roles": [
+              "居民是最初相信、后来重新判断说明的主体。",
+              "公司是安全说明的发出方；水质调查结果是反证，并非相信的主体。"
+            ],
+            "time": "说明会的信任在先，随后多次检测超标；过去叙述的先后顺序清楚，但「ていく」所需的向后持续视点仍不自然。",
+            "negation": "句子意图否定后续信任；日语听起来更像信任转变或未继续相信，不能凭时间线把「信じていかなかった」自然化。",
+            "translation": "中文准确写出先相信、后不再相信的故事，但它顺畅地表达了日语固定目标在此难以自然承担的转变。",
+            "reading": "已逐段核对：説明会・住民・水質調査・基準超過・信じていかなかった等读音及标点对应，无读音错误。"
+          }
+        },
+        {
+          "revision": 3,
+          "kind": "rejected-draft",
+          "authorReceipt": "007b36e9846d5a8e4108572eb019ee56833cc05c2a44fbcd1ff2b48343da1aef",
+          "cardHash": "75267b70b5ed2e444fbcf1c7f300637ef16e261a55f904b70689661d1d827b21",
+          "reviewReceipt": "f516d065904fae297b31e85d44de36fc8d226dd72109504530a2eb140b0ffa6c",
+          "languageReview": {
+            "id": "usage:teikuNegativePast:verb:信じる:しんじる",
+            "hash": "75267b70b5ed2e444fbcf1c7f300637ef16e261a55f904b70689661d1d827b21",
+            "status": "rejected",
+            "sentence": "当初の計画では、委員会は試算を根拠に次段階へ進むことになっていたが、追加の検算が終わるまで、委員たちはその予測を信じていかなかった。",
+            "reason": "「追加の検算が終わるまで」は判断を保留した期間であり、試算に基づく進行計画だけでは「予測を信じていく」という信頼の持続・発展経路を立てられない。全文の「信じていかなかった」はこの文脈では不自然で、通常は「信じなかった／信じられなかった」等で言う。また中文「没有继续相信」会读出先前已信任，而冻结稿没有这一前史。当前句を拒收；この固定配对全体に自然表現がないとの断定ではない。",
+            "roles": [
+              "委員会は試算を根拠に次段階へ進む計画の主体。",
+              "委員たちは予測を信じるか判断する主体で、予測がその対象。"
+            ],
+            "time": "「当初」と「検算が終わるまで」は過去の計画と保留期間を示すが、信頼が将来へ継続する過去の推移は示していない。",
+            "negation": "固定形は「信じていく」経路の過去否定を要する。実際の文脈は検算前に信じなかったという単純否定に収まり、補助動詞いくの方向が空回りする。",
+            "translation": "「没有继续相信」含む既存の信頼が途切れた含意は日本語の前史と合わない。原計画や検算待ちの情報はおおむね対応する。",
+            "reading": "本文の「当初／委員会／試算／根拠／次段階／追加／検算／予測」と目標「信じていかなかった」は記載の仮名と一致する。注音の確定誤りは見当たらない。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "usage:tekuruNegative:verb:信じる:しんじる",
+      "pair": "verb:信じる:しんじる/tekuruNegative",
+      "initialAuditStatus": "revise",
+      "reason": "一张新稿被拒后，两次独立返修检索仍找不到可信的非过去否定教学句；暂缓此精确配对的常规出题，保留词形识别和恢复条件。",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      },
+      "publishedCard": {
+        "id": "usage:tekuruNegative:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "tekuruNegative",
+        "scene": "反复展示证据，对方仍没有渐渐相信解释。",
+        "before": [
+          {
+            "text": "証拠を何度示しても、相手はこちらの説明を",
+            "reading": "しょうこをなんどしめしても、あいてはこちらのせつめいを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "即使反复展示证据，对方也没有逐渐相信我们的说明。",
+        "review": "approved"
+      },
+      "publishedHash": "465838fe79c9afb03413566cfc5e703f405f1592d4740c0af219e86f1383f84f",
+      "sourceCard": {
+        "id": "usage:tekuruNegative:verb:信じる:しんじる",
+        "senseId": "verb:信じる:しんじる",
+        "meaning": "相信",
+        "form": "tekuruNegative",
+        "scene": "反复展示证据，对方仍没有渐渐相信解释。",
+        "before": [
+          {
+            "text": "証拠を何度示しても、相手はこちらの説明を",
+            "reading": "しょうこをなんどしめしても、あいてはこちらのせつめいを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "即使反复展示证据，对方也没有逐渐相信我们的说明。",
+        "review": "draft"
+      },
+      "sourceHash": "cbdc1b580e8af0d443b5f20159e446be037b2166b7d7961ead33b6a36b28c995",
+      "sourceIndex": 6161,
+      "insertBeforeId": "usage:tekuruNegativePast:verb:信じる:しんじる",
+      "deferralBasis": "three-failed-repair-attempts",
+      "restoreCondition": "取得固定词义与完整目标下的可信自然用例，并有新卡通过独立语言审核后逐对恢复。",
+      "attempts": [
+        {
+          "revision": 1,
+          "author": "/root/repair_evidence_other_author",
+          "kind": "rejected-draft",
+          "route": "说明会后的信任向当前显现",
+          "authorReceipt": "5248558aa676758ddece93780f9796a7370797b9288aa1c009134cd39273c3a0",
+          "notesHash": "ef33f581ea04f6dcc818865e6bdd9412f4f46d9d1ec629952159ef84a50a939f",
+          "cardHash": "6d67e782538ef218b4a042354d362317280fd1685e9723982f3f035ca2ca137d",
+          "reviewReceipt": "bcb7770c13c697e740c73e878d7b591409653e42d6503af2366fc35a1b7691e6",
+          "authorNote": {
+            "id": "usage:tekuruNegative:verb:信じる:しんじる",
+            "roles": "町持续举行说明会；形成信任的主体为居民。",
+            "object": "新安全措施的效果；居民判断这项措施是否有效。",
+            "time": "制度实施一年后的当前观察点；反复举行说明会是截至当前仍未形成信任的历时背景。",
+            "negation": "否定居民对措施效果的信任截至当前仍未显现；不使用过去时「信じてこなかった」，也不声称居民未来必然不会信。",
+            "researchCheck": "direction8 的文学会报告与当事者记录均为「信じてこなかった」等过去否定；这些时态与本卡非过去目标不同，不能作本卡证据。没有找到可直接支撑此句的精确否定用例。",
+            "reviewFocus": "重点判断当前进程能否自然说成「信じてこない」；若标准语感需要过去否定或普通状态否定，本稿不可保留该固定目标。"
+          },
+          "languageReview": {
+            "id": "usage:tekuruNegative:verb:信じる:しんじる",
+            "hash": "6d67e782538ef218b4a042354d362317280fd1685e9723982f3f035ca2ca137d",
+            "status": "rejected",
+            "sentence": "制度開始から一年、町は説明会を重ねているが、住民は新しい安全策の効果を信じてこない。",
+            "reason": "「制度開始から一年」到目前的历时未建立信任，通常会用过去否定「信じてこなかった」陈述截至现在的经历，或用「信じていない」陈述现状。这里句尾非过去「信じてこない」既不像自然的当前状态，也缺少能使信任逐渐向观察点显现的清楚变化过程；反复说明会只是外部行动，不能使这句成为自然的时间路线。",
+            "roles": "町举行说明会；居民是相信的主体，安全措施的效果是对象。",
+            "time": "制度开始至今一年，观察点是现在；该事实已延续一年。",
+            "negation": "固定目标应否定信任向当前显现的过程，不能靠过去否定或普通状态否定替代。",
+            "translation": "译文的“至今仍未相信”符合想表达的事实，却更对应「信じてこなかった／信じていない」，没有解决完整日语句的语感问题。",
+            "reading": "句段读音与正文对应；目标读音「しんじてこない」正确。"
+          }
+        },
+        {
+          "revision": 2,
+          "author": "/root/repair_evidence_other_author",
+          "kind": "no-credible-candidate",
+          "route": "对照当前不信、过去未信及信任渐变路线",
+          "authorReceipt": "696e36bc32408f9e6da5225b653e0e31adbb777a939b144a942edebd4a13a756",
+          "notesHash": "ab2115c66f664fd72cfaafaaf77e1ae4d3daf178d7d75172aa89fd16c0ed7765",
+          "cardHash": "6d67e782538ef218b4a042354d362317280fd1685e9723982f3f035ca2ca137d",
+          "reviewReceipt": "d1598a293ab0dd4b8c970390077d246df074848656f5eb0bb70f15c6522cf471",
+          "authorNote": {
+            "id": "usage:tekuruNegative:verb:信じる:しんじる",
+            "status": "applicability-reassessment",
+            "roles": "町举行说明会；居民是形成信任的主体。当前稿没有独立的说话人或听话人角色。",
+            "object": "居民对新安全措施效果的判断。",
+            "time": "原稿以制度实施一年后的当前为观察点，并以反复举行说明会作为历时背景；rev1 指出这没有建立信任逐步向当前显现的路线。",
+            "negation": "固定目标要求否定状态或变化显现到当前；换成「信じてこなかった」或「信じていない」会改掉指定形式，普通不信也不足以证明目标路线。",
+            "reason": "rev1 拒收当前句，判断非过去「信じてこない」既不像自然的当前状态，也没有清楚的信任变化过程。本轮复核仍未找到满足固定词义、当前观察点和「信じてこない」完整述语的自然候选；重复试验、说明会或反复劝说都只写外部刺激，不能证明信任本身逐渐显现。若改用过去否定、状态否定、信頼が生まれる或信じられる，都会偏离固定目标，故逐字保留被拒稿，不计为返修。",
+            "evidence": "direction8 所列「信じてこなかった」均为过去否定，不能支持本题非过去述语。对精确字符串的检索没有找到可依赖的自然完整述语；检索无命中本身不证明该形式不自然，但目前不足以编造一个供审核的候选。",
+            "attemptKind": "applicability-reassessment",
+            "contentRevision": false,
+            "revisionNote": "本 ID 的 draft 对象与 rev1 被拒稿保持不变。本轮只复核自然适用路线，不计为内容返修次数。"
+          }
+        },
+        {
+          "revision": 5,
+          "author": "/root/repair_believe_tekuru_author3",
+          "kind": "no-credible-candidate",
+          "route": "另行检索精确非过去否定、分辨条件肯定及过去否定近邻",
+          "authorReceipt": "02e3af7629848d102f83ad297faf0d2761beafc171970ca61ea928b53c438a72",
+          "notesHash": "34c665fcd1a36d8eb07a432b94c7c5cd7531100868985598a4300a49778f6548",
+          "cardHash": "6d67e782538ef218b4a042354d362317280fd1685e9723982f3f035ca2ca137d",
+          "reviewReceipt": "cf986b82c4e197d173961ca249fee9086ad5c24d447259b076e687dbe68c9cae",
+          "authorNote": {
+            "id": "usage:tekuruNegative:verb:信じる:しんじる",
+            "status": "applicability-reassessment",
+            "roles": "町举行说明会；居民是形成信任的主体。当前稿没有独立的说话人或听话人角色。",
+            "object": "居民对新安全措施效果的判断。",
+            "time": "原稿以制度实施一年后的当前为观察点，并以反复举行说明会作为历时背景；rev1 指出这没有建立信任逐步向当前显现的路线。",
+            "negation": "固定目标要求否定状态或变化显现到当前；换成「信じてこなかった」或「信じていない」会改掉指定形式，普通不信也不足以证明目标路线。",
+            "reason": "rev1–rev4 对该 ID 的稿件正文完全相同，审核哈希均为 6d67e782538ef218b4a042354d362317280fd1685e9723982f3f035ca2ca137d；重复审核按同一稿计，只能算一个被拒内容版本。本轮对固定答案「信じてこない」另行检索，但未找到足以写成自然卡片的完整非过去否定句，故不造新稿，逐字保留 rev4 被拒对象并记录适用性重评。",
+            "evidence": "direction8 所列「信じてこなかった」均为过去否定，不能支持本题非过去述语。对精确字符串的检索没有找到可依赖的自然完整述语；检索无命中本身不证明该形式不自然，但目前不足以编造一个供审核的候选。",
+            "attemptKind": "applicability-reassessment",
+            "contentRevision": false,
+            "revisionNote": "本轮完成精确短语与语境检索，但未取得强候选，未写新的日语句。draft 的对象、场景和完整句与 rev4 相同；重复拒审同一稿不算新的内容返修，故将此轮记为 applicability-reassessment，研究不足也不等同于认定固定配对绝无自然表达。",
+            "researchAttempts": [
+              {
+                "queries": [
+                  "\"信じてこない\"",
+                  "\"信じてこない\" 日本語 文例",
+                  "「信じてこない」 site:go.jp OR site:ac.jp",
+                  "信じてこない corpus",
+                  "\"信じてこない\" 信頼 信用",
+                  "\"信じてこない\" 小説 OR 会話 OR 物語",
+                  "\"なかなか信じてこない\"",
+                  "\"まだ信じてこない\""
+                ],
+                "result": "公开网页搜索没有给出可核实、自然的完整「信じてこない」非过去否定例。返回项多为「信じてこなかった」「信じていない」等其他形式；也发现了字符串边界误命中（如「もうしてこないと信じてる」，其中「してこない」与「信じてる」分属不同谓词）。没有把这些近邻或误命中当成本题证据。"
+              }
+            ],
+            "sourceChecks": [
+              {
+                "source": "太宰府市会议记录",
+                "url": "https://www.city.dazaifu.lg.jp/uploaded/attachment/16193.pdf",
+                "context": "发言「信用して良いのかどうか、信じていかないと進まないのですが…」讨论推进事务需要相信与否，实际是「信じていく」非过去肯定形加条件「ないと」。它只支持肯定持续信任路线，不支持本题非过去否定。"
+              },
+              {
+                "source": "森本峰子「Sweet As」—Contemporary Short Stories by New Zealanders，南半球評論 46（2019），pp. 46–48",
+                "url": "https://www.jstage.jst.go.jp/article/anzshr/35/0/35_46/_pdf/-char/en",
+                "context": "对短篇 The Great Balance 的梗概写到，叙述者与一名死者的母亲交谈时，得知自己「これまで自分が信じてこなかった予感の存在」。这是回看此前一直不信的「信じてこなかった」过去否定，不能代替固定的「信じてこない」。"
+              },
+              {
+                "source": "少納言：国立国語研究所「現代日本語書き言葉均衡コーパス」文字列検索说明",
+                "url": "https://shonagon.ninjal.ac.jp/",
+                "context": "该页说明可用全字段字符串搜索 BCCWJ；本轮没有提交交互式语料查询，因此不把网页搜索无命中写成 BCCWJ 的零命中结论，也不作不存在判断。"
+              }
+            ],
+            "languageBarrier": "自然的当前不信状态通常会改成「信じていない」，回望截至现在未曾相信会转成「信じてこなかった」，拒绝相信则会转成「信じようとしない」；这些都不是固定答案。现有相邻用例未证明非过去「信じてこない」可作此类陈述。把否定硬解释成“逐渐开始相信的变化未出现”缺少真实用例并受到既有独立审核的自然度质疑；把它解释为空间上的“相信后朝说话人移动”也不能自然表达固定词义下的常规教学场景。"
+          }
+        }
+      ]
+    },
+    {
+      "id": "usage:tekuruNegative:verb:知る:しる",
+      "pair": "verb:知る:しる/tekuruNegative",
+      "initialAuditStatus": "uncertain",
+      "reason": "一张新稿被拒后，两次不同路线的返修仍找不到可信的知る＋てこない教学句；暂缓此精确配对的常规出题，不限制知る的其他形式。",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      },
+      "publishedCard": {
+        "id": "usage:tekuruNegative:verb:知る:しる",
+        "senseId": "verb:知る:しる",
+        "meaning": "知道",
+        "form": "tekuruNegative",
+        "scene": "面试官抱怨，有些应聘者来之前根本不了解公司。",
+        "before": [
+          {
+            "text": "面接に来るのに、会社のことを何も",
+            "reading": "めんせつにくるのに、かいしゃのことをなにも"
+          }
+        ],
+        "after": [
+          {
+            "text": "人もいる。",
+            "reading": "ひともいる。"
+          }
+        ],
+        "translation": "有些人明明是来面试，却对公司什么都不了解就来了。",
+        "review": "approved"
+      },
+      "publishedHash": "fb279cb758b820ee47fae506084363c35d5c49bd3d1c5de5d2d576b8466ffef7",
+      "sourceCard": {
+        "id": "usage:tekuruNegative:verb:知る:しる",
+        "senseId": "verb:知る:しる",
+        "meaning": "知道",
+        "form": "tekuruNegative",
+        "scene": "面试官抱怨，有些应聘者来之前根本不了解公司。",
+        "before": [
+          {
+            "text": "面接に来るのに、会社のことを何も",
+            "reading": "めんせつにくるのに、かいしゃのことをなにも"
+          }
+        ],
+        "after": [
+          {
+            "text": "人もいる。",
+            "reading": "ひともいる。"
+          }
+        ],
+        "translation": "有些人明明是来面试，却对公司什么都不了解就来了。",
+        "review": "draft"
+      },
+      "sourceHash": "77e28c7a7ec61663690c9037e810d3443ccb1d488d022bf75d08ec9c36943071",
+      "sourceIndex": 5809,
+      "insertBeforeId": "usage:teiku:verb:作る:つくる",
+      "deferralBasis": "three-failed-repair-attempts",
+      "restoreCondition": "取得固定词义与完整目标下的可信自然用例，并有新卡通过独立语言审核后逐对恢复。",
+      "attempts": [
+        {
+          "revision": 1,
+          "author": "/root/repair_evidence_direction_author",
+          "kind": "rejected-draft",
+          "route": "多次采访取得具体事实的时间累积",
+          "authorReceipt": "c744f96bb6d0d1b84a18d7b8c4861e09faf0313b2ae10d3a6b147aac3853b8a2",
+          "notesHash": "340a12e51313165275a2629a2764008738443d3151710c46ca78234a8a3bd2a6",
+          "cardHash": "59ed508e288e8b4e51a26ef6481eea76ccf151cda212da34b7c638a3d3d8db76",
+          "reviewReceipt": "d7d32365286227d7d179d9a8fa8451a724042eb59dea1ba5ee844ad257fca007",
+          "authorNote": {
+            "id": "usage:tekuruNegative:verb:知る:しる",
+            "roles": {
+              "speaker": "反复到岛上采访的记者",
+              "listener": "阅读采访报道的读者"
+            },
+            "object": "居民口述的渔业具体作业流程这一组外部事实",
+            "time": "多次到岛上采访开始后至记者整理报道的当前观察点",
+            "negation": "否定的是重复接触后知识仍未积累到当前观察点的充分程度；不是只陈述此刻对单条事实不知。肯定「知ってくる」表示通过多次接触获得这些事实；普通「知らない」描述静态的不知。须由审核者判断知る能否自然承载此目标否定，不能换成表示理解过程的分かる。",
+            "evidence": "research/direction8.md 第5项列出旧句将「知ってこない」偷换成事先调查的风险；第6项给出「書くことの楽しさを知ってきた」这一相邻肯定过去形。国立国语研究所指出知る是从外部取得知识，且「徐々に知る／ようやく知ってきた」不像表示渐进理解的分かる（https://kotoba.ninjal.ac.jp/qa/yokuaru/qa-49/）。现句改用可经反复采访取得的一组事实，但目标否定尚无同形直接例证。"
+          },
+          "languageReview": {
+            "id": "usage:tekuruNegative:verb:知る:しる",
+            "hash": "59ed508e288e8b4e51a26ef6481eea76ccf151cda212da34b7c638a3d3d8db76",
+            "status": "rejected",
+            "sentence": "島に何度も通って住民に話を聞いても、私は漁業の細かな手順をまだ十分に知ってこない。",
+            "reason": "完整句「まだ十分に知ってこない」不宜作教学例句。「知る」在此是取得外部事实，不是对同一套手順逐步加深理解；「十分に」和译文的「认识逐步积累」把过程性压在「知る」上。国立国语研究所的「分かる／知る」说明明确区分这种过程焦点，所附「知ってきた」肯定近邻也不能证明本否定直陈自然。尚缺与固定「知道」义、当前时间路线和否定形式都相符的完整用例；不据此断言一切该配对绝无表达。",
+            "roles": {
+              "speaker": "反复到岛上采访的记者",
+              "listener": "阅读采访报道的读者"
+            },
+            "time": "多次采访后到当前；句中「まだ」要求当前尚未达到的状态。",
+            "negation": "拟否定知识积累到当前的充分程度；实际目标难以自然承载该渐进解释。",
+            "translation": "中文「认识至今仍未充分积累」比日语「知る」的知识取得多出渐进过程，不能按现句通过。",
+            "reading": "しまになんどもかよってじゅうみんにはなしをきいても、わたしはぎょぎょうのこまかなてじゅんをまだじゅうぶんにしってこない。"
+          }
+        },
+        {
+          "revision": 2,
+          "author": "/root/repair_evidence_direction_author",
+          "kind": "no-credible-candidate",
+          "route": "原句退回后检验时间与到场前知识路线",
+          "authorReceipt": "6ff84626df6b76cbe0d000b6c776fd8d7a91277e363c6ee0dc50f4ab3fa9fd31",
+          "notesHash": "198e2316aab77553a75fb298af16b7f719f5f1d28015ce6284933477eae17e0d",
+          "cardHash": "59ed508e288e8b4e51a26ef6481eea76ccf151cda212da34b7c638a3d3d8db76",
+          "reviewReceipt": "cda6d3f82dfd748fa84def715f03e5478796f09a7d8aeeb974ef01ff28d6ffbf",
+          "authorNote": {
+            "id": "usage:tekuruNegative:verb:知る:しる",
+            "status": "applicability-reassessment",
+            "roles": {
+              "speaker": "未设；未形成可交的自然例句",
+              "listener": "未设；未形成可交的自然例句"
+            },
+            "object": "「知る」固定为从外部取得某项知识；不能把同一事实写成持续加深的理解。",
+            "time": "当前观察点路线要求知识变化显现至现在；国立国语研究所说明知る的取得变化是瞬时的。",
+            "negation": "否定形「知らない」陈述缺少该知识；「知ってこない」若按变化到当前来读，会强加渐进获取过程。改成到某地调查后再来又会把词义换成调查／询问，不能作为本固定词义的空间路线。",
+            "reason": "rev1 审核指出原稿把知る硬译成同一对象的渐深认识。本轮未找到能支持固定「知る」义、当前时间视点和「知ってこない」否定的完整例句；未以“面试前不打听，便来参加面试”改写旧句。",
+            "evidence": "国立国语研究所指出知る表示从外部取得知识、从未知到已知的瞬时变化，不能把过程焦点放在同一知识上（https://kotoba.ninjal.ac.jp/qa/yokuaru/qa-49/）。国际交流基金教材将Vてから移动的路线限定为意志动词并举「食べていきましょう／買ってきてくれました」；该路线不支持把知る改成主动调查（https://www.kyozai.jpf.go.jp/kyozai/material/BTS00084/ja/render.do）。任务研究 direction8.md 第5项明确禁止把「没调查后来过来」冒充本目标。",
+            "attemptKind": "applicability-reassessment",
+            "contentRevision": false,
+            "revisionNote": "从 rev1 冻结卡片逐字恢复同一 draft 对象；未修改正文内容。本次只复核固定词义／形式配对适用性，不计为内容返修次数。"
+          }
+        },
+        {
+          "revision": 3,
+          "author": "/root/repair_know_tekuru_author3",
+          "kind": "no-credible-candidate",
+          "route": "多项离散事实、空间往返及过去观察截点",
+          "authorReceipt": "197915a8450fd81cbfb14d6fd3a3f21dc42321ba82451f35dc9b87590affb834",
+          "notesHash": "73ab5d9f9efdd4d386ae72c5a9d2ebc013f1b300a4a35b4ce68e2252e6f9f7a9",
+          "cardHash": "59ed508e288e8b4e51a26ef6481eea76ccf151cda212da34b7c638a3d3d8db76",
+          "reviewReceipt": "f58c2ef0d993388d3c8129cf13702652e12f44ebc21bde099526944c5da49005",
+          "authorNote": {
+            "id": "usage:tekuruNegative:verb:知る:しる",
+            "status": "applicability-reassessment",
+            "roles": {
+              "speaker": "曾尝试设为负责地方导览文案的外勤编辑；没有形成可交的新句。",
+              "listener": "曾尝试设为需要核稿的同事；没有形成可交的新句。"
+            },
+            "object": "尝试列出互相独立的具体事实：旧地名、祭典日期、避难所位置，不再使用“对同一套流程理解不充分”的对象。",
+            "time": "测试了外勤人员往返数个市镇、在返回写文案前取得事实的空间路线，也测试了多个事实到当前仍未取得的时间路线。",
+            "negation": "外勤候选「三つの町を回る担当者が、旧地名と祭りの日程を知ってこないと案内文を書けない」在句意上需要的是出发后调查／听取并带回信息；若不把「知る」改成这些行为，目标的空间路线无法确证。时间路线若说多个事实尚未成为知识，普通「知らない」已经直接陈述知识缺失；单靠多个宾语不能证明否定的「知ってこない」自然。",
+            "reason": "本轮按复审意见另测“多个离散事实”与“取得知识后到场”两条路线，候选如下：①「三つの町を回る担当者が、旧地名と祭りの日程を知ってこないと案内文を書けない」；②将旧地名、祭典日期、避难所位置并列，写成外勤人员在回来时仍未取得这些事实。①要表达的实际过程仍是外出查询／访问，若用自然的「調べてくる／聞いてくる／確認してくる」便改变固定词义；②不表达自然的到场前“知道”动作，改为「知らないまま来る」则不再是目标。没有找到可保留固定“知道”义和完整「知ってこない」的强新句，故逐字保留 rev2 冻结卡，不计内容返修。",
+            "evidence": "国立国语研究所的砂川有里子说明，「知る」表示从外部取得此前没有的知识，变化是瞬时的；同一页面明确对比「徐々に分かる／ようやく分かってきた」与不成立的「徐々に知る／ようやく知ってきた」。这直接提示持续时间不能自动使知る成为渐进过程，但该文没有裁定所有多项事实或空间路线的否定式，不能据此宣告本 ID 不可用（https://kotoba.ninjal.ac.jp/qa/yokuaru/qa-49/）。国际交流基金的「Vてきます／Vていきます」材料把空间的“做某动作后移动”路线以可安排动作举例，没有给出知る，也不证明此配对不可能（https://www.kyozai.jpf.go.jp/kyozai/material/BTS00084/ja/render.do）。direction8.md 第5项已有相同限制。检索精确字符串「知ってこない」「知って来ない」「知ってこないと」「知ってきません」未找到可核实的目标用例；搜索未命中只记为证据缺口，不作为不存在证明。",
+            "attemptKind": "applicability-reassessment",
+            "contentRevision": false,
+            "revisionNote": "相对 rev1 内容没有形成强候选；逐字保留 rev2 冻结卡对象。本轮只记录适用性复核，不计为内容返修。",
+            "attempts": [
+              {
+                "route": "多项离散事实、空间往返",
+                "trial": "三つの町を回る担当者が、旧地名と祭りの日程を知ってこないと案内文を書けない。",
+                "result": "未采用。句子需要外勤前往各地取得信息并带回；自然改写会用調べる、聞く或確認する，不能据此证明固定「知る」词义的目标。"
+              },
+              {
+                "route": "多项离散事实、当前知识缺口",
+                "trial": "旧地名、祭典日期、避难所位置等事实截至当前仍未被外勤编辑知晓。",
+                "result": "未采用。语义仅为「知らない」；无法说明为什么自然地需要「知ってこない」。"
+              },
+              {
+                "route": "到场前知识",
+                "trial": "新成员到场时仍不知道地点沿革与安全须知。",
+                "result": "未采用。自然的到场表达是「知らないまま来る／事前に知っておく」；替换为「知ってこない」缺少可靠用例支持。"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "usage:tekuruNegativePast:verb:知る:しる",
+      "pair": "verb:知る:しる/tekuruNegativePast",
+      "initialAuditStatus": "uncertain",
+      "reason": "一张新稿被拒后，两次不同路线的返修仍找不到可信的知る＋てこなかった教学句；暂缓此精确配对的常规出题，不限制知る的其他形式。",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      },
+      "publishedCard": {
+        "id": "usage:tekuruNegativePast:verb:知る:しる",
+        "senseId": "verb:知る:しる",
+        "meaning": "知道",
+        "form": "tekuruNegativePast",
+        "scene": "回顾此前对农业的陌生，自己没逐步接触真实情况。",
+        "before": [
+          {
+            "text": "都会だけで暮らして、農家の苦労を",
+            "reading": "とかいだけでくらして、のうかのくろうを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "此前一直只在城市生活，对农户的辛苦一直不了解。",
+        "review": "approved"
+      },
+      "publishedHash": "45e1633a3aae33b09e619175e6492b0b94307fadb4bb5a9a7f68aa1eac8f70a2",
+      "sourceCard": {
+        "id": "usage:tekuruNegativePast:verb:知る:しる",
+        "senseId": "verb:知る:しる",
+        "meaning": "知道",
+        "form": "tekuruNegativePast",
+        "scene": "回顾此前对农业的陌生，自己没逐步接触真实情况。",
+        "before": [
+          {
+            "text": "都会だけで暮らして、農家の苦労を",
+            "reading": "とかいだけでくらして、のうかのくろうを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "此前一直只在城市生活，对农户的辛苦一直不了解。",
+        "review": "draft"
+      },
+      "sourceHash": "d6140ebcc35f959a716b7af100fd7b9d2c6ec3e364376286c17a4d06336f2253",
+      "sourceIndex": 5810,
+      "insertBeforeId": "usage:teiku:verb:作る:つくる",
+      "deferralBasis": "three-failed-repair-attempts",
+      "restoreCondition": "取得固定词义与完整目标下的可信自然用例，并有新卡通过独立语言审核后逐对恢复。",
+      "attempts": [
+        {
+          "revision": 1,
+          "author": "/root/repair_evidence_direction_author",
+          "kind": "rejected-draft",
+          "route": "多次采访取得具体事实的时间累积",
+          "authorReceipt": "c744f96bb6d0d1b84a18d7b8c4861e09faf0313b2ae10d3a6b147aac3853b8a2",
+          "notesHash": "340a12e51313165275a2629a2764008738443d3151710c46ca78234a8a3bd2a6",
+          "cardHash": "e29658f39d0240c7291eff56fed78ed8d55951ba437e36cd89bfc9e5f47275ff",
+          "reviewReceipt": "d7d32365286227d7d179d9a8fa8451a724042eb59dea1ba5ee844ad257fca007",
+          "authorNote": {
+            "id": "usage:tekuruNegativePast:verb:知る:しる",
+            "roles": {
+              "speaker": "回顾早年祭典采访的记者",
+              "listener": "阅读回忆文章的读者"
+            },
+            "object": "祭典准备流程中的具体事实与细节",
+            "time": "记者在港町连续采访祭典的五年，截止于当时；现在回忆该过去观察点",
+            "negation": "否定截至过去观察点在重复采访中获得的知识积累，不是把一次事实直接判成当时未知。邻近肯定「知ってきた」可表示从经历中逐渐取得事实；普通「知らなかった」只把未知状态定位在过去，未凸显知识获得轨迹。国立国语研究所的词义说明提示不能将其改写成逐渐明白；该来源与研究线索均未证明本目标否定自然，交独立审核裁定。",
+            "evidence": "research/direction8.md 第6项的广岛大学记录「書くことの楽しさを知ってきた彼ら」是逐渐获得认识的肯定过去近邻。国立国语研究所区分从外界取得知识的知る与逐渐明白的分かる（https://kotoba.ninjal.ac.jp/qa/yokuaru/qa-49/）；该说明也指出知る通常不突出渐进过程，因此当前目标否定仍需独立审核。"
+          },
+          "languageReview": {
+            "id": "usage:tekuruNegativePast:verb:知る:しる",
+            "hash": "e29658f39d0240c7291eff56fed78ed8d55951ba437e36cd89bfc9e5f47275ff",
+            "status": "rejected",
+            "sentence": "港町で五年間、祭りの取材を続けた当時の私は、準備の細かな手順を十分に知ってこなかったと、今になって振り返る。",
+            "reason": "「五年間…十分に知ってこなかった」同样把「知る」解释成长期逐渐加深对同一套手順的认识；过去时点和五年跨度没有解决「知る」通常表示取得知识、难以聚焦获得过程的搭配问题。后接「と、今になって振り返る」语法可解析，却不能使目标否定成为自然教材句。需有固定「知道」义与「知ってこなかった」完整否定句的直接语境证据；肯定「知ってきた」不能替代。",
+            "roles": {
+              "speaker": "回顾早年祭典采访的记者",
+              "listener": "阅读回忆文章的读者"
+            },
+            "time": "五年采访期间截止于当时，现时回顾该过去观察点。",
+            "negation": "拟否定过去五年中的知识积累；完整句把否定的过程义加给「知る」，自然度未证实。",
+            "translation": "中文「逐步积累起充分认识」偏向理解过程，不能作为日语目标自然度的佐证。",
+            "reading": "みなとまちでごねんかん、まつりのしゅざいをつづけたとうじのわたしは、じゅんびのこまかなてじゅんをじゅうぶんにしってこなかったと、いまになってふりかえる。"
+          }
+        },
+        {
+          "revision": 2,
+          "author": "/root/repair_evidence_direction_author",
+          "kind": "no-credible-candidate",
+          "route": "原句退回后检验时间与到场前知识路线",
+          "authorReceipt": "6ff84626df6b76cbe0d000b6c776fd8d7a91277e363c6ee0dc50f4ab3fa9fd31",
+          "notesHash": "198e2316aab77553a75fb298af16b7f719f5f1d28015ce6284933477eae17e0d",
+          "cardHash": "e29658f39d0240c7291eff56fed78ed8d55951ba437e36cd89bfc9e5f47275ff",
+          "reviewReceipt": "cda6d3f82dfd748fa84def715f03e5478796f09a7d8aeeb974ef01ff28d6ffbf",
+          "authorNote": {
+            "id": "usage:tekuruNegativePast:verb:知る:しる",
+            "status": "applicability-reassessment",
+            "roles": {
+              "speaker": "未设；未形成可交的自然例句",
+              "listener": "未设；未形成可交的自然例句"
+            },
+            "object": "「知る」固定为取得具体知识；不能把所知对象换成对人或处境逐渐加深的理解。",
+            "time": "把观察点放在过去并不能把知る的瞬时获得变成持续过程；「知ってこなかった」需独立证据支持。",
+            "negation": "普通「知らなかった」陈述过去不具备某项知识；本目标若解作直到过去观察点都未逐渐取得该知识，会不自然地否定渐进过程。若解作未带知识从外地来，又不是本课已核实的知る用法。",
+            "reason": "rev1 审核指出五年跨度及事后回顾仍把知る改成长期积累认识。国立国语研究所的瞬时获得分析适用于过去观察点；本轮未找到固定「知道」义加「知ってこなかった」的完整否定用例，故不再改时间词或宾语硬拼。",
+            "evidence": "国立国语研究所区分「知る」的瞬时知识取得与「分かる」的过程变化（https://kotoba.ninjal.ac.jp/qa/yokuaru/qa-49/）。direction8.md 第6项所列广岛大学「書くことの楽しさを知ってきた」只是肯定过去近邻，不能证明目标否定；国际交流基金的意志动词限制也不能支持空间路线（https://www.kyozai.jpf.go.jp/kyozai/material/BTS00084/ja/render.do）。",
+            "attemptKind": "applicability-reassessment",
+            "contentRevision": false,
+            "revisionNote": "从 rev1 冻结卡片逐字恢复同一 draft 对象；未修改正文内容。本次只复核固定词义／形式配对适用性，不计为内容返修次数。"
+          }
+        },
+        {
+          "revision": 3,
+          "author": "/root/repair_know_tekuru_author3",
+          "kind": "no-credible-candidate",
+          "route": "多项离散事实、空间往返及过去观察截点",
+          "authorReceipt": "197915a8450fd81cbfb14d6fd3a3f21dc42321ba82451f35dc9b87590affb834",
+          "notesHash": "73ab5d9f9efdd4d386ae72c5a9d2ebc013f1b300a4a35b4ce68e2252e6f9f7a9",
+          "cardHash": "e29658f39d0240c7291eff56fed78ed8d55951ba437e36cd89bfc9e5f47275ff",
+          "reviewReceipt": "f58c2ef0d993388d3c8129cf13702652e12f44ebc21bde099526944c5da49005",
+          "authorNote": {
+            "id": "usage:tekuruNegativePast:verb:知る:しる",
+            "status": "applicability-reassessment",
+            "roles": {
+              "speaker": "曾尝试设为回顾赴任前后资料准备的地方编辑；没有形成可交的新句。",
+              "listener": "曾尝试设为读其回忆的同事；没有形成可交的新句。"
+            },
+            "object": "试过列举过去尚未掌握的互不相同事实：旧地名、祭典日期、避难所位置；没有把同一对象的熟悉程度当作知る的渐变。",
+            "time": "设置过去截点于调任到当地或负责导览文案之时，并考虑此前分多次取得事实的时间区间；过去观察点本身没有证明知识逐项进入说话者认知。",
+            "negation": "候选「赴任した当時の私は、旧地名も祭りの日も避難所の場所も知ってこなかった」只陈述当时不知道多项事实，普通「知らなかった」更直接。若明确说截至过去截点都没有逐项取得新知识，仍缺少可核实的固定词义目标用例；把“后来终于明白”加进句子会改成分かる／理解する。",
+            "reason": "本轮另试多项离散事实的过去回顾，以及过去区间里分次接触不同来源的资料但未获知新事实；没有找到自然地要求完整「知ってこなかった」的情境。失败并非仅因为单个对象的充分程度，而是候选的时点与否定仍只表达当时无知识，直接说「知らなかった」更贴切；若强调到场前准备又会需要「調べる／聞く／確認する」。保留 rev2 冻结卡，不计为内容返修。",
+            "evidence": "国立国语研究所说明「知る」是从外部取得知识的瞬时认知变化；其具体例谈渐进表达时明确排除「ようやく知ってきた」，但不等于对目标否定过去式的穷尽判定（https://kotoba.ninjal.ac.jp/qa/yokuaru/qa-49/）。研究文献中的「書くことの楽しさを知ってきた彼ら」是 direction8.md 第6项所记肯定过去近邻，只显示已有作者能以肯定式描述经历后的发现，不能证明「知ってこなかった」否定式自然。国际交流基金的空间路线材料也没有给知る的实例。精确搜索「知ってこなかった」「知って来なかった」「知ってきませんでした」「何も知ってこなかった」未得到可核验的目标用例；检索未命中仅构成证据缺口。",
+            "attemptKind": "applicability-reassessment",
+            "contentRevision": false,
+            "revisionNote": "相对 rev1 内容没有形成强候选；逐字保留 rev2 冻结卡对象。本轮只记录适用性复核，不计为内容返修。",
+            "attempts": [
+              {
+                "route": "过去观察点、多项离散事实",
+                "trial": "赴任した当時の私は、旧地名も祭りの日も避難所の場所も知ってこなかった。",
+                "result": "未采用。句意是赴任时缺少这些知识，用「知らなかった」更直接；目标「てくる」的时间路线没有额外贡献。"
+              },
+              {
+                "route": "过去区间、不同来源的事实累积",
+                "trial": "在多次整理资料的过去期间，编辑没有逐项得知新的地名、日程与安全事实。",
+                "result": "未采用。若保留知る，日语目标需要对瞬时知得事件作时间累积解释；未查到精确否定过去式实例，也没有形成足以交审的自然句。"
+              },
+              {
+                "route": "调任前后到场路线",
+                "trial": "说明外勤编辑直到过去到任时仍未带着导览所需知识到达。",
+                "result": "未采用。自然表达倾向「知らないまま赴任した／事前に調べていなかった」，后者会替换固定词义与动词。"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "usage:teokuNegative:verb:遅れる:おくれる",
+      "pair": "verb:遅れる:おくれる/teokuNegative",
+      "initialAuditStatus": "uncertain",
+      "reason": "三次独立返修尝试均未找到能体现准备或状态保留义的可信「遅れておかない」教学句；暂缓此精确配对的常规出题，不限制遅れる的其他形式。",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于尝试、行动准备或事先安排。",
+        "reviewVersion": 7
+      },
+      "publishedCard": {
+        "id": "usage:teokuNegative:verb:遅れる:おくれる",
+        "senseId": "verb:遅れる:おくれる",
+        "meaning": "迟到；延误",
+        "form": "teokuNegative",
+        "scene": "对方已布置完，不按原计划故意晚到。",
+        "before": [
+          {
+            "text": "準備が済んだので、予定していたようには",
+            "reading": "じゅんびがすんだので、よていしていたようには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "准备完成了，所以不按原先的计划故意晚到。",
+        "review": "approved"
+      },
+      "publishedHash": "338e8dd73e1a49600c97fdde1c40cfb51008a4e93d2957c4400e4eccb88626bd",
+      "sourceCard": {
+        "id": "usage:teokuNegative:verb:遅れる:おくれる",
+        "senseId": "verb:遅れる:おくれる",
+        "meaning": "迟到；延误",
+        "form": "teokuNegative",
+        "scene": "对方已布置完，不按原计划故意晚到。",
+        "before": [
+          {
+            "text": "準備が済んだので、予定していたようには",
+            "reading": "じゅんびがすんだので、よていしていたようには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "准备完成了，所以不按原先的计划故意晚到。",
+        "review": "draft"
+      },
+      "sourceHash": "e08158e611db895c892caadfd6456cc588f544f87fc593f9562ce55d4c9393db",
+      "sourceIndex": 4967,
+      "insertBeforeId": "usage:teokuNegativePast:verb:遅れる:おくれる",
+      "deferralBasis": "three-failed-repair-attempts",
+      "restoreCondition": "取得固定词义与完整目标下的可信自然用例，并有新卡通过独立语言审核后逐对恢复。",
+      "attempts": [
+        {
+          "revision": 1,
+          "author": "/root/repair_evidence_teoku_author",
+          "kind": "no-credible-candidate",
+          "route": "计划故意迟到与保留延误状态",
+          "authorReceipt": "1dea6eac84c7df56a83d8511b7d6229e803dbde97327eb8bfb54c0bf282880e6",
+          "notesHash": "1045e479566c6336430d06732a6ce00f956c00328841ebee02c58c5bb77ae416",
+          "cardHash": "e08158e611db895c892caadfd6456cc588f544f87fc593f9562ce55d4c9393db",
+          "reviewReceipt": "8da5745e6ea774f4603cf1940b738702e69d7eabcb22da39bb6096cd7c170de9",
+          "authorNote": {
+            "id": "usage:teokuNegative:verb:遅れる:おくれる",
+            "status": "awaiting-independent-original-reassessment",
+            "roles": "原场景称对方已完成布置，但完整句省略了「遅れる」的主体；从译文看像是某个赴约者，未交代是说话人还是第三人，也未说明谁预先安排迟到。",
+            "object": "遅れる是不及物动词，句中指主体相对预定时刻迟到／延误，没有直接宾语。基线把它说成按原计划故意晚到；此解释如何符合ておく的准备／保留用义，仍待审核者判断。",
+            "time": "準備が済んだので给出准备结束后的背景；予定していたようには指预定方式／时刻。答案为非过去否定，但准备结束与未来赴约的时间关系没有进一步交代。",
+            "negation": "固定目标是遅れておかない，否定ておく的“预先迟到／让迟到状态保持”路线；原译写作“不按原先计划故意晚到”。不得改判为遅れないでおく（暂且不迟到）、普通遅れない，或及物遅らせる。原句是否自然表达这个范围并不预设。",
+            "attempts": "此前作者尝试从有意选择迟到的安排、以及保留延误状态供后续使用两条路线理解，均未找到 mixed7 支持的可信完整上下文。mixed7 仅列其他动词的先到用例与一般延误资料；没有遅れておかない的精确自然用例。本次随稿附入的是 baseline/reported-45.json 的原卡，仅将 review 从 approved 改为 draft，日文、场景、译文及其他字段均未改；这不是内容不同的返修版本，也不得计入三次返修。请独立审核者判断固定词义／形式及课程用义下是否有自然表达。",
+            "attemptKind": "original-reassessment"
+          }
+        },
+        {
+          "revision": 2,
+          "author": "/root/repair_teoku_delay_author2",
+          "kind": "no-credible-candidate",
+          "route": "重新检验延误状态保留及事前迟到用途",
+          "authorReceipt": "4806b1c700e7c1bbeef5164a0f6bb6ccaa7cb8ced7589bc551a3c735e138bcda",
+          "notesHash": "09fbdce78304897bb0903d2d72c448f4f31dd13b960a240279d5691a8af7d418",
+          "cardHash": "e08158e611db895c892caadfd6456cc588f544f87fc593f9562ce55d4c9393db",
+          "reviewReceipt": "ce03cabc0401e25ea20d32ceff143a566b09ed017570fdcf15157331756be594",
+          "authorNote": {
+            "id": "usage:teokuNegative:verb:遅れる:おくれる",
+            "status": "applicability-reassessment",
+            "roles": "遅れる的不及物主体可以是赴约者或进度延误的项目；本轮仍没找到能让该主体自然地预先迟到、并说明后续用途的具体情境，所以没有可填写的新句角色。",
+            "object": "固定义为相对约定时刻迟到或事件／进度延误；遅れる仍是不及物词。本轮不改成排名落后、及物遅らせる或其他词义。",
+            "time": "准备／保留路线需要先有可供后续使用的迟延状态。可检索到的近邻句「遅れたままにしておく」使用「たまま＋にする」，没有证明本题要求的「遅れておく」能自然表达该状态；而为约会预定迟到仍缺少迟到作为准备的后续需要。",
+            "negation": "固定答案「遅れておかない」否定ておく的准备／保留层。不能改读成普通「遅れない」、暂不迟到的「遅れないでおく」，也不能写成及物「遅らせておかない」。",
+            "reason": "rev1 独立审核拒绝了原句，并指出“按计划故意晚到”没有建立准备／保留作用。本轮尝试重审保留既有延误状态、以及让赴约者预先迟到以服务后续安排两条路线，但没有找到既满足固定词义／答案又自然的完整句；因此按要求保留旧卡，没有把勉强造句当返修。证据缺口是精确「遅れておかない」或可核实同构全文的缺失，且近邻材料不足以确定该配对无自然表达。",
+            "evidence": "mixed7.md 只列「先に教室に着いておかないと」「数年遅れてしまう」等不同动词／普通形，不能支持本目标。公开检索 exact「遅れておかない」「遅れておかないと」「遅れておくと」未取得可信完整用例；兵库教育大学的课堂逐字稿有「遅れたままにしておくとどんどん遅れる」(https://hyogo-u.repo.nii.ac.jp/record/6241/files/M12207I-1.pdf)，但那是「遅れたまま＋にしておく」，不是目标接续。该负面检索不能证明语法绝无可能。",
+            "attemptKind": "applicability-reassessment",
+            "contentRevision": false,
+            "revisionNote": "保留 rev1 冻结卡片原样；本轮只复核固定词义／形式配对适用性，没有形成内容不同的新稿，故不计为内容返修次数。"
+          }
+        },
+        {
+          "revision": 3,
+          "author": "/root/repair_late_teoku_author3",
+          "kind": "no-credible-candidate",
+          "route": "扩大精确形式检索并核对ておく与たままにしておく",
+          "authorReceipt": "68a521698d769bd7e2e080b51993e2d93dab5868e9197a1263bb4204c07b9075",
+          "notesHash": "a8ec6f60b0f9c073f36dab2a9e2ffb815789e826692e4749c44b543de8d37a64",
+          "cardHash": "e08158e611db895c892caadfd6456cc588f544f87fc593f9562ce55d4c9393db",
+          "reviewReceipt": "6d26be1b0a426e363c699fce73b4ffdbd4092a9502ecd1812109384ff70372eb",
+          "authorNote": {
+            "id": "usage:teokuNegative:verb:遅れる:おくれる",
+            "status": "applicability-reassessment",
+            "roles": "「遅れる」は自动词，可由约定迟到的人或发生延误的事件作主体。本轮再次比较了“让赴约者故意晚到”和“让已有延误状态继续保留”两条路线，但前者的迟到本身没有明确的后续用途，后者查到的近邻表达不是固定接续，因此没有合格的新句可供填写。",
+            "object": "固定词义仍为相对约定时刻迟到，或事件／进度发生延误；不换成排名落后、他动词「遅らせる」或「遅れを取り戻す」。",
+            "time": "「ておく」须有后续安排需要的事前动作，或明确需要保留的状态。此处若让赴约者故意迟到，仍未建立迟到作为准备的用途；若写成“延误状态继续存在”，目前能核实的相邻句使用「遅れたままにしておく」，其句法是「たまま＋にしておく」，不能直接证明目标「遅れておく」。",
+            "negation": "固定答案「遅れておかない」须否定「ておく」的准备／保留层。不能用普通「遅れない」、暂且不迟到的「遅れないでおく」，也不能换成及物「遅らせておかない」来填卡。仅说“不迟到”或“取消故意晚到计划”没有体现目标的准备／保留作用。",
+            "reason": "复核原句后，另尝试两类不同的新情境：①赴约者有意晚到以服务后续安排；②某事件已有时间延误，需先维持该状态。第一类仍只是计划迟到，没找到迟到本身有用的后续步骤；第二类最接近保留义，却检索到的是「遅れたままにしておく」或「滞納となったままにしておく」这类「たまま＋にしておく」，不是目标的直接接续。为不把普通否定误写成「ておく」否定，本轮未编造一条看似成立的完整句。",
+            "evidence": "检索词包括「遅れておかない」「おくれておかない」「遅れておかないと」「遅れておくと」「遅れておきます」「遅れておくことに」「あえて遅れておく」「わざと遅れておく」「遅れとく」及其假名写法；未找到可核实的可靠全文精确用例。国际交流基金《みんなの教材サイト・Vておきます》(https://www.kyozai.jpf.go.jp/kyozai/material/BTS00093/ja/render.do)说明事前准备、临时保留状态，并注明通常用意志动词、也存在自动词例；其中没有「遅れる」例句。国际交流基金 Irodori 第7课(https://www.irodori.jpf.go.jp/assets/data/elementary01/pdf/Y_L07_au.pdf)给出约会迟到的通常说法；东京大学 UTalk 手册(https://fukutake.iii.u-tokyo.ac.jp/utalk/howtomake/UTalk_Manual.pdf)把「遅れてきた参加者」与接待方「フォロー…できるようにしておく」分别表达，均未支持目标接续。兵库教育大学课堂逐字稿(https://hyogo-u.repo.nii.ac.jp/record/6241/files/M12207I-1.pdf)有「遅れたままにしておくとどんどん遅れる」；这是可核实的状态保留近邻例，但语法为「たまま＋にしておく」，不等于「遅れておく」。以上检索没有证明该配对绝无自然用法，仅说明本轮没有找到足以支持新稿的证据。",
+            "attemptKind": "applicability-reassessment",
+            "contentRevision": false,
+            "revisionNote": "本轮尝试搜集直接用例并重审主动造成迟到与保留延误状态两条路线，仍未找到强候选；遵照任务要求，完整保留 rev2 冻结的旧卡，不将适用性复核计作内容返修。"
+          }
+        }
+      ]
+    }
+  ]
+}
