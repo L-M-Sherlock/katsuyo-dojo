@@ -1,6 +1,6 @@
 # 三级内容流水线（协议 3）
 
-入口是仓库 `scripts/staged-workflow.mjs`。以下 `scripts/` 均相对本 skill 目录；派发给作者的路径必须是实际存在的绝对路径。作者使用 `gpt-6-astra low`，审核者使用 `gpt-6-astra medium`。主代理只协调、运行机械门禁并汇总法定人数，不逐卡作语言裁定。资源允许时，工作池可暂以 6 名作者和 8 名审核者为配置示例，不把该数值固化为长期上限。
+入口是仓库 `scripts/staged-workflow.mjs`。以下 `scripts/` 均相对本 skill 目录；派发给作者的路径必须是实际存在的绝对路径。作者使用 `gpt-6-luna max`，审核者使用 `gpt-6-sol medium`。主代理只协调、运行机械门禁并汇总法定人数，不逐卡作语言裁定。资源允许时，工作池可暂以 6 名作者和 8 名审核者为配置示例，不把该数值固化为长期上限。
 
 ## 阶段与写入归属
 
@@ -12,7 +12,7 @@
 
 共享文件系统不能按 agent 身份设置 OS 权限。这里的隔离由独占路径、实际 owner 校验、受保护文件哈希和快照验证落实：越界写入会使后续检查／合并失败，不能宣称工具能阻止任何绕开它的裸文件写入。不得代用其他代理身份伪造作者或协调器记录。
 
-同一阶段发生两次不同失败稿后，重新做 pilot；不把重复扫描同一旧文件算两次。重写用新目录，不覆盖提交快照。若旧批准缺少真实逐卡依据，撤回批准，保留旧文件和理由；未复审内容不得进候选。
+同一阶段发生两次不同失败稿后，重新做 pilot；不把重复扫描同一旧文件算两次。这是批次工作流回退，不能当作某个配对已被拒绝两次返修。按[协调者流程](coordinator.md#4-处理语法与出题适用性的边界)分别记录每个精确配对的返修版本与审核结果；第三次实际返修仍因自然度或用义问题被拒收，或审核者明确判定该固定用法没有自然表达时，暂缓该配对常规出题。重写用新目录，不覆盖提交快照。若旧批准缺少真实逐卡依据，撤回批准，保留旧文件和理由；未复审内容不得进候选。
 
 ## 命令与交接
 
@@ -20,7 +20,7 @@
 
 | 命令 | 执行者 | 作用 |
 |---|---|---|
-| `init --actor /root [--maxAuthors N --maxReviewQueue N --maxReviewers N --requiredReviews N --reviewPolicy main\|coordinator-only\|consensus]` | 主代理 | 保存基线并设置作者／审核队列容量、每阶段审核人数与法定人数策略；默认 `requiredReviews=2`，且不得超过 `maxReviewers` |
+| `init --actor /root [--maxAuthors N --maxReviewQueue N --maxReviewers N --requiredReviews N --reviewPolicy main\|coordinator-only\|consensus]` | 主代理 | 保存基线并设置作者／审核队列容量；新任务默认 `requiredReviews=1`，显式设 `reviewPolicy=coordinator-only`，仅分派一名独立审核者。历史任务按账本原人数核验 |
 | `configure --actor /root [--maxAuthors N --maxReviewQueue N --maxReviewers N --requiredReviews N --reviewPolicy ...]` | 主代理 | 在未产生审核报告的阶段调整工作池和法定人数；已有报告后不能改策略／法定人数 |
 | `dispatch --actor /root --owner /root/实际句柄 --batch lane/NN --kind pilot\|expansion\|remaining --selection <绝对子集JSON>` | 主代理 | 解析原清单并锁定精确配对，返回两个可写路径 |
 | `handoff --actor /root --batch lane/NN --stage ID --owner /root/实际句柄 --reason ...` | 主代理 | 原负责人停写后显式交接，保留身份记录 |
@@ -29,8 +29,8 @@
 | `check --actor /root/实际句柄 --batch lane/NN --stage ID` | 作者 | 检查最终稿和说明，再运行独立词典对照 |
 | `submit --actor /root/实际句柄 --batch lane/NN --stage ID` | 作者 | 绑定检查结果并封存快照，停写，返回审核表 |
 | `assign-review --actor /root --batch lane/NN --stage ID --reviewer /root/reviewer_name` | 主代理 | 给不可变提交分配独立审核者，并返回完整绝对 packet（`cards`、`notes`、`readings`、`assignment`、`receipt`、`count`、`output`） |
-| `review --actor /root/reviewer_name --batch lane/NN --stage ID --review <判断JSON路径>` | `gpt-6-astra medium` 审核者 | 严格读取 packet 指定快照，独立核准每张实际生成句及词典候选；不能搜索猜稿、改卡片或合并；命令把该路径绑定为固定 output |
-| `finalize --actor /root --batch lane/NN --stage ID` | 主代理协调器 | 汇总已到齐的独立报告，按 `reviewPolicy` 设置 approved/rejected；冲突、缺报或过期报告退回复审 |
+| `review --actor /root/reviewer_name --batch lane/NN --stage ID --review <判断JSON路径>` | `gpt-6-sol medium` 审核者 | 严格读取 packet 指定快照，独立核准每张实际生成句及词典候选；不能搜索猜稿、改卡片或合并；命令把该路径绑定为固定 output |
+| `finalize --actor /root --batch lane/NN --stage ID` | 主代理协调器 | 核验一份独立报告，按逐卡结论设置 approved/rejected；缺报、待核实或过期报告不能批准 |
 | `review --actor /root --batch lane/NN --stage ID --review <判断JSON>` | 兼容旧记录 | 仅用于历史主代理审核记录；新批次不能用它替代法定人数 |
 | `merge --actor /root --batch lane/NN` | 主代理 | 只读取已核验作者／审核快照并检查完整集合，写正式稿 |
 | `invalidate-merge --actor /root --batch lane/NN --stage ID --reason ...` | 主代理 | 审核依据被撤回时，保留原正式稿和审核历史、撤销该批合并，并原子地把受影响阶段退回 submitted；新审核完成前禁止再次合并。产品与发布候选须另行核对撤回 |
@@ -43,11 +43,11 @@
 
 `micro-pilot.mjs` 只帮助主代理选原批次内的配对，作者不得重写该清单。独立检查阶段稿用 `check-staged-batch.mjs --project ... --assignment <原始清单> --scope <预先派发子集> --input <阶段稿> --output <报告>`；它没有批准权限。
 
-## 审核报告与法定人数
+## 单份独立审核报告
 
 每名审核者从同一 immutable delivery 独立读取完整句，不读取另一审核者的报告。审核派发 packet 必须一次给出 delivery 内不可变文件的完整绝对路径：`cards`、`notes`、`readings`、`assignment`，并附作者 `receipt`、`count` 和固定 `output` 路径；审核者不得搜索目录、按 mtime 或 revision 猜稿，也不得在没有新 packet 路径时重审旧稿。报告必须逐卡一次，包含源卡 `hash`、完整句、`reason`、`roles`、`time`、`negation`、`translation`、`reading` 以及 `readings.candidates` 中每个精确 `id` 的 `retain|error` 判定。这里的 `retain|error` 只判断作者 reading 是否应保留或修正，不是拒绝词典建议；不得列出 candidates 之外的 id。报告文件各自隔离，不能互相覆盖。主代理只验证哈希、范围、字段和时效，再由 `finalize` 汇总；不得用自己的逐卡判断补足缺失报告。
 
-每个阶段默认分派 `requiredReviews=2` 名独立审核者；只有逐卡意见冲突时才加派第 3 名审核者复审（先把 `maxReviewers` 配置为至少 3）。冲突由审核者复审，协调器不作语言裁定。`coordinator-only` 要求两份报告逐卡通过；`consensus` 采用逐卡多数，平票拒绝，并记录冲突；`main` 仅为历史兼容策略，新批次应使用前两者之一。缺报、delivery 漂移或过期报告时，阶段不能批准；复审必须使用新 delivery 和完整 packet，并至少加入一名未参与冲突的审核者。法定人数不是“收到一份报告”或“预检通过”。
+每个新阶段只分派一名独立审核者，配置 `requiredReviews=1`、`reviewPolicy=coordinator-only`。该审核者须逐卡核对完整句、场景、译文和读音；只在报告逐卡通过且 delivery、哈希和时效校验通过后批准。拒收或拿不准时返修／补证据，不补派第二人，也不由协调器代审。历史多审阶段仍按各自账本的原人数和策略验证，不能改写旧收据。
 
 ## 作者说明与审核表
 
@@ -75,6 +75,6 @@
 
 ## 吞吐和发布
 
-作者阶段和审核者数量按配置扩容；待审队列达到 `maxReviewQueue` 即停止派新稿，先消化审核。默认容量为 6 个作者阶段、6 个待审阶段和 8 个可登记审核者；可由 `configure` 调整，但登记池不能超过 `maxReviewers`。每份提交默认分配 2 名 `gpt-6-astra medium` 审核者，冲突时再分配第 3 名（需先将 `maxReviewers` 配置为至少 3）；只有报告全部到齐且满足 `reviewPolicy` 才能进入 `approved`。审核者不能互相覆盖文件，各自写独立报告；主代理仅汇总，不作逐卡语言替代。作者阶段持有带 token 的 lease，须以 heartbeat 延长；owner 失联后阶段仍占用作者／审核队列容量，协调器必须等待 lease 过期并显式 `reclaim`，不会把失联 owner 当作完成或静默抢占。作者或审核者完成后由状态事件连续补位，不能用 `send_message` 冒充仍在运行的代理。冲突、缺报、哈希不符或过期报告进入复审／返修，不计入批准；不要把未实现的 metrics 命令写成已有能力。
+作者阶段和审核者数量按配置扩容；待审队列达到 `maxReviewQueue` 即停止派新稿，先消化审核。默认容量为 6 个作者阶段、6 个待审阶段和 8 个可登记审核者；可由 `configure` 调整，但登记池不能超过 `maxReviewers`。每份新提交只分配 1 名 `gpt-6-sol medium` 审核者；其完整报告通过校验后才能进入 `approved`。主代理仅核验并汇总，不作逐卡语言替代。作者阶段持有带 token 的 lease，须以 heartbeat 延长；owner 失联后阶段仍占用作者／审核队列容量，协调器必须等待 lease 过期并显式 `reclaim`，不会把失联 owner 当作完成或静默抢占。作者或审核者完成后由状态事件连续补位，不能用 `send_message` 冒充仍在运行的代理。拒收、缺报、哈希不符或过期报告进入返修，不计入批准；不要把未实现的 metrics 命令写成已有能力。
 
 合并正式稿仍不等于产品接入或发布。完成所有有效配对、重新核对历史基线、更新审计与测试口径后，才按 `docs/publishing.md` 发布，并确认同一提交部署成功。

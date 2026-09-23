@@ -28,7 +28,7 @@ const policy = (value, fallback = 'main') => {
 };
 const quorum = (value, max) => {
   const count = limit(value, 2, 'requiredReviews');
-  if (count < 2 || count > max) fail('requiredReviews must be at least 2 and no greater than maxReviewers');
+  if (count > max) fail('requiredReviews cannot exceed maxReviewers');
   return count;
 };
 
@@ -225,7 +225,7 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
     if (summary.authorReceipt !== stage.delivery.receipt || summary.scopeHash !== stage.scopeHash
         || summary.cardSnapshotHash !== stage.cardSnapshotHash
         || summary.count !== stage.pairs.length || summary.status !== stage.status
-        || summary.stage !== stage.id || summary.requiredReviews < 2) fail('Finalization source or outcome mismatch');
+        || summary.stage !== stage.id || summary.requiredReviews < 1) fail('Finalization source or outcome mismatch');
     readDelivery(root, stage.delivery);
     const reviewers = stage.reviewers ?? [];
     if (new Set(reviewers).size !== reviewers.length || reviewers.length < summary.requiredReviews
@@ -302,7 +302,7 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
           stageLeaseMs: leaseDuration(opts.stageLeaseMs),
           protected: protectedFiles, batches: {}, pending: {}, registeredReviewers: [], reviewerRegistryVersion: 1,
           reviewerRegistryHistory: [], events: []};
-        state.requiredReviews = quorum(opts.requiredReviews, state.maxReviewers);
+        state.requiredReviews = quorum(opts.requiredReviews ?? 1, state.maxReviewers);
         event(state, 'initialized'); writeNew(statePath, state);
         return {version: 3, maxAuthors: state.maxAuthors, maxReviewQueue: state.maxReviewQueue,
           maxReviewers: state.maxReviewers, requiredReviews: state.requiredReviews, reviewPolicy: state.reviewPolicy,
@@ -615,6 +615,7 @@ export function createStagedWorkflow({taskRoot, project, now = () => new Date().
         independent(stage, opts.reviewer);
         stage.reviewers ??= stage.reviewer ? [stage.reviewer] : [];
         if (stage.reviewers.includes(opts.reviewer)) fail('Reviewer already assigned');
+        if (requiredReviews === 1 && stage.reviewers.length) fail('Single-review stage already has its reviewer');
         if (stage.reviewers.length >= requiredReviews + 1) fail('Stage reviewer limit reached: only one conflict reviewer is allowed');
         // A third reviewer is an adjudicator, never an extra vote.  Wait for
         // the two required primary reports and create a conflict-only scope.

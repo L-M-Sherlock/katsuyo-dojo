@@ -261,8 +261,8 @@ function verifyStage({root, stage, assignment, assignmentHash, project, required
   }
   const finalization = verifyFinalization({root, stage, cards, readings, authorReceipt: stage.delivery.receipt,
     scopeHash: stage.scopeHash, cardSnapshotHash: stage.cardSnapshotHash, reviews});
-  // Every stage in a merged release has to contribute cards approved by the
-  // two independent reports (and by a conflict adjudicator where present).
+  // Every stage in a merged release has to contribute cards approved by its
+  // recorded independent reviewer quorum (including historical multi-review stages).
   for (const review of reviews) {
     const adjudicator = stage.conflict?.reviewer === review.reviewer;
     // Primary reports may disagree on the conflict set. A third report is
@@ -334,7 +334,7 @@ export function verifyIntegrationBatches(taskRootOrOptions, project, batches, ou
     if (!Array.isArray(merged) || merged.length !== assignment.length) fail(`merged card count mismatch for ${name}`);
     if (merged.some(card => card?.review !== 'approved') || new Set(merged.map(card => card?.id)).size !== merged.length) fail(`merged card identity mismatch for ${name}`);
     const requiredReviews = Number(state.requiredReviews ?? 2);
-    if (!Number.isSafeInteger(requiredReviews) || requiredReviews < 2) fail('invalid required review quorum');
+    if (!Number.isSafeInteger(requiredReviews) || requiredReviews < 1) fail('invalid required review quorum');
     const stages = arr(item.stages).filter(stage => stage.status === 'approved');
     const stageProofs = [];
     for (const stage of stages) {
@@ -469,7 +469,7 @@ export function verifyReleaseProof(input) {
       if (!Array.isArray(readings.candidates) || candidateIds.size !== readings.candidates.length
           || [...candidateIds].some(id => !cardById.has(id))) fail(`portable dictionary candidate identity mismatch: ${stage.stage.id}`);
       const requiredReviews = Number(summary?.requiredReviews);
-      if (!Number.isSafeInteger(requiredReviews) || requiredReviews < 2
+      if (!Number.isSafeInteger(requiredReviews) || requiredReviews < 1
           || (proof.requiredReviews !== undefined && requiredReviews !== proof.requiredReviews)) fail(`portable required review quorum mismatch: ${stage.stage.id}`);
       if (new Set(stage.reviews.map(review => review.reviewer)).size !== stage.reviews.length) fail(`portable duplicate reviewer: ${stage.stage.id}`);
       for (const review of stage.reviews) {

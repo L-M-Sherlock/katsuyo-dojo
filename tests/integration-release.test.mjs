@@ -174,6 +174,13 @@ test('portable verification preserves explicitly configured larger review quorum
   assert.equal(verifyReleaseProof(proof).valid, true);
 });
 
+test('portable verification accepts one independently reviewed new stage', t => {
+  const {proof} = portableFixture(t, {requiredReviews: 1});
+  assert.equal(proof.requiredReviews, 1);
+  assert.equal(proof.batches[0].stages[0].reviews.length, 1);
+  assert.equal(verifyReleaseProof(proof).valid, true);
+});
+
 test('portable verification accepts a receipt-bound conflict adjudication and rejects changed dependencies', t => {
   const {proof} = portableFixture(t, {conflict: true});
   assert.equal(verifyReleaseProof(proof).valid, true);

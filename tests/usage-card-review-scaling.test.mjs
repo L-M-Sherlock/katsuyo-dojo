@@ -97,9 +97,26 @@ test('configured six-author pool backpressures the seventh stage', async t => {
   assert.equal(status.stages.filter(stage => stage.status === 'writing').length, 6);
 });
 
+test('new stages require one independent review and do not assign a second reviewer', async t => {
+  const f = fixture(t, 3);
+  const config = await f.workflow.run('init', {actor: '/root', maxReviewers: 1, reviewPolicy: 'coordinator-only'});
+  assert.equal(config.requiredReviews, 1);
+  const job = await f.dispatch('scale0', '/root/author');
+  const cards = f.write(job); await f.submit(job);
+  const options = {actor: '/root', batch: job.batch, stage: job.stage};
+  await f.workflow.run('assign-review', {...options, reviewer: '/root/reviewer_1'});
+  await assert.rejects(f.workflow.run('assign-review', {...options, reviewer: '/root/reviewer_2'}), /Single-review stage/);
+  await assert.rejects(f.workflow.run('finalize', options), /Missing immutable reviewer delivery/);
+  await f.workflow.run('review', {actor: '/root/reviewer_1', batch: job.batch, stage: job.stage, review: f.review(cards)});
+  const finalized = await f.workflow.run('finalize', options);
+  assert.equal(finalized.status, 'approved');
+  assert.equal(finalized.required, 1);
+  assert.equal((await f.workflow.run('merge', {actor: '/root', batch: job.batch})).count, 3);
+});
+
 test('one submitted snapshot can be assigned three independent reviewers', async t => {
   const f = fixture(t);
-  await f.workflow.run('init', {actor: '/root', maxAuthors: 4, maxReviewQueue: 4, maxReviewers: 3, reviewPolicy: 'coordinator-only'});
+  await f.workflow.run('init', {actor: '/root', maxAuthors: 4, maxReviewQueue: 4, maxReviewers: 3, requiredReviews: 2, reviewPolicy: 'coordinator-only'});
   const job = await f.dispatch('scale0', '/root/author');
   const cards = f.write(job);
   await f.submit(job);
@@ -329,7 +346,7 @@ test('a third reviewer receives only conflicting cards and cannot alter settled 
 
 test('conflicting independent decisions are surfaced and cannot be silently finalized', async t => {
   const f = fixture(t);
-  await f.workflow.run('init', {actor: '/root', maxAuthors: 4, maxReviewQueue: 4, maxReviewers: 3, reviewPolicy: 'coordinator-only'});
+  await f.workflow.run('init', {actor: '/root', maxAuthors: 4, maxReviewQueue: 4, maxReviewers: 3, requiredReviews: 2, reviewPolicy: 'coordinator-only'});
   const job = await f.dispatch('scale0', '/root/author');
   const cards = f.write(job);
   await f.submit(job);
@@ -348,7 +365,7 @@ test('conflicting independent decisions are surfaced and cannot be silently fina
 
 test('coordinator finalization applies unanimous or majority rules without a semantic root review', async t => {
   const f = fixture(t);
-  await f.workflow.run('init', {actor: '/root', maxAuthors: 4, maxReviewQueue: 4, maxReviewers: 3, reviewPolicy: 'consensus'});
+  await f.workflow.run('init', {actor: '/root', maxAuthors: 4, maxReviewQueue: 4, maxReviewers: 3, requiredReviews: 2, reviewPolicy: 'consensus'});
   const job = await f.dispatch('scale0', '/root/author');
   const cards = f.write(job); await f.submit(job);
   for (const reviewer of ['/root/reviewer_1', '/root/reviewer_2']) {
@@ -374,7 +391,7 @@ test('coordinator finalization applies unanimous or majority rules without a sem
 
 test('real CLI consumes existing packet reports without overwriting them and pins every merge dependency', async t => {
   const f = fixture(t, 3);
-  await f.workflow.run('init', {actor: '/root'});
+  await f.workflow.run('init', {actor: '/root', requiredReviews: 2});
   const job = await f.dispatch('scale0', '/root/author');
   const cards = f.write(job); await f.submit(job);
   const config = await f.workflow.run('configure', {actor: '/root', maxAuthors: 6, maxReviewQueue: 6, maxReviewers: 3, reviewPolicy: 'coordinator-only'});
@@ -449,7 +466,7 @@ test('a waiting operation acquires the real check lock, while timeout never remo
 
 test('reopen clears stale conflict and semantic dependencies while retaining immutable history', async t => {
   const f = fixture(t);
-  await f.workflow.run('init', {actor: '/root', maxReviewers: 3, reviewPolicy: 'coordinator-only'});
+  await f.workflow.run('init', {actor: '/root', maxReviewers: 3, requiredReviews: 2, reviewPolicy: 'coordinator-only'});
   const job = await f.dispatch('scale0', '/root/author');
   const cards = f.write(job); await f.submit(job);
   for (const reviewer of ['/root/reviewer_1', '/root/reviewer_2']) {
@@ -475,7 +492,7 @@ test('reopen clears stale conflict and semantic dependencies while retaining imm
 
 test('restart-review revokes approved state but preserves immutable history and author delivery', async t => {
   const f = fixture(t);
-  await f.workflow.run('init', {actor: '/root', maxReviewers: 3, reviewPolicy: 'coordinator-only'});
+  await f.workflow.run('init', {actor: '/root', maxReviewers: 3, requiredReviews: 2, reviewPolicy: 'coordinator-only'});
   const job = await f.dispatch('scale0', '/root/author');
   const cards = f.write(job); await f.submit(job);
   for (const reviewer of ['/root/reviewer_1', '/root/reviewer_2']) {
