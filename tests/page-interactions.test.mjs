@@ -254,6 +254,21 @@ test('a completed route plays twelve questions and rotates to another course', a
   assert.notEqual(view.container.querySelector('.current-course-name').textContent, initialCourse);
 });
 
+test('completion previews the retained course focus instead of the global lowest score', async () => {
+  const current = masteredProfile();
+  current.practiceGoalCourseId = 'multiStepCompound';
+  delete current.byKc['construction.tagaru'];
+  delete current.byKc['compound.chain.prepare-request'];
+  storage.setItem(KEY, JSON.stringify(current));
+  const view = await mount();
+  fireEvent.click(view.getByRole('button', { name: '结束本轮' }));
+  await waitFor(() => assert.ok(view.getByText('本轮完成')));
+  assert.equal(view.container.querySelector('.completion-focus span').textContent, '下一轮重点');
+  assert.equal(view.container.querySelector('.completion-focus strong').textContent, '事先准备与请求的组合应用');
+  fireEvent.click(view.getByRole('button', { name: /继续下一轮/ }));
+  await waitFor(() => assert.equal(view.container.querySelector('.exercise-card')?.getAttribute('data-form'), 'teokuRequest'));
+});
+
 test('revealing in review creates a pending retest and the next round starts with spacing instead of fabricated mastery loss', async () => {
   const initial = masteredProfile();
   storage.setItem(KEY, JSON.stringify(initial));

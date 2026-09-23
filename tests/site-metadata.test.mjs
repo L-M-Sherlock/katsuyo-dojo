@@ -24,5 +24,5 @@ test("uses learner-facing knowledge-point language", async () => {
   assert.doesNotMatch(readme, /原子|ATOMIC/);
   assert.match(page, /拆开规律/);
   assert.match(page, /本题重点/);
-  assert.match(page, /当前薄弱点/);
+  assert.match(page, /下一轮重点/);
 });
