@@ -144,6 +144,13 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .progress-track span { display: block; height: 100%; background: var(--red); transition: width .35s ease; }
 .quiet-button { justify-self: end; border: 0; padding: 7px 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; }
 .quiet-button:hover { color: var(--ink); }
+.course-switch { width: min(900px, 100%); margin: 9px auto 0; color: var(--muted); font-size: 12px; }
+.course-switch summary { width: fit-content; cursor: pointer; color: var(--red-dark); }
+.course-switch p { margin: 8px 0; }
+.course-switch > div { max-height: 180px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 7px; }
+.course-switch button { border: 1px solid var(--line); border-radius: 5px; padding: 7px 10px; background: rgba(255,255,255,.65); cursor: pointer; text-align: left; }
+.course-switch button:hover { border-color: var(--red); color: var(--red-dark); }
+.completion-card .course-switch { width: min(360px, 100%); text-align: left; }
 
 .practice-notice { margin: 10px 0 0; padding: 7px 10px; border-left: 2px solid var(--red); background: rgba(250,248,242,.6); color: var(--muted); font-size: 12px; }
 .practice-notice strong { margin-right: 10px; color: var(--red-dark); }

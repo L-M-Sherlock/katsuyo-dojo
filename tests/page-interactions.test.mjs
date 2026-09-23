@@ -269,6 +269,47 @@ test('completion previews the retained course focus instead of the global lowest
   await waitFor(() => assert.equal(view.container.querySelector('.exercise-card')?.getAttribute('data-form'), 'teokuRequest'));
 });
 
+test('skipping an unfinished adaptive course starts another unlocked course without clearing its retest', async () => {
+  const initial = masteredProfile();
+  initial.practiceGoalCourseId = 'multiStepCompound';
+  delete initial.byKc['construction.tagaru'];
+  delete initial.byKc['compound.chain.prepare-request'];
+  const unfinished = KNOWLEDGE.exercises.find(exercise => exercise.courseId === 'multiStepCompound' && exercise.form === 'teokuRequest');
+  initial.assessment = recordIndependentAttempt(initial.assessment, { exercise: unfinished, questionId: 'skip-course-failure', correct: false });
+  storage.setItem(KEY, JSON.stringify(initial));
+  const view = await mount();
+  const before = JSON.parse(storage.getItem(KEY));
+  fireEvent.click(view.getByText('暂时跳过本课，改练其他课程'));
+  const switchButton = [...view.container.querySelectorAll('.course-switch button')].find(button => button.textContent.includes('たがる'));
+  assert.ok(switchButton);
+  fireEvent.click(switchButton);
+  await waitFor(() => assert.equal(view.container.querySelector('.exercise-card')?.getAttribute('data-form'), 'tagaru'));
+  const after = JSON.parse(storage.getItem(KEY));
+  assert.equal(after.practiceGoalCourseId, 'tagaru');
+  assert.equal(after.rotation, before.rotation + 1);
+  assert.equal(after.attempted, before.attempted);
+  assert.deepEqual(after.byKc, before.byKc);
+  assert.deepEqual(after.assessment, before.assessment);
+  for (let index = 0; index < 4; index += 1) {
+    assert.equal(displayedExercise(view).courseId, 'tagaru');
+    await answerDisplayedCorrectly(view);
+    if (index < 3) await next(view);
+  }
+  const practiced = JSON.parse(storage.getItem(KEY));
+  fireEvent.click(view.getByText('暂时跳过本课，改练其他课程'));
+  const originalTitle = UNIFIED_COURSES.find(course => course.id === 'multiStepCompound').title;
+  const returnButton = [...view.container.querySelectorAll('.course-switch button')].find(button => button.textContent.includes(originalTitle));
+  assert.ok(returnButton);
+  fireEvent.click(returnButton);
+  await waitFor(() => assert.equal(view.container.querySelector('.exercise-card')?.getAttribute('data-form'), 'teokuRequest'));
+  assert.deepEqual(JSON.parse(storage.getItem(KEY)).byKc, practiced.byKc);
+});
+
+test('new learners are not offered a course switch before another course is ready', async () => {
+  const view = await mount();
+  assert.equal(view.container.querySelector('.course-switch'), null);
+});
+
 test('revealing in review creates a pending retest and the next round starts with spacing instead of fabricated mastery loss', async () => {
   const initial = masteredProfile();
   storage.setItem(KEY, JSON.stringify(initial));

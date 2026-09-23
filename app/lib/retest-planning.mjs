@@ -11,17 +11,19 @@ import { summarizeUnifiedCourse } from './unified-progress.mjs';
  * Choose a real original question without mutating assessment. The selection
  * is frozen until that question is finished; score changes must not replace it
  * while its feedback or diagnostic steps are on screen. */
-export function planRetestQuestion(profile, mode, { exercises, components, courses, courseKcIds, seed = 0, at = new Date().toISOString() }) {
+export function planRetestQuestion(profile, mode, { exercises, components, courses, courseKcIds, seed = 0, at = new Date().toISOString(), courseId = /** @type {string | null} */ (null) }) {
   if (!profile.assessment) return null;
   const assessment = reconcileAssessmentCatalog(profile.assessment, exercises, USAGE_REVIEW_VERSION);
   if (!Object.keys(assessment.pending).length) return null;
   const byId = new Map(components.map(kc => [kc.id, kc]));
   const open = new Set(courses.filter(course => summarizeUnifiedCourse(course,
     (courseKcIds[course.id] ?? []).map(id => byId.get(id)).filter(Boolean), profile.introducedKcIds, profile).unlocked).map(course => course.id));
-  const entries = Object.values(assessment.pending).filter(p => isPracticeRetest(p) && (mode === 'adaptive' || p.courseId === mode));
+  const entries = Object.values(assessment.pending).filter(p => isPracticeRetest(p)
+    && (mode === 'adaptive' || p.courseId === mode) && (!courseId || p.courseId === courseId));
   if (!entries.length) return null;
   const active = { ...assessment, pending: Object.fromEntries(entries.map(p => [p.key, p])) };
-  const eligiblePool = exercises.filter(e => open.has(e.courseId) && (mode === 'adaptive' || e.courseId === mode));
+  const eligiblePool = exercises.filter(e => open.has(e.courseId)
+    && (mode === 'adaptive' || e.courseId === mode) && (!courseId || e.courseId === courseId));
   const recent = new Set(profile.recentWordKeys ?? []);
   const excluded = [...new Set(eligiblePool.filter(e => recent.has(wordKey(e))).map(e => assessmentTarget(e).wordKey))];
   const retest = selectRetest(active, eligiblePool, { at, catalogExercises: exercises, excludeWordKeys: excluded })

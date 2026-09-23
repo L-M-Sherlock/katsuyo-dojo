@@ -69,8 +69,8 @@ export function createPracticePlanner(model) {
         && (profile.byKc[kc.id]?.confidence ?? 0) < 1 && !isComponentMastered(kc, profile.byKc)).map(kc => kc.id) : [],
       candidatesFor: (kc, courseId) => candidatesFor(kc, profile, courseId) });
   }
-  /** @param {ReturnType<typeof plan>} planned @param {any} profile @param {{seed?: number, usedKeys?: string[], usedWordKeys?: string[]}} options */
-  function assign(planned, profile, { seed = 0, usedKeys = [], usedWordKeys = [] } = {}) {
+  /** @param {ReturnType<typeof plan>} planned @param {any} profile @param {{seed?: number, usedKeys?: string[], usedWordKeys?: string[], restrictCourseId?: string | null}} options */
+  function assign(planned, profile, { seed = 0, usedKeys = [], usedWordKeys = [], restrictCourseId = null } = {}) {
     return assignPracticeExercises(planned.plan, { allowReview: item => isComponentMastered(item, profile.byKc), isUseful: planned.review ? undefined : candidate => hasLearningOpportunity(candidate, profile), seed: seed + profile.rotation, byKc: profile.byKc,
       recentWordKeys: profile.recentWordKeys,
       usedKeys: planned.review ? [...new Set([...usedKeys, ...(profile.coursePractice?.[planned.goalCourseId] ?? [])])] : usedKeys,
@@ -79,7 +79,7 @@ export function createPracticePlanner(model) {
         const others = planned.available.filter(kc => kc.id !== preferred.id);
         return others.length ? [...others.slice(index % others.length), ...others.slice(0, index % others.length)] : [];
       },
-      candidatesFor: kc => candidatesFor(kc, profile, planned.goalCourseId) });
+      candidatesFor: kc => candidatesFor(kc, profile, planned.goalCourseId).filter(exercise => !restrictCourseId || exercise.courseId === restrictCourseId) });
   }
   return { plan, assign, candidatesFor, courseComponents, hasLearningOpportunity, needsRefreshAfterAnswer };
 }

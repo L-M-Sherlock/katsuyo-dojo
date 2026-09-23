@@ -315,8 +315,8 @@ function makePlan(mode: PracticeMode, profile: Profile, length = SESSION_LENGTH,
   }
   return planned;
 }
-function verificationFor(mode: PracticeMode, profile: Profile, seed = 0) {
-  return planRetestQuestion(profile, mode, { exercises: KNOWLEDGE.exercises, components: ALL_KCS, courses: COURSES, courseKcIds: KNOWLEDGE.courseKcIds, seed });
+function verificationFor(mode: PracticeMode, profile: Profile, seed = 0, courseId: string | null = null) {
+  return planRetestQuestion(profile, mode, { exercises: KNOWLEDGE.exercises, components: ALL_KCS, courses: COURSES, courseKcIds: KNOWLEDGE.courseKcIds, seed, courseId });
 }
 
 const browserStorage = () => window.localStorage;
@@ -363,6 +363,7 @@ function hintFor(item: PracticeItem, form: Form | null) {
 
 export default function Home() {
   const [mode, setMode] = useState<PracticeMode>("adaptive");
+  const [temporarilySkippedCourseId, setTemporarilySkippedCourseId] = useState<ModeId | null>(null);
   const [challengeQuestions, setChallengeQuestions] = useState<AssignedQuestion[] | null>(null);
   const challenging = challengeQuestions !== null;
   const [challengePosition, setChallengePosition] = useState(0);
@@ -433,14 +434,15 @@ export default function Home() {
   const gradedRef = useRef(false);
   const roundQuestions = useMemo(() => {
     if (challengeQuestions) return challengeQuestions;
-    const assigned = PRACTICE_PLANNER.assign(roundState, planningProfile, { seed, usedKeys: usedQuestionKeys, usedWordKeys }) as { item: KnowledgeComponent; candidate: Exercise }[];
+    const assigned = PRACTICE_PLANNER.assign(roundState, planningProfile, { seed, usedKeys: usedQuestionKeys, usedWordKeys,
+      restrictCourseId: temporarilySkippedCourseId ? goalCourseId : null }) as { item: KnowledgeComponent; candidate: Exercise }[];
     if (verification?.exercise) {
       const candidate = verification.exercise as Exercise;
       const focusId = [...candidate.kcIds].reverse().find(id => KC_BY_ID.get(id)?.gating) ?? candidate.kcIds[0];
       assigned[0] = { item: KC_BY_ID.get(focusId) ?? assigned[0]?.item ?? ALL_KCS[0], candidate };
     }
     return assigned;
-  }, [planningProfile, roundState, seed, usedQuestionKeys, usedWordKeys, verification, challengeQuestions]);
+  }, [planningProfile, roundState, seed, usedQuestionKeys, usedWordKeys, verification, challengeQuestions, temporarilySkippedCourseId, goalCourseId]);
   const currentQuestion = roundQuestions[questionIndex];
   const targetKc = currentQuestion?.item ?? focusKc ?? ALL_KCS.find((kc) => kc.gating) ?? GATING_KCS[0];
   const exercise = currentQuestion?.candidate ?? PRACTICE_PLANNER.candidatesFor(targetKc, planningProfile, goalCourseId ?? targetKc.firstCourseId)[0] ?? KNOWLEDGE.exercises[0];
@@ -753,15 +755,18 @@ export default function Home() {
     }
     if (answeredCount >= SESSION_LENGTH) return finishRound();
     const current = profileRef.current;
-    const pendingHere = Object.values(current.assessment.pending).some(pending => isPracticeRetest(pending) && (mode === "adaptive" || pending.courseId === mode));
+    const pendingHere = Object.values(current.assessment.pending).some(pending => isPracticeRetest(pending)
+      && (mode === "adaptive" || pending.courseId === mode)
+      && (!temporarilySkippedCourseId || pending.courseId === goalCourseId));
     if (pendingHere || verification?.exercise) {
       const next = makePlan(mode, current, SESSION_LENGTH - answeredCount, goalCourseId);
       const consumed = [...new Set([...usedQuestionKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => exerciseKey(candidate))])];
       const consumedWords = [...usedWordKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => wordKey(candidate))];
-      const nextVerification = verificationFor(mode, current, seed + 1);
+      const nextVerification = verificationFor(mode, current, seed + 1, temporarilySkippedCourseId ? goalCourseId : null);
       // Legitimate retests and their question-count spacing can continue even
       // when this course has exhausted its distinct learning examples.
-      if (!nextVerification?.exercise && !PRACTICE_PLANNER.assign(next, current, { seed: seed + 1, usedKeys: consumed, usedWordKeys: consumedWords }).length) return finishRound();
+      if (!nextVerification?.exercise && !PRACTICE_PLANNER.assign(next, current, { seed: seed + 1, usedKeys: consumed, usedWordKeys: consumedWords,
+        restrictCourseId: temporarilySkippedCourseId ? goalCourseId : null }).length) return finishRound();
       setUsedWordKeys(consumedWords);
       setPlanningProfile(current); setRoundState(next);
       setRoundOffset(answeredCount); setUsedQuestionKeys(consumed); setQuestionIndex(0);
@@ -783,9 +788,10 @@ export default function Home() {
       if ((mode !== "adaptive" || next.goalCourseId === goalCourseId) && canContinueRound(focusKc, next, nextProfile.byKc, false)) {
         const consumed = [...new Set([...usedQuestionKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => exerciseKey(candidate))])];
         const consumedWords = [...usedWordKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => wordKey(candidate))];
-        if (!PRACTICE_PLANNER.assign(next, nextProfile, { seed: seed + 1, usedKeys: consumed, usedWordKeys: consumedWords }).length) return finishRound();
+        if (!PRACTICE_PLANNER.assign(next, nextProfile, { seed: seed + 1, usedKeys: consumed, usedWordKeys: consumedWords,
+          restrictCourseId: temporarilySkippedCourseId ? goalCourseId : null }).length) return finishRound();
         setUsedWordKeys(consumedWords);
-        setPlanningProfile(nextProfile); setRoundState(next); setRoundOffset(answeredCount); setUsedQuestionKeys(consumed); setQuestionIndex(0); setVerification(verificationFor(mode, nextProfile, seed + 1)); setSeed((value) => value + 1); resetQuestion();
+        setPlanningProfile(nextProfile); setRoundState(next); setRoundOffset(answeredCount); setUsedQuestionKeys(consumed); setQuestionIndex(0); setVerification(verificationFor(mode, nextProfile, seed + 1, temporarilySkippedCourseId ? goalCourseId : null)); setSeed((value) => value + 1); resetQuestion();
         return;
       }
       finishRound();
@@ -800,7 +806,8 @@ export default function Home() {
         ? { ...next, plan: roundState.plan.slice(questionIndex + 1) } : next;
       const consumed = [...new Set([...usedQuestionKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => exerciseKey(candidate))])];
       const consumedWords = [...usedWordKeys, ...roundQuestions.slice(0, questionIndex + 1).map(({ candidate }) => wordKey(candidate))];
-      if (!PRACTICE_PLANNER.assign(refreshed, current, { seed: seed + 1, usedKeys: consumed, usedWordKeys: consumedWords }).length) return finishRound();
+      if (!PRACTICE_PLANNER.assign(refreshed, current, { seed: seed + 1, usedKeys: consumed, usedWordKeys: consumedWords,
+        restrictCourseId: temporarilySkippedCourseId ? goalCourseId : null }).length) return finishRound();
       setPlanningProfile(current); setRoundState(refreshed); setRoundOffset(answeredCount);
       setUsedQuestionKeys(consumed); setUsedWordKeys(consumedWords); setQuestionIndex(0);
       setVerification(null); setSeed(value => value + 1); resetQuestion();
@@ -810,7 +817,7 @@ export default function Home() {
     setQuestionIndex((value) => value + 1);
     setVerification(null);
     resetQuestion();
-  }, [finishRound, focusKc, goalCourseId, mode, probing, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, roundState, planningProfile, save, usedQuestionKeys, usedWordKeys, verification, seed, waitForTiming, challenging, challengePosition, activeChallengeCourses]);
+  }, [finishRound, focusKc, goalCourseId, mode, probing, questionIndex, reviewRound, resetQuestion, roundOffset, roundQuestions, roundState, planningProfile, save, usedQuestionKeys, usedWordKeys, verification, seed, waitForTiming, challenging, challengePosition, activeChallengeCourses, temporarilySkippedCourseId]);
   const classChoices = useMemo(() => practiceDomain === "verb" ? ["ichidan", "godan", "irregular"] as PracticeClass[] : ["i", "na"] as PracticeClass[], [practiceDomain]);
   useLayoutEffect(() => {
     // Commit the new question/feedback state before it can receive input. The
@@ -867,14 +874,14 @@ export default function Home() {
     return true;
   }
 
-  function applyRound(nextMode: PracticeMode, current: Profile, preferredCourseId: string | null = null) {
+  function applyRound(nextMode: PracticeMode, current: Profile, preferredCourseId: string | null = null, skippedCourseId: ModeId | null = null) {
     setChallengeQuestions(null); setChallengePosition(0); setShowChallengeSelection(false); setActiveChallengeCourses([]);
     writePreference(browserStorage, CHALLENGE_PREFERENCE_KEY, null);
     writePreference(browserStorage, LEGACY_CHALLENGE_PREFERENCE_KEY, null);
     if (window.location.hash.startsWith('#/challenge')) window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
     const next = makePlan(nextMode, current, SESSION_LENGTH, preferredCourseId);
-    setPlanningProfile(current); setMode(nextMode); setRoundState(next);
-    setVerification(verificationFor(nextMode, current, seed + 1));
+    setPlanningProfile(current); setMode(nextMode); setRoundState(next); setTemporarilySkippedCourseId(skippedCourseId);
+    setVerification(verificationFor(nextMode, current, seed + 1, skippedCourseId ? next.goalCourseId : null));
     setQuestionIndex(0); setRoundOffset(0); setUsedQuestionKeys([]); setUsedWordKeys([]); setSessionCorrect(0); setFinished(false); setUnlocked(null);
     setSeed((value) => value + 1); resetQuestion();
   }
@@ -883,6 +890,14 @@ export default function Home() {
     if (nextMode !== "adaptive" && !summarizeUnifiedCourse(COURSES.find(c => c.id === nextMode)!, kcsOf(nextMode), profileRef.current.introducedKcIds, profileRef.current).unlocked) return;
     const current = activateReadyKcs({ ...profileRef.current, rotation: profileRef.current.rotation + 1 });
     if (await save(current)) { navigateView("practice"); applyRound(nextMode, current, nextMode === mode ? goalCourseId : null); }
+  }
+  async function skipToCourse(courseId: ModeId) {
+    await waitForTiming();
+    if (mode !== "adaptive" || challenging || (probing && !probesDone && !finished) || blockedRef.current || savingRef.current) return;
+    if (!alternativeCourses.some(course => course.id === courseId)) return;
+    const current = activateReadyKcs({ ...profileRef.current, rotation: profileRef.current.rotation + 1, practiceGoalCourseId: courseId });
+    if (!await save(current)) return;
+    applyRound("adaptive", current, courseId, goalCourseId as ModeId);
   }
   function openChallenge() {
     if (showChallengeSelection) return;
@@ -999,6 +1014,18 @@ export default function Home() {
     return summary.unlocked && summary.mastered === summary.total && !summary.complete && summary.pendingCount === 0;
   });
   const visibleCourses = COURSES.filter(c => courseFilter === "all" || c.domain === courseFilter);
+  const alternativeCourses = useMemo(() => {
+    if (mode !== "adaptive" || challenging) return [];
+    return COURSES.filter(candidate => {
+      if (candidate.id === goalCourseId) return false;
+      const summary = summarizeUnifiedCourse(candidate, kcsOf(candidate.id), profile.introducedKcIds, profile);
+      if (!summary.unlocked || summary.mastered === summary.total) return false;
+      const previewProfile = activateReadyKcs({ ...profile, rotation: profile.rotation + 1, practiceGoalCourseId: candidate.id });
+      const preview = makePlan("adaptive", previewProfile, SESSION_LENGTH, candidate.id);
+      return preview.goalCourseId === candidate.id && !!preview.focus
+        && PRACTICE_PLANNER.assign(preview, previewProfile, { restrictCourseId: candidate.id }).length > 0;
+    });
+  }, [profile, goalCourseId, mode, challenging]);
   const goalCourse = COURSES.find(value => value.id === goalCourseId) ?? course;
   const recovery = !challenging && !activeVerification && !reviewRound && focusKc && focusKc.firstCourseId !== goalCourse.id;
   const displayedCourse = activeVerification ? course : goalCourse;
@@ -1068,6 +1095,11 @@ export default function Home() {
     const required = kcsOf(item.id).filter((kc) => kc.gating);
     return summarizeUnifiedCourse(item, required, introducedSet, profile);
   };
+  const courseSwitch = mode === "adaptive" && alternativeCourses.length > 0 && <details className="course-switch">
+    <summary>暂时跳过本课，改练其他课程</summary>
+    <p>本轮先练所选课程；原课进度保留，尚未提交的答案不会计分。</p>
+    <div>{alternativeCourses.map(candidate => <button type="button" key={candidate.id} onClick={() => void skipToCourse(candidate.id)}>改练「{candidate.title}」</button>)}</div>
+  </details>;
 
   return <main className="site-shell">
     {storageNotice && <div className="storage-notice" role="alert"><p>{storageNotice}</p><button type="button" onClick={exportProgress}>导出本页记录</button>{invalidRaw !== null && <><button type="button" onClick={() => downloadProgress(invalidRaw, `katsuyo-dojo-original-${todayKey()}.json`)}>导出原始记录</button><button type="button" disabled={saving} onClick={resetInvalidProgress}>清除损坏记录并重新开始</button></>}{blocked && <button type="button" onClick={() => window.location.reload()}>重新加载最新进度</button>}</div>}
@@ -1085,6 +1117,7 @@ export default function Home() {
 
       <button type="button" className="reset-progress" onClick={resetProgress}>清除本地进度</button>
     </aside>}<section className="exercise-stage">{challenging && <h1 className="sr-only">自由挑战作答</h1>}{correctionNotice && <div className="migration-notice" role="status"><p><strong>旧归因记录已校正</strong><span>{correctionNotice}</span></p><button type="button" onClick={() => setCorrectionNotice(null)} aria-label="关闭校正说明">知道了</button></div>}{migrationNotice && <div className="migration-notice" role="status"><p><strong>独立评估已启用</strong><span>辅助练习与独立掌握分开记录。{profile.assessment.migration ? ` 已依据可核验日志修正 ${profile.assessment.migration.changes.length} 个知识点，并恢复 ${pendingRetests.length} 项待复测。无法核验来源的历史记录保留，不当作新增独立成绩。` : "学习进度已保留，未确认的整题表现将安排独立复测。"}</span></p><button type="button" onClick={() => setMigrationNotice(false)} aria-label="关闭迁移说明">知道了</button></div>}{!finished ? <><div className={`stage-meta${challenging ? " challenge-stage-meta" : ""}`}><span>第 {questionNumber} 题{!challenging && <> / {roundQuestionLimit}</>}</span>{challenging ? <span className="challenge-count">已答 {answeredInRound} 题 · 答对 {sessionCorrect} 题</span> : <div className="progress-track"><span style={{ width: `${questionNumber / Math.max(roundQuestionLimit, 1) * 100}%` }} /></div>}<button type="button" className="quiet-button" onClick={finishRound}>{challenging ? "结束挑战" : "结束本轮"}</button></div>
+      {!probing && courseSwitch}
       {challenging && <div className="practice-notice challenge-notice"><strong>自由挑战 · {course.title}</strong><span>{activeChallengeCourses.length > 1 ? `已选 ${activeChallengeCourses.length} 门课程，轮换出题` : "持续练习当前课程"}</span><button type="button" onClick={openChallenge}>更换课程</button><button type="button" onClick={() => start("adaptive")}>返回自适应</button></div>}
       {!challenging && (activeVerification || recovery || reviewRound) && <p className="practice-notice">
         <strong>{activeVerification?.kind === 'retest' ? '独立复测' : activeVerification?.kind === 'rehearsal' ? '巩固练习' : activeVerification?.kind === 'spacing' ? '间隔练习' : recovery ? '补基础' : '巩固训练'}</strong>
@@ -1106,6 +1139,7 @@ export default function Home() {
           <strong>{nextRoundFocus?.label ?? "全部已达标"}</strong>
           {nextRoundMissingCoverage.length > 0 && <small>待覆盖：{nextRoundMissingCoverage.join("、")}</small>}
         </div>
+        {courseSwitch}
         <button type="button" className="restart-button" onClick={() => start(mode)}>{mode === "adaptive" ? "继续下一轮" : "继续本专项"}<span><kbd>Enter</kbd> →</span></button>
         {mode !== "adaptive" && <button type="button" className="back-adaptive" onClick={() => start("adaptive")}>返回自适应训练</button>}
       </article>}
