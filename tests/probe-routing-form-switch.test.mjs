@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { createAnswerAnalyzer, normalizeAnswer } from '../app/lib/answer-analysis.mjs';
 import { acceptedConjugations } from '../app/lib/conjugation.mjs';
-import { COMPOUND_FORM_SPECS } from '../app/lib/compound-forms.mjs';
+import { COMPOUND_FORM_SPECS, RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
 import { deriveUnified, unifiedDiagnosticSteps } from '../app/lib/unified-knowledge.mjs';
 import { prioritizeContinuationFormSwitch } from '../app/lib/probe-routing.mjs';
 import { planDiagnosticTransition } from '../app/lib/diagnostic-session.mjs';
@@ -20,7 +20,13 @@ const compoundForms = Object.keys(CONTINUATION_FORM_MATRIX).flatMap(base => ['Pa
 const forms = [...compoundForms, 'passiveDesireNegativePast'];
 
 test('frozen independent sibling examples prioritize only the observed continuation stage', () => {
+  let retired=0;
   for (const [surface, reading, cls, form, input, target] of seeds.priority) {
+    if (RETIRED_TEORU_NEGATIVE_FORMS.has(form)) {
+      assert.equal(COMPOUND_FORM_SPECS[form],undefined);
+      retired++;
+      continue;
+    }
     const item = word(surface, reading, cls), result = analyze(item, form, input);
     // Frozen expectation review: てある and contracted ている have the same
     // complete negative-past surface. The original seed stays unchanged, and
@@ -42,6 +48,7 @@ test('frozen independent sibling examples prioritize only the observed continuat
     assert.match(result.feedback.message, /前面的构成步骤未单独检查/);
     assert.deepEqual(result.steps, unifiedDiagnosticSteps(item, form, { answer: input, normalize: normalizeAnswer }));
   }
+  assert.equal(retired,1,'the frozen retired-form witness stays visible in the historical seed');
 });
 
 test('lexical damage, complete competing expressions and legitimate targets preserve their respective guards', () => {
@@ -65,8 +72,9 @@ test('lexical damage, complete competing expressions and legitimate targets pres
 test('the independent matrix explicitly covers every supported continuation family and ending', () => {
   const registered = [...new Set(Object.values(COMPOUND_FORM_SPECS).map(spec => spec.form))].sort();
   const listed = Object.keys(CONTINUATION_FORM_MATRIX).filter(base => !['passive', 'potential', 'causative', 'causativePassive'].includes(base)).sort();
-  assert.deepEqual(listed, registered);
-  assert.equal(compoundForms.length, 60);
+  assert.deepEqual(listed, registered.filter(base=>base!=='teoru'));
+  assert.equal(COMPOUND_FORM_SPECS.teoruPast.form,'teoru');
+  assert.equal(compoundForms.length, 57);
   const items = [write, ride, word('泳ぐ', 'およぐ', 'godan'), word('話す', 'はなす', 'godan'),
     word('待つ', 'まつ', 'godan'), word('死ぬ', 'しぬ', 'godan'), word('遊ぶ', 'あそぶ', 'godan'),
     word('読む', 'よむ', 'godan'), word('買う', 'かう', 'godan'), word('行く', 'いく', 'godan'),

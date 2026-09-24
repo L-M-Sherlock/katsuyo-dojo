@@ -1,6 +1,6 @@
 import { conjugateAdjective, acceptedAdjectiveConjugations, explainAdjectiveConjugation } from './adjective-conjugation.mjs';
 import { CHAIN_FORM_SPECS, chainOutputClass, chainIntermediate } from './multi-step-forms.mjs';
-import { COMPOUND_FORM_SPECS } from "./compound-forms.mjs";
+import { COMPOUND_FORM_SPECS, RETIRED_TEORU_NEGATIVE_FORMS } from "./compound-forms.mjs";
 import { FORM_LABELS } from "./form-labels.mjs";
 
 const NEGATIVE_ENDINGS = {
@@ -246,6 +246,7 @@ function conjugateIrregular(word, form) {
  * @param {ConjugationForm} form
  */
 export function conjugate(word, verbClass, form) {
+  if (RETIRED_TEORU_NEGATIVE_FORMS.has(form)) throw new Error(`Retired conjugation form: ${form}`);
   const chain = CHAIN_FORM_SPECS[form];
   if (chain) {
     const base = conjugate(word, verbClass, chain.base);
@@ -807,5 +808,5 @@ export function explainClass(verb) {
   if (verb.surface.endsWith("る")) return `${verb.surface} 以 る 结尾，但 る 前的「${beforeRu?.kana ?? "前一音"}」不在い段或え段，按常用初判应归为五段；活用时词尾会在不同元音段之间移动。`;
   return `${verb.surface} 是五段动词；最后一个假名会随活用在不同元音段之间移动。`;
 }
-/** @typedef {`${"teageru" | "temorau" | "tekureru" | "teiru" | "tearu" | "teoru" | "tai" | "tehoshii" | "youtosuru" | "temiru" | "teshimau" | "teoku" | "teiku" | "tekuru" | "sugiru" | "tagaru"}${"Past" | "Negative" | "NegativePast"}`} CompoundContinuationForm */
+/** @typedef {`${"teageru" | "temorau" | "tekureru" | "teiru" | "tearu" | "tai" | "tehoshii" | "youtosuru" | "temiru" | "teshimau" | "teoku" | "teiku" | "tekuru" | "sugiru" | "tagaru"}${"Past" | "Negative" | "NegativePast"}` | "teoruPast"} CompoundContinuationForm */
 /** @typedef {"negative" | "past" | "te" | "masu" | "passive" | "potential" | "imperative" | "volitional" | "ba" | "nasai" | "prohibitive" | "causative" | "causativePassive" | "causativePassiveContracted" | "nakute" | "naide" | "zu" | "zuni" | "teshimau" | "chau" | "teoku" | "toku" | "negativePast" | "masuPast" | "masuNegative" | "masuNegativePast" | "passivePast" | "passiveNegative" | "passiveNegativePast" | "potentialPast" | "potentialNegative" | "potentialNegativePast" | "causativePast" | "causativeNegative" | "causativeNegativePast" | "causativePassivePast" | "causativePassiveNegative" | "causativePassiveNegativePast" | "passiveDesireNegativePast" | "teageru" | "temorau" | "tekureru" | "tekudasai" | "naideKudasai" | "teiru" | "teru" | "tearu" | "teoru" | "toru" | "tai" | "tehoshii" | "tara" | "temo" | "nagara" | "tsutsu" | "nakerebaNaranai" | "nakutewaIkenai" | "naitoIkenai" | "tari" | "tewa" | "temoIi" | "nakutemoIi" | "masenka" | "youtosuru" | "temiru" | "teiku" | "teku" | "tekuru" | "tatte" | "sugiru" | "tagaru" | "temiruDesirePast" | "passiveProgressivePast" | "causativeReceivePast" | CompoundContinuationForm | import("./multi-step-forms.mjs").ChainForm} ConjugationForm */

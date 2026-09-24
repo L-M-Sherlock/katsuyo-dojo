@@ -9,6 +9,7 @@ import { assessmentTarget, emptyAssessment, reconcileAssessmentCatalog, recordIn
 import { restoreLearningAssessment } from '../app/lib/assessment-transfer.mjs';
 import { emptySkillStats, updateSkillStats } from '../app/lib/adaptive.mjs';
 import { reviewedLexicalSense } from '../app/lib/lexical-usage.mjs';
+import { RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
 
 const before = JSON.parse(readFileSync(new URL('./fixtures/natural-word-supply-before.json', import.meta.url), 'utf8'));
 const voiceReview = JSON.parse(readFileSync(new URL('./fixtures/voice-usage-review-before.json', import.meta.url), 'utf8'));
@@ -18,6 +19,8 @@ const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions
 const naturalnessReview = JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json', import.meta.url), 'utf8'));
 const fullNaturalnessProof = JSON.parse(gunzipSync(readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json.gz', import.meta.url))));
 const fullNaturalnessBefore = JSON.parse(readFileSync(new URL('./fixtures/naturalness-full-deferred-before.json', import.meta.url), 'utf8'));
+const userDirectedBefore = JSON.parse(readFileSync(new URL('./fixtures/user-directed-deferrals-before.json', import.meta.url), 'utf8'));
+const retiredTeoruBefore = JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-negatives-before.json', import.meta.url), 'utf8'));
 assert.equal(fullNaturalnessBefore.sourceCommit, fullNaturalnessProof.sourceCommit);
 assert.deepEqual(new Set(fullNaturalnessBefore.entries.map(row => row.pair)), new Set(fullNaturalnessProof.deferrals.map(row => row.pair)));
 const actionContexts = new Map((actionReview.contextChanges ?? []).map(row => [row.pair, row]));
@@ -63,6 +66,14 @@ const fullNaturalnessDeferred = fullNaturalnessBefore.entries.map(entry => {
   assert.ok(entry.previousUsage.status === 'allowed' || (entry.previousUsage.status === 'context-required' && entry.previousUsage.context));
   return {...exercise, context: entry.previousUsage.context};
 });
+const userDirectedDeferred = userDirectedBefore.entries.filter(entry => !RETIRED_TEORU_NEGATIVE_FORMS.has(entry.pair.split('/')[1])).map(entry => {
+  const exercise = model.registryExercises.find(e => `${reviewedLexicalSense(e.item)?.id}/${e.form}` === entry.pair);
+  assert.ok(exercise, entry.pair);
+  assert.ok(entry.previousUsage.status === 'allowed' || (entry.previousUsage.status === 'context-required' && entry.previousUsage.context));
+  return {...exercise, context: entry.previousUsage.context};
+});
+assert.deepEqual(new Set(retiredTeoruBefore.forms), RETIRED_TEORU_NEGATIVE_FORMS);
+const retiredTeoruExercises = retiredTeoruBefore.exercises;
 const find = (surface, form) => {
   const exercise = model.exercises.find(candidate => candidate.item.surface === surface && candidate.form === form);
   assert.ok(exercise, `Expected reviewed exercise: ${surface}/${form}`);
@@ -100,7 +111,8 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   // Reconstruct the old view without replacing or weakening its frozen hashes.
   // The only exceptions are the documented retirement/context delta and the
   // context IDs' review-version suffix; every unrelated text is still hashed.
-  const originalExercises = [...model.exercises, ...retired, ...actionDeferred, ...fullNaturalnessDeferred].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
+  const originalExercises = [...model.exercises, ...retired, ...actionDeferred, ...fullNaturalnessDeferred,
+    ...userDirectedDeferred, ...retiredTeoruExercises].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
   assert.equal(originalExercises.length, before.counts.eligibleExercises);
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');
@@ -190,13 +202,26 @@ test('the historical word expansion retains all original rule signatures and kno
     const target = assessmentTarget(exercise);
     return [target.key, hash(target.ruleSignature)];
   }));
-  assert.ok(before.targets.every(target => targets.has(target.key)));
-  for (const target of before.targets) assert.equal(targets.get(target.key), target.ruleSignatureSha256, target.key);
+  const activeTargets=before.targets.filter(target=>!RETIRED_TEORU_NEGATIVE_FORMS.has(target.key.split(':')[2]));
+  const archivedTargets=before.targets.filter(target=>RETIRED_TEORU_NEGATIVE_FORMS.has(target.key.split(':')[2]));
+  assert.ok(archivedTargets.length>0);
+  assert.ok(activeTargets.every(target => targets.has(target.key)));
+  for (const target of activeTargets) assert.equal(targets.get(target.key), target.ruleSignatureSha256, target.key);
+  for (const target of archivedTargets) {
+    assert.equal(targets.has(target.key),false,target.key);
+    assert.ok(currentEligibilityBaseline().targets[target.key],`Retired target remains in frozen history: ${target.key}`);
+  }
   const actual = model.components.map(component => ({ id: component.id, gating: component.gating, firstCourseId: component.firstCourseId,
     prerequisites: component.prerequisites, coverageKcIds: component.coverageKcIds }));
-  assert.deepEqual([...actual].sort((a,b)=>a.id.localeCompare(b.id)), [...currentEligibilityBaseline().components].sort((a,b)=>a.id.localeCompare(b.id)));
+  const retiredFacets=new Set(['facet.apply.teoru.negative','facet.apply.teoru.negativePast']);
+  const retiredPrerequisites=new Set(['stem.godan.a','suffix.negative','adj.suffix.i-past','compound.negative-past']);
+  const expected=currentEligibilityBaseline().components.filter(component=>!retiredFacets.has(component.id)).map(component=>
+    component.id==='apply.teoru.continuation' ? {...component,
+      prerequisites:component.prerequisites.filter(id=>!retiredPrerequisites.has(id)),
+      coverageKcIds:component.coverageKcIds.filter(id=>!retiredFacets.has(id))} : component);
+  assert.deepEqual([...actual].sort((a,b)=>a.id.localeCompare(b.id)),expected.sort((a,b)=>a.id.localeCompare(b.id)));
   assert.equal(model.components.filter(component => component.gating).length, 132);
-  assert.equal(model.components.filter(component => component.id.startsWith('facet.')).length, 130);
+  assert.equal(model.components.filter(component => component.id.startsWith('facet.')).length, 128);
 });
 
 test('the four deliberately expanded small transfer pools contain the reviewed words on the same actual rule paths', () => {

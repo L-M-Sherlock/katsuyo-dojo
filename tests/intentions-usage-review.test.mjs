@@ -14,6 +14,8 @@ import {USAGE_CARDS, usageCardStageRequirements} from '../app/lib/usage-cards.mj
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 import {reviewedLexicalSense} from '../app/lib/lexical-usage.mjs';
 import integrationCards from '../app/lib/usage-cards/integration-generated.mjs';
+import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
+import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
 
 const baseline=JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json',import.meta.url),'utf8'));
 const hash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -28,8 +30,14 @@ const actionReview=JSON.parse(readFileSync(new URL('../docs/usage-card-actions-r
 const naturalnessReview=JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json',import.meta.url),'utf8'));
 const fullNaturalnessProof=JSON.parse(gunzipSync(readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json.gz',import.meta.url))));
 const fullNaturalnessBefore=JSON.parse(readFileSync(new URL('./fixtures/naturalness-full-deferred-before.json',import.meta.url),'utf8'));
+const userDirectedBefore=JSON.parse(readFileSync(new URL('./fixtures/user-directed-deferrals-before.json',import.meta.url),'utf8'));
+const retiredTeoruBefore=JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-negatives-before.json',import.meta.url),'utf8'));
 assert.equal(fullNaturalnessBefore.sourceCommit,fullNaturalnessProof.sourceCommit);
 assert.deepEqual(new Set(fullNaturalnessBefore.entries.map(row=>row.pair)),new Set(fullNaturalnessProof.deferrals.map(row=>row.pair)));
+assert.equal(userDirectedBefore.sourceCommit,'5f8c4760ddd7d055d401ccedc770648614d06bf5');
+assert.deepEqual(new Map(userDirectedBefore.entries.map(row=>[row.pair,[row.id,row.cardHash]])),
+  new Map(USER_DIRECTED_USAGE_DEFERRALS.map(row=>[row.pair,[row.id,row.cardHash]])));
+assert.deepEqual(new Set(retiredTeoruBefore.forms),RETIRED_TEORU_NEGATIVE_FORMS);
 const actionIds=new Set(actionReview.approvedIds);
 const integrationIds=new Set(integrationCards.map(card=>card.id));
 const actionContexts=new Map((actionReview.contextChanges??[]).map(row=>[row.pair,row]));
@@ -59,15 +67,24 @@ const fullNaturalnessRetired=fullNaturalnessBefore.entries.map(entry=>{
   assert.ok(entry.previousUsage.status==='allowed'||(entry.previousUsage.status==='context-required'&&entry.previousUsage.context));
   return {...exercise,context:entry.previousUsage.context};
 });
+const userDirectedRetired=userDirectedBefore.entries.filter(entry=>!RETIRED_TEORU_NEGATIVE_FORMS.has(entry.pair.split('/')[1])).map(entry=>{
+  const exercise=model.registryExercises.find(e=>`${reviewedLexicalSense(e.item)?.id}/${e.form}`===entry.pair);
+  assert.ok(exercise,`${entry.pair}: remains in the morphology registry`);
+  assert.ok(entry.previousUsage.status==='allowed'||(entry.previousUsage.status==='context-required'&&entry.previousUsage.context));
+  return {...exercise,context:entry.previousUsage.context};
+});
+const retiredTeoruExercises=retiredTeoruBefore.exercises;
+assert.equal(retiredTeoruExercises.length,292);
 const naturalnessPrevious=new Map(naturalnessReview.approvedRevisions.map(row=>[row.id,row.previousCard]));
 
 test('approved intention and action-pair deferrals change only the documented exercise catalog entries',()=>{
   assert.equal(USAGE_REVIEW_VERSION,baseline.reviewVersion+4);
   assert.deepEqual(new Set(baseline.retired.map(e=>`${e.senseId}/${e.form}`)),expectedPairs);
   const currentIds=new Set(model.exercises.map(e=>e.id));
-  for(const e of [...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired])assert.ok(!currentIds.has(e.id),e.id);
-  const reconstructed=[...model.exercises,...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired];
-  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length);
+  for(const e of [...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,...userDirectedRetired,...retiredTeoruExercises])assert.ok(!currentIds.has(e.id),e.id);
+  const reconstructed=[...model.exercises,...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,
+    ...userDirectedRetired,...retiredTeoruExercises];
+  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length-userDirectedRetired.length-retiredTeoruExercises.length);
   assert.equal(hash(reconstructed.map(e=>e.id).sort()),baseline.eligibleExerciseIdsSha256,
     'no unrelated exercise may disappear or become eligible');
   // Preserve the frozen historical hash while accounting for the four
@@ -127,6 +144,22 @@ test('deferred forms remain constructible and recognizable with their usage limi
     const answer=conjugate(item.surface,item.class,form);
     assert.ok(recognizeForms(item,answer,normalizeAnswer).some(x=>x.form===form),exercise.id);
   }
+  for(const exercise of userDirectedRetired){
+    const {item,form}=exercise;
+    assert.equal(supportsVerbForm(item,form),true,exercise.id);
+    assert.equal(eligibleVerbForm(item,form),false,exercise.id);
+    const usage=assessFormUsage(item,form);
+    assert.equal(usage.status,'context-required',exercise.id);
+    assert.equal(usage.context,undefined,exercise.id);
+    assert.equal(usage.reasonCode,'user-directed-naturalness-hold',exercise.id);
+    const answer=conjugate(item.surface,item.class,form);
+    assert.ok(recognizeForms(item,answer,normalizeAnswer).some(x=>x.form===form),exercise.id);
+  }
+  for(const exercise of retiredTeoruExercises){
+    assert.equal(supportsVerbForm(exercise.item,exercise.form),false,exercise.id);
+    assert.equal(eligibleVerbForm(exercise.item,exercise.form),false,exercise.id);
+    assert.throws(()=>conjugate(exercise.item.surface,exercise.item.class,exercise.form),/Retired conjugation form/,exercise.id);
+  }
 });
 
 test('all five existing retest obligations transfer to other words without changing prior evidence',()=>{
@@ -181,15 +214,31 @@ test('a newly deferred sole-word target keeps its historical failure until an ex
   assert.equal(resumed.suspendedPending[target.key],undefined);
 });
 
+test('user-requested holds preserve every old failed target for a different-word retest',()=>{
+  for(const exercise of userDirectedRetired){
+    const target=assessmentTarget(exercise);
+    const alternatives=model.exercises.filter(candidate=>assessmentTarget(candidate).key===target.key);
+    assert.ok(alternatives.some(candidate=>assessmentTarget(candidate).wordKey!==target.wordKey),exercise.id);
+    const failed=recordIndependentAttempt(emptyAssessment(),{
+      exercise,questionId:`user-hold:${exercise.id}`,correct:false,at:'2026-09-24T00:00:00Z',
+    });
+    const restored=restoreLearningAssessment({byKc:{},assessment:failed},
+      {components:model.components,exercises:model.exercises}).assessment;
+    assert.deepEqual(restored.pending[target.key],failed.pending[target.key],exercise.id);
+    assert.equal(restored.byTarget[target.key].eligibleRetestCorrect,0,exercise.id);
+  }
+});
+
 test('every eligible intention pair now has an approved example with all course forms still trainable',()=>{
   const pairs=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   const requirements=usageCardStageRequirements('intentions');
   const intentionForms=new Set(UNIFIED_COURSES.filter(course=>course.stageId==='intentions').flatMap(course=>course.forms));
   const deferredIntentions=fullNaturalnessProof.deferrals.filter(row=>intentionForms.has(row.pair.split('/')[1]));
-  assert.equal(requirements.length,3681-deferredIntentions.length);
+  const userHeldIntentions=USER_DIRECTED_USAGE_DEFERRALS.filter(row=>intentionForms.has(row.pair.split('/')[1]));
+  assert.equal(requirements.length,3681-deferredIntentions.length-userHeldIntentions.length);
   assert.ok(requirements.every(pair=>pairs.has(pair)));
   assert.equal(model.components.filter(c=>c.gating).length,132);
-  assert.equal(model.components.filter(c=>c.id.startsWith('facet.')).length,130);
+  assert.equal(model.components.filter(c=>c.id.startsWith('facet.')).length,128);
   for(const course of UNIFIED_COURSES)for(const form of course.forms)
     assert.ok(model.exercises.some(e=>e.courseId===course.id&&e.form===form),`${course.id}/${form}`);
 });

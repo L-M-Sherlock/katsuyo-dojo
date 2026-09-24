@@ -245,6 +245,12 @@ function withRecordedSpeed(previous, next, event, assessed) {
  */
 export function restoreLearningAssessment(sourceProfile, { components, exercises, at = new Date().toISOString(), catalogVersion = USAGE_REVIEW_VERSION }) {
   const source = object(sourceProfile), allowed = new Set(components.map(component => component.id));
+  // Retiring the two ておる negative forms removes their coverage facets from
+  // the live model. Existing assessments may still refer to those exact IDs;
+  // keep that evidence readable and let catalog reconciliation suspend its
+  // pending targets, without restoring either facet to the current curriculum.
+  allowed.add('facet.apply.teoru.negative');
+  allowed.add('facet.apply.teoru.negativePast');
   const reconcile = restored => Array.isArray(exercises)
     ? { ...restored, assessment: reconcileAssessmentCatalog(restored.assessment, exercises, catalogVersion) } : restored;
   if (source.assessment !== undefined) return reconcile(restoreVersioned(source, allowed));

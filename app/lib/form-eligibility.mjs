@@ -1,5 +1,6 @@
 import { ACTION_PAIR_DEFERRALS } from './action-pair-deferrals.mjs';
 import { FULL_NATURALNESS_DEFERRED_PAIRS } from './usage-cards/full-naturalness-overlay.mjs';
+import { USER_DIRECTED_DEFERRED_PAIRS } from './usage-cards/user-directed-deferrals.mjs';
 export { DEFERRED_ACTION_PAIRS } from './action-pair-deferrals.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
 import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
@@ -210,6 +211,11 @@ export function assessFormUsage(item, form) {
   if (!(adjective ? supportsAdjectiveForm(item, form) : supportsVerbForm(item, form))) return blocked('morphology', '这个词类不支持本题要求的构形规则。');
   const sense = reviewedLexicalSense(item);
   if (!sense) return blocked('semantic', '这个词条、读音或释义尚未完成适用性审核。', 'unreviewed-lexeme');
+  if (USER_DIRECTED_DEFERRED_PAIRS.has(`${sense.id}/${form}`)) return {
+    ...contextual(sense, form,
+      '用户对当前例句的教学自然度存疑，暂缓这个精确词义与形式的常规出题；保留构形、完整词形识别及历史复测记录。'),
+    reasonCode: 'user-directed-naturalness-hold',
+  };
   if (FULL_NATURALNESS_DEFERRED_PAIRS.has(`${sense.id}/${form}`)) return {
     ...contextual(sense, form,
       '这个精确词义与形式的自然教材句仍未通过审核，暂不作为常规练习；保留构形、识别和历史复测记录。'),

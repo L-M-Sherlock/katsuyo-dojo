@@ -34,8 +34,18 @@ function snapshotComponent(component) {
  * may disappear, but are explicitly reported for suspension, never counted
  * as fulfilled. Full learning simulations check the actual lesson sequence.
  */
-export function buildEligibilityReport(model, { courses, assessFormUsage, reviewedLexicalSense, reviewVersion, baseline = null }) {
+export function buildEligibilityReport(model, { courses, assessFormUsage, reviewedLexicalSense, reviewVersion,
+  baseline = null, retiredForms = [] }) {
   if (!Array.isArray(model.registryExercises)) throw new Error('Eligibility audit requires the pre-filter registryExercises');
+  const retired = new Set(retiredForms);
+  if (retired.size && (retired.size !== 2 || !retired.has('teoruNegative') || !retired.has('teoruNegativePast'))) {
+    throw new Error('Unsupported intentional form retirement in eligibility audit');
+  }
+  const retiredFacetIds = new Set(retired.size ? ['facet.apply.teoru.negative', 'facet.apply.teoru.negativePast'] : []);
+  const retiredCourseForms = new Set([...retired].map(form => `aspect:${form}`));
+  const retiredParentPrerequisites = new Set(retired.size
+    ? ['stem.godan.a', 'suffix.negative', 'adj.suffix.i-past', 'compound.negative-past'] : []);
+  const retiredTarget = id => retired.has(id.split(':')[2]);
   const before = model.registryExercises, after = model.exercises, issues = [];
   const byId = new Map(model.components.map(component => [component.id, component]));
   const currentIds = new Set(after.map(exercise => exercise.id));
@@ -45,6 +55,10 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
   const forms = compareGroups(before, after, exercise => [formKey(exercise)]);
   const courseForms = compareGroups(before, after, exercise => [courseFormKey(exercise)]);
   const retestPaths = compareGroups(before, after, exercise => [assessmentTarget(exercise).key]);
+  for (const id of retiredFacetIds) if (byId.has(id)) issues.push({code:'retired-component-still-registered', id});
+  for (const form of retired) if (before.some(exercise => exercise.form === form)) {
+    issues.push({code:'retired-form-still-registered', form});
+  }
   const oldPaths = indexExercises(before, exercise => [assessmentTarget(exercise).key]);
   const newPaths = indexExercises(after, exercise => [assessmentTarget(exercise).key]);
   const wordExamples = exercises => [...new Map(exercises.map(exercise => [assessmentTarget(exercise).wordKey,
@@ -111,9 +125,16 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
   if (baseline) {
     for (const original of baseline.components) {
       const current = byId.get(original.id);
-      if (!current) issues.push({ code: 'removed-original-component', id: original.id });
-      else if (JSON.stringify(snapshotComponent(current)) !== JSON.stringify(original)) {
-        issues.push({ code: 'changed-original-requirements', id: original.id });
+      if (!current && !retiredFacetIds.has(original.id)) issues.push({ code: 'removed-original-component', id: original.id });
+      else if (current) {
+        const expected = original.id === 'apply.teoru.continuation' && retired.size
+          ? {...original,
+            prerequisites: original.prerequisites.filter(id => !retiredParentPrerequisites.has(id)),
+            coverageKcIds: original.coverageKcIds.filter(id => !retiredFacetIds.has(id))}
+          : original;
+        if (JSON.stringify(snapshotComponent(current)) !== JSON.stringify(expected)) {
+          issues.push({ code: 'changed-original-requirements', id: original.id });
+        }
       }
     }
     for (const group of courseForms) {
@@ -123,11 +144,14 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
       }
     }
     const courseFormIds = new Set(courseForms.map(group => group.key));
-    for (const id of Object.keys(baseline.courseForms)) if (!courseFormIds.has(id)) issues.push({ code: 'removed-original-course-form', id });
+    for (const id of Object.keys(baseline.courseForms)) if (!courseFormIds.has(id) && !retiredCourseForms.has(id)) {
+      issues.push({ code: 'removed-original-course-form', id });
+    }
     const pathsById = new Map(retestPaths.map(path => [path.key, path]));
     for (const [id, original] of Object.entries(baseline.targets ?? {})) {
       const current = pathsById.get(id);
-      if (!current || current.before.exercises < original.exercises || current.before.distinctWords < original.distinctWords) {
+      if ((!current || current.before.exercises < original.exercises || current.before.distinctWords < original.distinctWords)
+          && !retiredTarget(id)) {
         issues.push({ code: 'changed-original-rule-path', id });
       }
     }
@@ -140,10 +164,12 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
     components: model.components.length, gating: model.components.filter(component => component.gating).length,
     facets: model.components.filter(component => component.id.startsWith('facet.')).length };
   if (baseline?.summary) for (const [field, value] of Object.entries(counts)) {
-    if (value !== baseline.summary[field]) issues.push({ code: 'changed-curriculum-size', field, before: baseline.summary[field], after: value });
+    const expected = baseline.summary[field] - (['forms', 'components', 'facets'].includes(field) ? retired.size : 0);
+    if (value !== expected) issues.push({ code: 'changed-curriculum-size', field, before: baseline.summary[field], after: value });
   }
   return {
     reviewVersion, baselineCommit: baseline?.sourceCommit ?? null,
+    intentionalRetirements: {forms: [...retired], courseForms: [...retiredCourseForms], facets: [...retiredFacetIds]},
     summary: { ...counts,
       before: summarize(before), after: summarize(after), removed: removed.length,
       retestPaths: { before: retestPaths.filter(path => path.before.exercises).length, after: retestPaths.filter(path => path.after.exercises).length,

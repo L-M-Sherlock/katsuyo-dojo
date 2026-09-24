@@ -5,6 +5,10 @@ const ENDINGS = [
   { id: "NegativePast", form: "negativePast", label: "否定过去形" },
 ];
 
+// The plain negative branches would produce 〜ておらない／〜ておらなかった.
+// They are retired from this curriculum; ておる and ておった remain.
+export const RETIRED_TEORU_NEGATIVE_FORMS = new Set(["teoruNegative", "teoruNegativePast"]);
+
 const BASES = [
   { id: "teageru", form: "teageru", label: "てあげる", outputType: "verb", outputClass: "ichidan" },
   { id: "temorau", form: "temorau", label: "てもらう", outputType: "verb", outputClass: "godan" },
@@ -24,7 +28,8 @@ const BASES = [
   { id: "tagaru", form: "tagaru", label: "たがる", outputType: "verb", outputClass: "godan" },
 ];
 
-export const COMPOUND_FORM_SPECS = Object.fromEntries(BASES.flatMap((base) => ENDINGS.map((ending) => [
+export const COMPOUND_FORM_SPECS = Object.fromEntries(BASES.flatMap((base) => ENDINGS.filter(ending =>
+  !RETIRED_TEORU_NEGATIVE_FORMS.has(`${base.id}${ending.id}`)).map((ending) => [
   `${base.id}${ending.id}`,
   { ...base, ending: ending.form, endingLabel: ending.label },
 ])));

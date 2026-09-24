@@ -3,6 +3,7 @@ import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createServer } from 'vite';
 import { buildEligibilityReport } from './lib/eligibility-audit.mjs';
+import { RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
 
 const args = process.argv.slice(2);
 if (args.length && (args.length !== 2 || args[0] !== '--output')) throw new Error('Usage: npm run audit:eligibility -- [--output path.json]');
@@ -14,7 +15,8 @@ try {
     server.ssrLoadModule('/app/lib/form-eligibility.mjs'),
     server.ssrLoadModule('/app/lib/lexical-usage.mjs'),
   ]);
-  const report = buildEligibilityReport(KNOWLEDGE, { courses: UNIFIED_COURSES, assessFormUsage, reviewedLexicalSense, reviewVersion: USAGE_REVIEW_VERSION, baseline });
+  const report = buildEligibilityReport(KNOWLEDGE, { courses: UNIFIED_COURSES, assessFormUsage, reviewedLexicalSense,
+    reviewVersion: USAGE_REVIEW_VERSION, baseline, retiredForms: RETIRED_TEORU_NEGATIVE_FORMS });
   if (args.length) writeFileSync(resolve(args[1]), `${JSON.stringify(report, null, 2)}\n`);
   process.stdout.write(`${report.issues.length ? 'Eligibility catalog FAILED' : 'Eligibility catalog OK'}: ${JSON.stringify(report.summary)}\n`);
   if (report.issues.length) {

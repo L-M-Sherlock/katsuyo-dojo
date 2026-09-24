@@ -1,0 +1,189 @@
+{
+  "sourceCommit": "5f8c4760ddd7d055d401ccedc770648614d06bf5",
+  "entries": [
+    {
+      "pair": "verb:手伝う:てつだう/tearuNegativePast",
+      "id": "usage:tearuNegativePast:verb:手伝う:てつだう",
+      "cardHash": "595cb6922db7f5bed92ee53e85a95fcfa4267411b99e7c07f798fb272a123ec9",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:手伝う:てつだう:tearu:v7",
+          "text": "为接下来的安排做准备，描述“帮忙”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:着る:きる/tearu",
+      "id": "usage:tearu:verb:着る:きる",
+      "cardHash": "ba31d4d4751772a0da3c2157da80958658c56109422e1a67d64cf7a75f239397",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "可自然表达人为完成动作后保留的结果。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:着る:きる/tearuPast",
+      "id": "usage:tearuPast:verb:着る:きる",
+      "cardHash": "2c50bdd7ee4c1c56d5cdc1e65cc8d4c02d31d568564bc9e1b8b87b611542b75d",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "可自然表达人为完成动作后保留的结果。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:守る:まもる/tearuNegative",
+      "id": "usage:tearuNegative:verb:守る:まもる",
+      "cardHash": "9d2a8b082045a50c042602eb21e101e995563cd54d59e2d8b6d37cf3fd20b4c5",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:守る:まもる:tearu:v7",
+          "text": "为接下来的安排做准备，描述“遵守；保护”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:急ぐ:いそぐ/teageruNegativePast",
+      "id": "usage:teageruNegativePast:verb:急ぐ:いそぐ",
+      "cardHash": "42ead5c0fb661119f47cea4c0b2742891d55618e32470642fb47c9974a2c5a67",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可以与帮助者、受益者的行动关系搭配。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:着く:つく/youtosuruNegative",
+      "id": "usage:youtosuruNegative:verb:着く:つく",
+      "cardHash": "2e0d4b3a1888768489e1405f26ef517004b19131614c27a4ce67b1595b2b0eef",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于尝试、行动准备或事先安排。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:要る:いる/zuni",
+      "id": "usage:zuni:verb:要る:いる",
+      "cardHash": "2ad228e793ca9600bf502e701f35e75319ed118cde0d9b19c29e8dd05f493ba0",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "分类、基础活用和条件连接适用于当前词义。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:違う:ちがう/teoruNegative",
+      "id": "usage:teoruNegative:verb:違う:ちがう",
+      "cardHash": "b3a84cbc4548cfc348395e904c878931c932caa684eb13b98073e41072193333",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:使う:つかう/teoruNegative",
+      "id": "usage:teoruNegative",
+      "cardHash": "08d419a42b77d47b30e4dbe2abdf058702411acec4266a37a102099c040b08cd",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:使う:つかう/teoruNegativePast",
+      "id": "usage:teoruNegativePast:verb:使う:つかう",
+      "cardHash": "3c7814d622f7c5080f3c389142e4d5ad6a2fdba078337593faa4e7be2cc92be4",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:乗る:のる/teoruNegative",
+      "id": "usage:teoruNegative:verb:乗る:のる",
+      "cardHash": "89e4bb54efd55bfd23c0f9614f86e174c229872a49134796ed1f92873bb5f460",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:乗る:のる/teoruNegativePast",
+      "id": "usage:teoruNegativePast:verb:乗る:のる",
+      "cardHash": "9236371140bfd3c9dd453a11c1babaa26236a4a2140a1eb159077afc8d2e8553",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:打つ:うつ/teoruNegative",
+      "id": "usage:teoruNegative:verb:打つ:うつ",
+      "cardHash": "4bc3ffee582a3aa2fa0cc8a58a24e826949b023764515db103084a1f3fd34585",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:打つ:うつ/teoruNegativePast",
+      "id": "usage:teoruNegativePast:verb:打つ:うつ",
+      "cardHash": "0f81356a62b3d42e4bf6788f65a5ace99737a17e75c93fc7e9810aa901e724df",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:焼く:やく/teoruNegative",
+      "id": "usage:teoruNegative:verb:焼く:やく",
+      "cardHash": "0414e460e42e09599029641400a4ed4c36eaf090603e071fac903d6f9de1e034",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:焼く:やく/teoruNegativePast",
+      "id": "usage:teoruNegativePast:verb:焼く:やく",
+      "cardHash": "8ca1b2f0ce7d4e32d225cb1c37ec409299cb76a3ddee1e38314e65f183b0bc52",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    }
+  ]
+}

@@ -8,6 +8,8 @@ import {readReleaseProof, verifyReleaseProof} from '../scripts/export-integratio
 import {auditIntegrationCoverage} from '../scripts/audit-integration-coverage.mjs';
 import {USAGE_CARDS, usageCardStageRequirements, usageCardIssues} from '../app/lib/usage-cards.mjs';
 import generated from '../app/lib/usage-cards/integration-generated.mjs';
+import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
+import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const actionReview = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url)));
@@ -20,6 +22,7 @@ const proof = readReleaseProof(proofPath);
 const fullNaturalness = JSON.parse(gunzipSync(fs.readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json.gz', import.meta.url))));
 const frozen = JSON.parse(fs.readFileSync(new URL('../docs/integration-stage-requirements.v3.json', import.meta.url)));
 const ids = new Set(generated.map(card => card.id));
+const userHeld = new Map(USER_DIRECTED_USAGE_DEFERRALS.map(row => [row.id, row]));
 
 // Recover the exact published source that preceded the later full-card audit.
 // Every current object must still match its final reviewed hash, and deferred
@@ -33,7 +36,15 @@ function preNaturalnessView() {
   for (const source of fullNaturalness.sourceCards) {
     const status = statuses.get(source.id);
     assert.equal(status.sourceHash, digest(source), `Frozen source drift: ${source.id}`);
-    if (status.status === 'deferred') assert.equal(current.has(source.id), false);
+    if (status.status === 'deferred' || userHeld.has(source.id) || RETIRED_TEORU_NEGATIVE_FORMS.has(source.form)) {
+      assert.equal(current.has(source.id), false);
+      if (userHeld.has(source.id)) {
+        const held = userHeld.get(source.id);
+        assert.equal(status.status, 'approved');
+        assert.equal(held.cardHash, status.cardHash);
+        assert.equal(held.pair, `${source.senseId}/${source.form}`);
+      }
+    }
     else {
       assert.equal(status.status, 'approved');
       assert.equal(digest(current.get(source.id)), status.cardHash, `Unreviewed current edit: ${source.id}`);

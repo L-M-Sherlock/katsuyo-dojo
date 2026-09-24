@@ -7,6 +7,7 @@ import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import { planDiagnosticTransition } from '../app/lib/diagnostic-session.mjs';
 import { evidenceCondition, scoreLearningEvidence } from '../app/lib/learning-evidence.mjs';
 import { assessmentTarget, emptyAssessment, recordIndependentAttempt, recordAssistedAttempt } from '../app/lib/learning-assessment.mjs';
+import { RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
 
 const raw = await readFile(new URL('./fixtures/independent-learning-evidence.json', import.meta.url), 'utf8');
 const frozen = JSON.parse(raw), seeds = frozen.cases, seedById = new Map(seeds.map(seed => [seed.id, seed]));
@@ -84,9 +85,11 @@ test('the actual 乗る log now records assisted local practice while preserving
   assert.deepEqual(before.byKc, initialByKc, 'replay may not mutate frozen original snapshots');
 });
 
-test('67 independently specified wrong-form recovery flows never turn guided success into independent mastery or coverage', t => {
+test('65 still-supported frozen recovery flows never turn guided success into independent mastery or coverage', t => {
   let actualSteps = 0;
-  for (const seed of seeds.filter(seed => seed.kind === 'compound-assisted-recovery')) {
+  const historical=seeds.filter(seed => seed.kind === 'compound-assisted-recovery');
+  assert.equal(historical.filter(seed=>RETIRED_TEORU_NEGATIVE_FORMS.has(seed.form)).length,2);
+  for (const seed of historical.filter(seed=>!RETIRED_TEORU_NEGATIVE_FORMS.has(seed.form))) {
     const label = `${seed.id}: ${seed.wrongAnswer}`, exercise = { item: seed.item, form: seed.form, courseId: 'independent-audit' };
     const required = deriveUnified(seed.item, seed.form).requiredKcIds;
     for (const kcId of seed.protectedKcIds) assert.ok(required.includes(kcId), `${label}: fixture protected component exists: ${kcId}`);
@@ -151,7 +154,7 @@ test('67 independently specified wrong-form recovery flows never turn guided suc
     assert.equal(assessment.byTarget[failedTarget].eligibleRetestCorrect, 0, `${label}: completion cannot fake retest success`);
   }
   assert.ok(actualSteps >= 60, 'the matrix must actually run recovery steps, not only score the original answer');
-  t.diagnostic(`67 frozen targets each passed explicit independent/supplied controls; their natural routes executed ${actualSteps} diagnostic steps with repeated-submit checks.`);
+  t.diagnostic(`65 current targets passed explicit independent/supplied controls; two retired targets remain in the frozen record. Their routes executed ${actualSteps} diagnostic steps with repeated-submit checks.`);
 });
 
 test('every automatic help condition retains its source and never awards independent or source-class credit', () => {

@@ -2,7 +2,7 @@ import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
 import { COURSES as VERB_COURSES, ADJECTIVE_COURSES } from './curriculum.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
 
-export const CURRICULUM_VERSION = 6;
+export const CURRICULUM_VERSION = 7;
 
 // Group by the course's primary learning objective, including courses whose
 // later exercises apply past/negative endings to the newly introduced form.
@@ -94,7 +94,7 @@ const COURSE_DESCRIPTIONS = {
   prohibitive: '练习动词辞书形后接な的禁止表达。',
   permission: '练习てもいい表达许可、なくてもいい表达无需，以及ませんか表达邀请。',
   obligation: '练习なければならない、なくてはいけない和ないといけない三种必须表达。',
-  aspect: '练习ている、てある、ておる及缩约，并学习它们的否定、过去和否定过去。',
+  aspect: '练习ている、てある、ておる及缩约；ておる保留基本形与过去形，否定变化练ている和てある。',
   giving: '练习てあげる、てもらう、てくれる的接续及其否定、过去和否定过去。',
   temiru: '先练习てみる表示尝试，再练习整个表达的否定、过去和否定过去。',
   teshimauChau: '练习てしまう及ちゃう／じゃう缩约，并学习てしまう的否定、过去和否定过去。',

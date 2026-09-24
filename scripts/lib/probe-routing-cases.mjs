@@ -15,7 +15,7 @@ const families = {
 // curriculum so that adding a family requires an explicit test expectation.
 export const CONTINUATION_FORM_MATRIX = {
   teageru: 'ichidan', temorau: 'u', tekureru: 'ichidan', teiru: 'ichidan',
-  tearu: 'aru', teoru: 'ru', tai: 'i', tehoshii: 'i', youtosuru: 'suru',
+  tearu: 'aru', tai: 'i', tehoshii: 'i', youtosuru: 'suru',
   temiru: 'ichidan', teshimau: 'u', teoku: 'ku', teiku: 'iku', tekuru: 'kuru',
   sugiru: 'ichidan', tagaru: 'ru', passive: 'ichidan', potential: 'ichidan',
   causative: 'ichidan', causativePassive: 'ichidan',

@@ -9,6 +9,7 @@ import { planDiagnosticTransition } from '../app/lib/diagnostic-session.mjs';
 import { auditLearningCase } from '../scripts/lib/learning-evidence-contracts.mjs';
 import { evaluateGeneratedCase } from '../scripts/lib/diagnosis-audit.mjs';
 import { auditUniversalCase, auditFlow } from '../scripts/lib/universal-diagnosis-audit.mjs';
+import { RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
 
 const frozen = JSON.parse(await readFile(new URL('./fixtures/independent-learning-evidence.json', import.meta.url), 'utf8'));
 const makeCase = (seed, input = seed.wrongAnswer) => ({ item: seed.item, form: seed.form, input,
@@ -21,8 +22,11 @@ const tamper = modify => (before, exercise, observation) => {
 };
 const changedMap = (map, id, correct = true) => ({ ...map, [id]: updateSkillStats(map[id], { correct }) });
 
-test('both real generated-audit entry points check independent and assisted channels for every frozen compound target', () => {
-  for (const row of frozen.cases.filter(candidate => candidate.kind === 'compound-assisted-recovery')) {
+test('both real generated-audit entry points check every still-supported frozen compound target', () => {
+  const historical=frozen.cases.filter(candidate => candidate.kind === 'compound-assisted-recovery');
+  assert.equal(historical.length,67);
+  assert.equal(historical.filter(row=>RETIRED_TEORU_NEGATIVE_FORMS.has(row.form)).length,2);
+  for (const row of historical.filter(candidate => !RETIRED_TEORU_NEGATIVE_FORMS.has(candidate.form))) {
     for (const input of [row.wrongAnswer, row.answer]) {
       const c = makeCase(row, input), analyzer = createAnswerAnalyzer(c.item, c.form), result = analyzer(input);
       const exact = evaluateGeneratedCase(c, result), paths = auditUniversalCase(c, analyzer);

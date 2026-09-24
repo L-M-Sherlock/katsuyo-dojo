@@ -4,6 +4,8 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 import {USAGE_CARDS} from '../app/lib/usage-cards.mjs';
+import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
+import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
 
 const status = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json', import.meta.url)));
 const bytes = fs.readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json.gz', import.meta.url));
@@ -67,10 +69,25 @@ test('portable naturalness audit progress preserves the frozen full scope and ex
 
 test('every displayed card has the final approved text hash, and exact deferrals stay absent', () => {
   const live = new Map(USAGE_CARDS.map(card => [card.id, card]));
-  assert.equal(live.size, status.counts.approved);
+  const held = new Map(USER_DIRECTED_USAGE_DEFERRALS.map(row => [row.id, row]));
+  const retired = new Set(proof.sourceCards.filter(card => RETIRED_TEORU_NEGATIVE_FORMS.has(card.form)).map(card => card.id));
+  const statusById=new Map(proof.statuses.map(row=>[row.id,row]));
+  const suppressedApproved=new Set([...held.keys(),...retired].filter(id=>statusById.get(id)?.status==='approved'));
+  assert.equal(held.size, USER_DIRECTED_USAGE_DEFERRALS.length);
+  assert.equal(new Set(USER_DIRECTED_USAGE_DEFERRALS.map(row => row.pair)).size, held.size);
+  assert.equal(live.size, status.counts.approved - suppressedApproved.size);
   for (const row of proof.statuses) {
     const card = live.get(row.id);
-    if (row.status === 'deferred') assert.equal(card, undefined, row.id);
+    if (row.status === 'deferred' || held.has(row.id) || retired.has(row.id)) {
+      assert.equal(card, undefined, row.id);
+      if (held.has(row.id)) {
+        const decision = held.get(row.id);
+        const original = proof.sourceCards.find(source => source.id === row.id);
+        assert.equal(row.status, 'approved', row.id);
+        assert.equal(decision.pair, `${original.senseId}/${original.form}`);
+        assert.equal(decision.cardHash, row.cardHash);
+      }
+    }
     else {
       assert.equal(row.status, 'approved', row.id);
       assert.ok(card, row.id);

@@ -1,4 +1,5 @@
 import { CHAIN_FORM_SPECS } from '../app/lib/multi-step-forms.mjs';
+import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createServer } from 'vite';
@@ -22,6 +23,23 @@ const verb = { domain: 'verb', surface: '読む', reading: 'よむ', class: 'god
 const adjective = { domain: 'adjective', surface: '高い', reading: 'たかい', class: 'i' };
 const mastered = { ...emptySkillStats(), attempts: 5, correct: 5, filteredAccuracy: 1, confidence: 1, bestConfidence: 1 };
 const profile = overrides => ({ version: 5, date: options.today, attempted: 4, correct: 3, streak: 0, rotation: 2, introducedKcIds: ['class.godan'], byKc: {}, ...overrides });
+const retiredTeoru=JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-negatives-before.json',import.meta.url)));
+
+test('revision 7 preserves retired ておる failures as suspended history without awarding mastery',()=>{
+  const base=parseUnifiedImport(profile({}),options);
+  for(const archived of retiredTeoru.historicalFailures){
+    const old={...base,version:7,curriculumVersion:6,assessment:archived.assessment};
+    delete old.statistics;
+    const restored=parseUnifiedImport(createUnifiedExport(old),options);
+    const key=Object.keys(archived.assessment.pending)[0];
+    assert.equal(restored.curriculumVersion,7);
+    assert.equal(restored.assessment.pending[key],undefined);
+    const {suspension,...preserved}=restored.assessment.suspendedPending[key];
+    assert.deepEqual(preserved,archived.assessment.pending[key]);
+    assert.equal(suspension.reason,'no-eligible-exercise');
+    assert.equal(restored.assessment.byTarget[key].eligibleRetestCorrect,0);
+  }
+});
 
 test('word history survives export/import without changing mastery or treating completion evidence as chronology', () => {
   const old = parseUnifiedImport(profile(), options);
@@ -56,11 +74,11 @@ test('all real continuation pools cover missing endings and avoid round and rece
   }
 });
 
-test('the unified curriculum keeps all 43 courses and 172 forms in prerequisite order', () => {
+test('the unified curriculum keeps all 43 courses and 170 current forms in prerequisite order', () => {
   assert.equal(UNIFIED_COURSES.length, 43);
   assert.equal(new Set(COURSE_ORDER).size, 43);
   const oldForms = new Set([...COURSES,...ADJECTIVE_COURSES].flatMap(c => c.forms));
-  assert.equal(oldForms.size, 172);
+  assert.equal(oldForms.size, 170);
   assert.deepEqual(new Set(model.exercises.map(e => e.form).filter(Boolean)), oldForms);
   assert.ok(COURSE_ORDER.indexOf('adjectiveIBase') < COURSE_ORDER.indexOf('basicCompound'));
   assert.ok(UNIFIED_COURSES.find(c => c.id === 'desire').forms.includes('taiNegativePast'));
@@ -282,7 +300,7 @@ test('v6 course reordering preserves mastered e-row and adverb evidence together
 });
 
 test('revision 1 e-row introductions preserve imperative access without inventing revision 2 ba access', () => {
-  assert.equal(CURRICULUM_VERSION, 6);
+  assert.equal(CURRICULUM_VERSION, 7);
   for (const version of [undefined, 1]) {
     const before = {
       ...parseUnifiedImport(profile({}), options),
@@ -477,7 +495,7 @@ test('revision 3 voice scores survive relocation and pending targets move withou
 test('revision 4 course reorder preserves scores, assessment and the current course goal',()=>{
   const source={...parseUnifiedImport(profile({byKc:{'apply.potential.continuation':{...mastered}}}),options),curriculumVersion:4,practiceGoalCourseId:'voiceCompound'};
   const restored=parseUnifiedImport(createUnifiedExport(source),options);
-  assert.equal(restored.curriculumVersion,6);
+  assert.equal(restored.curriculumVersion,7);
   for(const field of ['byKc','assessment','practiceLog','introducedKcIds','coursePractice','practiceGoalCourseId'])assert.deepEqual(restored[field],source[field],field);
   assert.deepEqual(parseUnifiedImport(createUnifiedExport(restored),options),restored);
 });

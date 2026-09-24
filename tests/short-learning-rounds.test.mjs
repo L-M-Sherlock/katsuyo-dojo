@@ -80,7 +80,7 @@ test('the real mixed learner no longer pads the final masu recovery with mastere
     } });
     assert.equal(report.completed, true);
     assert.equal(report.masteredCount, 132);
-    assert.equal(report.completedFacetCount, 130);
+    assert.equal(report.completedFacetCount, 128);
     assert.ok(rows.length < 60, `previously 97 masu questions; got ${rows.length}`);
     const tail = rows.filter(row => ['stem.ichidan.drop-ru', 'stem.godan.i', 'suffix.masu'].every(id => row.byKc[id]?.confidence >= 1)
       && ['facet.form.masu.suru', 'facet.form.masu.kuru'].every(id => row.byKc[id]?.correct >= 1));

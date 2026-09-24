@@ -19,6 +19,8 @@ import classActionCards1 from '../app/lib/usage-cards/class-actions-1.mjs';
 import classActionCards2 from '../app/lib/usage-cards/class-actions-2.mjs';
 import reviewedActionReplacements from '../app/lib/usage-cards/actions-naturalness-20260923.mjs';
 import integrationWordCards from '../app/lib/usage-cards/integration-generated.mjs';
+import {USER_DIRECTED_DEFERRED_PAIRS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
+import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
 const integrationIds = new Set(integrationWordCards.map(card => card.id));
 const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url), 'utf8'));
 const naturalnessReview = JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json', import.meta.url), 'utf8'));
@@ -94,7 +96,8 @@ test('reviewed stages retain exact eligible coverage and preserve the original r
   assert.deepEqual(usageCardIssues(USAGE_CARDS,{requireBasicCoverage:true,requireStageCoverage:['voice','linking','intentions','actions']}),[]);
   const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
   const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice'),...usageCardStageRequirements('linking'),
-    ...usageCardStageRequirements('intentions'),...usageCardStageRequirements('actions'),...integrationWordCards.map(card=>`${card.senseId}/${card.form}`)]);
+    ...usageCardStageRequirements('intentions'),...usageCardStageRequirements('actions'),...integrationWordCards.map(card=>`${card.senseId}/${card.form}`)]
+    .filter(pair=>!USER_DIRECTED_DEFERRED_PAIRS.has(pair)&&!RETIRED_TEORU_NEGATIVE_FORMS.has(pair.split('/')[1])));
   const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   assert.deepEqual(actual,expected);
   assert.equal(USAGE_CARDS.length,expected.size);
@@ -122,8 +125,12 @@ test('published action cards match the approved review ledger and leave the hist
   const required = new Set(usageCardStageRequirements('actions'));
   const actionForms = new Set(UNIFIED_COURSES.filter(course=>course.stageId==='actions').flatMap(course=>course.forms));
   const fullDeferredActions = new Set([...fullNaturalnessDeferred].filter(pair=>actionForms.has(pair.split('/')[1])));
+  const userDeferredActions = new Set([...USER_DIRECTED_DEFERRED_PAIRS].filter(pair=>actionForms.has(pair.split('/')[1])));
+  const retiredActions = new Set(fullNaturalnessSource.filter(card=>RETIRED_TEORU_NEGATIVE_FORMS.has(card.form))
+    .map(card=>`${card.senseId}/${card.form}`));
   const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
-  assert.equal(required.size, actionReview.effectiveRequiredPairs - naturalnessDeferred.size - fullDeferredActions.size);
+  assert.equal(required.size, actionReview.effectiveRequiredPairs - naturalnessDeferred.size - fullDeferredActions.size
+    - userDeferredActions.size - retiredActions.size);
   assert.equal(pendingPairs.size, 0);
   assert.equal(pendingPairs.size, actionReview.pendingPairs);
   assert.equal(actionReview.deferredPairs, 32);
@@ -132,11 +139,16 @@ test('published action cards match the approved review ledger and leave the hist
   assert.equal(actionReview.complete, true);
   const deferred = DEFERRED_ACTION_PAIRS;
   for (const pair of pendingPairs) assert.ok(!covered.has(pair), pair);
-  for (const pair of approvedPairs) assert.equal(required.has(pair), !naturalnessDeferred.has(pair) && !fullDeferredActions.has(pair), pair);
+  for (const pair of approvedPairs) assert.equal(required.has(pair), !naturalnessDeferred.has(pair) && !fullDeferredActions.has(pair)
+    && !userDeferredActions.has(pair) && !retiredActions.has(pair), pair);
   assert.ok([...deferred].every(pair=>!required.has(pair)&&!pendingPairs.has(pair)));
   assert.deepEqual(new Set([...covered, ...pendingPairs]), required);
-  assert.equal(required.size+deferred.size+fullDeferredActions.size,actionReview.originalRequiredPairs);
-  assert.equal(covered.size - (approvedPairs.size - naturalnessDeferred.size - fullDeferredActions.size), actionReview.originalActionPairs);
+  assert.equal(required.size+deferred.size+fullDeferredActions.size+userDeferredActions.size+retiredActions.size,actionReview.originalRequiredPairs);
+  const userDeferredNewActions = [...userDeferredActions].filter(pair=>approvedPairs.has(pair)).length;
+  const retiredNewActions=[...retiredActions].filter(pair=>approvedPairs.has(pair)).length;
+  assert.equal(covered.size - (approvedPairs.size - naturalnessDeferred.size - fullDeferredActions.size
+    - userDeferredNewActions - retiredNewActions), actionReview.originalActionPairs
+    - (userDeferredActions.size - userDeferredNewActions) - (retiredActions.size - retiredNewActions));
   assert.ok(actionWordCards.every(card => card.review === 'approved'));
 });
 
@@ -144,7 +156,7 @@ test('the naturalness release replaces only independently approved cards and wit
   const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
   const historical = new Map([...actionSeedCards, ...actionWordCards, ...classActionCards1, ...classActionCards2]
     .map(card => [card.id, card]));
-  const current = new Map(USAGE_CARDS.map(card => [card.id, card]));
+  const releasedAtNaturalnessFreeze = new Map(fullNaturalnessSource.map(card => [card.id, card]));
   assert.equal(naturalnessReview.scopeCount, 45);
   assert.equal(naturalnessReview.approvedCount, 36);
   assert.equal(naturalnessReview.deferredCount, 9);
@@ -157,7 +169,8 @@ test('the naturalness release replaces only independently approved cards and wit
     assert.equal(hash(row.previousCard), row.previousHash);
     assert.equal(hash(row.currentCard), row.currentHash);
     assert.deepEqual(historical.get(row.id), row.previousCard);
-    assert.deepEqual(current.get(row.id), row.currentCard);
+    assert.deepEqual(releasedAtNaturalnessFreeze.get(row.id), row.currentCard);
+    if(RETIRED_TEORU_NEGATIVE_FORMS.has(row.currentCard.form))assert.ok(!USAGE_CARDS.some(card=>card.id===row.id));
     assert.ok(row.authorReceipt && row.reviewReceipt);
     assert.equal(row.languageReview.status, 'approved');
     assert.equal(row.languageReview.id, row.id);
@@ -168,7 +181,7 @@ test('the naturalness release replaces only independently approved cards and wit
     touched.add(row.id);
     assert.equal(hash(row.publishedCard), row.publishedHash);
     assert.deepEqual(historical.get(row.id), row.publishedCard);
-    assert.ok(!current.has(row.id), row.id);
+    assert.ok(!USAGE_CARDS.some(card=>card.id===row.id), row.id);
     assert.equal(row.attempts.length, 3);
     for (const attempt of row.attempts) {
       assert.ok(attempt.authorReceipt && attempt.reviewReceipt);

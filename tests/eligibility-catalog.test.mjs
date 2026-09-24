@@ -4,8 +4,12 @@ import { currentEligibilityBaseline } from '../scripts/lib/eligibility-baseline.
 import { createServer } from 'vite';
 import { buildEligibilityReport } from '../scripts/lib/eligibility-audit.mjs';
 import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
+import { RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
+import { reconcileAssessmentCatalog } from '../app/lib/learning-assessment.mjs';
+import { readFileSync } from 'node:fs';
 
 const allowed = () => ({ status: 'allowed', category: 'semantic', reason: '已审核' });
+const retiredTeoru=JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-negatives-before.json',import.meta.url)));
 const sample = (surface, reading, cls = 'godan') => {
   const item = { domain: 'verb', surface, reading, class: cls }, form = 'past';
   return { id: `past:${surface}`, item, form, courseId: 'past', courseIndex: 0,
@@ -97,11 +101,29 @@ test('all declared courses, forms, gating knowledge and coverage remain trainabl
     ]);
     const baseline = currentEligibilityBaseline();
     const report = buildEligibilityReport(KNOWLEDGE, { courses: UNIFIED_COURSES, assessFormUsage: usage.assessFormUsage,
-      reviewVersion: usage.USAGE_REVIEW_VERSION, reviewedLexicalSense, baseline });
+      reviewVersion: usage.USAGE_REVIEW_VERSION, reviewedLexicalSense, baseline,
+      retiredForms: RETIRED_TEORU_NEGATIVE_FORMS });
     assert.deepEqual(report.issues, []);
-    for (const field of ['courses', 'forms', 'components', 'gating', 'facets']) assert.equal(report.summary[field], baseline.summary[field], field);
-    assert.ok(report.summary.before.exercises >= baseline.summary.exercises, "new words may grow the fixed registry, never shrink it");
-    assert.equal(report.summary.retestPaths.before, 1035);
+    for (const field of ['courses', 'forms', 'components', 'gating', 'facets']) {
+      const expected=baseline.summary[field]-(['forms','components','facets'].includes(field)?RETIRED_TEORU_NEGATIVE_FORMS.size:0);
+      assert.equal(report.summary[field], expected, field);
+    }
+    const retiredRegistry=[...RETIRED_TEORU_NEGATIVE_FORMS].reduce((sum,form)=>sum+baseline.courseForms[`aspect:${form}`].exercises,0);
+    assert.ok(report.summary.before.exercises >= baseline.summary.exercises-retiredRegistry,
+      'new words may grow the fixed registry; only the declared two forms may shrink it');
+    const retiredTargets=Object.keys(baseline.targets).filter(key=>RETIRED_TEORU_NEGATIVE_FORMS.has(key.split(':')[2])).length;
+    assert.equal(report.summary.retestPaths.before,1035-retiredTargets);
+    assert.deepEqual(new Set(retiredTeoru.forms),RETIRED_TEORU_NEGATIVE_FORMS);
+    for(const archived of retiredTeoru.historicalFailures){
+      const original=archived.assessment, key=Object.keys(original.pending)[0];
+      const restored=reconcileAssessmentCatalog(original,KNOWLEDGE.exercises,usage.USAGE_REVIEW_VERSION);
+      assert.deepEqual(Object.keys(restored.pending),[]);
+      const {suspension,...preserved}=restored.suspendedPending[key];
+      assert.deepEqual(preserved,original.pending[key]);
+      assert.equal(suspension.reason,'no-eligible-exercise');
+      assert.deepEqual(restored.byTarget,original.byTarget);
+      assert.equal(restored.originalCount,original.originalCount);
+    }
     assert.ok(report.summary.removed > 0);
     assert.ok(report.summary.after.contexts > 0);
   } finally { await server.close(); }
