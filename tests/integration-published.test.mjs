@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {readReleaseProof, verifyReleaseProof} from '../scripts/export-integration-batches.mjs';
@@ -16,8 +17,32 @@ const naturalnessRevisions = new Map(naturalnessReview.approvedRevisions.map(ent
 const withdrawals = actionReview.editorialWithdrawals;
 const proofPath = fileURLToPath(new URL('../docs/integration-release-proof.v3.json.gz', import.meta.url));
 const proof = readReleaseProof(proofPath);
+const fullNaturalness = JSON.parse(gunzipSync(fs.readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json.gz', import.meta.url))));
 const frozen = JSON.parse(fs.readFileSync(new URL('../docs/integration-stage-requirements.v3.json', import.meta.url)));
 const ids = new Set(generated.map(card => card.id));
+
+// Recover the exact published source that preceded the later full-card audit.
+// Every current object must still match its final reviewed hash, and deferred
+// objects must be absent; the old release proof itself is never rewritten.
+function preNaturalnessView() {
+  const current = new Map(USAGE_CARDS.map(card => [card.id, card]));
+  const statuses = new Map(fullNaturalness.statuses.map(row => [row.id, row]));
+  assert.equal(current.size, USAGE_CARDS.length);
+  assert.equal(fullNaturalness.sourceCards.length, fullNaturalness.activeCount);
+  assert.equal(statuses.size, fullNaturalness.activeCount);
+  for (const source of fullNaturalness.sourceCards) {
+    const status = statuses.get(source.id);
+    assert.equal(status.sourceHash, digest(source), `Frozen source drift: ${source.id}`);
+    if (status.status === 'deferred') assert.equal(current.has(source.id), false);
+    else {
+      assert.equal(status.status, 'approved');
+      assert.equal(digest(current.get(source.id)), status.cardHash, `Unreviewed current edit: ${source.id}`);
+      current.delete(source.id);
+    }
+  }
+  assert.equal(current.size, 0, 'No runtime card may appear outside the full-card proof');
+  return fullNaturalness.sourceCards;
+}
 
 // Undo only documented later edits, then check the original frozen hash. Do not
 // compare unchanged cards to a baseline constructed from those same cards.
@@ -63,13 +88,13 @@ test('integration proof stays immutable while documented later edits reconstruct
   assert.equal(createHash('sha256').update(fs.readFileSync(proofPath)).digest('hex'), frozen.proof.sha256);
   assert.deepEqual(generated, proof.batches.flatMap(batch => batch.merged.value));
   assert.equal(ids.size, generated.length);
-  const prior = USAGE_CARDS.filter(card => !ids.has(card.id));
+  const prior = preNaturalnessView().filter(card => !ids.has(card.id));
   assert.equal(prior.length, 16411 - naturalnessReview.deferredCount);
   const historical = historicalView(prior);
   assert.equal(historical.length, 16412);
   assert.equal(digest(historical), '775ff7fcd7a0a2bdfb27a9408202d92d58a1dc76712e6bd5b43d6d0dceb7167d');
   assert.equal(digest(proof.baseline.cards), '770d6cf0a58f97a147ae263254788a2e28de01400ba58ea91bfa73ec845da94c');
-  const byId = new Map(USAGE_CARDS.map(card => [card.id, card]));
+  const byId = new Map(preNaturalnessView().map(card => [card.id, card]));
   for (const card of proof.release.cards) assert.deepEqual(byId.get(card.id), card);
 });
 
@@ -103,14 +128,14 @@ test('completion retains the previous 245 additions and the frozen prior-release
   assert.equal(createHash('sha256').update(fs.readFileSync(oldPath)).digest('hex'), priorState.proof.sha256);
   const oldProof = readReleaseProof(oldPath);
   assert.equal(verifyReleaseProof(oldProof).valid, true);
-  const current = new Map(USAGE_CARDS.map(card => [card.id, card]));
+  const current = new Map(preNaturalnessView().map(card => [card.id, card]));
   for (const old of oldProof.release.cards) assert.deepEqual(current.get(old.id), old);
   const oldIds = new Set(oldProof.release.cards.map(card => card.id));
   const added = generated.filter(card => !oldIds.has(card.id));
   assert.equal(added.length, 245);
   assert.deepEqual(new Set(added.map(card => `${card.senseId}/${card.form}`)), new Set(priorState.open));
   const addedIds = new Set(added.map(card => card.id));
-  const priorRuntime = USAGE_CARDS.filter(card => !addedIds.has(card.id));
+  const priorRuntime = preNaturalnessView().filter(card => !addedIds.has(card.id));
   assert.equal(priorRuntime.length, frozen.previousRelease.cards - withdrawals.length - naturalnessReview.deferredCount);
   const historical = historicalView(priorRuntime);
   assert.equal(historical.length, frozen.previousRelease.cards);
@@ -118,7 +143,7 @@ test('completion retains the previous 245 additions and the frozen prior-release
 });
 
 test('historical verification detects unrelated drift and changes to a reviewed replacement', () => {
-  const prior = USAGE_CARDS.filter(card => !ids.has(card.id));
+  const prior = preNaturalnessView().filter(card => !ids.has(card.id));
   const changed = prior.map((card, index) => index === 0 ? {...card, translation: 'unreviewed'} : card);
   assert.notEqual(digest(historicalView(changed)), digest(historicalView(prior)));
   const revisedId = [...revisions.keys()][0];

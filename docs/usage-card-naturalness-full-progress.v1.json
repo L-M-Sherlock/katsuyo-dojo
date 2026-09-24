@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "884f05590ec9d43aef35b32ce5bbdc73590adf32",
+  "activeCount": 17596,
+  "batchCount": 1099,
+  "reviewedBatches": 1099,
+  "repairSubmissions": 773,
+  "counts": {
+    "approved": 17560,
+    "deferred": 36
+  },
+  "proof": {
+    "path": "docs/usage-card-naturalness-full-progress.v1.json.gz",
+    "sha256": "d8250ce58d97ed9e869ef91086e7494728a784f1d3a0b8a844a4a5073508ebc3",
+    "uncompressedSha256": "ff8fdc2755adf6c6bdac60f2d03e011c496e23c69be2c79525fa18c18871f3b4"
+  }
+}

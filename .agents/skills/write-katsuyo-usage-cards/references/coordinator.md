@@ -92,6 +92,10 @@ node "$SKILL_DIR/scripts/card-workbench.mjs" prepare --project "$PWD" \
 
 在交给审核者前先运行 `scripts/review-preflight.mjs`。它把可机械确定的结构、字段、范围、哈希、模板和报告过期问题挡在审核队列外，并把肯否、过去、完成／准备、授受和语体等仍需语言判断的卡列为 attention。预检输出是筛选证据，不是自然度结论；审核者仍须逐句阅读 attention 以外的每张卡。冻结命令会再次运行预检，不能用旧报告或手动复制绕过。
 
+回溯审核在用卡时，`scripts/audit-naturalness.mjs` 使用对象型冻结清单；`review-preflight.mjs` 只接受 `lane/NN` 的数组型 manifest，不能直接指向该清单。此类返修先做精确 assignment 检查与 `reading-audit.py`，再由 `freeze-repair` 重新验证固定目标、卡片结构、读音、完整句和不可变交付。审核者交报告前运行 `node scripts/audit-naturalness.mjs check-report audit/NNNN /root/审核者句柄`，返修报告用 `check-repair-report 返修ID /root/审核者句柄`；这两个命令只校验，不登记结论。不要为绕过 `manifest.find` 错误伪造 lane 清单，也不要把机械检查当成自然度批准。
+
+此类返修的 `draft.json` 与 `notes.json` 顶层都必须是数组；`notes.json` 每个元素直接带对应卡片 `id`，且须与 assignment 逐项一一覆盖。不要把逐卡记录包在 `{ "repairId": "...", "cards": [...] }` 内：即使作者自己的检查通过，`freeze-repair` 也会因交付格式不符而拒绝冻结。找不到可信新句时，对应卡不放入 `draft.json`，仍在 `notes.json` 中写一条含 `id`、`status: "no-credible-candidate"`、具体 `reason` 和独立证据路线的记录。作者停写前应解析这两个最终文件，确认顶层类型和 ID 范围，再通知协调者冻结。
+
 语言审核由一名独立审核者覆盖本批每张实际生成句：`before + resolveUsageCard(card).target + after`，连同场景、译文和读音一起读。审核者对不可变快照提交完整报告，报告须包含卡片哈希、具体理由、角色、时间、否定范围、译文和 reading 判断。主代理只检查报告完整性并汇总结果；不提供自己的逐卡语言替代意见。
 
 依据[完整句审核](editorial-review.md)和表达族专项规则，分开处理：

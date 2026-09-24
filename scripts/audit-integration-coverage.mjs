@@ -24,6 +24,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import zlib from 'node:zlib';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {readReleaseProof, verifyReleaseProof} from './export-integration-batches.mjs';
 
@@ -168,7 +169,79 @@ function setArray(set) { return [...set].sort((a, b) => a.localeCompare(b)); }
 function intersection(a, b) { return new Set([...a].filter(item => b.has(item))); }
 function difference(a, b) { return new Set([...a].filter(item => !b.has(item))); }
 
-function auditProof(file, cards, required, runtime, errors) {
+const cardHash = card => digest(Buffer.from(JSON.stringify(card)));
+
+function naturalnessSuccessors(file, expected, changedIds, statusFile) {
+  const bytes = fs.readFileSync(file);
+  if (statusFile && fs.existsSync(statusFile)) {
+    const summary = readData(statusFile).value;
+    if (summary?.proof?.sha256 !== digest(bytes)) fail('Naturalness proof differs from its published checksum');
+  }
+  const proof = parseJson(file.endsWith('.gz') ? zlib.gunzipSync(bytes) : bytes, file);
+  if (proof.schemaVersion !== 1 || !Array.isArray(proof.sourceCards)
+      || !Array.isArray(proof.statuses) || !Array.isArray(proof.repairs)
+      || proof.sourceCards.length !== proof.activeCount || proof.statuses.length !== proof.activeCount) {
+    fail('Naturalness proof has an invalid or incomplete inventory');
+  }
+  const sources = new Map(proof.sourceCards.map(card => [card.id, card]));
+  const statuses = new Map(proof.statuses.map(row => [row.id, row]));
+  if (sources.size !== proof.activeCount || statuses.size !== proof.activeCount
+      || proof.statuses.some(row => row.status !== 'approved' && row.status !== 'deferred')) {
+    fail('Naturalness proof has duplicate IDs or unfinished reviews');
+  }
+  const approvedCount = proof.statuses.filter(row => row.status === 'approved').length;
+  const deferredCount = proof.activeCount - approvedCount;
+  if (proof.counts && (proof.counts.approved !== approvedCount || proof.counts.deferred !== deferredCount)) {
+    fail('Naturalness proof status counts differ from its inventory');
+  }
+  for (const [id, source] of sources) {
+    const status = statuses.get(id);
+    if (!status || status.sourceHash !== cardHash(source)
+        || (status.status === 'approved' && !HEX.test(status.cardHash ?? ''))) {
+      fail(`Naturalness proof has a missing or stale source status: ${id}`);
+    }
+  }
+  const release = new Map(expected.map(card => [card.id, card]));
+  // The old integration chain is verified separately. Here it anchors every
+  // successor to that exact old object, rather than to an arbitrary ID match.
+  for (const [id, old] of release) {
+    const source = sources.get(id), status = statuses.get(id);
+    if (!source || !status || cardHash(source) !== cardHash(old)
+        || status.sourceHash !== cardHash(old)) fail(`Naturalness source differs from integration release: ${id}`);
+  }
+  const approvedDrafts = new Map();
+  for (const repair of proof.repairs) {
+    if (!Array.isArray(repair.draft) || !Array.isArray(repair.rows)) fail('Naturalness repair lacks its draft or review rows');
+    const drafts = new Map(repair.draft.map(card => [card.id, card]));
+    for (const row of repair.rows) {
+      if (row.status !== 'approved' || !changedIds.has(row.id)) continue;
+      const draft = drafts.get(row.id);
+      if (!draft || row.hash !== cardHash(draft) || !HEX.test(repair.authorReceipt ?? '')
+          || !HEX.test(repair.reviewReceipt ?? '') || !repair.author || !repair.reviewer
+          || repair.author === repair.reviewer) fail(`Naturalness repair provenance is invalid: ${row.id}`);
+      approvedDrafts.set(row.id, {card: {...draft, review: 'approved'}, repair});
+    }
+  }
+  const successors = new Map();
+  for (const id of changedIds) {
+    const status = statuses.get(id), approved = approvedDrafts.get(id);
+    if (status?.status !== 'approved' || !approved
+        || status.cardHash !== cardHash(approved.card)
+        || status.reviewReceipt !== approved.repair.reviewReceipt) {
+      fail(`Naturalness final approval is missing or stale: ${id}`);
+    }
+    successors.set(id, {card: approved.card, provenance: {
+      id, sourceHash: status.sourceHash, finalHash: status.cardHash,
+      repairId: approved.repair.repairId, author: approved.repair.author,
+      authorReceipt: approved.repair.authorReceipt, reviewer: approved.repair.reviewer,
+      reviewReceipt: approved.repair.reviewReceipt,
+    }});
+  }
+  return {fileHash: digest(bytes), sourceCommit: proof.sourceCommit,
+    activeCount: proof.activeCount, successors};
+}
+
+function auditProof(file, cards, required, runtime, errors, naturalnessFile, naturalnessStatusFile) {
   const report = {path: file, fileHash: null, chainValid: false, contentMatches: false, valid: false};
   const verifiedCards = new Map();
   try {
@@ -190,16 +263,35 @@ function auditProof(file, cards, required, runtime, errors) {
     const extra = actual.filter(card => !expectedById.has(card?.id)).map(card => card?.id ?? '(missing id)');
     const changed = expected.filter(card => actualById.has(card.id)
       && JSON.stringify(card) !== JSON.stringify(actualById.get(card.id))).map(card => card.id);
+    const reviewedSuccessors = [];
+    const unreviewedChanged = [];
+    if (changed.length && naturalnessFile && fs.existsSync(naturalnessFile)) {
+      try {
+        const naturalness = naturalnessSuccessors(naturalnessFile, expected, new Set(changed), naturalnessStatusFile);
+        report.naturalness = {path: naturalnessFile, fileHash: naturalness.fileHash,
+          sourceCommit: naturalness.sourceCommit, activeCount: naturalness.activeCount};
+        for (const id of changed) {
+          const successor = naturalness.successors.get(id);
+          if (successor && JSON.stringify(actualById.get(id)) === JSON.stringify(successor.card)) {
+            reviewedSuccessors.push(successor.provenance);
+            verifiedCards.set(id, successor.card);
+          } else unreviewedChanged.push(id);
+        }
+      } catch (error) {
+        report.naturalness = {path: naturalnessFile, error: error.message};
+        unreviewedChanged.push(...changed);
+      }
+    } else unreviewedChanged.push(...changed);
     const outsideRequirements = expected.map(pairKey).filter(pair => !required.set.has(pair));
     const objectHash = list => digest(Buffer.from(JSON.stringify([...list].sort((a, b) => String(a?.id).localeCompare(String(b?.id))))));
-    report.contentMatches = !missing.length && !extra.length && !changed.length && actual.length === expected.length;
+    report.contentMatches = !missing.length && !extra.length && !unreviewedChanged.length && actual.length === expected.length;
     Object.assign(report, {batches: verified.batches, releaseFileHash: proof.release.fileHash, releaseCount: expected.length,
       historicalCount: proof.baseline.cards.length, protocol3Count: expected.length - proof.baseline.cards.length,
       sourceCount: actual.length, sourceContentHash: objectHash(actual), releaseContentHash: objectHash(expected),
-      missing, extra, changed, outsideRequirements});
+      missing, extra, changed: unreviewedChanged, reviewedSuccessors, outsideRequirements});
     if (missing.length) errors.push(`Proof cards missing from formal source: ${missing.join(', ')}`);
     if (extra.length) errors.push(`Formal integration cards absent from proof: ${extra.join(', ')}`);
-    if (changed.length) errors.push(`Formal integration cards differ from proof: ${changed.join(', ')}`);
+    if (unreviewedChanged.length) errors.push(`Formal integration cards differ from proof: ${unreviewedChanged.join(', ')}`);
     if (actual.length !== expected.length && !missing.length && !extra.length) errors.push('Formal integration card count differs from proof');
     if (outsideRequirements.length) errors.push(`Proof release pairs outside frozen requirements: ${outsideRequirements.join(', ')}`);
     report.valid = report.contentMatches && !outsideRequirements.length;
@@ -226,6 +318,7 @@ function auditProof(file, cards, required, runtime, errors) {
  * @param {string} [options.open] exact open/unresolved pair ledger
  * @param {string} [options.receipts] receipt and expected-hash ledger
  * @param {string} [options.proofPath] portable release proof; verifies receipts and exact formal content
+ * @param {string} [options.naturalnessProofPath] complete exact-hash audit proof for reviewed successors
  * @param {string} [options.runtime] runtime module used for resolving target readings
  * @param {boolean} [options.strict] missing receipt/hash/reading metadata is blocking
  */
@@ -303,7 +396,9 @@ export async function auditIntegrationCoverage(options = {}) {
   }
 
   const proof = options.proofPath
-    ? auditProof(absolute(root, options.proofPath), cards, required, runtime, errors) : null;
+    ? auditProof(absolute(root, options.proofPath), cards, required, runtime, errors,
+      absolute(root, options.naturalnessProofPath, 'docs/usage-card-naturalness-full-progress.v1.json.gz'),
+      absolute(root, options.naturalnessStatusPath, 'docs/usage-card-naturalness-full-progress.v1.json')) : null;
 
   const receiptData = options.receipts && fs.existsSync(absolute(root, options.receipts))
     ? readData(absolute(root, options.receipts)).value : null;

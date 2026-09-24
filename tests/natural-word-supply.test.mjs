@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { gunzipSync } from 'node:zlib';
 import { createServer } from 'vite';
 import { assessmentTarget, emptyAssessment, reconcileAssessmentCatalog, recordIndependentAttempt, retestStatus } from '../app/lib/learning-assessment.mjs';
 import { restoreLearningAssessment } from '../app/lib/assessment-transfer.mjs';
@@ -15,6 +16,10 @@ const linkingReview = JSON.parse(readFileSync(new URL('./fixtures/linking-usage-
 const intentionReview = JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json', import.meta.url), 'utf8'));
 const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url), 'utf8'));
 const naturalnessReview = JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json', import.meta.url), 'utf8'));
+const fullNaturalnessProof = JSON.parse(gunzipSync(readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json.gz', import.meta.url))));
+const fullNaturalnessBefore = JSON.parse(readFileSync(new URL('./fixtures/naturalness-full-deferred-before.json', import.meta.url), 'utf8'));
+assert.equal(fullNaturalnessBefore.sourceCommit, fullNaturalnessProof.sourceCommit);
+assert.deepEqual(new Set(fullNaturalnessBefore.entries.map(row => row.pair)), new Set(fullNaturalnessProof.deferrals.map(row => row.pair)));
 const actionContexts = new Map((actionReview.contextChanges ?? []).map(row => [row.pair, row]));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const identity = item => `${item.domain}:${item.surface}`;
@@ -51,6 +56,12 @@ const actionDeferred = [...(actionReview.deferred ?? []), ...naturalnessReview.d
   const exercise = model.registryExercises.find(e => `${reviewedLexicalSense(e.item)?.id}/${e.form}` === entry.pair);
   assert.ok(exercise, entry.pair);
   return {...exercise, context: entry.previousUsage?.context};
+});
+const fullNaturalnessDeferred = fullNaturalnessBefore.entries.map(entry => {
+  const exercise = model.registryExercises.find(e => `${reviewedLexicalSense(e.item)?.id}/${e.form}` === entry.pair);
+  assert.ok(exercise, entry.pair);
+  assert.ok(entry.previousUsage.status === 'allowed' || (entry.previousUsage.status === 'context-required' && entry.previousUsage.context));
+  return {...exercise, context: entry.previousUsage.context};
 });
 const find = (surface, form) => {
   const exercise = model.exercises.find(candidate => candidate.item.surface === surface && candidate.form === form);
@@ -89,7 +100,7 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   // Reconstruct the old view without replacing or weakening its frozen hashes.
   // The only exceptions are the documented retirement/context delta and the
   // context IDs' review-version suffix; every unrelated text is still hashed.
-  const originalExercises = [...model.exercises, ...retired, ...actionDeferred].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
+  const originalExercises = [...model.exercises, ...retired, ...actionDeferred, ...fullNaturalnessDeferred].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
   assert.equal(originalExercises.length, before.counts.eligibleExercises);
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');

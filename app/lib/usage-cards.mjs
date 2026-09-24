@@ -3,6 +3,7 @@ import linking from './usage-cards/linking.mjs';
 import actions from './usage-cards/actions.mjs';
 import actionsGenerated from './usage-cards/actions-generated.mjs';
 import reviewedActionReplacements from './usage-cards/actions-naturalness-20260923.mjs';
+import { FULL_NATURALNESS_REPLACEMENTS, FULL_NATURALNESS_DEFERRED_PAIRS } from './usage-cards/full-naturalness-overlay.mjs';
 import combinations from './usage-cards/combinations.mjs';
 import integrationWordCards from './usage-cards/integration-generated.mjs';
 import classBasics from './usage-cards/class-basics.mjs';
@@ -31,12 +32,14 @@ import { deriveUnified } from './unified-knowledge.mjs';
 
 /** Separate teaching content: never populate this from eligibility `context`. */
 const actionReplacements = new Map(reviewedActionReplacements.map(card => [card.id, card]));
+const fullNaturalnessReplacements = new Map(FULL_NATURALNESS_REPLACEMENTS.map(card => [card.id, card]));
 const originalCards = [...basics, ...linking, ...actions, ...actionsGenerated, ...combinations,
   ...classBasics, ...classLinking1, ...classLinking2, ...classActions1, ...classActions2, ...classCombinations1, ...classCombinations2,
   ...basicWordCards, ...voiceWordCards, ...linkingWordCards, ...intentionWordCards, ...integrationWordCards];
 export const USAGE_CARDS = /** @type {UsageCard[]} */ (originalCards
-  .filter(card => !NATURALNESS_DEFERRED_ACTION_PAIRS.has(`${card.senseId}/${card.form}`))
-  .map(card => actionReplacements.get(card.id) ?? card));
+  .filter(card => !NATURALNESS_DEFERRED_ACTION_PAIRS.has(`${card.senseId}/${card.form}`)
+    && !FULL_NATURALNESS_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`))
+  .map(card => fullNaturalnessReplacements.get(card.id) ?? actionReplacements.get(card.id) ?? card));
 export const USAGE_CARD_GROUPS = [
   {id: 'basics', stages: ['basics', 'voice']},
   {id: 'linking', stages: ['linking', 'intentions']},

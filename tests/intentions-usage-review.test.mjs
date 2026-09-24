@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {gunzipSync} from 'node:zlib';
 import {createServer} from 'vite';
 import {assessFormUsage, eligibleVerbForm, supportsVerbForm, USAGE_REVIEW_VERSION} from '../app/lib/form-eligibility.mjs';
 import {conjugate} from '../app/lib/conjugation.mjs';
@@ -25,6 +26,10 @@ const expectedPairs=new Set([
 ]);
 const actionReview=JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json',import.meta.url),'utf8'));
 const naturalnessReview=JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json',import.meta.url),'utf8'));
+const fullNaturalnessProof=JSON.parse(gunzipSync(readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json.gz',import.meta.url))));
+const fullNaturalnessBefore=JSON.parse(readFileSync(new URL('./fixtures/naturalness-full-deferred-before.json',import.meta.url),'utf8'));
+assert.equal(fullNaturalnessBefore.sourceCommit,fullNaturalnessProof.sourceCommit);
+assert.deepEqual(new Set(fullNaturalnessBefore.entries.map(row=>row.pair)),new Set(fullNaturalnessProof.deferrals.map(row=>row.pair)));
 const actionIds=new Set(actionReview.approvedIds);
 const integrationIds=new Set(integrationCards.map(card=>card.id));
 const actionContexts=new Map((actionReview.contextChanges??[]).map(row=>[row.pair,row]));
@@ -48,15 +53,21 @@ const naturalnessRetired=naturalnessReview.deferred.map(entry=>{
   assert.equal(entry.previousUsage.status,'allowed');
   return {...exercise,context:entry.previousUsage.context};
 });
+const fullNaturalnessRetired=fullNaturalnessBefore.entries.map(entry=>{
+  const exercise=model.registryExercises.find(e=>`${reviewedLexicalSense(e.item)?.id}/${e.form}`===entry.pair);
+  assert.ok(exercise,`${entry.pair}: remains in the morphology registry`);
+  assert.ok(entry.previousUsage.status==='allowed'||(entry.previousUsage.status==='context-required'&&entry.previousUsage.context));
+  return {...exercise,context:entry.previousUsage.context};
+});
 const naturalnessPrevious=new Map(naturalnessReview.approvedRevisions.map(row=>[row.id,row.previousCard]));
 
 test('approved intention and action-pair deferrals change only the documented exercise catalog entries',()=>{
   assert.equal(USAGE_REVIEW_VERSION,baseline.reviewVersion+4);
   assert.deepEqual(new Set(baseline.retired.map(e=>`${e.senseId}/${e.form}`)),expectedPairs);
   const currentIds=new Set(model.exercises.map(e=>e.id));
-  for(const e of [...retired,...actionRetired,...naturalnessRetired])assert.ok(!currentIds.has(e.id),e.id);
-  const reconstructed=[...model.exercises,...retired,...actionRetired,...naturalnessRetired];
-  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length);
+  for(const e of [...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired])assert.ok(!currentIds.has(e.id),e.id);
+  const reconstructed=[...model.exercises,...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired];
+  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length);
   assert.equal(hash(reconstructed.map(e=>e.id).sort()),baseline.eligibleExerciseIdsSha256,
     'no unrelated exercise may disappear or become eligible');
   // Preserve the frozen historical hash while accounting for the four
@@ -80,7 +91,7 @@ test('approved intention and action-pair deferrals change only the documented ex
     context:{...e.context,id:e.context.id.replace(/:v\d+$/,':vX')},
   })).sort((a,b)=>a.id.localeCompare(b.id,'en'));
   assert.equal(hash(contexts),baseline.contextsSha256,'unrelated applicability notes stay unchanged');
-  const historical=USAGE_CARDS.filter(card=>!actionIds.has(card.id)&&!integrationIds.has(card.id))
+  const historical=fullNaturalnessProof.sourceCards.filter(card=>!actionIds.has(card.id)&&!integrationIds.has(card.id))
     .map(card=>naturalnessPrevious.get(card.id)??card);
   assert.equal(historical.length,baseline.counts.cards);
   assert.equal(hash(historical),baseline.cardsSha256,'no published example is edited or dropped');
@@ -101,10 +112,21 @@ test('deferred forms remain constructible and recognizable with their usage limi
   }
   const maniau=retired.find(e=>e.item.surface==='間に合う').item;
   const wakaru=retired.find(e=>e.item.surface==='分かる').item;
-  for(const form of ['tekudasai','imperative','nasai','nakutemoIi','volitional','tai','past'])
+  for(const form of ['imperative','nasai','nakutemoIi','volitional','tai','past'])
     assert.equal(eligibleVerbForm(maniau,form),true,`間に合う/${form}`);
-  for(const form of ['tekudasai','naideKudasai','imperative','nasai','prohibitive','temoIi','nakutemoIi'])
+  for(const form of ['tekudasai','imperative','nasai','temoIi','nakutemoIi'])
     assert.equal(eligibleVerbForm(wakaru,form),true,`分かる/${form}`);
+  for(const exercise of fullNaturalnessRetired){
+    const {item,form}=exercise;
+    assert.equal(supportsVerbForm(item,form),true,exercise.id);
+    assert.equal(eligibleVerbForm(item,form),false,exercise.id);
+    const usage=assessFormUsage(item,form);
+    assert.equal(usage.status,'context-required',exercise.id);
+    assert.equal(usage.context,undefined,exercise.id);
+    assert.equal(usage.reasonCode,'naturalness-full-deferred',exercise.id);
+    const answer=conjugate(item.surface,item.class,form);
+    assert.ok(recognizeForms(item,answer,normalizeAnswer).some(x=>x.form===form),exercise.id);
+  }
 });
 
 test('all five existing retest obligations transfer to other words without changing prior evidence',()=>{
@@ -136,10 +158,35 @@ test('all five existing retest obligations transfer to other words without chang
   }
 });
 
+test('a newly deferred sole-word target keeps its historical failure until an example returns',()=>{
+  const pair='verb:来る:くる/teageruNegativePast';
+  assert.ok(fullNaturalnessProof.deferrals.some(row=>row.pair===pair));
+  const exercise=fullNaturalnessRetired.find(e=>`${reviewedLexicalSense(e.item)?.id}/${e.form}`===pair);
+  assert.ok(exercise);
+  const target=assessmentTarget(exercise);
+  assert.equal(model.exercises.filter(e=>assessmentTarget(e).key===target.key).length,0);
+  const failed=recordIndependentAttempt(emptyAssessment(),{
+    exercise,questionId:'naturalness-deferred-history',correct:false,at:'2026-09-18T00:00:00Z',
+  });
+  const original=structuredClone(failed);
+  const restored=restoreLearningAssessment({byKc:{},assessment:failed},{components:model.components,exercises:model.exercises}).assessment;
+  assert.deepEqual(failed,original,'restoration does not mutate the saved failure');
+  assert.equal(restored.pending[target.key],undefined);
+  const {suspension,...preserved}=restored.suspendedPending[target.key];
+  assert.deepEqual(preserved,failed.pending[target.key]);
+  assert.equal(suspension.reason,'no-eligible-exercise');
+  assert.equal(restored.byTarget[target.key].eligibleRetestCorrect,0);
+  const resumed=reconcileAssessmentCatalog(restored,[...model.exercises,exercise],USAGE_REVIEW_VERSION);
+  assert.deepEqual(resumed.pending[target.key],failed.pending[target.key]);
+  assert.equal(resumed.suspendedPending[target.key],undefined);
+});
+
 test('every eligible intention pair now has an approved example with all course forms still trainable',()=>{
   const pairs=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   const requirements=usageCardStageRequirements('intentions');
-  assert.equal(requirements.length,3681);
+  const intentionForms=new Set(UNIFIED_COURSES.filter(course=>course.stageId==='intentions').flatMap(course=>course.forms));
+  const deferredIntentions=fullNaturalnessProof.deferrals.filter(row=>intentionForms.has(row.pair.split('/')[1]));
+  assert.equal(requirements.length,3681-deferredIntentions.length);
   assert.ok(requirements.every(pair=>pairs.has(pair)));
   assert.equal(model.components.filter(c=>c.gating).length,132);
   assert.equal(model.components.filter(c=>c.id.startsWith('facet.')).length,130);

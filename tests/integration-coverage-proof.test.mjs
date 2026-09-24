@@ -87,6 +87,95 @@ function fixture(t) {
   return {root, options, cards, cardFile, setCards, setRuntime, setProof, proof: result.proof};
 }
 
+function reviewedNaturalnessSuccessor(f) {
+  const old = f.proof.release.cards[1];
+  const draft = {...old, scene: 'Reviewed replacement scene', review: 'draft'};
+  const final = {...draft, review: 'approved'};
+  const authorReceipt = 'a'.repeat(64), reviewReceipt = 'b'.repeat(64);
+  const naturalness = {schemaVersion: 1, sourceCommit: 'synthetic-commit', activeCount: 2,
+    sourceCards: f.proof.release.cards,
+    statuses: f.proof.release.cards.map(card => ({id: card.id, sourceHash: sha(JSON.stringify(card)),
+      status: 'approved', cardHash: sha(JSON.stringify(card.id === old.id ? final : card)),
+      reviewReceipt: card.id === old.id ? reviewReceipt : 'c'.repeat(64)})),
+    repairs: [{repairId: 'synthetic-repair-01', author: '/root/synthetic_author',
+      reviewer: '/root/synthetic_independent_reviewer', authorReceipt, reviewReceipt,
+      draft: [draft], rows: [{id: old.id, hash: sha(JSON.stringify(draft)), status: 'approved'}]}]};
+  const naturalnessPath = path.join(f.root, 'naturalness-proof.json.gz');
+  const setNaturalness = value => fs.writeFileSync(naturalnessPath, gzipSync(encode(value)));
+  setNaturalness(naturalness);
+  f.setRuntime(f.cards.map(card => card.id === old.id ? final : card));
+  f.setCards(f.cards.map(card => card.id === old.id ? final : card));
+  return {old, final, naturalness, naturalnessPath, setNaturalness,
+    options: {...f.options, cards: f.cardFile, naturalnessProofPath: naturalnessPath}};
+}
+
+test('complete naturalness proof permits an exact independently reviewed integration successor', async t => {
+  const f = fixture(t), successor = reviewedNaturalnessSuccessor(f);
+  const report = await auditIntegrationCoverage(successor.options);
+  assert.equal(report.valid, true, report.errors.join('\n'));
+  assert.deepEqual(report.proof.changed, []);
+  assert.equal(report.proof.reviewedSuccessors.length, 1);
+  assert.equal(report.proof.reviewedSuccessors[0].id, successor.old.id);
+  assert.equal(report.proof.reviewedSuccessors[0].author, '/root/synthetic_author');
+  assert.equal(report.proof.reviewedSuccessors[0].reviewer, '/root/synthetic_independent_reviewer');
+  assert.equal(report.integrity.fileIntegrityBasis, 'verified-proof-content');
+});
+
+test('naturalness successor cannot hide a changed source, stale final hash, or unreviewed edit', async t => {
+  const f = fixture(t), successor = reviewedNaturalnessSuccessor(f);
+  const altered = structuredClone(successor.naturalness);
+  altered.sourceCards[1].scene = 'Different historical source';
+  successor.setNaturalness(altered);
+  let report = await auditIntegrationCoverage(successor.options);
+  assert.equal(report.valid, false);
+  assert.match(report.proof.naturalness.error, /missing or stale source status|source differs from integration release/);
+
+  altered.sourceCards[1] = successor.old;
+  altered.statuses[1].cardHash = '0'.repeat(64);
+  successor.setNaturalness(altered);
+  report = await auditIntegrationCoverage(successor.options);
+  assert.equal(report.valid, false);
+  assert.match(report.proof.naturalness.error, /final approval is missing or stale/);
+
+  successor.setNaturalness(successor.naturalness);
+  f.setCards(f.cards.map(card => card.id === successor.old.id
+    ? {...successor.final, translation: 'Unreviewed translation'} : card));
+  report = await auditIntegrationCoverage(successor.options);
+  assert.equal(report.valid, false);
+  assert.deepEqual(report.proof.changed, [successor.old.id]);
+});
+
+test('naturalness proof must cover the full frozen inventory with an independent repair reviewer', async t => {
+  const f = fixture(t), successor = reviewedNaturalnessSuccessor(f);
+  const altered = structuredClone(successor.naturalness);
+  altered.statuses[0].status = 'uncertain';
+  successor.setNaturalness(altered);
+  let report = await auditIntegrationCoverage(successor.options);
+  assert.equal(report.valid, false);
+  assert.match(report.proof.naturalness.error, /unfinished reviews/);
+
+  altered.statuses[0].status = 'approved';
+  altered.repairs[0].reviewer = altered.repairs[0].author;
+  successor.setNaturalness(altered);
+  report = await auditIntegrationCoverage(successor.options);
+  assert.equal(report.valid, false);
+  assert.match(report.proof.naturalness.error, /provenance is invalid/);
+});
+
+test('reviewed successors still require the exact historical integration ID set', async t => {
+  const f = fixture(t), successor = reviewedNaturalnessSuccessor(f);
+  f.setCards(f.cards.filter(card => card.id !== successor.old.id));
+  let report = await auditIntegrationCoverage(successor.options);
+  assert.equal(report.valid, false);
+  assert.deepEqual(report.proof.missing, [successor.old.id]);
+
+  const extra = {...successor.final, id: 'usage:synthetic-extra', senseId: 'sense:synthetic-extra'};
+  f.setCards([...f.cards.map(card => card.id === successor.old.id ? successor.final : card), extra]);
+  report = await auditIntegrationCoverage(successor.options);
+  assert.equal(report.valid, false);
+  assert.deepEqual(report.proof.extra, [extra.id]);
+});
+
 test('strict proof coverage accepts exact historical objects and reviewed new cards without invented receipts', async t => {
   const f = fixture(t);
   const report = await auditIntegrationCoverage(f.options);

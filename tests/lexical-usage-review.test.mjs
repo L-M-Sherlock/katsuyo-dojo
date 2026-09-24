@@ -128,7 +128,12 @@ test('simultaneous teaching keeps unsupported readings out without banning real 
   for (const surface of ['寝る', '眠る', '起きる']) {
     assert.equal(supportsVerbForm(word(surface), 'tsutsu'), true, surface);
     assert.equal(eligibleVerbForm(word(surface), 'tsutsu'), false, surface);
-    assert.equal(eligibleVerbForm(word(surface), 'nagara'), true, surface);
+    if(surface==='起きる'){
+      const usage=assessFormUsage(word(surface),'nagara');
+      assert.equal(eligibleVerbForm(word(surface),'nagara'),false,surface);
+      assert.equal(usage.reasonCode,'naturalness-full-deferred',surface);
+      assert.equal(usage.status,'context-required',surface);
+    } else assert.equal(eligibleVerbForm(word(surface), 'nagara'), true, surface);
   }
   for (const surface of ['始める', '出かける', '座る', '立つ', '入る']) for (const form of ['nagara', 'tsutsu']) {
     assert.equal(eligibleVerbForm(word(surface), form), true, `${surface}:${form}`);

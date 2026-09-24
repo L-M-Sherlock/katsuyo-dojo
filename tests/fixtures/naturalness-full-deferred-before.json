@@ -1,0 +1,385 @@
+{
+  "sourceCommit": "884f05590ec9d43aef35b32ce5bbdc73590adf32",
+  "entries": [
+    {
+      "pair": "verb:出る:でる/tsutsu",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可与同一主体的另一动作同时进行。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:分かる:わかる/naideKudasai",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "把该词用于人际沟通中的劝告、请求或努力目标。",
+        "context": {
+          "id": "verb:分かる:わかる:naideKudasai:v7",
+          "text": "交流双方围绕“明白”提出请求、劝告或行动目标。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:分かる:わかる/prohibitive",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "把该词用于人际沟通中的劝告、请求或努力目标。",
+        "context": {
+          "id": "verb:分かる:わかる:prohibitive:v7",
+          "text": "交流双方围绕“明白”提出请求、劝告或行动目标。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:助ける:たすける/tekuruNegative",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:勝つ:かつ/masenka",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用作人际指令、邀请、许可或行动安排。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:勝つ:かつ/naide",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用作人际指令、邀请、许可或行动安排。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:始める:はじめる/tearuPast",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:始める:はじめる:tearu:v7",
+          "text": "为接下来的安排做准备，描述“开始”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:学ぶ:まなぶ/teageru",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可以与帮助者、受益者的行动关系搭配。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:学ぶ:まなぶ/teageruNegative",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可以与帮助者、受益者的行动关系搭配。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:学ぶ:まなぶ/teageruNegativePast",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可以与帮助者、受益者的行动关系搭配。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:学ぶ:まなぶ/teageruPast",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可以与帮助者、受益者的行动关系搭配。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:思う:おもう/teageruPast",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可以与帮助者、受益者的行动关系搭配。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:思う:おもう/teikuNegative",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:来る:くる/teageruNegativePast",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可以与帮助者、受益者的行动关系搭配。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:浴びる:あびる/tearuPast",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:浴びる:あびる:tearu:v7",
+          "text": "为接下来的安排做准备，描述“淋；沐浴”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:着く:つく/teiku",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:着く:つく/teikuPast",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:着く:つく/teku",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:知る:しる/naideKudasai",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "把该词用于人际沟通中的劝告、请求或努力目标。",
+        "context": {
+          "id": "verb:知る:しる:naideKudasai:v7",
+          "text": "交流双方围绕“知道”提出请求、劝告或行动目标。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:知る:しる/teikuNegative",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:稼ぐ:かせぐ/tearu",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:稼ぐ:かせぐ:tearu:v7",
+          "text": "为接下来的安排做准备，描述“挣钱”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:稼ぐ:かせぐ/tearuPast",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:稼ぐ:かせぐ:tearu:v7",
+          "text": "为接下来的安排做准备，描述“挣钱”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:終わる:おわる/naide",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用作人际指令、邀请、许可或行动安排。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:続ける:つづける/tearu",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:続ける:つづける:tearu:v7",
+          "text": "为接下来的安排做准备，描述“继续”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:続ける:つづける/tearuPast",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:続ける:つづける:tearu:v7",
+          "text": "为接下来的安排做准备，描述“继续”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:起きる:おきる/nagara",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可与同一主体的另一动作同时进行。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:足りる:たりる/tehoshii",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "てほしい可以表达对情况出现的期待，主体不必是有意行动的人。",
+        "context": {
+          "id": "verb:足りる:たりる:tehoshii:v7",
+          "text": "组织者核对活动物资，谈论对数量的期待。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:足りる:たりる/tehoshiiNegative",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "てほしい可以表达对情况出现的期待，主体不必是有意行动的人。",
+        "context": {
+          "id": "verb:足りる:たりる:tehoshii:v7",
+          "text": "组织者核对活动物资，谈论对数量的期待。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:足りる:たりる/tehoshiiNegativePast",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "てほしい可以表达对情况出现的期待，主体不必是有意行动的人。",
+        "context": {
+          "id": "verb:足りる:たりる:tehoshii:v7",
+          "text": "组织者核对活动物资，谈论对数量的期待。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:足りる:たりる/tehoshiiPast",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "てほしい可以表达对情况出现的期待，主体不必是有意行动的人。",
+        "context": {
+          "id": "verb:足りる:たりる:tehoshii:v7",
+          "text": "组织者核对活动物资，谈论对数量的期待。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:迎える:むかえる/tearuNegativePast",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:迎える:むかえる:tearu:v7",
+          "text": "为接下来的安排做准备，描述“迎接”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:過ぎる:すぎる/zu",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "分类、基础活用和条件连接适用于当前词义。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:間に合う:まにあう/taiNegative",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可自然表达动作当事人的愿望。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:間に合う:まにあう/taiNegativePast",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可自然表达动作当事人的愿望。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:間に合う:まにあう/tekudasai",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用作人际指令、邀请、许可或行动安排。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "pair": "verb:間に合う:まにあう/teshimauNegativePast",
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    }
+  ]
+}

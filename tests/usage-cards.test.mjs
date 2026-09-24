@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {gunzipSync} from 'node:zlib';
 import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import UsageCardView from '../app/lib/usage-card-view.mjs';
@@ -21,9 +22,15 @@ import integrationWordCards from '../app/lib/usage-cards/integration-generated.m
 const integrationIds = new Set(integrationWordCards.map(card => card.id));
 const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url), 'utf8'));
 const naturalnessReview = JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json', import.meta.url), 'utf8'));
+const fullNaturalnessSummary = JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json', import.meta.url), 'utf8'));
+const fullNaturalnessBytes = readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json.gz', import.meta.url));
+const fullNaturalnessProof = JSON.parse(gunzipSync(fullNaturalnessBytes));
 const naturalnessDeferred = new Set(naturalnessReview.deferred.map(row => row.pair));
 const naturalnessPrevious = new Map(naturalnessReview.approvedRevisions.map(row => [row.id, row.previousCard]));
 const beforeNaturalness = cards => cards.map(card => naturalnessPrevious.get(card.id) ?? card);
+const fullNaturalnessSource = fullNaturalnessProof.sourceCards;
+const fullNaturalnessStatus = new Map(fullNaturalnessProof.statuses.map(row => [row.id, row]));
+const fullNaturalnessDeferred = new Set(fullNaturalnessProof.deferrals.map(row=>row.pair));
 const actionIds = new Set(actionReview.approvedIds);
 
 const intentionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-intentions-review.json', import.meta.url),'utf8'));
@@ -102,7 +109,10 @@ test('published action cards match the approved review ledger and leave the hist
   assert.equal(actionWordCards.length, actionReview.approvedCards);
   assert.deepEqual(new Set(actionWordCards.map(card => card.id)), actionIds);
   assert.equal(hash(actionWordCards), actionReview.approvedCardsSha256);
-  const old = beforeNaturalness(USAGE_CARDS.filter(card => !actionIds.has(card.id) && !integrationIds.has(card.id)));
+  assert.equal(createHash('sha256').update(fullNaturalnessBytes).digest('hex'),fullNaturalnessSummary.proof.sha256);
+  assert.equal(fullNaturalnessProof.sourceCommit,fullNaturalnessSummary.sourceCommit);
+  assert.equal(fullNaturalnessSource.length,fullNaturalnessSummary.activeCount);
+  const old = beforeNaturalness(fullNaturalnessSource.filter(card => !actionIds.has(card.id) && !integrationIds.has(card.id)));
   assert.equal(old.length, actionReview.originalCards);
   assert.equal(hash(old), actionReview.originalCardsSha256);
   const approvedPairs = new Set(actionWordCards.map(card => `${card.senseId}/${card.form}`));
@@ -110,8 +120,10 @@ test('published action cards match the approved review ledger and leave the hist
   assert.equal(approvedPairs.size, actionReview.approvedCards);
   assert.ok([...pendingPairs].every(pair => !approvedPairs.has(pair)));
   const required = new Set(usageCardStageRequirements('actions'));
+  const actionForms = new Set(UNIFIED_COURSES.filter(course=>course.stageId==='actions').flatMap(course=>course.forms));
+  const fullDeferredActions = new Set([...fullNaturalnessDeferred].filter(pair=>actionForms.has(pair.split('/')[1])));
   const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
-  assert.equal(required.size, actionReview.effectiveRequiredPairs - naturalnessDeferred.size);
+  assert.equal(required.size, actionReview.effectiveRequiredPairs - naturalnessDeferred.size - fullDeferredActions.size);
   assert.equal(pendingPairs.size, 0);
   assert.equal(pendingPairs.size, actionReview.pendingPairs);
   assert.equal(actionReview.deferredPairs, 32);
@@ -120,11 +132,11 @@ test('published action cards match the approved review ledger and leave the hist
   assert.equal(actionReview.complete, true);
   const deferred = DEFERRED_ACTION_PAIRS;
   for (const pair of pendingPairs) assert.ok(!covered.has(pair), pair);
-  for (const pair of approvedPairs) assert.equal(required.has(pair), !naturalnessDeferred.has(pair), pair);
+  for (const pair of approvedPairs) assert.equal(required.has(pair), !naturalnessDeferred.has(pair) && !fullDeferredActions.has(pair), pair);
   assert.ok([...deferred].every(pair=>!required.has(pair)&&!pendingPairs.has(pair)));
   assert.deepEqual(new Set([...covered, ...pendingPairs]), required);
-  assert.equal(required.size+deferred.size,actionReview.originalRequiredPairs);
-  assert.equal(covered.size - (approvedPairs.size - naturalnessDeferred.size), actionReview.originalActionPairs);
+  assert.equal(required.size+deferred.size+fullDeferredActions.size,actionReview.originalRequiredPairs);
+  assert.equal(covered.size - (approvedPairs.size - naturalnessDeferred.size - fullDeferredActions.size), actionReview.originalActionPairs);
   assert.ok(actionWordCards.every(card => card.review === 'approved'));
 });
 
@@ -210,7 +222,7 @@ test('published intention batches match the reviewed content and leave all old c
   const ids = new Set(intentionWordCards.map(card=>card.id));
   assert.equal(ids.size,intentionReview.approvedCards);
   assert.equal(intentionWordCards.length,intentionReview.approvedCards);
-  assert.equal(hash(beforeNaturalness(USAGE_CARDS.filter(card=>!ids.has(card.id)&&!actionIds.has(card.id)&&!integrationIds.has(card.id)))),intentionReview.originalCardsSha256);
+  assert.equal(hash(beforeNaturalness(fullNaturalnessSource.filter(card=>!ids.has(card.id)&&!actionIds.has(card.id)&&!integrationIds.has(card.id)))),intentionReview.originalCardsSha256);
   const reviewed = [];
   for(const batch of intentionReview.batches) {
     const cards=(await import(`../app/lib/usage-cards/intention-words/${batch.file}`)).default;
@@ -327,6 +339,7 @@ test('reading validation catches stale okurigana and truncated kana without gues
 });
 
 test('reviewed source readings retain the intended word sense and revised sentence', () => {
+  const hash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
   const cases=[
     ['usage:adjectiveNaNegativePast:adjective:複雑:ふくざつ','before','まえのひょうはいぜんは'],
     ['usage:teageruPast:verb:調べる:しらべる','before','どうりょうのかわりにみちじゅんを'],
@@ -341,8 +354,17 @@ test('reviewed source readings retain the intended word sense and revised senten
     ['usage:te:verb:要る:いる','after','、すぐにははじめられません。'],
     ['usage:masuPast:verb:生まれる:うまれる','before','そふはせんきゅうひゃくごじゅうねんに'],
   ];
+  const sourceById=new Map(fullNaturalnessSource.map(c=>[c.id,c]));
   const byId=new Map(USAGE_CARDS.map(c=>[c.id,c]));
-  for(const [id,side,expected] of cases) assert.equal(byId.get(id)[side].map(p=>p.reading??p.text).join(''),expected,id);
+  for(const [id,side,expected] of cases) {
+    const source=sourceById.get(id), current=byId.get(id), status=fullNaturalnessStatus.get(id);
+    assert.ok(source&&current&&status,id);
+    assert.equal(source[side].map(p=>p.reading??p.text).join(''),expected,`${id}: frozen source reading`);
+    assert.equal(hash(source),status.sourceHash,`${id}: source content has not changed`);
+    assert.equal(hash(current),status.cardHash,`${id}: displayed revision has current-hash approval`);
+    assert.equal(current.senseId,source.senseId,id);
+    assert.equal(current.form,source.form,id);
+  }
 });
 
 test('ideographic zero stays inside the year ruby rather than breaking its reading', () => {
