@@ -9,6 +9,7 @@ import {auditIntegrationCoverage} from '../scripts/audit-integration-coverage.mj
 import {USAGE_CARDS, usageCardStageRequirements, usageCardIssues} from '../app/lib/usage-cards.mjs';
 import generated from '../app/lib/usage-cards/integration-generated.mjs';
 import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
+import {USER_DIRECTED_USAGE_CORRECTIONS} from '../app/lib/usage-cards/user-directed-corrections.mjs';
 import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -23,6 +24,7 @@ const fullNaturalness = JSON.parse(gunzipSync(fs.readFileSync(new URL('../docs/u
 const frozen = JSON.parse(fs.readFileSync(new URL('../docs/integration-stage-requirements.v3.json', import.meta.url)));
 const ids = new Set(generated.map(card => card.id));
 const userHeld = new Map(USER_DIRECTED_USAGE_DEFERRALS.map(row => [row.id, row]));
+const userCorrected = new Map(USER_DIRECTED_USAGE_CORRECTIONS.map(row => [row.id, row]));
 
 // Recover the exact published source that preceded the later full-card audit.
 // Every current object must still match its final reviewed hash, and deferred
@@ -33,6 +35,8 @@ function preNaturalnessView() {
   assert.equal(current.size, USAGE_CARDS.length);
   assert.equal(fullNaturalness.sourceCards.length, fullNaturalness.activeCount);
   assert.equal(statuses.size, fullNaturalness.activeCount);
+  assert.equal(userCorrected.size, USER_DIRECTED_USAGE_CORRECTIONS.length);
+  const matchedCorrections = new Set();
   for (const source of fullNaturalness.sourceCards) {
     const status = statuses.get(source.id);
     assert.equal(status.sourceHash, digest(source), `Frozen source drift: ${source.id}`);
@@ -47,10 +51,20 @@ function preNaturalnessView() {
     }
     else {
       assert.equal(status.status, 'approved');
-      assert.equal(digest(current.get(source.id)), status.cardHash, `Unreviewed current edit: ${source.id}`);
+      const correction = userCorrected.get(source.id);
+      if (correction) {
+        assert.equal(correction.pair, `${source.senseId}/${source.form}`);
+        assert.equal(correction.previousHash, status.cardHash);
+        assert.equal(correction.finalHash, digest(correction.card));
+        assert.equal(digest(current.get(source.id)), correction.finalHash,
+          `Unreviewed user correction: ${source.id}`);
+        matchedCorrections.add(source.id);
+      } else assert.equal(digest(current.get(source.id)), status.cardHash,
+        `Unreviewed current edit: ${source.id}`);
       current.delete(source.id);
     }
   }
+  assert.deepEqual(matchedCorrections, new Set(userCorrected.keys()));
   assert.equal(current.size, 0, 'No runtime card may appear outside the full-card proof');
   return fullNaturalness.sourceCards;
 }

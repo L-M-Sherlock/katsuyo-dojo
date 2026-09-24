@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
-import {USAGE_CARDS} from '../app/lib/usage-cards.mjs';
+import {USAGE_CARDS, resolveUsageCard, usageCardIssues} from '../app/lib/usage-cards.mjs';
 import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
+import {USER_DIRECTED_USAGE_CORRECTIONS} from '../app/lib/usage-cards/user-directed-corrections.mjs';
 import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
 
 const status = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-naturalness-full-progress.v1.json', import.meta.url)));
@@ -70,11 +71,14 @@ test('portable naturalness audit progress preserves the frozen full scope and ex
 test('every displayed card has the final approved text hash, and exact deferrals stay absent', () => {
   const live = new Map(USAGE_CARDS.map(card => [card.id, card]));
   const held = new Map(USER_DIRECTED_USAGE_DEFERRALS.map(row => [row.id, row]));
+  const corrected = new Map(USER_DIRECTED_USAGE_CORRECTIONS.map(row => [row.id, row]));
   const retired = new Set(proof.sourceCards.filter(card => RETIRED_TEORU_NEGATIVE_FORMS.has(card.form)).map(card => card.id));
   const statusById=new Map(proof.statuses.map(row=>[row.id,row]));
   const suppressedApproved=new Set([...held.keys(),...retired].filter(id=>statusById.get(id)?.status==='approved'));
   assert.equal(held.size, USER_DIRECTED_USAGE_DEFERRALS.length);
   assert.equal(new Set(USER_DIRECTED_USAGE_DEFERRALS.map(row => row.pair)).size, held.size);
+  assert.equal(corrected.size, USER_DIRECTED_USAGE_CORRECTIONS.length);
+  assert.equal(new Set(USER_DIRECTED_USAGE_CORRECTIONS.map(row => row.pair)).size, corrected.size);
   assert.equal(live.size, status.counts.approved - suppressedApproved.size);
   for (const row of proof.statuses) {
     const card = live.get(row.id);
@@ -91,8 +95,39 @@ test('every displayed card has the final approved text hash, and exact deferrals
     else {
       assert.equal(row.status, 'approved', row.id);
       assert.ok(card, row.id);
-      assert.equal(cardHash(card), row.cardHash, row.id);
+      const correction = corrected.get(row.id);
+      if (correction) {
+        assert.equal(correction.previousHash, row.cardHash, row.id);
+        assert.equal(correction.pair, `${card.senseId}/${card.form}`, row.id);
+        assert.equal(correction.finalHash, cardHash(correction.card), row.id);
+        assert.equal(cardHash(card), correction.finalHash, row.id);
+      } else assert.equal(cardHash(card), row.cardHash, row.id);
       assert.ok(row.reviewReceipt, row.id);
     }
   }
+});
+
+test('user-directed corrections keep their fixed targets and matching readings', () => {
+  const cards = USER_DIRECTED_USAGE_CORRECTIONS.map(row => USAGE_CARDS.find(card => card.id === row.id));
+  assert.ok(cards.every(Boolean));
+  assert.deepEqual(usageCardIssues(cards), []);
+  const sentences = cards.map(card => {
+    const resolved = resolveUsageCard(card);
+    assert.ok(resolved);
+    return card.before.map(part => part.text).join('') + resolved.target.text
+      + card.after.map(part => part.text).join('');
+  });
+  assert.deepEqual(sentences, [
+    'どんなに美味しくても、一時間も列には並ばない。',
+    '失礼になるので、親は子どもに人を指させなかった。',
+    '窓からの冷気を厚手のカーテンで防がなくて、大丈夫だったのですか。',
+    '川沿いを歩いていると、昔住んでいたアパートの前を過ぎたりする。',
+    '転勤がなくなったので、古い社宅に住まなくてよかった。',
+    'あの時、危険が迫っていたので、彼にはすぐに安全な場所へ戻ってほしかった。',
+    '医師の説明を聞いて、父の病気が治らないと頭では分かったが、心のどこかではまだ分かりたくなかった。',
+  ]);
+  assert.deepEqual(cards.map(card => resolveUsageCard(card).target.reading), [
+    'ならばない', 'ささせなかった', 'ふせがなくて', 'すぎたり',
+    'すまなくて', 'もどってほしかった', 'わかりたくなかった',
+  ]);
 });

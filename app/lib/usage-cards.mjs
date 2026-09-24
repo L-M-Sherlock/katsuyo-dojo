@@ -5,6 +5,7 @@ import actionsGenerated from './usage-cards/actions-generated.mjs';
 import reviewedActionReplacements from './usage-cards/actions-naturalness-20260923.mjs';
 import { FULL_NATURALNESS_REPLACEMENTS, FULL_NATURALNESS_DEFERRED_PAIRS } from './usage-cards/full-naturalness-overlay.mjs';
 import { USER_DIRECTED_DEFERRED_PAIRS } from './usage-cards/user-directed-deferrals.mjs';
+import { USER_DIRECTED_USAGE_CORRECTIONS } from './usage-cards/user-directed-corrections.mjs';
 import { RETIRED_TEORU_NEGATIVE_FORMS } from './compound-forms.mjs';
 import combinations from './usage-cards/combinations.mjs';
 import integrationWordCards from './usage-cards/integration-generated.mjs';
@@ -35,6 +36,7 @@ import { deriveUnified } from './unified-knowledge.mjs';
 /** Separate teaching content: never populate this from eligibility `context`. */
 const actionReplacements = new Map(reviewedActionReplacements.map(card => [card.id, card]));
 const fullNaturalnessReplacements = new Map(FULL_NATURALNESS_REPLACEMENTS.map(card => [card.id, card]));
+const userDirectedCorrections = new Map(USER_DIRECTED_USAGE_CORRECTIONS.map(row => [row.id, row.card]));
 const originalCards = [...basics, ...linking, ...actions, ...actionsGenerated, ...combinations,
   ...classBasics, ...classLinking1, ...classLinking2, ...classActions1, ...classActions2, ...classCombinations1, ...classCombinations2,
   ...basicWordCards, ...voiceWordCards, ...linkingWordCards, ...intentionWordCards, ...integrationWordCards];
@@ -43,7 +45,7 @@ export const USAGE_CARDS = /** @type {UsageCard[]} */ (originalCards
     && !NATURALNESS_DEFERRED_ACTION_PAIRS.has(`${card.senseId}/${card.form}`)
     && !FULL_NATURALNESS_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`)
     && !USER_DIRECTED_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`))
-  .map(card => fullNaturalnessReplacements.get(card.id) ?? actionReplacements.get(card.id) ?? card));
+  .map(card => userDirectedCorrections.get(card.id) ?? fullNaturalnessReplacements.get(card.id) ?? actionReplacements.get(card.id) ?? card));
 export const USAGE_CARD_GROUPS = [
   {id: 'basics', stages: ['basics', 'voice']},
   {id: 'linking', stages: ['linking', 'intentions']},
