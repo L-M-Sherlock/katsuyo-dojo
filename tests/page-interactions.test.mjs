@@ -264,9 +264,22 @@ test('completion previews the retained course focus instead of the global lowest
   fireEvent.click(view.getByRole('button', { name: '结束本轮' }));
   await waitFor(() => assert.ok(view.getByText('本轮完成')));
   assert.equal(view.container.querySelector('.completion-focus span').textContent, '下一轮重点');
-  assert.equal(view.container.querySelector('.completion-focus strong').textContent, '事先准备与请求的组合应用');
+  assert.equal(view.container.querySelector('.completion-focus strong').textContent, '把事先准备与请求连起来');
+  assert.match(view.container.querySelector('.completion-focus p').textContent,/按顺序完成每一步/);
   fireEvent.click(view.getByRole('button', { name: /继续下一轮/ }));
   await waitFor(() => assert.equal(view.container.querySelector('.exercise-card')?.getAttribute('data-form'), 'teokuRequest'));
+});
+
+test('completion explains the volitional godan stem without showing an internal row label', async () => {
+  const current = masteredProfile();
+  current.practiceGoalCourseId = 'volitional';
+  delete current.byKc['stem.godan.o'];
+  storage.setItem(KEY, JSON.stringify(current));
+  const view = await mount();
+  fireEvent.click(view.getByRole('button', { name: '结束本轮' }));
+  await waitFor(() => assert.ok(view.getByText('本轮完成')));
+  assert.equal(view.container.querySelector('.completion-focus strong').textContent, '五段动词意向形的词尾变化');
+  assert.match(view.container.querySelector('.completion-focus p').textContent,/「書く」的「く」换成「こ」/);
 });
 
 test('skipping an unfinished adaptive course starts another unlocked course without clearing its retest', async () => {

@@ -36,6 +36,7 @@ import type { LearningAssessment } from "./lib/learning-assessment.mjs";
 import { assessmentCatalog, applyLearningObservation } from "./lib/learning-profile.mjs";
 import { planRetestQuestion } from "./lib/retest-planning.mjs";
 import { createPracticePlanner } from "./lib/practice-planning.mjs";
+import { focusCopy } from "./lib/focus-copy.mjs";
 import ChallengeSelection from "./lib/challenge-selection.mjs";
 import { createChallengePlanner, normalizeChallengeCourses, CHALLENGE_PREFERENCE_KEY, LEGACY_CHALLENGE_PREFERENCE_KEY, HIGHEST_CHALLENGE_COURSE, CHALLENGE_RECENT_QUESTION_LIMIT } from "./lib/challenge-planning.mjs";
 import { createProfileStore, readPreference, writePreference } from "./lib/profile-store.mjs";
@@ -1037,6 +1038,7 @@ export default function Home() {
     const nextProfile = activateReadyKcs({ ...profile, rotation: profile.rotation + 1 });
     return makePlan(mode, nextProfile, SESSION_LENGTH, goalCourseId).focus;
   }, [finished, challenging, profile, mode, goalCourseId]);
+  const nextRoundFocusCopy = nextRoundFocus ? focusCopy(nextRoundFocus) : null;
   const nextRoundMissingCoverage = nextRoundFocus?.coverageKcIds.filter((id) => (profile.byKc[id]?.correct ?? 0) < 1).map((id) => KC_BY_ID.get(id)?.label).filter(Boolean) ?? [];
   const questionNumber = roundOffset + questionIndex + 1;
   const roundQuestionLimit = challenging ? roundQuestions.length : verification?.exercise || Object.values(planningProfile.assessment.pending).some(entry => isPracticeRetest(entry) && (mode === "adaptive" || entry.courseId === mode))
@@ -1136,7 +1138,8 @@ export default function Home() {
         <p>{pendingInMode.length ? `还有 ${pendingInMode.length} 项待独立复测。下一轮先安排符合条件的复测，间隔不足时穿插其他目标。` : unlocked ? `新知识点已解锁：${unlocked}` : mode === "adaptive" && activeRouteComplete ? unfinishedReview ? `全部知识点已达标，下一轮优先完成「${unfinishedReview.title}」的综合复习。` : "全部课程已完成，接下来按课程轮换巩固。" : mode === "adaptive" ? "下一轮会继续当前课程的重点，并穿插其他知识点。" : "专项模式只练当前课程，不会推进自适应路线的解锁。"}</p>
         <div className="completion-focus">
           <span>下一轮重点</span>
-          <strong>{nextRoundFocus?.label ?? "全部已达标"}</strong>
+          <strong>{nextRoundFocusCopy?.title ?? nextRoundFocus?.label ?? "全部已达标"}</strong>
+          {nextRoundFocusCopy && <p>{nextRoundFocusCopy.detail}</p>}
           {nextRoundMissingCoverage.length > 0 && <small>待覆盖：{nextRoundMissingCoverage.join("、")}</small>}
         </div>
         {courseSwitch}

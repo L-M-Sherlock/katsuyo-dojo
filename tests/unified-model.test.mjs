@@ -12,6 +12,7 @@ import { assignPracticeExercises, recordRecentWord, wordKey } from '../app/lib/e
 import { parseUnifiedImport, createUnifiedExport } from '../app/lib/unified-profile.mjs';
 import { deriveAdjectiveExercise } from '../app/lib/adjective-knowledge-model.mjs';
 import { summarizeUnifiedCourse } from '../app/lib/unified-progress.mjs';
+import { focusCopy } from '../app/lib/focus-copy.mjs';
 
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
 let page;
@@ -24,6 +25,21 @@ const adjective = { domain: 'adjective', surface: '高い', reading: 'たかい'
 const mastered = { ...emptySkillStats(), attempts: 5, correct: 5, filteredAccuracy: 1, confidence: 1, bestConfidence: 1 };
 const profile = overrides => ({ version: 5, date: options.today, attempted: 4, correct: 3, streak: 0, rotation: 2, introducedKcIds: ['class.godan'], byKc: {}, ...overrides });
 const retiredTeoru=JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-negatives-before.json',import.meta.url)));
+
+test('every next-round focus has a learner-facing title and concrete explanation',()=>{
+  const gating=model.components.filter(component=>component.gating);
+  assert.equal(gating.length,132);
+  for(const component of gating){
+    const copy=focusCopy(component);
+    assert.ok(copy,component.id);
+    assert.ok(copy.title.length>=5&&copy.detail.length>=10,component.id);
+    assert.doesNotMatch(copy.title,/[aeio]段|接续|后续变化应用|组合应用/u,component.id);
+    assert.notEqual(copy.title,component.id);
+  }
+  assert.deepEqual(focusCopy(byId.get('stem.godan.o')),
+    {title:'五段动词意向形的词尾变化',detail:'写「書こう」时，把「書く」的「く」换成「こ」，再加「う」。'});
+  assert.equal(focusCopy(byId.get('apply.teoru.continuation')).title,'把「ておる」变成过去形');
+});
 
 test('revision 7 preserves retired ておる failures as suspended history without awarding mastery',()=>{
   const base=parseUnifiedImport(profile({}),options);
