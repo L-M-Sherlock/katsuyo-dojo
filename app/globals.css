@@ -49,6 +49,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   background: var(--red); color: #fffaf1; font-family: "Yu Mincho", "Noto Serif JP", serif; font-size: 21px;
   box-shadow: inset 0 0 0 2px rgba(255,255,255,.22), 0 3px 10px rgba(117, 37, 31, .16);
 }
+.brand-glyph { line-height: 1; transform: translateY(-1px); }
 .brand strong { display: block; font-size: 19px; letter-spacing: .12em; }
 .brand small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; letter-spacing: .2em; }
 
@@ -92,6 +93,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .adaptive-entry:hover { border-color: #aaa69c; background: rgba(255,255,255,.7); }
 .adaptive-entry.active { border-color: var(--ink); background: var(--ink); color: #fffaf1; box-shadow: 0 8px 20px rgba(23,33,28,.12); }
 .adaptive-icon { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: var(--red); color: white; font-family: "Yu Mincho", serif; font-size: 15px; }
+.adaptive-glyph { line-height: 1; transform: translateY(-1px); }
 .adaptive-entry strong, .adaptive-entry small { display: block; }
 .adaptive-entry strong { font-size: 15px; }
 .adaptive-entry small { margin-top: 4px; max-width: 180px; white-space: normal; overflow-wrap: anywhere; color: var(--muted); font-size: 11px; }
