@@ -1,5 +1,6 @@
 // @ts-check
 /** @typedef {import('./adaptive.mjs').SkillStats} SkillStats */
+import { PROFILE_IMPORT_ERROR_CODES, normalizeProfileImportError, profileImportError } from './profile-import-error.mjs';
 
 const FORMAT = "katsuyo-dojo-profile";
 const FORMAT_VERSION = 2;
@@ -58,15 +59,24 @@ export function createProfileExport(profile, exportedAt = new Date().toISOString
 
 /** @param {unknown} value @param {{today: string, kcIds?: string[], gatingKcIds?: string[], initialKcIds?: string[]}} options */
 export function parseProfileImport(value, { today, kcIds = /** @type {string[]} */ ([]), gatingKcIds = kcIds, initialKcIds = /** @type {string[]} */ ([]) }) {
+  try {
+    return parseProfileImportValue(value, { today, kcIds, gatingKcIds, initialKcIds });
+  } catch (error) {
+    throw normalizeProfileImportError(error);
+  }
+}
+
+/** @param {unknown} value @param {{today: string, kcIds?: string[], gatingKcIds?: string[], initialKcIds?: string[]}} options */
+function parseProfileImportValue(value, { today, kcIds = /** @type {string[]} */ ([]), gatingKcIds = kcIds, initialKcIds = /** @type {string[]} */ ([]) }) {
   const envelope = record(value);
-  if (!envelope) throw new Error("文件内容不是有效的数据对象。");
+  if (!envelope) throw profileImportError(PROFILE_IMPORT_ERROR_CODES.INVALID_FILE, "文件内容不是有效的数据对象。");
   if ("format" in envelope && (envelope.format !== FORMAT || !(envelope.formatVersion === 1 || envelope.formatVersion === FORMAT_VERSION))) {
-    throw new Error("这不是受支持的活用道場备份文件。");
+    throw profileImportError(PROFILE_IMPORT_ERROR_CODES.UNSUPPORTED_FORMAT, "这不是受支持的活用道場备份文件。");
   }
 
   const source = record(envelope.profile) ?? envelope;
   if (source.version !== 4 && source.version !== 5) {
-    throw new Error("备份版本不受支持或数据不完整。");
+    throw profileImportError(PROFILE_IMPORT_ERROR_CODES.UNSUPPORTED_VERSION, "备份版本不受支持或数据不完整。");
   }
 
   const sameDay = source.date === today;
@@ -82,11 +92,11 @@ export function parseProfileImport(value, { today, kcIds = /** @type {string[]} 
   // The old flattened skills cannot be decomposed reliably. Keep only daily
   // totals and restart the atomic assessment, as promised by the v5 migration.
   if (source.version === 4) {
-    if (!record(source.bySkill)) throw new Error("备份版本不受支持或数据不完整。");
+    if (!record(source.bySkill)) throw profileImportError(PROFILE_IMPORT_ERROR_CODES.INVALID_DATA, "备份版本不受支持或数据不完整。");
     return { version: 5, ...daily, introducedKcIds: [...initialKcIds], byKc: {} };
   }
   const sourceStats = record(source.byKc);
-  if (!sourceStats) throw new Error("备份版本不受支持或数据不完整。");
+  if (!sourceStats) throw profileImportError(PROFILE_IMPORT_ERROR_CODES.INVALID_DATA, "备份版本不受支持或数据不完整。");
 
   const allowed = new Set(kcIds);
   const allowedGating = new Set(gatingKcIds);

@@ -1,5 +1,6 @@
 import { acceptedConjugations } from './conjugation.mjs';
 import { diagnoseCommonVerbError } from './verb-common-errors.mjs';
+import { diagnosticComposite, diagnosticMessage, diagnosticText, legacyDiagnosticMessage } from './i18n/diagnostics.mjs';
 
 const classLabels = { godan: '五段动词', ichidan: '一段动词' };
 const sharedRule = id => /^(stem\.|onbin\.|suffix\.)/.test(id);
@@ -31,10 +32,13 @@ export function diagnoseContinuationClassConflict(item, step, family, answer, no
   if ([...step.answers, ...step.readings].some(correct => normalize(correct) === actual)) return null;
   const { cls, application, rule, bases } = context;
   if (!bases.some(base => normalize(base.slice(0, -1) + (cls === 'godan' ? 'た' : 'った')) === actual)) return null;
+  const descriptor=diagnosticMessage('diagnostics.continuation.classConflict',{
+    familyLabel:family.label,familyForm:family.form,
+  });
   return {
     kcId: null,
     confirmedKcIds: [],
-    message: `已定位到「${family.label}」的过去变化，但还不能区分词类判断与变化规则。先确认词类，再按给定词类检查变化；本次尚未更新知识点。`,
+    ...descriptor,
     stage: { form: 'past', label: `${family.label}的过去变化`, candidateKcIds: [application, rule].filter(id => step.kcIds.includes(id)) },
   };
 }
@@ -50,6 +54,17 @@ export function buildContinuationClassProbes(item, step, family) {
   const answers = step.answers.filter(answer => valid.has(answer));
   const readings = step.readings.filter(answer => valid.has(answer));
   const kcIds = step.kcIds.filter(sharedRule);
+  const classificationNote=diagnosticMessage(family.form === 'tearu'
+    ? 'diagnostics.continuation.classification.note.tearu'
+    : 'diagnostics.continuation.classification.note.default');
+  const classificationExplanation=diagnosticMessage(family.form === 'tearu'
+    ? 'diagnostics.continuation.classification.explanation.tearu'
+    : 'diagnostics.continuation.classification.explanation.default',{
+      familyLabel:family.label,familyForm:family.form,classLabel:classLabels[cls],classId:cls,
+    });
+  const conjugationNote=diagnosticMessage('diagnostics.continuation.conjugation.note',{
+    classLabel:classLabels[cls],classId:cls,
+  });
   // Giving the class removes that question from the next assessment. Neither
   // this choice nor guided conjugation demonstrates independent application.
   return [
@@ -62,15 +77,20 @@ export function buildContinuationClassProbes(item, step, family) {
       ],
       expectedClass: cls, answers: [cls], readings: [cls], kcIds: [], focusId: null,
       continuation: true, targetLabel: '动词类别',
-      note: family.form === 'tearu' ? '本步判断中间形式末尾「ある」的类别，不判断原词，也不计入独立掌握度。' : '这里只确认中间形式的类别，不计入知识点统计。',
-      classificationExplanation: family.form === 'tearu' ? '末尾的「ある」是五段动词；它的否定变化虽然特殊，过去形仍按五段动词变化。' : `「${family.label}」构成的中间形式继续按${classLabels[cls]}变化。`,
+      note: classificationNote.message,
+      classificationExplanation: classificationExplanation.message,
+      i18n: {
+        note:diagnosticText(classificationNote.messageKey,classificationNote.params),
+        classificationExplanation:diagnosticText(classificationExplanation.messageKey,classificationExplanation.params),
+      },
     },
     {
       kind: 'conjugation', providedClass: cls, analysisItem: provided,
       surface: provided.surface, reading: provided.reading, form: 'past',
       providedAnswers: bases, answers, readings, kcIds, focusId: kcIds.includes(rule) ? rule : kcIds[0] ?? null,
       continuation: true, targetLabel: '过去形',
-      note: `已知这个中间形式是${classLabels[cls]}，本步只检查过去变化。`,
+      note: conjugationNote.message,
+      i18n: {note:diagnosticText(conjugationNote.messageKey,conjugationNote.params)},
       reviewContext: {
         sourceItem: { domain: item.domain, class: item.class, surface: item.surface, reading: item.reading },
         family: { form: family.form, ending: 'past', outputClass: cls, label: family.label },
@@ -170,13 +190,17 @@ export function diagnoseMixedContinuationPast(item, step, family, answer, normal
   if (observations.size !== 1) return null;
   const rootMismatch = [...observations.values()][0];
   const observation = rootMismatch
-    ? `给定前部「${rootMismatch.expected}」，你写成了「${rootMismatch.actual}」；过去变化末尾也不同。`
-    : '给定的前部已保留，但过去变化末尾还有差异。';
+    ? diagnosticMessage('diagnostics.continuation.mixed.rootMismatch',{
+      expected:rootMismatch.expected,actual:rootMismatch.actual,operation:rootMismatch.operation,
+    })
+    : diagnosticMessage('diagnostics.continuation.mixed.tailMismatch');
+  const tail=diagnosticMessage(givenClass
+    ? 'diagnostics.continuation.mixed.tail.givenClass'
+    : 'diagnostics.continuation.mixed.tail.unknownClass');
+  const descriptor=diagnosticComposite([observation,tail]);
   return {
     kcId: null, confirmedKcIds: [],
-    message: observation + (givenClass
-      ? '这些差异仍不能唯一对应某个知识点，本次未更新掌握度。'
-      : '先确认中间形式的词类，再按给定词类检查变化；本次未更新知识点。'),
+    ...descriptor,
     review: { kind: 'mixed-past', form: 'past', label: `${family.label}的过去变化`, rootMismatch },
   };
 }
@@ -198,8 +222,10 @@ export function diagnoseGivenClassPast(step, answer, normalize = value => value)
   if (!diagnostics.length && cls === 'ichidan' && !allowed.includes('stem.ichidan.drop-ru')
     && bases.some(base => normalize(base + 'た') === normalize(answer))) {
     return { kcId: null, confirmedKcIds: [],
-      message: '接续前仍保留了「る」。本步只评估过去接续，不额外评估去「る」规则。' };
+      ...diagnosticMessage('diagnostics.continuation.retainedRu') };
   }
   if (!diagnostics.length || unique(diagnostics.map(diagnosis => diagnosis.kcId)).length !== 1) return null;
-  return { ...diagnostics[0], confirmedKcIds: [] };
+  const diagnosis=diagnostics[0];
+  return { ...diagnosis, confirmedKcIds: [],
+    ...legacyDiagnosticMessage('rule',diagnosis.message) };
 }

@@ -1,10 +1,11 @@
-import { recognizeForms, recognizedFormLabel, recognizedFormsIdentification } from './form-recognition.mjs';
+import { recognizeForms, recognizedFormLabel, recognizedFormsIdentificationMessage } from './form-recognition.mjs';
 import { matchAcceptedAnswer } from './answer-variants.mjs';
 import { hasLexicalTypo } from './lexical-typo.mjs';
 import { deriveUnified, diagnoseUnified, diagnoseUnifiedStep, unifiedDiagnosticSteps, unifiedStepDiagnosticSteps, diagnoseUnifiedStepReview } from './unified-knowledge.mjs';
 import { planForContext, progressiveSteps, diagnoseAtomicStep } from './diagnostic-plan.mjs';
 import { diagnosticFeedback } from './diagnostic-feedback.mjs';
 import { diagnoseConjugationPath, diagnoseProvidedConjugation } from './conjugation-path-diagnosis.mjs';
+import { diagnosticComposite, diagnosticMessage } from './i18n/diagnostics.mjs';
 
 export function normalizeAnswer(value) {
   return value.normalize('NFKC')
@@ -25,21 +26,25 @@ export function createAnswerAnalyzer(item, form, options = {}) {
   const getPlan = () => plan ??= planForContext(item,form,step);
   return answer => {
     if(typeof answer!=='string'||!normalize(answer).length||Array.from(answer).length>256) {
+      const descriptor=diagnosticMessage(typeof answer==='string'&&Array.from(answer).length>256
+        ? 'diagnostics.answer.invalid.tooLong' : 'diagnostics.answer.invalid.empty');
       return {kind:'invalid',match:{correct:false,variant:null},diagnosis:null,steps:[],
-        feedback:{resolution:'invalid',observations:[],terminal:true,message:typeof answer==='string'&&Array.from(answer).length>256?'输入过长，请只填写活用后的词形（最多 256 个字符）。':'请输入答案后再检查。'}};
+        feedback:{resolution:'invalid',observations:[],terminal:true,...descriptor}};
     }
     const match = matchAcceptedAnswer(answer, surface.acceptedVariants, reading.acceptedVariants, normalize);
     if (match.correct) return { kind: 'correct', match, diagnosis: null, steps: [] };
     if (step?.kind === 'atomic' && step.laterOutputs?.some(value => normalize(value) === normalize(answer))) {
+      const descriptor=diagnosticMessage('diagnostics.answer.invalid.stepAhead');
       return { kind: 'invalid', match, diagnosis: null, steps: [],
         feedback: { resolution: 'step-ahead', observations: [], terminal: false,
-          message: '你已写出后续步骤的正确形式。本步只需填写当前要求的中间形式，请调整后重交；不记知识点错误。' } };
+          ...descriptor } };
     }
     if (step?.kind === 'classification') return { kind: 'incorrect', match, diagnosis: null, steps: [] };
     if(!form) {
       const kcId=surface.requiredKcIds.find(id=>/^(class\.|adj\.class\.)/.test(id));
-      return {kind:'incorrect',match,diagnosis:{kcId,confirmedKcIds:[],message:'词类判断有误，请对照正确类别及分类依据。'},steps:[],
-        feedback:{resolution:'rule',observations:[],terminal:true,message:'词类判断有误，请对照正确类别及分类依据。'}};
+      const descriptor=diagnosticMessage('diagnostics.answer.classification.incorrect');
+      return {kind:'incorrect',match,diagnosis:{kcId,confirmedKcIds:[],...descriptor},steps:[],
+        feedback:{resolution:'rule',observations:[],terminal:true,...descriptor}};
     }
     const canRecognize = !step?.kind || step.kind === 'conjugation';
     const tailClass = ({tearu:'aru',teiku:'iku',tekuru:'kuru',youtosuru:'irregular'})[step?.reviewContext?.family?.form];
@@ -79,11 +84,19 @@ export function createAnswerAnalyzer(item, form, options = {}) {
     const feedback=diagnosticFeedback({item,answer,diagnosis,steps,plan:!diagnosis?getPlan():plan,step,normalize});
     if(recognizedForms.length && !inPath) {
       const target=step?.targetLabel??recognizedFormLabel(item,form);
-      const identification=recognizedFormsIdentification(item,recognizedForms,target);
+      const identification=recognizedFormsIdentificationMessage(item,recognizedForms,target,form);
       if(!diagnosis?.message&&!steps[0]?.probeSelection) {
-        feedback.message=identification+(steps.length?'本次不据此扣除具体知识点的掌握度；下面检查本题要求的变化。':'本次不据此扣除具体知识点的掌握度，请对照本题解析核对形式。');
+        const tail=diagnosticMessage(steps.length
+          ? 'diagnostics.recognition.tail.withSteps'
+          : 'diagnostics.recognition.tail.terminal');
+        Object.assign(feedback,diagnosticComposite([identification,tail]));
         feedback.resolution='target-form';feedback.observations=[];
-      } else if (!diagnosis?.message || !recognizedForms.every(match=>match.usage?.status==='allowed'&&diagnosis.message.includes(match.label))) feedback.message=identification+feedback.message;
+      } else if (!diagnosis?.message || !recognizedForms.every(match=>match.usage?.status==='allowed'&&diagnosis.message.includes(match.label))) {
+        const combined=feedback.messageKey
+          ? diagnosticComposite([identification,feedback])
+          : diagnosticMessage('diagnostics.recognition.prefixedFeedback',{identification:identification.message,feedback:feedback.message});
+        Object.assign(feedback,combined);
+      }
     }
 
     return {kind:'incorrect',match,diagnosis,recognizedForms,steps,feedback,planFallback};

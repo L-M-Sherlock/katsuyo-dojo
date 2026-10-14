@@ -21,7 +21,7 @@ const compiled = ts.transpileModule(await readFile(pageUrl, 'utf8'), {
 const { default: Page, KNOWLEDGE, ALL_KCS } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
 
 const { JSDOM } = await import('jsdom');
-const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost/katsuyo-dojo/', pretendToBeVisual: true });
+const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http://localhost/katsuyo-dojo/zh-CN/', pretendToBeVisual: true });
 for (const key of ['window', 'document', 'navigator', 'HTMLElement', 'HTMLInputElement', 'StorageEvent']) {
   Object.defineProperty(globalThis, key, { configurable: true, value: dom.window[key] });
 }

@@ -1,6 +1,7 @@
 import { acceptedConjugations } from './conjugation.mjs';
 import { commonVerbErrorCandidates } from './verb-common-errors.mjs';
 import { atomicSteps, buildDiagnosticPlan } from './diagnostic-plan.mjs';
+import { diagnosticMessage, diagnosticText, legacyDiagnosticMessage } from './i18n/diagnostics.mjs';
 
 const unique = values => [...new Set(values)];
 const labels = {godan:'五段动词',ichidan:'一段动词',irregular:'不规则动词'};
@@ -91,32 +92,50 @@ export function diagnoseConjugationPath(plan, answer, {scope,normalize=value=>va
   const failures = unique(matches.filter(candidate=>!candidate.classConflict).map(candidate=>candidate.kcId));
   if (direct && !classConflict && failures.length===1 && allowed.has(failures[0]) && rules.includes(failures[0])
     && diagnoseNative?.(stage.source,stage.form,written,normalize)?.kcId===failures[0]) {
-    return {diagnosis:{kcId:failures[0],confirmedKcIds:[],message:`差异位于「${stage.source.surface}」的${stage.label}。${matches.find(candidate=>candidate.kcId===failures[0]).message}${rest?'后面的接续未单独评估，不据此记对。':''}`},steps:[]};
+    const detail=matches.find(candidate=>candidate.kcId===failures[0]).message;
+    const descriptor=diagnosticMessage(rest
+      ? 'diagnostics.path.direct.withRemainder'
+      : 'diagnostics.path.direct',{
+        source:stage.source.surface,stageLabel:stage.label,stageForm:stage.form,detail,failedKcId:failures[0],
+      });
+    return {diagnosis:{kcId:failures[0],confirmedKcIds:[],...descriptor},steps:[]};
   }
   if (!classConflict) return null;
   const given = step?.providedClass === stage.source.class
     && step.surface === stage.source.surface && step.reading === stage.source.reading;
   const nativePlan = buildDiagnosticPlan(stage.source,stage.form);
+  const categoryNote=diagnosticMessage('diagnostics.path.classification.note');
+  const categoryExplanation=diagnosticMessage('diagnostics.path.classification.explanation',{
+    source:stage.source.surface,classLabel:labels[stage.source.class],classId:stage.source.class,
+  });
+  const conjugationNote=diagnosticMessage('diagnostics.path.conjugation.note');
   const category = {
     kind:'classification',diagnosticOnly:true,nodeId:`${start.id}:class`,analysisItem:stage.source,
     surface:stage.source.surface,reading:stage.source.reading,form:stage.form,
     classChoices:Object.entries(labels).map(([value,label])=>({value,label})),
     expectedClass:stage.source.class,answers:[stage.source.class],readings:[stage.source.class],kcIds:[],focusId:null,
-    continuation:indexIsDerived(plan,stage.source),targetLabel:'动词类别',
-    note:'本步只确认给定动词的类别，不更新独立掌握度。',
-    classificationExplanation:`「${stage.source.surface}」在这里按${labels[stage.source.class]}变化。`,
+    continuation:indexIsDerived(plan,stage.source),targetLabel:'动词类别',targetKind:'verb-class',
+    note:categoryNote.message,
+    classificationExplanation:categoryExplanation.message,
+    i18n: {
+      note:diagnosticText(categoryNote.messageKey,categoryNote.params),
+      classificationExplanation:diagnosticText(categoryExplanation.messageKey,categoryExplanation.params),
+    },
   };
   const conjugation = {
     kind:'conjugation',nodeId:`${start.id}:given`,pathClassGiven:true,providedClass:stage.source.class,analysisItem:stage.source,
     surface:stage.source.surface,reading:stage.source.reading,form:stage.form,
     providedAnswers:[stage.source.surface,stage.source.reading],answers:nativePlan.acceptedVariants,readings:nativePlan.readingVariants,
-    kcIds:rules,focusId:rules.at(-1),continuation:true,targetLabel:stage.label,
-    note:'本步已提供词类，只检查这一步的构形；其他步骤不重复评估。',
+    kcIds:rules,focusId:rules.at(-1),continuation:true,targetLabel:stage.label,targetForm:stage.form,
+    note:conjugationNote.message,
+    i18n:{note:diagnosticText(conjugationNote.messageKey,conjugationNote.params)},
   };
   const steps = given ? atomicSteps(nativePlan,stage.form,rules) : [category,conjugation];
-  const message = `输入中的「${written}」匹配到「${stage.source.surface}」${stage.label}的候选错误，可能涉及词类判断或构形${given?'；已提供词类，下面只检查局部变化。':'。先确认词类，再检查这一步的变化。'}${rest?'其余接续未单独评估，不因这次定位而记对。':''}本次尚未确定可扣分的知识点。`;
-  if (steps[0]) steps[0].probeSelection={strategy:'conjugation-path',label:stage.label,form:stage.form,candidateKcIds:rules,message};
-  return {diagnosis:null,steps,message,classConflict:true,refineClass:matches.some(candidate=>!candidate.classConflict||candidate.localError)};
+  const descriptor=diagnosticMessage(`diagnostics.path.candidate.${given?'givenClass':'unknownClass'}${rest?'WithRemainder':''}`,{
+    written,source:stage.source.surface,stageLabel:stage.label,stageForm:stage.form,
+  });
+  if (steps[0]) steps[0].probeSelection={strategy:'conjugation-path',label:stage.label,form:stage.form,candidateKcIds:rules,...descriptor};
+  return {diagnosis:null,steps,...descriptor,classConflict:true,refineClass:matches.some(candidate=>!candidate.classConflict||candidate.localError)};
 }
 
 function indexIsDerived(plan, source) {
@@ -131,5 +150,5 @@ export function diagnoseProvidedConjugation(step, answer, normalize=value=>value
     .filter(candidate=>!candidate.classConflict && normalize(candidate.answer)===actual);
   const ids=unique(matches.map(candidate=>candidate.kcId));
   if(ids.length!==1||!step.kcIds.includes(ids[0]))return null;
-  return {kcId:ids[0],confirmedKcIds:[],message:matches[0].message};
+  return {kcId:ids[0],confirmedKcIds:[],...legacyDiagnosticMessage('rule',matches[0].message)};
 }

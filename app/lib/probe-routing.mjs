@@ -1,6 +1,7 @@
 import { acceptedConjugations } from './conjugation.mjs';
 import { DIAGNOSTIC_FORMS, diagnosticFamily, buildDiagnosticPlan, atomicSteps } from './diagnostic-plan.mjs';
 import { diagnoseContinuationClassConflict, buildContinuationClassProbes } from './continuation-class-probes.mjs';
+import { diagnosticMessage } from './i18n/diagnostics.mjs';
 
 const identity = value => value;
 const verbForms = DIAGNOSTIC_FORMS.filter(form => !form.startsWith('adjective'));
@@ -58,7 +59,7 @@ function remainingPastProbe(source, family, answer, normalize) {
   const { surface, reading } = [...pairs.values()][0];
   const provided = { domain: 'adjective', class: 'i', surface, reading, iiFamily: false };
   const [past] = atomicSteps(buildDiagnosticPlan(provided, 'adjectivePast'), 'adjectivePast', ['adj.suffix.i-past']);
-  return { ...past, providedAnswers: [...new Set([surface, reading])], targetLabel: '过去形' };
+  return { ...past, providedAnswers: [...new Set([surface, reading])], targetLabel: '过去形', targetForm: 'past' };
 }
 
 export function prioritizeContinuationFormSwitch(item, answer, contexts, normalize = identity) {
@@ -88,13 +89,18 @@ export function prioritizeContinuationFormSwitch(item, answer, contexts, normali
     && alternatives.every(form => diagnosticFamily(form).ending === 'negative')
     ? remainingPastProbe(source, family, answer, normalize) : null;
   const selected = remainingPast ?? { ...step, kcIds, focusId: kcIds.at(-1) };
+  const descriptor=diagnosticMessage(remainingPast
+    ? 'diagnostics.routing.formSwitch.remainingPast'
+    : 'diagnostics.routing.formSwitch.intermediate',{
+      familyLabel:family.label,familyForm:family.form,writtenLabel:written,
+      writtenEndings:[...new Set(alternatives.map(form=>diagnosticFamily(form).ending))].join(','),
+      targetLabel:target,targetEnding:family.ending,
+    });
   const probeSelection = {
     strategy: 'continuation-form-switch', form: step.form,
     label: `${family.label}的${target}`, candidateKcIds: selected.kcIds,
     matchedForms: alternatives,
-    message: `你的答案匹配到「${family.label}」的${written}，本题要求${target}。${remainingPast
-      ? '下面保留这个否定形式，只检查剩余的过去变化。'
-      : '先给出这个表达的中间形式，只检查后续变化。'}前面的构成步骤未单独检查，不会因这次定位而记对。`,
+    ...descriptor,
   };
   // Retain shared tail rules even when they also occur in the skipped base.
   // This route provides no evidence about that base or independent chaining.
@@ -128,10 +134,13 @@ export function prioritizeContinuationPast(item, answer, contexts, normalize = i
   if (matchesAnotherForm(item, parent.form, answer, normalize)) return null;
   const probes = buildContinuationClassProbes(item, parent, family);
   if (probes.length !== 2) return null;
+  const descriptor=diagnosticMessage('diagnostics.routing.continuationPast',{
+    familyLabel:family.label,familyForm:family.form,
+  });
   const probeSelection = {
     strategy: 'continuation-past', form: parent.form, label: stage.label,
     candidateKcIds: stage.candidateKcIds,
-    message: `你的答案匹配到「${family.label}」过去变化的候选错误，先确认中间形式的词类，再检查过去变化。前面的构成步骤未单独检查，不会因这次定位而记对。`,
+    ...descriptor,
   };
   return [{ ...probes[0], probeSelection }, probes[1]];
 }

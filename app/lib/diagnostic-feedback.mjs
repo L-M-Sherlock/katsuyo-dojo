@@ -1,37 +1,55 @@
+import { diagnosticComposite, diagnosticMessage, legacyDiagnosticMessage } from './i18n/diagnostics.mjs';
+
 // Observations describe the submitted text. They never supply scoring evidence.
 // Correct outputs remain hidden until the corresponding probe is answered.
 export function diagnosticFeedback({item,answer,diagnosis,steps,plan,step,normalize=value=>value}) {
   const actual=normalize(answer),observations=[];
-  if(diagnosis?.message)return {resolution:diagnosis.targetMismatch?'target-form':diagnosis.kcId?'rule':diagnosis.stage?'stage':diagnosis.review?'mixed':'partial',
-    message:diagnosis.message,observations,terminal:steps.length===0};
+  if(diagnosis?.message) {
+    const resolution=diagnosis.targetMismatch?'target-form':diagnosis.kcId?'rule':diagnosis.stage?'stage':diagnosis.review?'mixed':'partial';
+    const descriptor=diagnosis.messageKey
+      ? {message:diagnosis.message,messageKey:diagnosis.messageKey,params:diagnosis.params??{}}
+      : legacyDiagnosticMessage(resolution==='target-form'?'targetForm':resolution,diagnosis.message);
+    return {resolution,...descriptor,observations,terminal:steps.length===0};
+  }
   const selection = steps[0]?.probeSelection;
-  if (selection) return { resolution: 'stage-priority', message: selection.message,
-    observations: [{ kind: 'candidate-stage', text: selection.label }], terminal: false };
+  if (selection) {
+    const descriptor=selection.messageKey
+      ? {message:selection.message,messageKey:selection.messageKey,params:selection.params??{}}
+      : legacyDiagnosticMessage('stagePriority',selection.message);
+    return { resolution: 'stage-priority',...descriptor,
+      observations: [{ kind: 'candidate-stage', text: selection.label }], terminal: false };
+  }
   for(const n of plan?.nodes??[]) {
     if(n.operation!=='row')continue;
     const root=normalize(n.fixed.reading),expected=normalize(n.output.reading).slice(root.length);
     if(actual.startsWith(root)&&root.length&&actual.length>root.length) {
       const written=actual.slice(root.length,root.length+1);
-      if(written!==expected&&/^[ぁ-ゖ]$/u.test(written))observations.push({kind:'stem',text:steps.some(step=>step.fallbackStage)
-        ? `词尾变化的位置写成了「${written}」，需要先核对这一步的完整形式。`
-        : `词干位置写成了「${written}」，这里需要${n.label}。`});
+      if(written!==expected&&/^[ぁ-ゖ]$/u.test(written)) {
+        const descriptor=steps.some(step=>step.fallbackStage)
+          ? diagnosticMessage('diagnostics.feedback.observation.stemFallback',{written})
+          : diagnosticMessage('diagnostics.feedback.observation.stemRule',{written,ruleLabel:n.label});
+        observations.push({kind:'stem',text:descriptor.message,messageKey:descriptor.messageKey,params:descriptor.params});
+      }
     }
   }
   if((plan?.nodes??[]).some(n=>n.ruleKcIds.includes('adj.suffix.i-past'))&&actual.endsWith('ない')) {
-    observations.push({kind:'ending',text:'末尾仍是「ない」，尚未完成过去变化。'});
+    const descriptor=diagnosticMessage('diagnostics.feedback.observation.negativePastIncomplete');
+    observations.push({kind:'ending',text:descriptor.message,messageKey:descriptor.messageKey,params:descriptor.params});
   }
   if(!observations.length) {
     const source=step?.surface??item.surface,reading=step?.reading??item.reading??source;
     const cut=item.domain==='adjective'&&item.class==='na'?0:item.class==='irregular'?2:1;
     const roots=[source,reading].map(word=>cut?word.slice(0,-cut):word).filter(Boolean);
     const intact=roots.some(root=>actual.startsWith(normalize(root)));
-    observations.push(intact
-      ? {kind:'ending',text:'给定的前部仍可辨认，但后面的变化不能唯一对应某条规则。'}
-      : {kind:'unresolved',text:'输入与给定形式的前部或接续有差异，缺少足够完整的片段来判断具体错因。'});
+    const descriptor=diagnosticMessage(intact
+      ? 'diagnostics.feedback.observation.ambiguousEnding'
+      : 'diagnostics.feedback.observation.unresolved');
+    observations.push({kind:intact?'ending':'unresolved',text:descriptor.message,messageKey:descriptor.messageKey,params:descriptor.params});
   }
-  const message=observations.map(o=>o.text).join('')+(steps.length
-    ? '本次不更新未确认的知识点；下面只检查尚未确认的变化。'
-    : step ? '本步不更新掌握度，可对照本步正确形式查看差异，然后继续。'
-      : '本题已记错，知识点不扣分；请对照变化解析核对输入。');
-  return {resolution:observations.length>1?'mixed':'unresolved',observations,message,terminal:steps.length===0};
+  const tail=diagnosticMessage(steps.length
+    ? 'diagnostics.feedback.tail.withSteps'
+    : step ? 'diagnostics.feedback.tail.step'
+      : 'diagnostics.feedback.tail.question');
+  const summary=diagnosticComposite([...observations,tail]);
+  return {resolution:observations.length>1?'mixed':'unresolved',observations,...summary,terminal:steps.length===0};
 }

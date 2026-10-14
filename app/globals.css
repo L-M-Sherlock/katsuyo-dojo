@@ -58,14 +58,29 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .brand small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; letter-spacing: .2em; }
 
 .topbar-actions { display: flex; align-items: center; gap: 28px; }
+.language-switch { position: relative; display: inline-flex; align-items: center; }
+.language-switch select {
+  appearance: none;
+  min-width: 92px;
+  padding: 8px 28px 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--paper-light);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.language-switch::after { content: "⌄"; position: absolute; right: 10px; color: var(--muted); pointer-events: none; }
+.language-switch select:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .github-link { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--paper-light); font-size: 13px; font-weight: 650; text-decoration: none; white-space: nowrap; }
 .github-link:hover { border-color: var(--ink); background: var(--ink); color: var(--paper-light); }
 
 .daily-summary { display: flex; align-items: center; gap: 30px; }
-.daily-summary div { display: flex; align-items: baseline; gap: 10px; }
+.daily-summary div { display: flex; flex: 0 0 auto; align-items: baseline; gap: 10px; white-space: nowrap; }
 .daily-summary div + div { padding-left: 30px; border-left: 1px solid var(--line); }
 .daily-summary span { color: var(--muted); font-size: 13px; }
-.daily-summary strong { font-size: 16px; font-variant-numeric: tabular-nums; }
+.daily-summary strong { font-size: 16px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .practice-layout {
   width: min(1280px, calc(100% - 48px));
@@ -450,7 +465,11 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
   .topbar { height: auto; min-height: 74px; padding: 12px 16px; gap: 10px; flex-wrap: wrap; }
   .brand { gap: 9px; }
   .brand strong { font-size: 17px; }
-  .topbar-actions { gap: 12px; }
+  .topbar-actions { width: 100%; min-width: 0; gap: 8px; flex-wrap: wrap; }
+  .main-view-nav { width: 100%; min-width: 0; flex: 1 1 100%; }
+  .main-view-nav :is(button, a) { min-width: 0; flex: 1 1 auto; padding-inline: 5px; text-align: center; }
+  .daily-summary { order: 2; margin-left: auto; }
+  .github-link { order: 2; }
   .github-link { padding-inline: 10px; }
   .brand small { display: none; }
   .daily-summary div + div { display: none; }
@@ -478,6 +497,9 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 }
 
 .practice-controls { border: 0; padding: 0; margin: 0; min-width: 0; }
+.usage-content-gate { width: min(620px, calc(100% - 32px)); margin: 56px auto; padding: 28px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper-light); text-align: center; }
+.usage-content-gate p { margin: 0; color: var(--muted); }
+.usage-content-gate button { margin-top: 18px; padding: 10px 18px; border: 0; border-radius: 7px; background: var(--ink); color: var(--paper-light); cursor: pointer; }
 .storage-notice { padding: 1rem; margin-bottom: 1rem; border: 1px solid #a66026; border-radius: 12px; background: #fff6e6; color: #593612; }
 .storage-notice p { margin: 0 0 .75rem; }
 .storage-notice button { margin-right: .75rem; padding: .5rem .75rem; cursor: pointer; }
@@ -536,6 +558,7 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
   .statistics-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .statistics-panel-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
   .main-view-nav :is(button, a) { padding: 8px 9px; }
+  .language-switch select { min-width: 78px; padding-inline: 8px 24px; }
 }
 @media (min-width: 851px) and (max-height: 800px) {
   .statistics-page { padding-top: 22px; }
@@ -553,6 +576,8 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
   .statistics-back { padding: 10px; }
   .topbar-actions { gap: 8px; }
   .main-view-nav :is(button, a) { padding: 7px; }
+  .language-switch { order: 3; }
+  .language-switch select { min-width: 86px; }
 }
 
 .challenge-entry { width: 100%; margin: 10px 0; padding: 12px 15px; text-align: left; display: grid; gap: 4px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper-light); cursor: pointer; }
@@ -604,8 +629,8 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 .challenge-start:disabled { color: var(--muted); background: var(--line); cursor: default; }
 @media (max-width: 650px) {
   .challenge-page { padding: 24px 14px 36px; }
-  .challenge-heading { align-items: flex-start; }
-  .challenge-heading .statistics-back { padding: 10px 12px; }
+  .challenge-heading { align-items: flex-start; flex-direction: column; }
+  .challenge-heading .statistics-back { max-width: 100%; padding: 10px 12px; white-space: normal; }
   .challenge-picker { padding: 18px 14px; }
   .challenge-picker-heading, .challenge-selection-footer { align-items: stretch; flex-direction: column; gap: 14px; }
   .challenge-search { width: 100%; }
@@ -648,6 +673,25 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
 .challenge-pending { margin: 24px 0; padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
 .challenge-pending > summary { cursor: pointer; font-weight: 700; }
 .challenge-pending[open] > summary { margin-bottom: 16px; }
+
+@media (min-width: 851px) and (max-width: 1320px) {
+  .topbar { padding-inline: 16px; gap: 14px; }
+  .brand { flex: 0 0 auto; }
+  .brand small { display: none; }
+  .topbar-actions { flex: 1 1 auto; min-width: 0; justify-content: flex-end; gap: 10px; }
+  .main-view-nav { gap: 1px; }
+  .main-view-nav :is(button, a) { padding: 7px 9px; font-size: 13px; }
+  .language-switch select { min-width: 78px; padding-inline: 8px 22px; }
+  .language-switch::after { right: 8px; }
+  .daily-summary { gap: 10px; }
+  .daily-summary span { display: none; }
+  .daily-summary div + div { padding-left: 10px; }
+  .github-link { min-height: 40px; padding: 7px 10px; }
+}
+
+@media (min-width: 851px) and (max-width: 1060px) {
+  .daily-summary { display: none; }
+}
 
 /* The principles article keeps the practice palette, with a quieter reading layout. */
 .principles-page { background: rgba(250, 248, 242, .7); }

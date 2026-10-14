@@ -1,4 +1,5 @@
 import { FORM_LABELS } from './form-labels.mjs';
+import { diagnosticMessage, diagnosticText } from './i18n/diagnostics.mjs';
 
 const className = cls => ({godan:'五段动词',ichidan:'一段动词',irregular:'不规则动词',i:'い形容词',na:'な形容词'})[cls];
 export const practiceStage = node => node.practiceStage ?? node.conjugationStage;
@@ -23,6 +24,7 @@ export function atomicInstruction(plan, index) {
   }[node.ruleKcIds[0]];
   const stemReady=previous&&(['row','drop','sound'].includes(previous.operation)||previous.ruleKcIds.includes('adj.stem.i-ku'));
   const preparation=stemReady?(previous.operation==='sound'?'音便已完成':'词尾变化已完成'):'已给出本步需要的形式';
+  const preparationKind=stemReady?(previous.operation==='sound'?'sound':'ending'):'given';
   const suffix=next&&['append','verb-terminal'].includes(next.operation)&&next.output.reading.startsWith(next.input.reading)
     ? next.output.reading.slice(next.input.reading.length) : '';
   const later=suffix ? `，暂时不要接「${suffix}」` : '';
@@ -32,17 +34,49 @@ export function atomicInstruction(plan, index) {
     : ['append','verb-terminal'].includes(node.operation)?`在给定形式后完成${node.label}`
     : `完成${node.label}`;
   const rule=node.operation==='row'?`把词尾变到${node.label.replace('词干','')}。${node.ruleKcIds.includes('stem.godan.u-wa')?'「う」结尾在这里变为「わ」。':''}`:'';
+  const operationLabel=node.label.replace('词干','词尾变化');
+  const stepTitleMessage=attachment
+    ? endingLabel
+      ? diagnosticMessage('diagnostics.instruction.step.addEnding',{endingLabel,endingRule:node.ruleKcIds[0]})
+      : diagnosticMessage('diagnostics.instruction.step.complete',{operationLabel:node.label,ruleId:node.ruleKcIds[0]})
+    : node.operation==='row'
+      ? diagnosticMessage('diagnostics.instruction.step.row',{goalLabel:goal,goalForm:stage?.form??plan.form})
+      : node.operation==='drop'
+        ? diagnosticMessage('diagnostics.instruction.step.dropRu')
+        : node.operation==='contract'
+          ? diagnosticMessage('diagnostics.instruction.step.contract')
+          : diagnosticMessage('diagnostics.instruction.step.complete',{operationLabel:node.label,ruleId:node.ruleKcIds[0]});
+  const targetMessage=diagnosticMessage('diagnostics.instruction.target',{
+    goalLabel:goal,goalForm:stage?.form??plan.form,operationLabel,ruleId:node.ruleKcIds[0],
+  });
+  const promptMessage=attachment&&endingLabel
+    ? diagnosticMessage('diagnostics.instruction.prompt.attach',{
+      preparation,endingLabel,endingRule:node.ruleKcIds[0],goalLabel:goal,goalForm:stage?.form??plan.form,
+      preparationKind,
+    })
+    : diagnosticMessage('diagnostics.instruction.prompt.action',{
+      goalLabel:goal,goalForm:stage?.form??plan.form,action,
+      later:['row','drop','sound'].includes(node.operation)?later:'',laterSuffix:['row','drop','sound'].includes(node.operation)?suffix:'',
+      operation:node.operation,ruleId:node.ruleKcIds[0],
+    });
+  const noteMessage=diagnosticMessage('diagnostics.instruction.note',{
+    source:source.surface,classLabel:className(source.class),classId:source.class,rule,
+    completion:attachment&&endingLabel?'':'请填写变化后的整个形式。',needsCompletion:!(attachment&&endingLabel),
+    operation:node.operation,ruleId:node.ruleKcIds[0],uWa:node.ruleKcIds.includes('stem.godan.u-wa'),
+  });
   return {
     goalLabel:goal,
-    stepTitle:attachment ? endingLabel ? `补上${endingLabel}` : `完成${node.label}`
-      : node.operation==='row'?`${goal}的词尾变化`
-      : node.operation==='drop'?'去掉词尾「る」'
-      : node.operation==='contract'?'写出缩约形式'
-      : `完成${node.label}`,
-    targetLabel:`${goal} · ${node.label.replace('词干','词尾变化')}`,
-    prompt:attachment&&endingLabel
-      ? `${preparation}。请在给定形式后接上${endingLabel}，填写完整的${goal}。`
-      : `${goal}：${action}${['row','drop','sound'].includes(node.operation)?later:''}。`,
-    note:`已提供正确输入和词类：本段起点「${source.surface}」按${className(source.class)}变化。${rule}${attachment&&endingLabel?'':'请填写变化后的整个形式。'}`,
+    goalForm:stage?.form??plan.form,
+    stepTitle:stepTitleMessage.message,
+    targetLabel:targetMessage.message,
+    prompt:promptMessage.message,
+    note:noteMessage.message,
+    i18n: {
+      goalLabel: diagnosticText('diagnostics.instruction.goal',{goalLabel:goal,goalForm:stage?.form??plan.form}),
+      stepTitle: diagnosticText(stepTitleMessage.messageKey,stepTitleMessage.params),
+      targetLabel: diagnosticText(targetMessage.messageKey,targetMessage.params),
+      prompt: diagnosticText(promptMessage.messageKey,promptMessage.params),
+      note: diagnosticText(noteMessage.messageKey,noteMessage.params),
+    },
   };
 }

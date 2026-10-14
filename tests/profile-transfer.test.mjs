@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createProfileExport, parseProfileImport } from "../app/lib/profile-transfer.mjs";
+import { PROFILE_IMPORT_ERROR_CODES, ProfileImportError, profileImportMessageKey } from "../app/lib/profile-import-error.mjs";
 
 const options = { today: "2026-09-03", kcIds: ["class.godan", "class.irregular", "facet.class.irregular.suru", "facet.class.irregular.kuru", "suffix.negative"], gatingKcIds: ["class.godan", "class.irregular", "suffix.negative"], initialKcIds: ["class.godan"] };
 const stats = { attempts: 5, correct: 4, filteredAccuracy: 0.8, confidence: 0.9, bestConfidence: 1, cleanTimeTotal: 6000, cleanTimeCount: 3 };
@@ -38,10 +39,17 @@ test("migrates v4 by retaining same-day totals and restarting atomic assessment"
 });
 
 test("rejects unsupported backups and removes unknown KCs", () => {
-  assert.throws(() => parseProfileImport({ format: "something-else", formatVersion: 2, profile }, options), /不是受支持/);
+  assert.throws(() => parseProfileImport({ format: "something-else", formatVersion: 2, profile }, options), error =>
+    error instanceof ProfileImportError && error.code === PROFILE_IMPORT_ERROR_CODES.UNSUPPORTED_FORMAT && /不是受支持/.test(error.message));
   const imported = parseProfileImport({ ...profile, introducedKcIds: [...profile.introducedKcIds, "unknown"], byKc: { ...profile.byKc, unknown: stats } }, options);
   assert.deepEqual(imported.introducedKcIds, profile.introducedKcIds);
   assert.deepEqual(Object.keys(imported.byKc), ["class.godan"]);
+});
+
+test("maps stable import failures to localized UI keys", () => {
+  assert.equal(profileImportMessageKey(new ProfileImportError(PROFILE_IMPORT_ERROR_CODES.UNSUPPORTED_VERSION, "old")),
+    "practice.importErrors.unsupportedVersion");
+  assert.equal(profileImportMessageKey(new SyntaxError("broken JSON")), "practice.importUnreadable");
 });
 
 test("clamps unsafe numeric values during import", () => {

@@ -14,6 +14,11 @@ test('parallel suites run every npm-test file exactly once, including new unclas
   assert.equal(new Set(assigned).size,files.length);
   assert.equal(suiteForTest('new-regression.test.mjs'),'unit');
   assert.equal(suiteForTest('independent-retest-ui.test.mjs'),'ui');
+  assert.equal(suiteForTest('i18n-browser-ui.test.mjs'),'ui');
+  assert.equal(suiteForTest('i18n-routing-ui.test.mjs'),'ui');
+  assert.equal(suiteForTest('i18n-language-switch.test.mjs'),'ui');
+  assert.equal(suiteForTest('i18n-contract.test.mjs'),'unit');
+  assert.equal(suiteForTest('i18n-build-output.test.mjs'),'unit');
   assert.equal(suiteForTest('probe-routing-contracts.test.mjs'),'paths');
   assert.equal(suiteForTest('independent-audit-contracts.test.mjs'),'diagnosis');
   assert.throws(()=>testFilesForSuite(files,'missing'));
@@ -27,7 +32,10 @@ test('ordinary CI runs parallel regression suites and builds without large gener
   assert.ok(ci.jobs.catalog.steps.some(step=>step.run==='npm run audit:eligibility -- --output eligibility-audit.json'));
   const runs=Object.values(ci.jobs).flatMap(job=>(job.steps??[]).map(step=>step.run??'')).join('\n');
   assert.doesNotMatch(runs,/audit:diagnosis|audit:paths|audit-diagnosis\.mjs|audit-diagnostic-paths\.mjs|--representatives/);
-  for(const command of ['audit','audit:usage','audit:integration','simulate:perfect','simulate:mixed','typecheck','lint','build'])assert.ok(ci.jobs.build.steps.some(step=>step.run===`npm run ${command}`));
+  for(const command of ['audit','audit:usage','audit:i18n','audit:integration','simulate:perfect','simulate:mixed','typecheck','lint','build'])assert.ok(ci.jobs.build.steps.some(step=>step.run===`npm run ${command}`));
+  const buildRuns=ci.jobs.build.steps.map(step=>step.run).filter(Boolean);
+  assert.ok(buildRuns.indexOf('npm run audit:i18n') < buildRuns.indexOf('npm run build'));
+  assert.equal(buildRuns.filter(run=>run==='npm run audit:i18n').length,1);
 });
 test('deployment requires all tests and the same-run build, and rejects failed, cancelled or skipped jobs',()=>{
   const ci=load('ci'),pages=load('pages');

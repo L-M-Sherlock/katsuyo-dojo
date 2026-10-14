@@ -8,6 +8,7 @@ import { parseUnifiedImport, createUnifiedExport } from '../app/lib/unified-prof
 import { createProfileStore } from '../app/lib/profile-store.mjs';
 import { emptyAssessment, assessmentTarget } from '../app/lib/learning-assessment.mjs';
 import { applyLearningObservation } from '../app/lib/learning-profile.mjs';
+import { PROFILE_IMPORT_ERROR_CODES, ProfileImportError } from '../app/lib/profile-import-error.mjs';
 
 const item = { domain: 'verb', surface: '増える', reading: 'ふえる', class: 'ichidan' };
 const exercise = { id: 'test:tagaruNegative:増える', courseId: 'tagaru', form: 'tagaruNegative', surface: item.surface, reading: item.reading, wordClass: item.class, domain: item.domain };
@@ -100,7 +101,7 @@ test('versioned exports and imports preserve logs as history without replaying t
   const logged = { ...appendPracticeEvent(initial, { ...initial, byKc }, detail()), version: 7, assessment: emptyAssessment() };
   const options = { today: initial.date, components: [{ id: 'stem.godan.a', prerequisites: [] }], legacyComponents: [] };
   const exported = createUnifiedExport(logged);
-  assert.equal(exported.formatVersion, 7);
+  assert.equal(exported.formatVersion, 8);
   const restored = parseUnifiedImport(exported, options);
   assert.deepEqual(restored.practiceLog, logged.practiceLog);
   assert.equal(restored.byKc['stem.godan.a'].attempts, 1);
@@ -116,10 +117,68 @@ test('versioned exports and imports preserve logs as history without replaying t
   }
 });
 
+test('v4 stores structured diagnosis data and preserves an optional legacy message', () => {
+  const initial = profile();
+  const structured = appendPracticeEvent(initial, initial, detail({ id: 'structured', diagnosis: {
+    kcId: 'stem.godan.a', confirmedKcIds: [], resolution: 'rule', messageKey: 'diagnostics.ruleMismatch',
+    params: { expected: 'か', actual: 'き', count: 1, retry: true, note: null },
+  } }));
+  assert.equal(structured.practiceLog.version, 4);
+  assert.deepEqual(structured.practiceLog.events[0].diagnosis, {
+    kcId: 'stem.godan.a', confirmedKcIds: [], resolution: 'rule', messageKey: 'diagnostics.ruleMismatch',
+    params: { expected: 'か', actual: 'き', count: 1, retry: true, note: null },
+  });
+  assert.deepEqual(parsePracticeLog(structured.practiceLog), structured.practiceLog);
+
+  const bilingual = appendPracticeEvent(structured, structured, detail({ id: 'structured-with-legacy', diagnosis: {
+    resolution: 'partial', messageKey: 'diagnostics.partial', params: {}, message: '原始中文诊断。',
+  } }));
+  assert.equal(bilingual.practiceLog.events.at(-1).diagnosis.message, '原始中文诊断。');
+  assert.equal(bilingual.practiceLog.events.at(-1).diagnosis.messageKey, 'diagnostics.partial');
+});
+
+test('v1 through v3 logs keep their raw legacy diagnosis messages', () => {
+  const current = appendPracticeEvent(profile(), profile(), detail({ diagnosis: { message: '历史原文。' } })).practiceLog;
+  for (const version of [1, 2, 3]) {
+    const legacy = structuredClone(current);
+    legacy.version = version;
+    assert.equal(parsePracticeLog(legacy).events[0].diagnosis.message, '历史原文。');
+  }
+});
+
+test('v4 rejects malformed structured diagnosis data with a stable import code', () => {
+  const valid = appendPracticeEvent(profile(), profile(), detail({ diagnosis: { messageKey: 'diagnostics.partial', params: { count: 1 } } })).practiceLog;
+  for (const mutate of [
+    diagnosis => { diagnosis.messageKey = 'not a key'; },
+    diagnosis => { diagnosis.params = { nested: {} }; },
+    diagnosis => { delete diagnosis.messageKey; },
+  ]) {
+    const invalid = structuredClone(valid); mutate(invalid.events[0].diagnosis);
+    assert.throws(() => parsePracticeLog(invalid), error => error instanceof ProfileImportError
+      && error.code === PROFILE_IMPORT_ERROR_CODES.INVALID_PRACTICE_LOG
+      && /作答日志/.test(error.message));
+  }
+});
+
+test('format v8 excludes UI locale and accepts all historical envelope versions', () => {
+  const initial = profile(), current = { ...appendPracticeEvent(initial, initial, detail()), version: 7, assessment: emptyAssessment(), locale: 'en', uiLocale: 'en' };
+  const exported = createUnifiedExport(current);
+  assert.equal(exported.formatVersion, 8);
+  assert.equal('locale' in exported.profile, false);
+  assert.equal('uiLocale' in exported.profile, false);
+  const options = { today: initial.date, components: [{ id: 'stem.godan.a', prerequisites: [] }], legacyComponents: [] };
+  for (let formatVersion = 1; formatVersion <= 8; formatVersion++) {
+    const restored = parseUnifiedImport({ ...exported, formatVersion }, options);
+    assert.equal(restored.version, 8);
+    assert.equal(restored.practiceLog.events[0].diagnosis.message, '');
+    assert.equal('locale' in restored, false);
+  }
+});
+
 test('malformed history cannot silently discard evidence or be restored as valid events', () => {
   const p = profile(), valid = appendPracticeEvent(p, p, detail()).practiceLog;
   for (const mutate of [
-    x => { x.version = 4; }, x => { x.totalEvents = 2; }, x => { x.events[0].at = 'not-a-date'; },
+    x => { x.version = 5; }, x => { x.totalEvents = 2; }, x => { x.events[0].at = 'not-a-date'; },
     x => { x.events[0].sequence = 7; }, x => { x.events[0].answerLength = 0; },
     x => { x.events[0].outcome = 'invented'; }, x => { x.events[0].changes = [{ kcId: 'a', label: 'a', before: {}, after: {} }]; },
   ]) {
@@ -160,9 +219,9 @@ function guidedLog() {
   return { initial, before, current };
 }
 
-test('v2 records assistance, local practice changes and pending snapshots without aliasing the live profile', () => {
+test('v4 records assistance, local practice changes and pending snapshots without aliasing the live profile', () => {
   const { before, current } = guidedLog(), event = current.practiceLog.events.at(-1);
-  assert.equal(current.practiceLog.version, 3);
+  assert.equal(current.practiceLog.version, 4);
   assert.deepEqual(event.changes, []);
   assert.deepEqual(event.assistedChanges.map(change => change.kcId), ['stem.ichidan.drop-ru', 'construction.tagaru']);
   assert.deepEqual(event.support, { independent: false, source: 'guided', provided: ['subgoal'] });
@@ -177,7 +236,7 @@ test('v2 records assistance, local practice changes and pending snapshots withou
   assert.equal(before.assessment.assistedByKc['construction.tagaru'], undefined);
 });
 
-test('legacy v1 events remain intact when a new v2 event is appended', () => {
+test('legacy v1 events remain intact when a new v4 event is appended', () => {
   const { before } = guidedLog();
   const legacy = structuredClone(before);
   legacy.practiceLog.version = 1;
@@ -187,7 +246,7 @@ test('legacy v1 events remain intact when a new v2 event is appended', () => {
   assert.deepEqual(parsePracticeLog(legacy.practiceLog), legacy.practiceLog);
   const appended = appendPracticeEvent(legacy, legacy, detail({ type: 'diagnostic-end', outcome: 'skipped', id: 'skip',
     support: { independent: false, source: 'completion', provided: ['answer'] } }));
-  assert.equal(appended.practiceLog.version, 3);
+  assert.equal(appended.practiceLog.version, 4);
   assert.deepEqual(appended.practiceLog.events[0], legacy.practiceLog.events[0]);
   assert.equal(appended.practiceLog.events.length, 2);
 });

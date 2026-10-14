@@ -1,4 +1,5 @@
 import { acceptedConjugations } from './conjugation.mjs';
+import { diagnosticMessage } from './i18n/diagnostics.mjs';
 
 const GODAN_ROWS = {
   う: ['わ', 'い', 'う', 'え', 'お'],
@@ -56,7 +57,7 @@ export function diagnosePassiveStageError(item, form, answer, normalize = value 
         return {
           kcId: null,
           confirmedKcIds: [],
-          message: '问题集中在受身形的构造，先分别检查词干与受身接续；后续形式将用正确中间形式单独练习。本次尚未更新知识点。',
+          ...diagnosticMessage('diagnostics.passive.ambiguousConstruction'),
           stage: {
             form: 'passive',
             label: '受身形构造',

@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
-const html=readFileSync(path.join(root,'index.html'),'utf8');
+const localizedHtml=['zh-CN','en'].map(locale=>readFileSync(path.join(root,locale,'index.html'),'utf8'));
 
 test('every self-hosted Japanese font face points to a served WOFF2 file',()=>{
   for(const [family,cssFamily] of [
@@ -13,7 +13,7 @@ test('every self-hosted Japanese font face points to a served WOFF2 file',()=>{
     ['noto-serif-jp','Noto Serif JP Variable'],
   ]){
     const href=`/fonts/${family}/wght.css`;
-    assert.ok(html.includes(`href="${href}"`),`${family}: stylesheet is linked`);
+    for(const [index,html] of localizedHtml.entries()) assert.ok(html.includes(`href="${href}"`),`${family}: stylesheet is linked in ${['zh-CN','en'][index]}`);
     const directory=path.join(root,'public','fonts',family);
     const css=readFileSync(path.join(directory,'wght.css'),'utf8');
     const files=[...css.matchAll(/url\(\.\/files\/([^)]*\.woff2)\)/g)].map(match=>match[1]);

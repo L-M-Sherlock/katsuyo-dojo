@@ -36,7 +36,7 @@ test('v6 real-log suffix migrates to v8 with one correction event and intact his
   assert.deepEqual(old, before);
   assert.equal(migrated.version, 8);
   assert.equal(migrated.assessment.version, 3);
-  assert.equal(migrated.practiceLog.version, 3);
+  assert.equal(migrated.practiceLog.version, 4);
   assert.equal(migrated.practiceLog.totalEvents, 21);
   assert.equal(migrated.practiceLog.droppedEntries, 16);
   assert.deepEqual(migrated.practiceLog.events.slice(0, 4), old.practiceLog.events);
@@ -57,10 +57,10 @@ test('v6 real-log suffix migrates to v8 with one correction event and intact his
   assert.equal(migrated.attempted, 9); assert.equal(migrated.correct, 7);
 });
 
-test('export format v6 roundtrips v8 exactly and does not append or replay another migration event', () => {
+test('export format v8 roundtrips v8 exactly and does not append or replay another migration event', () => {
   const migrated = parseUnifiedImport(legacyNoru(), options);
   const exported = createUnifiedExport(migrated, options.at);
-  assert.equal(exported.formatVersion, 7);
+  assert.equal(exported.formatVersion, 8);
   for (let count = 0; count < 3; count++) {
     const restored = parseUnifiedImport(exported, options);
     assert.deepEqual(restored, migrated);
@@ -108,7 +108,7 @@ test('v7 strict restore rejects damaged authoritative scores instead of clamping
     const invalid = structuredClone(migrated); mutate(invalid);
     assert.throws(() => parseUnifiedImport(createUnifiedExport(invalid), options));
   }
-  assert.throws(() => parseUnifiedImport({ format: 'katsuyo-dojo-profile', formatVersion: 8, profile: migrated }, options));
+  assert.throws(() => parseUnifiedImport({ format: 'katsuyo-dojo-profile', formatVersion: 9, profile: migrated }, options));
 });
 
 test('old cumulative-only profiles retain their history and explicitly log the limits of reconstruction', () => {

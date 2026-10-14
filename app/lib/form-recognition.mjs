@@ -3,6 +3,7 @@ import { acceptedConjugations } from './conjugation.mjs';
 import { acceptedAdjectiveConjugations, adjectiveTargetLabel } from './adjective-conjugation.mjs';
 import { FORM_LABELS } from './form-labels.mjs';
 import { supportsVerbForm, assessFormUsage } from './form-eligibility.mjs';
+import { diagnosticComposite, diagnosticMessage } from './i18n/diagnostics.mjs';
 
 const byDomain = Object.fromEntries(['verb','adjective'].map(domain=>[domain,
   [...new Set(UNIFIED_COURSES.filter(course=>course.domain===domain).flatMap(course=>course.forms))]]));
@@ -22,24 +23,29 @@ export function recognizedFormLabel(item, form) {
 // Recognition describes the submitted structure; it does not establish that
 // the expression fits the lemma's reviewed sense or an unspecified situation.
 // Share this copy with the page so the qualification survives guided practice.
-export function recognizedFormsIdentification(item, matches, target) {
-  if(!matches?.length)return '';
+export function recognizedFormsIdentificationMessage(item, matches, target, targetForm = null) {
+  if(!matches?.length)return null;
   const labels=[...new Set(matches.map(match=>match.label??recognizedFormLabel(item,match.form)))].join('／');
   const qualified=matches.some(match=>match.usage&&match.usage.status!=='allowed');
-  const identification=qualified
-    ? `从构形上看，你的答案对应${labels}，本题要求${target}。`
-    : `你的答案与${labels}一致，本题要求${target}。`;
+  const identification=diagnosticMessage(qualified
+    ? 'diagnostics.recognition.qualified'
+    : 'diagnostics.recognition.allowed',{labels,targetLabel:target,forms:matches.map(match=>match.form).join(','),...(targetForm?{targetForm}:{})});
   const notes=[];
   for(const match of matches) {
     const usage=match.usage;
     if(!usage||usage.status==='allowed')continue;
     const reason=usage.reason?.replace(/[。；;]+$/u,'');
-    const qualification=usage.reasonCode==='unreviewed-lexeme'?'实际用法尚未确认'
-      :usage.status==='context-required'?'实际使用需要合适的语境':'不适合这里给定的词义';
-    const note=`${match.label}${qualification}${reason?`：${reason}`:''}。`;
-    if(!notes.includes(note))notes.push(note);
+    const type=usage.reasonCode==='unreviewed-lexeme'?'unreviewed'
+      :usage.status==='context-required'?'context':'disallowed';
+    const note=diagnosticMessage(`diagnostics.recognition.note.${type}${reason?'WithReason':''}`,
+      {label:match.label,form:match.form,reasonCode:usage.reasonCode??'',...(reason?{reason}:{})});
+    if(!notes.some(existing=>existing.message===note.message))notes.push(note);
   }
-  return identification+notes.join('');
+  return diagnosticComposite([identification,...notes]);
+}
+
+export function recognizedFormsIdentification(item, matches, target, targetForm = null) {
+  return recognizedFormsIdentificationMessage(item,matches,target,targetForm)?.message??'';
 }
 
 function recognizedUsage(item, form) {

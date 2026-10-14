@@ -14,6 +14,8 @@
 
 制作与审核使用 [.agents/skills/write-katsuyo-usage-cards/SKILL.md](../.agents/skills/write-katsuyo-usage-cards/SKILL.md)，课程级任务另读[协调者流程](../.agents/skills/write-katsuyo-usage-cards/references/coordinator.md)。仓库版本是维护来源，包含作者／审核者规则、专项语言审核、清单校验和读音对照脚本；不再依赖本机个人目录。
 
+翻译用法卡时另读[本地化覆盖与英语审核](../.agents/skills/write-katsuyo-usage-cards/references/localization-review.md)。英语内容是按稳定卡片 ID 绑定的独立覆盖层，不修改本节所述 canonical 卡片。
+
 从仓库根目录运行工具时，可设置 `SKILL_DIR="$PWD/.agents/skills/write-katsuyo-usage-cards"`，再使用 skill 中的命令。分派任务应给出该目录、只读清单和独占输出文件的实际路径。临时草稿、读音报告和试作放任务临时目录；skill 源码随仓库维护，不加入网站运行时包。个人安装副本需要更新时，从仓库同步，不在两处分别维护。
 
 ## 编写接口
@@ -55,6 +57,46 @@
 此前 2,219 张卡的扫描范围、12 张修正与保留异读的理由见[注音复核记录](usage-card-reading-audit.md)。
 
 卡片属于静态教学资源，不随个人进度保存或导出；不用个人备份编写测试，不需要进度迁移。
+
+## 本地化覆盖层
+
+每种语言维护独立覆盖层。覆盖层只提供学习者可见的 `scene`、`translation` 和可选 `note`。日语句段、reading、目标形式、词义 ID、形式 ID、课程身份、适用性和审核状态继续来自 canonical 卡片。
+
+```js
+{
+  id: 'usage:negative',
+  sourceHash: 'sha256:…',
+  scene: 'The speaker decides not to drink tonight.',
+  translation: 'I will not drink alcohol tonight.',
+  note: 'Optional short usage note.'
+}
+```
+
+`id` 是跨语言稳定身份。`sourceHash` 绑定最终运行时 canonical 卡片内容。源卡变化后，旧翻译及其审核结论立即过期；必须根据新卡重新核对，不能只刷新哈希。翻译不能回写 canonical 卡片，也不能改动日语、目标形式或题库适用性。
+
+英语首版从最终在用 `USAGE_CARDS` 冻结精确范围。每个批次最多 64 张。全量检查要求 ID 集合完全相等、每卡恰好一条、哈希匹配、字段非空、没有未允许的中文残留或答案泄漏。
+
+语言审核采用确定性分层抽样。样本包含每个有效“形式 × 词类”至少一张、每个批次至少一张、全部带 `note` 的卡，并对其余卡按稳定 ID 哈希抽取 5%。样本还须覆盖全部课程和六个阶段。任一样本失败时，修订该卡并扩查它所属的整个批次；模板问题扩查所有受影响批次。全量检查、样本审核和扩查均通过后才能接入该语言。完整操作规则见上述本地化 reference。
+
+对冻结的英语作者批次生成审校包：`node scripts/sample-english-usage-review.mjs`。默认读取当前运行时 `USAGE_CARDS`、最终英语覆盖层，以及 `work/i18n-english-usage-cards-gpt/` 下的清单、分配、作者输出和收据，将抽样清单与每包最多 64 张的 JSON 写入被 Git 忽略的 `work/i18n-english-usage-cards-review/`。可用 `--work-dir`、`--output-dir` 指定路径。清单保存算法版本、冻结哈希、最终英语覆盖层和模块的收据哈希、样本 ID 及审校包字节哈希；每条记录包括完整日语句和目标、中文源字段、英语字段及哈希、课程阶段、正式作者批次及其收据。源卡、英语文案、作者输出或最终模块改变后须重新生成审校包。该命令只抽样，不产生语言审核结论。
+
+独立审核者把每包报告写入 `work/i18n-english-usage-cards-review/reports/review-NNNN.json`，保持审校包原顺序。报告顶层需有 `schemaVersion: 1`、非空 `reviewer`、`selfReview: false`、`packetId`、`packetSha256`、`count` 和 `rows`。每行需有精确的 `id`、`sourceHash`、`englishHash`、`status`（`approved`、`revise`、`uncertain` 或 `source_issue`）、具体且非空的 `reason`，以及七个布尔检查：`englishNatural`、`meaning`、`roles`、`timeAndPolarity`、`register`、`scene`、`noAnswerLeak`。`approved` 的七项检查都须为 `true`。校验器会拒收重复或过短的理由，作为“逐卡写理由”的机械门禁；它不替代语言判断。
+
+全部样本报告到齐后运行 `node scripts/verify-english-usage-review.mjs`。工具逐一核对审校包字节哈希、报告身份及每行顺序和哈希，并在 `work/i18n-english-usage-cards-review/expansion/` 写入状态汇总和完整批次扩查包。任一非 `approved` 样本所在的正式作者批次都会生成一包，包含该批次全部卡片及触发扩查的样本 ID；每包最多 64 张，并绑定作者批次收据、当前英语哈希与最终收据。原始样本报告保留在 `reports/`，工具不会修改它们。可用 `--work-dir`、`--review-dir`、`--output-dir` 指定路径。
+
+样本中需要返修的卡片使用 `node scripts/repair-english-usage-cards.mjs prepare` 冻结作者任务。默认输出到 `work/i18n-english-usage-cards-repair/`：`manifest.json` 列出精确 ID、原英语哈希和每份分配文件的字节哈希，`assignments/repair-NNNN.json` 每份最多 16 张，提供完整日语与中文源卡、原英语、原审核状态／理由／七项检查及 `requiredNote`。作者只在相应 `outputs/repair-NNNN.json` 提交译文，格式为 `{ "schemaVersion": 1, "translatorId": "gpt-6-luna-max", "batchId": "repair-NNNN", "assignmentHash": "…", "cards": [{ "id": "…", "sourceHash": "…", "originalEnglishHash": "…", "scene": "…", "translation": "…" }] }`；源卡有说明时，每张输出还须有非空 `note`。卡片顺序与分配完全一致。
+
+所有返修输出齐全后运行 `node scripts/repair-english-usage-cards.mjs merge`。工具先校验完整输出集合、原英语哈希、字段、说明有无、中文残留与正面日语答案泄漏；全部通过后，只把这些 ID 的英语字段写入正式作者批次输出，调用原英语生成器重建覆盖层和收据，再在返修目录保存逐包 `receipts/` 与 `merge-receipt.json`。样本报告仍作为原始触发证据保存在审校目录。两个命令可用 `--work-dir`、`--review-dir`、`--repair-dir` 指定目录；未收到作者输出前不要运行 `merge`。
+
+返修合并会改变英语哈希，因此原抽样清单不能再作为当前英语内容的审核包。运行 `node scripts/verify-english-usage-review.mjs after-repair`，工具会核对原扩查汇总、原样本包和报告哈希、返修合并收据、当前正式收据及覆盖层／模块哈希，并在 `work/i18n-english-usage-cards-review/expansion-after-repair/` 生成新包。扩查范围仍由原报告中非通过项决定；包内内容和哈希来自返修后的当前覆盖层。新目录首次生成后保持不可变，证据变化会报错，需保留旧目录另开新的审核轮次。
+
+第一轮返修后的完整批次扩查报告放在 `work/i18n-english-usage-cards-review/expansion-reports/batch-NNNN.json`。运行 `node scripts/repair-english-usage-cards.mjs prepare --stage expansion`，工具核对全部扩查报告的文件集合、审校包哈希、批次身份、逐卡顺序及哈希、状态、七项布尔检查和具体理由，并把未通过卡冻结到 `work/i18n-english-usage-cards-expansion-repair/`，每份 `assignments/repair-NNNN.json` 最多 16 张。作者按第一次返修相同的输出结构提交 `outputs/repair-NNNN.json`。所有输出齐全后运行 `node scripts/repair-english-usage-cards.mjs merge --stage expansion`：仅合并实际改动的卡并重建正式英语覆盖层及收据。`rereview/` 只包含改动卡的复审包；`carried-approved.json` 列出英语哈希保持不变、可沿用本次扩查通过结论的卡。原样本与扩查证据始终保留。
+
+针对 `rereview/` 改动卡的报告放在同目录的 `reports/rereview-NNNN.json`。运行 `node scripts/repair-english-usage-cards.mjs prepare --stage rereview`，工具严格核对全部复审报告，并将未通过卡冻结在 `work/i18n-english-usage-cards-final-repair/`，每份最多 16 张。作者按同一输出格式交付后运行 `node scripts/repair-english-usage-cards.mjs merge --stage rereview`。合并会逐卡确认两组已通过卡仍保有原 `sourceHash` 与英语哈希：完整扩查中未修改的通过卡，以及改动卡复审中通过的卡。只有本轮再次改动的卡进入 `final-rereview/`；其中的 `carried-approved.json` 与清单保存沿用通过结论的哈希证据。原始样本、扩查和复审报告均不被改写。
+
+`final-rereview/reports/` 中若仍有未通过项，运行 `node scripts/repair-english-usage-cards.mjs prepare --stage final`，只冻结这些卡到 `work/i18n-english-usage-cards-last-repair/`。校验器再次核对报告文件集合、包哈希、逐卡顺序、身份、七项检查和理由，并核对前两轮沿用的通过卡哈希。作者提交 `outputs/repair-NNNN.json` 后运行 `node scripts/repair-english-usage-cards.mjs merge --stage final`；合并仅修改本轮返修卡，重建正式收据，并在 `last-rereview/` 给实际改动的卡生成最终复核包。所有旧报告和旧包继续保留。
+
+最终 `last-rereview/reports/` 全部通过后，运行 `node scripts/verify-english-usage-release.mjs freeze`。工具验证样本范围外的抽样通过卡、全部扩查卡与沿用通过卡的当前哈希、最终报告和四轮返修收据链，再写入可提交的 `docs/english-usage-release-proof.v1.json.gz`。该压缩证明包含全部在用卡的 ID、源卡哈希和英语哈希，以及范围、报告与收据摘要；不会把 Git 忽略的完整报告提交入库。`node scripts/verify-english-usage-release.mjs verify` 只读已提交证明和当前运行时内容；`npm run audit:i18n` 同样执行此校验，因此后续源卡或英语改动会使审计失败，直到新内容完成审核并重新冻结证明。
 
 ## 首批复核记录
 

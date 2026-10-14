@@ -16,12 +16,15 @@ import { wordKey } from '../app/lib/exercise-selection.mjs';
 
 // Compile the actual page without starting Vite's development server in tests.
 const pageUrl = new URL('../app/page.tsx', import.meta.url);
+const rewriteImports = (source, baseUrl, replacements = new Map()) => source.replace(/from ["']([^"']+)["']/g, (_match, specifier) => {
+  const resolved = specifier.startsWith('.') ? new URL(specifier, baseUrl).href : import.meta.resolve(specifier);
+  return `from ${JSON.stringify(replacements.get(resolved) ?? resolved)}`;
+});
 // Exposing the display-label table only lets the UI driver identify the
 // question shown on screen; expected scores remain independently asserted.
-const compiled = ts.transpileModule(await readFile(pageUrl, 'utf8'), {
+const compiled = rewriteImports(ts.transpileModule(await readFile(pageUrl, 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
-}).outputText.replace(/from ["']([^"']+)["']/g, (_match, specifier) =>
-  `from ${JSON.stringify(specifier.startsWith('.') ? new URL(specifier, pageUrl).href : import.meta.resolve(specifier))}`);
+}).outputText, pageUrl);
 const { default: Page, VERB_KNOWLEDGE, ADJECTIVE_KNOWLEDGE, KNOWLEDGE, ALL_KCS } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
 
 const { JSDOM } = await import('jsdom');
@@ -43,7 +46,8 @@ let lockTail;
 
 beforeEach(() => {
   storage.clear();
-  window.history.replaceState(null, '', '/katsuyo-dojo/');
+  window.history.replaceState(null, '', '/katsuyo-dojo/zh-CN/');
+  document.head.innerHTML = `<meta name="description" content=""><meta property="og:title" content=""><meta property="og:description" content=""><meta property="og:locale" content="zh_CN"><meta property="og:url" content=""><meta property="og:image" content=""><meta name="twitter:title" content=""><meta name="twitter:description" content=""><meta name="twitter:image" content=""><link rel="canonical" href="https://l-m-sherlock.github.io/katsuyo-dojo/zh-CN/"><link rel="alternate" hreflang="zh-CN" href="https://l-m-sherlock.github.io/katsuyo-dojo/zh-CN/"><link rel="alternate" hreflang="en" href="https://l-m-sherlock.github.io/katsuyo-dojo/en/"><link rel="alternate" hreflang="x-default" href="https://l-m-sherlock.github.io/katsuyo-dojo/">`;
   lockTail = Promise.resolve();
   Object.defineProperty(navigator, 'locks', { configurable: true, value: { request: (_key, callback) => {
     const job = lockTail.then(callback); lockTail = job.catch(() => {}); return job;
@@ -164,6 +168,46 @@ async function exportedProfile(view, name = '导出数据') {
   } finally { URL.createObjectURL = create; URL.revokeObjectURL = revoke; dom.window.HTMLAnchorElement.prototype.click = click; }
 }
 
+test('language switching keeps the active challenge selection and learning profile', async () => {
+  const view = await mount();
+  const profileBefore = storage.getItem(KEY);
+  fireEvent.click(view.getByRole('button', { name: '自由挑战' }));
+  await waitFor(() => assert.ok(view.getByRole('heading', { name: '自由挑战' })));
+  const firstCourse = view.container.querySelector('.challenge-course-option input');
+  fireEvent.click(firstCourse);
+  assert.equal(firstCourse.checked, true);
+  fireEvent.change(view.getByRole('combobox', { name: '语言' }), { target: { value: 'en' } });
+  await waitFor(() => assert.equal(document.documentElement.lang, 'en'));
+  assert.equal(window.location.pathname, '/katsuyo-dojo/en/');
+  assert.equal(window.location.hash, '#/challenge');
+  assert.ok(view.getByRole('heading', { name: 'Free challenge' }));
+  assert.equal(view.container.querySelector('.challenge-course-option input').checked, true);
+  assert.equal(storage.getItem(KEY), profileBefore);
+  assert.equal(storage.getItem('katsuyo-ui-locale-v1'), 'en');
+  assert.equal(document.querySelector('link[rel="canonical"]').href, 'https://l-m-sherlock.github.io/katsuyo-dojo/en/');
+  assert.equal(document.querySelector('meta[property="og:locale"]').content, 'en_US');
+  assert.equal(document.querySelector('meta[property="og:url"]').content, 'https://l-m-sherlock.github.io/katsuyo-dojo/en/');
+  assert.equal(document.querySelector('meta[property="og:image"]').content, 'https://l-m-sherlock.github.io/katsuyo-dojo/og-en.png');
+  assert.match(document.querySelector('meta[name="twitter:description"]').content, /Practice Japanese/);
+});
+
+test('the English entry localizes practice and auxiliary pages without changing Japanese study text', async () => {
+  window.history.replaceState(null, '', '/katsuyo-dojo/en/');
+  const view = await mount();
+  await waitFor(() => assert.equal(Boolean(view.queryByText('Loading English usage cards…')), false));
+  assert.equal(document.documentElement.lang, 'en');
+  assert.equal(document.title, '活用道場 · Japanese Conjugation Practice');
+  assert.ok(view.getByRole('button', { name: 'Practice', exact: true }));
+  assert.ok(view.getByRole('button', { name: 'Free challenge', exact: true }));
+  assert.ok(view.getByRole('button', { name: /Adaptive practice/ }));
+  assert.ok(view.container.querySelector('.word-display ruby[lang="ja"]'));
+  for (const chinese of ['你的答案', '表达作用', '全部课程', '知识进度']) assert.equal(view.container.textContent.includes(chinese), false, chinese);
+  fireEvent.click(view.getByRole('button', { name: 'Statistics', exact: true }));
+  await waitFor(() => assert.ok(view.getByRole('heading', { name: 'Learning statistics' })));
+  fireEvent.click(view.getByRole('link', { name: 'Principles', exact: true }));
+  await waitFor(() => assert.ok(view.getByRole('heading', { name: /How does 活用道場 plan your practice/ })));
+});
+
 test('page preserves hint assistance after collapse and clears the manual hint on the next question', async () => {
   const view = await mount();
   await showHint(view);
@@ -207,6 +251,20 @@ test('denied storage reads do not prevent grading or route switching', async () 
   fireEvent.click(view.getByRole('tab', { name: '形容词专项' }));
   assert.equal(view.getByRole('tab', { name: '形容词专项' }).getAttribute('aria-selected'), 'true');
   assert.equal(view.container.querySelector('.word-display').textContent, before);
+});
+
+test('a blocked localStorage getter does not crash locale detection or switching', async () => {
+  const descriptor = Object.getOwnPropertyDescriptor(window, 'localStorage');
+  Object.defineProperty(window, 'localStorage', { configurable: true, get() { throw new Error('SecurityError'); } });
+  try {
+    const view = await mount();
+    assert.match(view.getByRole('alert').textContent, /暂存在本页/);
+    fireEvent.change(view.getByRole('combobox', { name: '语言' }), { target: { value: 'en' } });
+    await waitFor(() => assert.equal(document.documentElement.lang, 'en'));
+    assert.equal(window.location.pathname, '/katsuyo-dojo/en/');
+  } finally {
+    Object.defineProperty(window, 'localStorage', descriptor);
+  }
 });
 
 test('a late external write is caught before grading even without a storage event', async () => {
@@ -453,6 +511,27 @@ test('whole continuation confusion requests diagnosis instead of blaming either 
   assert.deepEqual(saved.byKc, initial.byKc);
   assert.equal(saved.attempted, 1);
   assert.equal(saved.correct, 0);
+});
+
+test('language switching relocalizes active diagnostic feedback without resetting the step', async () => {
+  const { view, form, item } = await mountCompoundPast();
+  const answer = conjugate(item.reading, item.class, form.replace(/Past$/, 'Negative'));
+  fireEvent.change(view.getByLabelText('你的答案'), { target: { value: answer } });
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  await waitFor(() => assert.ok(view.getByRole('region', { name: '拆步练习' })));
+  const region = view.getByRole('region', { name: '拆步练习' });
+  const classChoice = region.querySelector('.class-options button');
+  if (classChoice) fireEvent.click(classChoice);
+  else {
+    const input = view.getByLabelText('本步答案');
+    fireEvent.change(input, { target: { value: 'わからないxyz' } });
+    fireEvent.submit(input.closest('form'));
+  }
+  await waitFor(() => assert.ok(region.querySelector('[role="status"]')));
+  fireEvent.change(view.getByRole('combobox', { name: '语言' }), { target: { value: 'en' } });
+  const english = await waitFor(() => view.getByRole('region', { name: 'Step practice' }));
+  assert.doesNotMatch(english.textContent, /词类判断|本步正确|辅助练习|请检查输入/);
+  assert.match(english.textContent, /verb class|This step|Check your entry/);
 });
 
 test('an unrecognized compound answer gives no partial credit', async () => {
@@ -1784,6 +1863,17 @@ test('v7 export and UI import preserve assisted records, pending retests and log
   assert.match(reloaded.container.querySelector('.practice-notice').textContent, /间隔练习/);
 });
 
+test('English imports show the stable reason for an unsupported backup format', async () => {
+  window.history.replaceState(null, '', '/katsuyo-dojo/en/');
+  const view = await mount();
+  await waitFor(() => assert.equal(Boolean(view.queryByText('Loading English usage cards…')), false));
+  fireEvent.click(view.getByRole('button', { name: /Knowledge progress/ }));
+  fireEvent.change(view.container.querySelector('input[type="file"]'), { target: { files: [{
+    name: 'wrong.json', text: async () => JSON.stringify({ format: 'another-app', formatVersion: 8, profile: {} }),
+  }] } });
+  await waitFor(() => assert.ok(view.getByText('This is not a supported Katsuyō Dōjō backup format.')));
+});
+
 test('opening a hint without submitting persists exposure and pending status across reload', async () => {
   const { view, initial } = await mountCompoundPast('past', 'verb', 'teageru');
   await showHint(view);
@@ -1874,7 +1964,7 @@ test('statistics navigation preserves the original draft, diagnostic draft and r
 });
 
 test('statistics direct links and browser navigation isolate practice keyboard shortcuts', async () => {
-  window.history.replaceState(null, '', '/katsuyo-dojo/#/stats');
+  window.history.replaceState(null, '', '/katsuyo-dojo/zh-CN/#/stats');
   storage.setItem(KEY, JSON.stringify(profile()));
   try {
     const view = await mount();
@@ -1883,7 +1973,7 @@ test('statistics direct links and browser navigation isolate practice keyboard s
     assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount, 0);
     fireEvent.click(view.getByRole('button', { name: '返回练习' }));
     assert.equal(window.location.hash, '');
-    window.history.replaceState(null, '', '/katsuyo-dojo/#/stats');
+    window.history.replaceState(null, '', '/katsuyo-dojo/zh-CN/#/stats');
     fireEvent(window, new window.PopStateEvent('popstate'));
     assert.ok(view.getByRole('heading', { name: '学习统计' }));
     const trigger = view.getByRole('button', { name: '查看知识进度' });
@@ -1891,7 +1981,7 @@ test('statistics direct links and browser navigation isolate practice keyboard s
     assert.ok(view.getByRole('dialog', { name: '知识进度' }));
     fireEvent.keyDown(window, { key: 'Escape' });
     assert.equal(document.activeElement, trigger);
-  } finally { window.history.replaceState(null, '', '/katsuyo-dojo/'); }
+  } finally { window.history.replaceState(null, '', '/katsuyo-dojo/zh-CN/'); }
 });
 
 test('principles preserves original and diagnostic drafts without scoring hidden practice', async () => {
@@ -1902,7 +1992,7 @@ test('principles preserves original and diagnostic drafts without scoring hidden
   fireEvent.click(view.getByRole('link', { name: '原理', exact: true }));
   assert.equal(window.location.hash, '#/principles');
   assert.equal(document.title, '原理介绍 · 活用道場');
-  assert.ok(view.getByRole('heading', { name: '活用道場怎样安排练习？' }));
+  assert.ok(view.getByRole('heading', { name: '活用道場 怎样安排练习？' }));
   assert.equal(view.getByRole('link', { name: '原理', exact: true }).getAttribute('aria-current'), 'page');
   assert.equal(view.getByRole('button', { name: '练习', exact: true }).getAttribute('aria-current'), null);
   fireEvent.keyDown(window, { key: 'Enter' });
@@ -1928,7 +2018,7 @@ test('principles preserves original and diagnostic drafts without scoring hidden
 test('principles deep links and browser navigation retain an active challenge', async () => {
   storage.setItem(KEY, JSON.stringify(profile()));
   storage.setItem('katsuyo-practice-challenge-v1', 'adjectiveIBase');
-  window.history.replaceState(null, '', '/katsuyo-dojo/#/principles/retest');
+  window.history.replaceState(null, '', '/katsuyo-dojo/zh-CN/#/principles/retest');
   const view = await mount();
   assert.equal(document.activeElement.id, 'principles-retest');
   assert.equal(view.queryByRole('heading', { name: '自由挑战作答' }), null);
@@ -1938,14 +2028,14 @@ test('principles deep links and browser navigation retain an active challenge', 
   const exercise = displayedExercise(view);
   fireEvent.change(input, { target: { value: '途中' } });
   for (const section of ['knowledge', 'mastery']) {
-    window.history.replaceState(null, '', `/katsuyo-dojo/#/principles/${section}`);
+    window.history.replaceState(null, '', `/katsuyo-dojo/zh-CN/#/principles/${section}`);
     fireEvent(window, new window.PopStateEvent('popstate'));
     assert.equal(document.activeElement.id, `principles-${section}`);
     assert.equal(view.getByRole('button', { name: '自由挑战', exact: true }).getAttribute('aria-current'), null);
     fireEvent.keyDown(window, { key: 'Enter' });
     assert.equal(displayedExercise(view).id, exercise.id);
   }
-  window.history.replaceState(null, '', '/katsuyo-dojo/#/challenge/play');
+  window.history.replaceState(null, '', '/katsuyo-dojo/zh-CN/#/challenge/play');
   fireEvent(window, new window.PopStateEvent('popstate'));
   assert.equal(view.getByLabelText('你的答案'), input);
   assert.equal(input.value, '途中');
@@ -2048,7 +2138,7 @@ async function openChallenge(view,courseId=null) {
   assert.ok(view.getByRole('heading',{name:'自由挑战',exact:true}));
   assert.equal(window.location.hash,'#/challenge');
   if(courseId){
-    const clear=view.getByRole('button',{name:'清空选择'});if(!clear.disabled)fireEvent.click(clear);
+    const clear=view.getByRole('button',{name:'清空课程选择'});if(!clear.disabled)fireEvent.click(clear);
     for(const id of Array.isArray(courseId)?courseId:[courseId])fireEvent.click(view.getByRole('checkbox',{name:UNIFIED_COURSES.find(c=>c.id===id).title,exact:true}));
     fireEvent.click(view.getByRole('button',{name:'开始挑战所选课程'}));
   }else fireEvent.click(view.getByRole('button',{name:/挑战最高难度/}));
@@ -2175,17 +2265,17 @@ test('the challenge page filters checkbox cards, retains hidden selections, and 
   fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
   assert.equal(window.location.hash,'#/challenge');
   assert.ok(view.getByRole('heading',{name:'自由挑战',exact:true}));
-  assert.equal(view.queryByRole('dialog'),null);assert.equal(view.queryByRole('combobox'),null);
+  assert.equal(view.queryByRole('dialog'),null);assert.equal(view.container.querySelector('.challenge-picker select'),null);
   assert.equal(view.getByRole('button',{name:'自由挑战',exact:true}).getAttribute('aria-current'),'page');
   assert.equal(view.getByRole('button',{name:'练习',exact:true}).getAttribute('aria-current'),null);
   assert.equal(view.getByRole('button',{name:'开始挑战所选课程'}).disabled,true);
   fireEvent.click(view.getByRole('checkbox',{name:'动词过去形',exact:true}));
   fireEvent.click(view.getByRole('button',{name:'形容词',exact:true}));
   assert.equal(view.getAllByRole('checkbox').length,6);
-  fireEvent.click(view.getByRole('button',{name:'全选当前结果'}));assert.ok(view.getByText('已选 7 门课程'));
+  fireEvent.click(view.getByRole('button',{name:'选择全部当前结果'}));assert.ok(view.getByText('已选 7 门课程'));
   fireEvent.change(view.getByRole('searchbox',{name:'搜索挑战课程'}),{target:{value:'不存在的课程'}});
   assert.ok(view.getByText(/没有找到匹配的课程/));assert.ok(view.getByText('已选 7 门课程'));
-  fireEvent.click(view.getByRole('button',{name:'清空选择'}));assert.equal(view.getByRole('button',{name:'开始挑战所选课程'}).disabled,true);
+  fireEvent.click(view.getByRole('button',{name:'清空课程选择'}));assert.equal(view.getByRole('button',{name:'开始挑战所选课程'}).disabled,true);
   fireEvent.keyDown(window,{key:'1'});assert.equal(storage.getItem(KEY),before);
   fireEvent.click(view.getByRole('button',{name:'返回当前练习'}));assert.equal(window.location.hash,'');
   assert.equal(view.getByRole('button',{name:'练习',exact:true}).getAttribute('aria-current'),'page');
@@ -2199,7 +2289,7 @@ test('legacy challenge selection and history navigation keep the current page an
   fireEvent.click(view.getByRole('button',{name:'自由挑战',exact:true}));
   assert.equal(window.location.hash,'#/challenge');
   assert.equal(view.getByRole('checkbox',{name:'い形容词基础活用',exact:true}).checked,true);
-  window.history.replaceState(null,'','/katsuyo-dojo/#/challenge/play');fireEvent(window,new window.PopStateEvent('popstate'));
+  window.history.replaceState(null,'','/katsuyo-dojo/zh-CN/#/challenge/play');fireEvent(window,new window.PopStateEvent('popstate'));
   assert.equal(view.getByLabelText('你的答案').value,'途中');
   assert.equal(view.getByRole('button',{name:'自由挑战',exact:true}).getAttribute('aria-current'),'page');
   fireEvent.click(view.getByRole('button',{name:'统计',exact:true}));
@@ -2209,7 +2299,7 @@ test('legacy challenge selection and history navigation keep the current page an
   fireEvent.click(view.getByRole('button',{name:'练习',exact:true}));
   await waitFor(()=>assert.equal(Boolean(view.container.querySelector('.challenge-notice')),false));
   assert.equal(window.location.hash,'');assert.equal(storage.getItem('katsuyo-practice-challenge-v1'),null);
-  window.history.replaceState(null,'','/katsuyo-dojo/#/challenge/play');fireEvent(window,new window.PopStateEvent('popstate'));
+  window.history.replaceState(null,'','/katsuyo-dojo/zh-CN/#/challenge/play');fireEvent(window,new window.PopStateEvent('popstate'));
   assert.equal(window.location.hash,'#/challenge');assert.ok(view.getByRole('heading',{name:'自由挑战',exact:true}));
 });
 

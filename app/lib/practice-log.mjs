@@ -1,5 +1,6 @@
 import { retestQueue } from './retest-queue.mjs';
 import { recordStatisticsEvent } from './statistics.mjs';
+import { PROFILE_IMPORT_ERROR_CODES, profileImportError } from './profile-import-error.mjs';
 /** @typedef {import('./adaptive.mjs').SkillStats} SkillStats */
 /** @typedef {{date: string, attempted: number, correct: number, streak: number}} Totals */
 /** @typedef {{surface: string, reading: string, form: string | null, label: string, kind: string, kcIds: string[], answers: string[], readings: string[], stepIndex: number | null, totalSteps: number, nextTotalSteps: number}} LogTarget */
@@ -8,8 +9,10 @@ import { recordStatisticsEvent } from './statistics.mjs';
 /** @typedef {{independent: boolean, source: string, provided: string[]}} EvidenceSupport */
 /** @typedef {{queue?: "practice" | "challenge" | null, pending: boolean, independentAttempts: number, independentCorrect: number, assistedOriginalAttempts: number, assistedOriginalCorrect: number, assistedStepAttempts: number, assistedStepCorrect: number, eligibleRetestCorrect: number, pendingReason: string | null, lastFailureAt: string | null, lastPresentedAt: string | null}} AssessmentSnapshot */
 /** @typedef {{targetKey: string, before: AssessmentSnapshot, after: AssessmentSnapshot, eligibility: {eligible: boolean, reason: string, remainingQuestions: number, availableAt: string | null, policy: string} | null}} AssessmentChange */
-/** @typedef {{mode?: "practice" | "challenge", id: string, sequence: number, questionId: string, at: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer: string, answerLength: number, answerTruncated: boolean, hintUsed: boolean, support?: EvidenceSupport, diagnosis: {kcId: string | null, confirmedKcIds: string[], resolution: string, message: string}, changes: KnowledgeChange[], assistedChanges?: KnowledgeChange[], assessment?: AssessmentChange, totals: {before: Totals, after: Totals}} PracticeEvent */
-/** @typedef {{version: 1 | 2 | 3, totalEvents: number, droppedEntries: number, events: PracticeEvent[]}} PracticeLog */
+/** @typedef {string | number | boolean | null} DiagnosisParam */
+/** @typedef {{kcId: string | null, confirmedKcIds: string[], resolution: string, message?: string, messageKey?: string, params?: Record<string, DiagnosisParam>}} LogDiagnosis */
+/** @typedef {{mode?: "practice" | "challenge", id: string, sequence: number, questionId: string, at: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer: string, answerLength: number, answerTruncated: boolean, hintUsed: boolean, support?: EvidenceSupport, diagnosis: LogDiagnosis, changes: KnowledgeChange[], assistedChanges?: KnowledgeChange[], assessment?: AssessmentChange, totals: {before: Totals, after: Totals}} PracticeEvent */
+/** @typedef {{version: 1 | 2 | 3 | 4, totalEvents: number, droppedEntries: number, events: PracticeEvent[]}} PracticeLog */
 
 export const PRACTICE_LOG_LIMIT = 500;
 // Bound the serialized log as well as its count: a complex answer can update
@@ -17,13 +20,15 @@ export const PRACTICE_LOG_LIMIT = 500;
 export const PRACTICE_LOG_MAX_CHARS = 750_000;
 
 /** @returns {PracticeLog} */
-export function emptyPracticeLog() { return { version: 3, totalEvents: 0, droppedEntries: 0, events: [] }; }
+export function emptyPracticeLog() { return { version: 4, totalEvents: 0, droppedEntries: 0, events: [] }; }
 
 export function practiceEventId() {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 }
 
-function invalid() { throw new Error('作答日志格式不完整或不受支持，未导入该备份。'); }
+function invalid() {
+  throw profileImportError(PROFILE_IMPORT_ERROR_CODES.INVALID_PRACTICE_LOG, '作答日志格式不完整或不受支持，未导入该备份。');
+}
 function object(value) { if (!value || typeof value !== 'object' || Array.isArray(value)) invalid(); return value; }
 function string(value, max = 256, nonempty = false) {
   if (typeof value !== 'string' || Array.from(value).length > max || (nonempty && !value.length)) invalid();
@@ -43,6 +48,38 @@ function number(value, max = Infinity) { if (typeof value !== 'number' || !Numbe
 function bool(value) { if (typeof value !== 'boolean') invalid(); return value; }
 function list(value, read, max = 256) { if (!Array.isArray(value) || value.length > max) invalid(); return value.map(read); }
 const strings = value => list(value, v => string(v));
+const diagnosisKeyPattern = /^[A-Za-z0-9]+(?:[._:-][A-Za-z0-9]+)*$/;
+function diagnosisParams(value) {
+  const source = object(value), entries = Object.entries(source);
+  if (entries.length > 32) invalid();
+  /** @type {Record<string, DiagnosisParam>} */
+  const result = {};
+  for (const [key, entry] of entries) {
+    if (!diagnosisKeyPattern.test(key) || key.length > 64 || ['__proto__', 'constructor', 'prototype'].includes(key)) invalid();
+    if (typeof entry === 'string') result[key] = string(entry, 1000);
+    else if (typeof entry === 'number' && Number.isFinite(entry)) result[key] = entry;
+    else if (typeof entry === 'boolean' || entry === null) result[key] = entry;
+    else invalid();
+  }
+  return result;
+}
+function readDiagnosis(value, version) {
+  const source = object(value);
+  /** @type {LogDiagnosis} */
+  const result = { kcId: nullableString(source.kcId), confirmedKcIds: strings(source.confirmedKcIds), resolution: string(source.resolution) };
+  if (version < 4) return { ...result, message: string(source.message, 4000) };
+  if (source.message !== undefined) result.message = string(source.message, 4000);
+  if (source.messageKey !== undefined) {
+    result.messageKey = string(source.messageKey, 256, true);
+    if (!diagnosisKeyPattern.test(result.messageKey)) invalid();
+  }
+  if (source.params !== undefined) {
+    if (!result.messageKey) invalid();
+    result.params = diagnosisParams(source.params);
+  }
+  if (result.message === undefined && result.messageKey === undefined) invalid();
+  return result;
+}
 const supportSources = new Set(['independent', 'guided', 'diagnostic', 'hinted', 'revealed', 'feedback-retry', 'rehearsal', 'completion', 'duplicate', 'typo', 'invalid', 'migration']);
 const assistanceKinds = new Set(['subgoal', 'intermediate', 'word-class', 'target-rule', 'hint', 'answer', 'lexical-retry']);
 const exposureOnlyReasons = new Set(['hinted', 'hint', 'assisted', 'retry', 'feedback-retry']);
@@ -132,7 +169,7 @@ function readAssessment(value) {
 }
 
 /** @returns {PracticeEvent} */
-function readEvent(value) {
+function readEvent(value, version = 4) {
   const s = object(value), exercise = object(s.exercise), target = object(s.target), diagnosis = object(s.diagnosis), daily = object(s.totals);
   const result = {
     id: string(s.id, 128, true), sequence: integer(s.sequence), questionId: string(s.questionId, 128, true), at: timestamp(s.at),
@@ -144,7 +181,7 @@ function readEvent(value) {
       kcIds: strings(target.kcIds), answers: list(target.answers, v => string(v), 32), readings: list(target.readings, v => string(v), 32),
       stepIndex: target.stepIndex === null ? null : integer(target.stepIndex), totalSteps: integer(target.totalSteps), nextTotalSteps: integer(target.nextTotalSteps) },
     answer: string(s.answer), answerLength: integer(s.answerLength), answerTruncated: bool(s.answerTruncated), hintUsed: bool(s.hintUsed),
-    diagnosis: { kcId: nullableString(diagnosis.kcId), confirmedKcIds: strings(diagnosis.confirmedKcIds), resolution: string(diagnosis.resolution), message: string(diagnosis.message, 4000) },
+    diagnosis: readDiagnosis(diagnosis, version),
     changes: knowledgeChanges(s.changes),
     ...(s.support === undefined ? {} : { support: readSupport(s.support) }),
     ...(s.assistedChanges === undefined ? {} : { assistedChanges: knowledgeChanges(s.assistedChanges) }),
@@ -206,10 +243,10 @@ function retain(log) {
 export function parsePracticeLog(value) {
   if (value === undefined) return emptyPracticeLog();
   const s = object(value);
-  if (![1, 2, 3].includes(s.version) || !Array.isArray(s.events)) invalid();
+  if (![1, 2, 3, 4].includes(s.version) || !Array.isArray(s.events)) invalid();
   const totalEvents = integer(s.totalEvents), droppedEntries = integer(s.droppedEntries);
   if (totalEvents !== droppedEntries + s.events.length) invalid();
-  const events = s.events.map(readEvent), ids = new Set();
+  const events = s.events.map(event => readEvent(event, s.version)), ids = new Set();
   for (const [index, event] of events.entries()) {
     if (event.sequence !== droppedEntries + index + 1 || ids.has(event.id)) invalid();
     ids.add(event.id);
@@ -220,7 +257,7 @@ export function parsePracticeLog(value) {
 /** Append to the same profile snapshot as the score change. The caller commits
  * both with one storage write, or retains both in its existing unsaved buffer.
  * @param {any} before @param {any} after
- * @param {{mode?: "practice" | "challenge", questionId: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer?: string, hintUsed?: boolean, support?: EvidenceSupport, assessmentKey?: string, eligibility?: AssessmentChange['eligibility'], diagnosis?: {kcId?: string | null, confirmedKcIds?: string[], resolution?: string, message?: string}, id?: string, at?: string, statistics?: {ordinal?: number|null, day?: string, answerMs?: number|null, progress?: import('./statistics.mjs').Snapshot|null, retestAttempt?: boolean}}} detail
+ * @param {{mode?: "practice" | "challenge", questionId: string, type: string, outcome: string, exercise: LogExercise, target: LogTarget, answer?: string, hintUsed?: boolean, support?: EvidenceSupport, assessmentKey?: string, eligibility?: AssessmentChange['eligibility'], diagnosis?: {kcId?: string | null, confirmedKcIds?: string[], resolution?: string, message?: string, messageKey?: string, params?: Record<string, DiagnosisParam>}, id?: string, at?: string, statistics?: {ordinal?: number|null, day?: string, answerMs?: number|null, progress?: import('./statistics.mjs').Snapshot|null, retestAttempt?: boolean}}} detail
  * @param {(id: string) => string} labelFor */
 export function appendPracticeEvent(before, after, detail, labelFor = id => id) {
   const log = before.practiceLog ?? emptyPracticeLog(), id = detail.id ?? practiceEventId();
@@ -239,10 +276,12 @@ export function appendPracticeEvent(before, after, detail, labelFor = id => id) 
     type: detail.type, outcome: detail.outcome, ...(detail.mode ? {mode:detail.mode} : {}), exercise: detail.exercise, target: detail.target,
     answer: input.slice(0, 256).join(''), answerLength: input.length, answerTruncated: input.length > 256, hintUsed: detail.hintUsed ?? false,
     diagnosis: { kcId: detail.diagnosis?.kcId ?? null, confirmedKcIds: detail.diagnosis?.confirmedKcIds ?? [],
-      resolution: detail.diagnosis?.resolution ?? detail.outcome, message: detail.diagnosis?.message ?? '' },
+      resolution: detail.diagnosis?.resolution ?? detail.outcome,
+      ...(detail.diagnosis?.messageKey ? { messageKey: detail.diagnosis.messageKey, params: detail.diagnosis.params ?? {} } : {}),
+      ...(detail.diagnosis?.message === undefined && detail.diagnosis?.messageKey ? {} : { message: detail.diagnosis?.message ?? '' }) },
     changes, assistedChanges, ...(detail.support ? { support: detail.support } : {}),
     ...(detail.assessmentKey ? { assessment: { targetKey: detail.assessmentKey, before: assessmentSnapshot(before.assessment, detail.assessmentKey),
       after: assessmentSnapshot(after.assessment, detail.assessmentKey), eligibility: detail.eligibility ?? null } } : {}), totals: { before, after },
   });
-  return { ...after, ...(after.statistics ? { statistics: recordStatisticsEvent(after.statistics, event, detail.statistics) } : {}), practiceLog: retain({ version: 3, totalEvents: event.sequence, droppedEntries: log.droppedEntries, events: [...log.events, event] }) };
+  return { ...after, ...(after.statistics ? { statistics: recordStatisticsEvent(after.statistics, event, detail.statistics) } : {}), practiceLog: retain({ version: 4, totalEvents: event.sequence, droppedEntries: log.droppedEntries, events: [...log.events, event] }) };
 }

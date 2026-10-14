@@ -7,6 +7,7 @@ import { restoreLearningAssessment } from './assessment-transfer.mjs';
 import { correctNaraClassification } from './score-corrections.mjs';
 import { CURRICULUM_VERSION, SOURCE_COURSES, UNIFIED_COURSES, VOICE_BASE_FORMS, VOICE_CONTINUATION_FORMS } from './unified-curriculum.mjs';
 import { USAGE_REVIEW_VERSION } from './form-eligibility.mjs';
+import { PROFILE_IMPORT_ERROR_CODES, normalizeProfileImportError, profileImportError } from './profile-import-error.mjs';
 
 export const UNIFIED_STORAGE_KEY = 'katsuyo-practice-profile-v8';
 export const LEGACY_V7_STORAGE_KEY = 'katsuyo-practice-profile-v7';
@@ -17,13 +18,21 @@ const object = value => value && typeof value === 'object' && !Array.isArray(val
 const strings = value => Array.isArray(value) ? value.filter(id => typeof id === 'string') : [];
 const ambiguous = id => id.startsWith('composition.') || id === 'compound.voice-stack' || id === 'suffix.masu' || id.startsWith('facet.form.masu.');
 export function createUnifiedExport(profile, exportedAt = new Date().toISOString()) {
-  return { format: FORMAT, formatVersion: 7, exportedAt, profile };
+  const portableProfile = { ...profile };
+  delete portableProfile.locale;
+  delete portableProfile.uiLocale;
+  return { format: FORMAT, formatVersion: 8, exportedAt, profile: portableProfile };
 }
-export function parseUnifiedImport(value, { today, components, legacyComponents, exercises = /** @type {any[] | undefined} */ (undefined), at = new Date().toISOString() }) {
+function parseUnifiedImportValue(value, { today, components, legacyComponents, exercises = /** @type {any[] | undefined} */ (undefined), at = new Date().toISOString() }) {
   const envelope = object(value);
-  if (!envelope || ('format' in envelope && (envelope.format !== FORMAT || ![1, 2, 3, 4, 5, 6, 7].includes(envelope.formatVersion)))) throw new Error('这不是受支持的活用道場备份文件。');
+  if (!envelope) throw profileImportError(PROFILE_IMPORT_ERROR_CODES.INVALID_FILE, '文件内容不是有效的数据对象。');
+  if ('format' in envelope && (envelope.format !== FORMAT || ![1, 2, 3, 4, 5, 6, 7, 8].includes(envelope.formatVersion))) {
+    throw profileImportError(PROFILE_IMPORT_ERROR_CODES.UNSUPPORTED_FORMAT, '这不是受支持的活用道場备份文件。');
+  }
   const source = object(envelope.profile) ?? envelope;
-  if (![4, 5, 6, 7, 8].includes(source.version) || (source.version >= 7 && !source.assessment)) throw new Error('备份版本不受支持或数据不完整。');
+  if (![4, 5, 6, 7, 8].includes(source.version) || (source.version >= 7 && !source.assessment)) {
+    throw profileImportError(PROFILE_IMPORT_ERROR_CODES.UNSUPPORTED_VERSION, '备份版本不受支持或数据不完整。');
+  }
   const current = source.version >= 6;
   const definitions = current ? components : legacyComponents;
   const options = { today, kcIds: definitions.map(k => k.id), gatingKcIds: definitions.filter(k => k.gating).map(k => k.id), initialKcIds: [] };
@@ -53,7 +62,9 @@ export function parseUnifiedImport(value, { today, components, legacyComponents,
   }
   const byKc = restored.byKc;
   const validCourses = new Set(UNIFIED_COURSES.map(c => c.id));
-  if (source.practiceGoalCourseId !== undefined && !validCourses.has(source.practiceGoalCourseId)) throw new Error('备份中的练习课程无效。');
+  if (source.practiceGoalCourseId !== undefined && !validCourses.has(source.practiceGoalCourseId)) {
+    throw profileImportError(PROFILE_IMPORT_ERROR_CODES.INVALID_PRACTICE_GOAL, '备份中的练习课程无效。');
+  }
   const legacyAccess = current ? strings(source.accessibleCourseIds) : SOURCE_COURSES.filter(course => legacyComponents.some(k => k.firstCourseId === course.id && (parsed.introducedKcIds.includes(k.id) || parsed.byKc[k.id]?.attempts > 0))).map(c => c.id);
   // Preserve access granted by the e-row stem's owner in the saved revision:
   // imperative in revision 1, ba in revision 2, potential in revision 3.
@@ -100,4 +111,12 @@ export function parseUnifiedImport(value, { today, components, legacyComponents,
     ? result.statistics
     : initializeStatistics(result, at, statisticsSnapshot(result, context));
   return { ...result, version: 8, statistics };
+}
+
+export function parseUnifiedImport(value, options) {
+  try {
+    return parseUnifiedImportValue(value, options);
+  } catch (error) {
+    throw normalizeProfileImportError(error);
+  }
 }
