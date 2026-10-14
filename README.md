@@ -4,6 +4,8 @@
 
 在线体验：<https://l-m-sherlock.github.io/katsuyo-dojo/>
 
+[原理介绍](https://l-m-sherlock.github.io/katsuyo-dojo/#/principles)说明知识点、选题、掌握度、诊断与独立复测。页面提供计算演示、分节链接和实现来源。顶部「原理」和练习页底部均可进入。阅读时保留当前答案与拆步状态，并暂停练习计时。
+
 ## 特色
 
 - 把完整活用拆成词类、词干、音便、接续、复合和例外等细分知识点

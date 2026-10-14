@@ -1894,6 +1894,94 @@ test('statistics direct links and browser navigation isolate practice keyboard s
   } finally { window.history.replaceState(null, '', '/katsuyo-dojo/'); }
 });
 
+test('principles preserves original and diagnostic drafts without scoring hidden practice', async () => {
+  const { view, item, form } = await mountCompoundPast('past', 'i-adjective');
+  const base = conjugate(item.reading, item.class, COMPOUND_FORM_SPECS[form].form);
+  const input = view.getByLabelText('你的答案');
+  fireEvent.change(input, { target: { value: base } });
+  fireEvent.click(view.getByRole('link', { name: '原理', exact: true }));
+  assert.equal(window.location.hash, '#/principles');
+  assert.equal(document.title, '原理介绍 · 活用道場');
+  assert.ok(view.getByRole('heading', { name: '活用道場怎样安排练习？' }));
+  assert.equal(view.getByRole('link', { name: '原理', exact: true }).getAttribute('aria-current'), 'page');
+  assert.equal(view.getByRole('button', { name: '练习', exact: true }).getAttribute('aria-current'), null);
+  fireEvent.keyDown(window, { key: 'Enter' });
+  fireEvent.keyDown(window, { key: '1' });
+  assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount, 0);
+  fireEvent.click(view.getAllByRole('button', { name: '返回当前练习 →' })[0]);
+  assert.equal(view.getByLabelText('你的答案'), input);
+  assert.equal(input.value, base);
+  fireEvent.click(view.getByRole('button', { name: '检查答案' }));
+  await waitFor(() => assert.ok(view.getByText('拆步练习 · 第 1 / 1 步')));
+  const stepInput = view.getByLabelText('本步答案');
+  fireEvent.change(stepInput, { target: { value: '途中' } });
+  const before = storage.getItem(KEY);
+  fireEvent.click(view.getByRole('link', { name: '原理', exact: true }));
+  fireEvent.keyDown(window, { key: 'Enter' });
+  fireEvent.click(view.getByRole('button', { name: '独立答对', exact: true }));
+  assert.equal(storage.getItem(KEY), before, 'the article demo cannot save learning evidence');
+  fireEvent.click(view.getAllByRole('button', { name: '返回当前练习 →' })[0]);
+  assert.equal(view.getByLabelText('本步答案'), stepInput);
+  assert.equal(stepInput.value, '途中');
+});
+
+test('principles deep links and browser navigation retain an active challenge', async () => {
+  storage.setItem(KEY, JSON.stringify(profile()));
+  storage.setItem('katsuyo-practice-challenge-v1', 'adjectiveIBase');
+  window.history.replaceState(null, '', '/katsuyo-dojo/#/principles/retest');
+  const view = await mount();
+  assert.equal(document.activeElement.id, 'principles-retest');
+  assert.equal(view.queryByRole('heading', { name: '自由挑战作答' }), null);
+  fireEvent.click(view.getAllByRole('button', { name: '返回当前挑战 →' })[0]);
+  assert.equal(window.location.hash, '#/challenge/play');
+  const input = view.getByLabelText('你的答案');
+  const exercise = displayedExercise(view);
+  fireEvent.change(input, { target: { value: '途中' } });
+  for (const section of ['knowledge', 'mastery']) {
+    window.history.replaceState(null, '', `/katsuyo-dojo/#/principles/${section}`);
+    fireEvent(window, new window.PopStateEvent('popstate'));
+    assert.equal(document.activeElement.id, `principles-${section}`);
+    assert.equal(view.getByRole('button', { name: '自由挑战', exact: true }).getAttribute('aria-current'), null);
+    fireEvent.keyDown(window, { key: 'Enter' });
+    assert.equal(displayedExercise(view).id, exercise.id);
+  }
+  window.history.replaceState(null, '', '/katsuyo-dojo/#/challenge/play');
+  fireEvent(window, new window.PopStateEvent('popstate'));
+  assert.equal(view.getByLabelText('你的答案'), input);
+  assert.equal(input.value, '途中');
+  assert.equal(view.getByRole('button', { name: '自由挑战', exact: true }).getAttribute('aria-current'), 'page');
+  assert.equal(JSON.parse(storage.getItem(KEY)).assessment.originalCount, 0);
+});
+
+test('principles reading and its demo do not accrue practice time', async () => {
+  const focus = document.hasFocus, descriptor = Object.getOwnPropertyDescriptor(performance, 'now');
+  let now = 0;
+  Object.defineProperty(performance, 'now', { configurable: true, value: () => now });
+  document.hasFocus = () => true;
+  try {
+    const view = await mount();
+    await act(async () => { await new Promise(resolve => requestAnimationFrame(resolve)); });
+    now = 1000;
+    fireEvent.click(view.getByRole('link', { name: '原理', exact: true }));
+    await waitFor(() => assert.equal(JSON.parse(storage.getItem(KEY)).statistics.totals.activeMs, 1000));
+    const before = JSON.parse(storage.getItem(KEY));
+    now = 31000;
+    fireEvent.pointerDown(view.getByRole('button', { name: '独立答对', exact: true }));
+    fireEvent.click(view.getByRole('button', { name: '独立答对', exact: true }));
+    now = 61000;
+    fireEvent.click(view.getAllByRole('button', { name: '返回当前练习 →' })[0]);
+    now = 62000;
+    fireEvent.click(view.getByRole('button', { name: '统计', exact: true }));
+    await waitFor(() => assert.equal(JSON.parse(storage.getItem(KEY)).statistics.totals.activeMs, 2000));
+    const after = JSON.parse(storage.getItem(KEY));
+    assert.deepEqual(after.byKc, before.byKc);
+    assert.deepEqual(after.assessment, before.assessment);
+  } finally {
+    cleanup(); document.hasFocus = focus;
+    if (descriptor) Object.defineProperty(performance, 'now', descriptor); else delete performance.now;
+  }
+});
+
 test('an original submission waits for a pending timing write without losing either change', async () => {
   const focus = document.hasFocus, timerDescriptor = Object.getOwnPropertyDescriptor(performance, 'now');
   let now = 0, focused = true, release;

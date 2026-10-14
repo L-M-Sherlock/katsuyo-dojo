@@ -3,6 +3,7 @@
 import { isPracticeRetest, isChallengeRetest, moveRetestQueue, retestQueue } from "./lib/retest-queue.mjs";
 
 import StatisticsPage from "./lib/statistics-page.mjs";
+import PrinciplesPage, { principlesSectionFromHash } from "./lib/principles-page.mjs";
 import UsageCardView from "./lib/usage-card-view.mjs";
 import { usageCardFor } from "./lib/usage-cards.mjs";
 import { emptyStatistics, recordActiveTime, statisticsSnapshot, localDay } from "./lib/statistics.mjs";
@@ -405,6 +406,8 @@ export default function Home() {
   const [migrationNotice, setMigrationNotice] = useState(false);
   const [correctionNotice, setCorrectionNotice] = useState<string | null>(null);
   const [showStatistics, setShowStatistics] = useState(() => typeof window !== "undefined" && window.location.hash === "#/stats");
+  const [principlesSection, setPrinciplesSection] = useState<string | null>(() => typeof window !== "undefined" ? principlesSectionFromHash(window.location.hash) : null);
+  const showPrinciples = principlesSection !== null;
   const [progressOpen, setProgressOpen] = useState(false);
   const [progressView, setProgressView] = useState<"course" | "atomic" | "pending" | "log">("course");
   const [transferNotice, setTransferNotice] = useState<{ kind: "success" | "error"; text: string } | null>(null);
@@ -465,7 +468,7 @@ export default function Home() {
   const originalFormIdentification = recognizedFormsIdentification(item, recognizedForms, targetLabel);
   const probing = diagnosticSteps.length > 0 && !probesDone;
   useEffect(() => {
-    if (!result || finished || progressOpen || showStatistics || showChallengeSelection) return;
+    if (!result || finished || progressOpen || showStatistics || showChallengeSelection || showPrinciples) return;
     const frame = requestAnimationFrame(() => {
       const target = probing ? feedbackRef.current?.querySelector<HTMLElement>('.diagnostic-practice') : feedbackRef.current;
       if (!target) return;
@@ -476,17 +479,17 @@ export default function Home() {
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [result, probing, finished, progressOpen, showStatistics, showChallengeSelection]);
+  }, [result, probing, finished, progressOpen, showStatistics, showChallengeSelection, showPrinciples]);
 
   useEffect(() => {
-    if (loading || showStatistics || progressOpen || showChallengeSelection) return;
+    if (loading || showStatistics || progressOpen || showChallengeSelection || showPrinciples) return;
     const frame = requestAnimationFrame(() => {
       const card = questionCardRef.current;
       if (card && card.getBoundingClientRect().top < 12) card.scrollIntoView?.({block:'start',behavior:'auto'});
       inputRef.current?.focus({preventScroll:true});
     });
     return () => cancelAnimationFrame(frame);
-  }, [exercise.id, questionIndex, seed, loading, showStatistics, progressOpen, showChallengeSelection]);
+  }, [exercise.id, questionIndex, seed, loading, showStatistics, progressOpen, showChallengeSelection, showPrinciples]);
 
   const detail = derivation.detail;
   const detailSteps = form ? derivation.operations.map((step: { output: string }) => step.output) : null;
@@ -560,7 +563,7 @@ export default function Home() {
     try { await job; } finally { timingWrite.current = null; }
   }, [loading, save, statisticsClock]);
   useEffect(() => {
-    const update = () => statisticsClock.setContext({ enabled: !loading && !blocked && !finished && !showStatistics && !progressOpen && !showChallengeSelection && !document.hidden && document.hasFocus(), answering: !result && !gradedRef.current, domain: item.domain, courseId: course.id });
+    const update = () => statisticsClock.setContext({ enabled: !loading && !blocked && !finished && !showStatistics && !progressOpen && !showChallengeSelection && !showPrinciples && !document.hidden && document.hasFocus(), answering: !result && !gradedRef.current, domain: item.domain, courseId: course.id });
     const presence = () => { update(); if (document.hidden || !document.hasFocus()) void flushTiming(); };
     const hide = () => { statisticsClock.setContext({ enabled: false }); void flushTiming(); };
     const interaction = () => statisticsClock.touch();
@@ -577,15 +580,17 @@ export default function Home() {
       window.removeEventListener('pagehide', hide);
       document.removeEventListener('visibilitychange', presence);
     };
-  }, [loading, blocked, finished, showStatistics, progressOpen, showChallengeSelection, result, item.domain, course.id, statisticsClock, flushTiming]);
+  }, [loading, blocked, finished, showStatistics, progressOpen, showChallengeSelection, showPrinciples, result, item.domain, course.id, statisticsClock, flushTiming]);
   useLayoutEffect(() => {
     navigationHandler.current = () => {
       const hash = window.location.hash;
-      if (hash === '#/stats' || hash === '#/challenge') statisticsClock.setContext({enabled: false});
+      const section = principlesSectionFromHash(hash);
+      if (hash === '#/stats' || hash === '#/challenge' || section !== null) statisticsClock.setContext({enabled: false});
       void flushTiming();
       if (hash === '#/challenge/play' && !challenging) { navigateView('challenge', true); return; }
-      if (!['#/stats', '#/challenge', '#/challenge/play'].includes(hash) && challenging) applyRound('adaptive', profileRef.current);
+      if (!['#/stats', '#/challenge', '#/challenge/play'].includes(hash) && section === null && challenging) applyRound('adaptive', profileRef.current);
       setShowStatistics(hash === '#/stats'); setShowChallengeSelection(hash === '#/challenge');
+      setPrinciplesSection(section);
     };
   });
   useEffect(() => {
@@ -594,14 +599,20 @@ export default function Home() {
     return () => { window.removeEventListener('hashchange', changed); window.removeEventListener('popstate', changed); };
   }, []);
   useEffect(() => {
-    document.title = showStatistics ? '学习统计 · 活用道場' : showChallengeSelection || challenging ? '自由挑战 · 活用道場' : '活用道場 · 日语动词与形容词活用练习';
+    document.title = showPrinciples ? '原理介绍 · 活用道場' : showStatistics ? '学习统计 · 活用道場' : showChallengeSelection || challenging ? '自由挑战 · 活用道場' : '活用道場 · 日语动词与形容词活用练习';
     if (loading) return;
+    if (showPrinciples) {
+      const target = document.getElementById(principlesSection ? `principles-${principlesSection}` : 'principles-title');
+      target?.focus({preventScroll: true});
+      (principlesSection ? target : document.querySelector<HTMLElement>('.topbar'))?.scrollIntoView?.({block: 'start'});
+      return;
+    }
     if (showStatistics) document.getElementById('statistics-title')?.focus({preventScroll: true});
     else if (showChallengeSelection) document.getElementById('challenge-title')?.focus({preventScroll: true});
     document.querySelector<HTMLElement>('.topbar')?.scrollIntoView?.({block: 'start'});
-  }, [showStatistics, showChallengeSelection, challenging, loading]);
-  function navigateView(view: 'practice' | 'stats' | 'challenge' | 'challenge-play', replace = false) {
-    if (view === 'stats' || view === 'challenge') statisticsClock.setContext({enabled: false});
+  }, [showStatistics, showChallengeSelection, challenging, loading, showPrinciples, principlesSection]);
+  function navigateView(view: 'practice' | 'stats' | 'challenge' | 'challenge-play' | 'principles', replace = false) {
+    if (view === 'stats' || view === 'challenge' || view === 'principles') statisticsClock.setContext({enabled: false});
     void flushTiming();
     const hash = view === 'practice' ? '' : view === 'challenge-play' ? '#/challenge/play' : `#/${view}`;
     if (window.location.hash !== hash) {
@@ -609,6 +620,11 @@ export default function Home() {
       if (replace) window.history.replaceState(null, '', url); else window.history.pushState(null, '', url);
     }
     setShowStatistics(view === 'stats'); setShowChallengeSelection(view === 'challenge');
+    setPrinciplesSection(view === 'principles' ? '' : null);
+  }
+  function openPrinciples(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault(); navigateView('principles');
   }
   function navigateStatistics(show: boolean) { navigateView(show ? 'stats' : challenging ? 'challenge-play' : 'practice'); }
   function goPractice() { if (challenging) void start('adaptive'); else navigateView('practice'); }
@@ -825,7 +841,7 @@ export default function Home() {
     // native listener stays mounted instead of briefly retaining an old result
     // while passive effects catch up with a freshly rendered next button.
     keyboardHandler.current = (event: KeyboardEvent) => {
-      if (progressOpen || showChallengeSelection || blocked || loading || showStatistics) return;
+      if (progressOpen || showChallengeSelection || blocked || loading || showStatistics || showPrinciples) return;
       const target = event.target as HTMLElement | null;
       const advanceButton = target?.closest("[data-diagnostic-next],.next-button");
       // Keep the listener installed across async saves. Reinstalling it after
@@ -853,7 +869,7 @@ export default function Home() {
       if (probing) document.querySelector<HTMLButtonElement>("[data-diagnostic-next]")?.click();
       else nextQuestion();
     };
-  }, [blocked, classChoices, finished, form, loading, nextQuestion, probing, progressOpen, result, showStatistics, showChallengeSelection]);
+  }, [blocked, classChoices, finished, form, loading, nextQuestion, probing, progressOpen, result, showStatistics, showChallengeSelection, showPrinciples]);
   useEffect(() => {
     const handler = (event: KeyboardEvent) => keyboardHandler.current?.(event);
     addEventListener("keydown", handler);
@@ -1107,9 +1123,10 @@ export default function Home() {
     {storageNotice && <div className="storage-notice" role="alert"><p>{storageNotice}</p><button type="button" onClick={exportProgress}>导出本页记录</button>{invalidRaw !== null && <><button type="button" onClick={() => downloadProgress(invalidRaw, `katsuyo-dojo-original-${todayKey()}.json`)}>导出原始记录</button><button type="button" disabled={saving} onClick={resetInvalidProgress}>清除损坏记录并重新开始</button></>}{blocked && <button type="button" onClick={() => window.location.reload()}>重新加载最新进度</button>}</div>}
     {loading && <p role="status">正在加载学习进度……</p>}
     <fieldset className="practice-controls" disabled={loading || saving || blocked} aria-busy={loading || saving}>
-    <header className="topbar"><button className="brand" type="button" onClick={() => showStatistics ? navigateStatistics(false) : start("adaptive")}><span className="brand-mark" aria-hidden="true"><span className="brand-glyph">活</span></span><span><strong>活用道場</strong><small>KATSUYŌ PRACTICE</small></span></button><div className="topbar-actions"><nav className="main-view-nav" aria-label="页面"><button type="button" aria-current={!showStatistics && !showChallengeSelection && !challenging ? "page" : undefined} onClick={goPractice}>练习</button><button type="button" aria-current={showStatistics ? "page" : undefined} onClick={() => navigateStatistics(true)}>统计</button><button type="button" aria-current={!showStatistics && (showChallengeSelection || challenging) ? "page" : undefined} onClick={openChallenge}>自由挑战</button></nav><div className="daily-summary"><div><span>今日</span><strong>{profile.correct} / {profile.attempted}</strong></div><div><span>连续答对</span><strong>{profile.streak}</strong></div></div><a className="github-link" href="https://github.com/L-M-Sherlock/katsuyo-dojo" target="_blank" rel="noopener noreferrer" aria-label="GitHub 源代码（新标签页打开）">GitHub <span aria-hidden="true">↗</span></a></div></header>
+    <header className="topbar"><button className="brand" type="button" onClick={() => showStatistics || showPrinciples ? navigateStatistics(false) : start("adaptive")}><span className="brand-mark" aria-hidden="true"><span className="brand-glyph">活</span></span><span><strong>活用道場</strong><small>KATSUYŌ PRACTICE</small></span></button><div className="topbar-actions"><nav className="main-view-nav" aria-label="页面"><button type="button" aria-current={!showStatistics && !showPrinciples && !showChallengeSelection && !challenging ? "page" : undefined} onClick={goPractice}>练习</button><button type="button" aria-current={showStatistics ? "page" : undefined} onClick={() => navigateStatistics(true)}>统计</button><button type="button" aria-current={!showStatistics && !showPrinciples && (showChallengeSelection || challenging) ? "page" : undefined} onClick={openChallenge}>自由挑战</button><a href="#/principles" aria-current={showPrinciples ? "page" : undefined} onClick={openPrinciples}>原理</a></nav><div className="daily-summary"><div><span>今日</span><strong>{profile.correct} / {profile.attempted}</strong></div><div><span>连续答对</span><strong>{profile.streak}</strong></div></div><a className="github-link" href="https://github.com/L-M-Sherlock/katsuyo-dojo" target="_blank" rel="noopener noreferrer" aria-label="GitHub 源代码（新标签页打开）">GitHub <span aria-hidden="true">↗</span></a></div></header>
+    {showPrinciples && !loading && <PrinciplesPage section={principlesSection ?? ""} onBack={() => navigateView(challenging ? "challenge-play" : "practice")} backLabel={challenging ? "返回当前挑战" : "返回当前练习"} />}
     {showStatistics && !loading && <StatisticsPage profile={profile} model={KNOWLEDGE} courses={COURSES} backLabel={challenging ? "返回当前挑战" : "返回练习"} onBack={() => navigateStatistics(false)} onKnowledge={() => { setProgressView("course"); setProgressOpen(true); }} />}
-    <div hidden={showStatistics || showChallengeSelection} inert={showStatistics || showChallengeSelection}><section className={`practice-layout ${challenging ? "challenge-layout" : ""}`}>{!challenging && <aside className="lesson-rail"><p className="eyebrow">YOKUBI 活用路线</p><h1>拆开规律，<br />逐项练会。</h1><p className="intro">先掌握动词与形容词的基本词形，再按表达目标学习，最后综合运用。</p>
+    <div hidden={showStatistics || showChallengeSelection || showPrinciples} inert={showStatistics || showChallengeSelection || showPrinciples}><section className={`practice-layout ${challenging ? "challenge-layout" : ""}`}>{!challenging && <aside className="lesson-rail"><p className="eyebrow">YOKUBI 活用路线</p><h1>拆开规律，<br />逐项练会。</h1><p className="intro">先掌握动词与形容词的基本词形，再按表达目标学习，最后综合运用。</p>
       <div className="domain-switch" role="tablist" aria-label="专项课程筛选">{(["all", "verb", "adjective"] as const).map(value => <button type="button" role="tab" key={value} aria-selected={courseFilter === value} className={courseFilter === value ? "active" : ""} onClick={() => changeCourseFilter(value)}>{value === "all" ? "全部课程" : value === "verb" ? "动词专项" : "形容词专项"}</button>)}</div>
       <p className="answer-note">筛选专项课程，共用同一份学习进度。</p>
       <button type="button" className={`adaptive-entry ${mode === "adaptive" ? "active" : ""}`} onClick={() => start("adaptive")}><span className="adaptive-icon" aria-hidden="true"><span className="adaptive-glyph">自</span></span><span><strong>自适应训练</strong><small>{challenging ? "按学习进度继续" : <>{mode === "adaptive" ? "当前课程" : "当前专项"} · <span className="current-course-name">{focusDisplayLabel}</span></>}</small><small>{challenging ? "回到推荐的学习路线" : pendingInMode.length ? `待独立复测 ${pendingInMode.length} 项` : "本轮重点掌握度"}</small></span><b>{challenging ? "继续" : `${focusPercent}%`}</b></button>
@@ -1129,7 +1146,7 @@ export default function Home() {
       {usageCard && (!result || probing) && <UsageCardView card={usageCard} />}
       {!form ? <div className={`class-options ${classChoices.length === 2 ? "two-options" : ""}`}>{classChoices.map((choice, index) => <button type="button" key={choice} disabled={Boolean(result)} data-class-shortcut={String(index + 1)} aria-keyshortcuts={String(index + 1)} className={`${selectedClass === choice ? "selected" : ""} ${result && choice === item.class ? "choice-correct" : ""} ${selectedClass === choice && result === "incorrect" ? "choice-wrong" : ""}`} onClick={() => chooseClass(choice)}><small>{choice === "ichidan" ? "る脱落" : choice === "godan" ? "词尾移动" : choice === "irregular" ? "固定变化" : choice === "i" ? "词尾い变化" : "な／だ接续"}</small><strong>{classLabelFor(choice)}</strong><kbd aria-hidden="true">{index + 1}</kbd></button>)}</div> : <form onSubmit={submit}><label htmlFor="answer">你的答案</label><div className={`answer-row ${result ?? ""}`}><input ref={inputRef} id="answer" lang="ja" onKeyDown={(event) => { if (event.key === "Enter" && (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229)) event.preventDefault(); }} autoComplete="off" disabled={Boolean(result)} value={answer} aria-describedby={typoNotice ? "typo-notice" : undefined} onChange={(e) => { setAnswer(e.target.value); setTypoNotice(false); setInputNotice(null); }} placeholder="输入日语……" /><button type="submit" disabled={!answer.trim() || Boolean(result)}>检查答案</button></div><p className="answer-note">汉字或全假名答案均可</p>{inputNotice && <p className="hint-box" role="status">{inputNotice}</p>}{typoNotice && <p id="typo-notice" className="hint-box" role="status">不需要变化的部分与原词不一致，可能是输入笔误。请对照原词修改后重新提交；本次未计入作答或知识点统计。</p>}</form>}
       {!result && <div className="assist-row"><button type="button" className="text-button" onClick={showHint}>{hintShown ? "收起提示" : "看一条提示"}</button><button type="button" className="text-button" onClick={() => grade(false, true)}>不知道</button></div>}{hintShown && !result && <p className="hint-box">{hintFor(item, form)}</p>}
-      {result && <div ref={feedbackRef} className={`feedback ${result}`} role="status"><div className="feedback-copy"><strong>{feedbackTitle}</strong>{probeSummary && originalFormIdentification && <p className="original-form-identification">{originalFormIdentification}</p>}<p className="feedback-summary">{feedbackMessage}</p></div>{challenging && currentPending && <div className="challenge-retest-action"><p>{isChallengeRetest(currentPending) ? "本题保留在挑战复测中，不会自动加入常规练习。" : "本题已在练习待复测列表中。"}</p>{isChallengeRetest(currentPending) && <button type="button" className="text-button" onClick={() => addChallengeRetest(currentPending.key)}>加入练习复测</button>}</div>}<div className="knowledge-tags" aria-label="本题涉及的知识点">{derivation.requiredKcIds.map((id: string) => KC_BY_ID.get(id)).filter((kc: KnowledgeComponent | undefined): kc is KnowledgeComponent => Boolean(kc)).map((kc: KnowledgeComponent) => <span className={kc.id === evidenceKcId ? "target" : confirmedKcIds.includes(kc.id) ? "confirmed" : ""} key={kc.id}>{confirmedKcIds.includes(kc.id) && "✓ 已确认 · "}{KC_FAMILY_LABELS[kc.family]} · {kc.label}</span>)}</div>{confirmedKcIds.length > 0 && <p className="partial-evidence-note">{independentResult ? "原题中可确认的局部规则单独记录；未确认的知识点不扣分。整题仍计为错误，保留待复测。" : "本次有帮助或未满足复测条件，可确认的局部规则只记录为辅助练习。独立掌握度保持不变。"}</p>}{probing && <DiagnosticPractice key={`${exercise.id}-${questionIndex}-${seed}`} item={item} goalLabel={targetLabel} active={!showStatistics && !showChallengeSelection} steps={diagnosticSteps} onEvidence={saveStepEvidence} onDone={finishDiagnosticPractice} />}<div hidden={probing}><div className="rule-line"><span><FuriganaText surface={item.surface} reading={item.reading} /></span><b>→</b>{!form ? <span className="answer-emphasis">{classLabelFor(item.class)}</span> : acceptedVariant ? <span className="answer-emphasis"><FuriganaText surface={acceptedVariant.surface} reading={acceptedVariant.reading} /></span> : detailSteps ? detailSteps.map((step: string, i: number) => <Fragment key={`${step}-${i}`}><span className={i === detailSteps.length - 1 ? "answer-emphasis" : ""}><FuriganaText surface={step} reading={readingSteps?.[i] ?? step} /></span>{i < detailSteps.length - 1 && <b>→</b>}</Fragment>) : detail.parts.map((part: string, i: number) => <span className={i === detail.parts.length - 1 ? "answer-emphasis" : ""} key={`${part}-${i}`}><FuriganaText surface={part} reading={readingParts[i] ?? part} />{i < detail.parts.length - 1 && <b className="joiner">＋</b>}</span>)}</div>{acceptedVariant && form && <p className="accepted-variant-note">{acceptedVariant.note && <span>{acceptedVariant.note}</span>}<span>{form === "causativePassive" || form.startsWith("causativePassive") ? "完整形式：" : "本站默认展示："}<FuriganaText surface={detail.answer} reading={readingDetail?.answer ?? detail.answer} /></span></p>}{result === "incorrect" && form && <p className="your-answer">你的答案：<span lang="ja">{answer || "—"}</span></p>}{usageCard && !probing && <UsageCardView card={usageCard} revealed />}<SemanticDetails semantics={formSemantics} /></div><div className="feedback-meta"><span>{feedbackMeta}</span><a href={exercise.sourceUrl ?? course.url} target="_blank" rel="noreferrer">查看本题参考课程 ↗</a></div><button type="button" className="next-button" disabled={probing} onClick={nextQuestion}>{probing ? "请完成或跳过拆步" : !challenging && questionNumber === roundQuestionLimit && !focusComplete ? "查看本轮结果" : focusComplete ? "继续" : "下一题"}{!probing && <span><kbd>Enter</kbd> →</span>}</button></div>}{!result && <p className="keyboard-hint">{!form ? <>{classChoices.map((_, index) => <Fragment key={index}><kbd>{index + 1}</kbd>{" "}</Fragment>)}选择答案</> : <><kbd>Enter</kbd> 检查答案</>}</p>}</article></> :
+      {result && <div ref={feedbackRef} className={`feedback ${result}`} role="status"><div className="feedback-copy"><strong>{feedbackTitle}</strong>{probeSummary && originalFormIdentification && <p className="original-form-identification">{originalFormIdentification}</p>}<p className="feedback-summary">{feedbackMessage}</p></div>{challenging && currentPending && <div className="challenge-retest-action"><p>{isChallengeRetest(currentPending) ? "本题保留在挑战复测中，不会自动加入常规练习。" : "本题已在练习待复测列表中。"}</p>{isChallengeRetest(currentPending) && <button type="button" className="text-button" onClick={() => addChallengeRetest(currentPending.key)}>加入练习复测</button>}</div>}<div className="knowledge-tags" aria-label="本题涉及的知识点">{derivation.requiredKcIds.map((id: string) => KC_BY_ID.get(id)).filter((kc: KnowledgeComponent | undefined): kc is KnowledgeComponent => Boolean(kc)).map((kc: KnowledgeComponent) => <span className={kc.id === evidenceKcId ? "target" : confirmedKcIds.includes(kc.id) ? "confirmed" : ""} key={kc.id}>{confirmedKcIds.includes(kc.id) && "✓ 已确认 · "}{KC_FAMILY_LABELS[kc.family]} · {kc.label}</span>)}</div>{confirmedKcIds.length > 0 && <p className="partial-evidence-note">{independentResult ? "原题中可确认的局部规则单独记录；未确认的知识点不扣分。整题仍计为错误，保留待复测。" : "本次有帮助或未满足复测条件，可确认的局部规则只记录为辅助练习。独立掌握度保持不变。"}</p>}{probing && <DiagnosticPractice key={`${exercise.id}-${questionIndex}-${seed}`} item={item} goalLabel={targetLabel} active={!showStatistics && !showChallengeSelection && !showPrinciples} steps={diagnosticSteps} onEvidence={saveStepEvidence} onDone={finishDiagnosticPractice} />}<div hidden={probing}><div className="rule-line"><span><FuriganaText surface={item.surface} reading={item.reading} /></span><b>→</b>{!form ? <span className="answer-emphasis">{classLabelFor(item.class)}</span> : acceptedVariant ? <span className="answer-emphasis"><FuriganaText surface={acceptedVariant.surface} reading={acceptedVariant.reading} /></span> : detailSteps ? detailSteps.map((step: string, i: number) => <Fragment key={`${step}-${i}`}><span className={i === detailSteps.length - 1 ? "answer-emphasis" : ""}><FuriganaText surface={step} reading={readingSteps?.[i] ?? step} /></span>{i < detailSteps.length - 1 && <b>→</b>}</Fragment>) : detail.parts.map((part: string, i: number) => <span className={i === detail.parts.length - 1 ? "answer-emphasis" : ""} key={`${part}-${i}`}><FuriganaText surface={part} reading={readingParts[i] ?? part} />{i < detail.parts.length - 1 && <b className="joiner">＋</b>}</span>)}</div>{acceptedVariant && form && <p className="accepted-variant-note">{acceptedVariant.note && <span>{acceptedVariant.note}</span>}<span>{form === "causativePassive" || form.startsWith("causativePassive") ? "完整形式：" : "本站默认展示："}<FuriganaText surface={detail.answer} reading={readingDetail?.answer ?? detail.answer} /></span></p>}{result === "incorrect" && form && <p className="your-answer">你的答案：<span lang="ja">{answer || "—"}</span></p>}{usageCard && !probing && <UsageCardView card={usageCard} revealed />}<SemanticDetails semantics={formSemantics} /></div><div className="feedback-meta"><span>{feedbackMeta}</span><a href={exercise.sourceUrl ?? course.url} target="_blank" rel="noreferrer">查看本题参考课程 ↗</a></div><button type="button" className="next-button" disabled={probing} onClick={nextQuestion}>{probing ? "请完成或跳过拆步" : !challenging && questionNumber === roundQuestionLimit && !focusComplete ? "查看本轮结果" : focusComplete ? "继续" : "下一题"}{!probing && <span><kbd>Enter</kbd> →</span>}</button></div>}{!result && <p className="keyboard-hint">{!form ? <>{classChoices.map((_, index) => <Fragment key={index}><kbd>{index + 1}</kbd>{" "}</Fragment>)}选择答案</> : <><kbd>Enter</kbd> 检查答案</>}</p>}</article></> :
       challenging ? <article className="completion-card"><p className="completion-jp">おつかれさま</p><span className="completion-label">本次挑战已结束</span>{answeredInRound > 0 && <div className="score"><strong>{sessionCorrect}</strong><span>/ {answeredInRound}</span></div>}<p>{challengeSummary}</p><p>作答已记录。挑战待复测保留在自由挑战中；可从选课页继续复测，或主动加入练习。</p><button type="button" className="restart-button" onClick={() => startChallenge(activeChallengeCourses)}>{activeChallengeCourses.length > 1 ? "继续挑战所选课程" : "继续挑战本课"}<span><kbd>Enter</kbd> →</span></button><button type="button" className="back-adaptive" onClick={openChallenge}>更换挑战课程</button><button type="button" className="back-adaptive" onClick={() => start("adaptive")}>返回自适应训练</button></article> :
       <article className="completion-card">
         <p className="completion-jp">おつかれさま</p>
@@ -1146,7 +1163,7 @@ export default function Home() {
         <button type="button" className="restart-button" onClick={() => start(mode)}>{mode === "adaptive" ? "继续下一轮" : "继续本专项"}<span><kbd>Enter</kbd> →</span></button>
         {mode !== "adaptive" && <button type="button" className="back-adaptive" onClick={() => start("adaptive")}>返回自适应训练</button>}
       </article>}
-      <footer className="source-note">课程编排参考 <a href={CHINESE_YOKUBI_URL} target="_blank" rel="noreferrer">Yokubi 中文版</a>，自适应学习思路参考 <a href="https://l-m-sherlock.github.io/kanabr/" target="_blank" rel="noopener noreferrer">kanabr</a> · 本地学习记录 · CC BY 4.0</footer></section></section></div>
+      <footer className="source-note"><a href="#/principles" onClick={openPrinciples}>原理介绍</a> · 课程编排参考 <a href={CHINESE_YOKUBI_URL} target="_blank" rel="noreferrer">Yokubi 中文版</a>，自适应学习思路参考 <a href="https://l-m-sherlock.github.io/kanabr/" target="_blank" rel="noopener noreferrer">kanabr</a> · 本地学习记录 · CC BY 4.0</footer></section></section></div>
     {progressOpen && <div className="progress-overlay"><button type="button" className="progress-backdrop" onClick={() => setProgressOpen(false)} aria-label="关闭知识进度" /><section className="progress-drawer" role="dialog" aria-modal="true" aria-labelledby="progress-title"><header><div><p>LEARNING PROFILE · {"UNIFIED"}</p><h2 id="progress-title">知识进度</h2></div><button ref={progressCloseRef} type="button" onClick={() => setProgressOpen(false)} aria-label="关闭知识进度">关闭 <kbd>Esc</kbd></button></header><div className="progress-summary"><div><span>已掌握知识点</span><strong>{masteredKcCount}</strong></div><div><span>已解锁知识点</span><strong>{introducedKcs.length}</strong></div><p>动词与形容词共用基础规则记录。辅助练习不改变独立掌握度，待复测不会因拆步答对而解除。练习待复测 {practiceRetests.length} 项，挑战待复测 {challengeRetests.length} 项。</p>{profile.assessment.migration && <p>旧版记录已按可核验日志修正 {profile.assessment.migration.changes.length} 个知识点；更早或无法核验来源的统计保留，不能据此还原历史独立作答。</p>}</div><section className="profile-transfer" aria-labelledby="profile-transfer-title"><div><h3 id="profile-transfer-title">更换设备</h3><p>导出一个 JSON 备份，保存知识点进度、辅助练习、待复测任务和作答日志，也可以在其他浏览器中恢复。</p></div><div className="transfer-actions"><button type="button" onClick={exportProgress}>导出数据</button><button type="button" onClick={() => importInputRef.current?.click()}>导入数据</button><input ref={importInputRef} type="file" accept="application/json,.json" hidden onChange={importProgress} /></div>{transferNotice && <p className={`transfer-notice ${transferNotice.kind}`} role="status">{transferNotice.text}</p>}</section><details className="curriculum-guide"><summary>课程如何安排</summary><p><strong>分组：</strong>按主要学习目标说明每门课学什么。</p><p><strong>排序：</strong>先学所需规则，再练它们的应用；条件相同时，优先复用和对照已学词形，主题相邻作为补充。可能与态接在基础变化之后，复用词干变化和基本时态。</p><p><strong>解锁：</strong>按知识点的先修条件开放。排在前面的课程并不都是后课的先修，同一主题也不必连续学习。</p><ol>{COURSE_STAGES.map((stage) => <li key={stage.id}><strong>{stage.label}</strong><span>{stage.objective}</span></li>)}</ol><p>同一课程先练新形式，再练它的后续变化。课程列表使用本站学习序号，题目上的 Yokubi 课号标明内容来源。</p></details><div className="progress-view-tabs" role="tablist" aria-label="进度查看方式"><button type="button" role="tab" aria-selected={progressView === "course"} className={progressView === "course" ? "active" : ""} onClick={() => setProgressView("course")}>按课程</button><button type="button" role="tab" aria-selected={progressView === "atomic"} className={progressView === "atomic" ? "active" : ""} onClick={() => setProgressView("atomic")}>按知识点</button><button type="button" role="tab" aria-selected={progressView === "pending"} className={progressView === "pending" ? "active" : ""} onClick={() => setProgressView("pending")}>待复测 {pendingRetests.length}</button><button type="button" role="tab" aria-selected={progressView === "log"} className={progressView === "log" ? "active" : ""} onClick={() => setProgressView("log")}>作答日志</button></div>
       {progressView === "pending" ? <PendingRetests assessment={profile.assessment} onAdd={addChallengeRetest} onMove={keepChallengeRetest} onReview={id => { setProgressOpen(false); void startChallenge(id); }} /> : progressView === "log" ? <PracticeLogView log={profile.practiceLog} /> : progressView === "course" ? <div className="course-progress-list">{visibleCourses.map((item) => { const summary = courseSummary(item); const isFocusCourse = focusKc?.firstCourseId === item.id; return <details key={item.id} open={isFocusCourse}><summary><span><small>{item.order !== undefined ? item.order + 1 : item.lesson}</small><b>{item.title}</b></span><span>{summary.status}<i aria-hidden="true">⌄</i></span></summary><p className="course-objective"><strong>{item.stageLabel}</strong> · {item.description ?? item.stageObjective}</p><div className="skill-progress-list">{groupKnowledgeCoverage(summary.required, ALL_KCS).map(group => renderCoverageGroup(group, item.id))}</div></details>; })}</div> : <div className="course-progress-list atomic-progress-list">{Object.entries(KC_FAMILY_LABELS).map(([family, label]) => { const groups = knowledgeGroups.filter(group => group.component.family === family); const components = groups.flatMap(group => [group.component, ...group.coverage]); if (!components.length) return null; return <details key={family} open={components.some((kc) => kc.id === focusKc?.id)}><summary><span><small>{components.filter((kc) => kc.gating && introducedSet.has(kc.id)).length}/{components.filter((kc) => kc.gating).length}</small><b>{label}</b></span><span>{components.length} 项<i aria-hidden="true">⌄</i></span></summary><div className="skill-progress-list">{groups.map(group => renderCoverageGroup(group))}</div></details>; })}</div>}
       </section></div>}
