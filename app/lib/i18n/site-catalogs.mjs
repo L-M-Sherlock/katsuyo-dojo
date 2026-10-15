@@ -39,7 +39,6 @@ const en = {
   ...DIAGNOSTIC_CATALOGS.en,
   shell: {
     ...CORE_CATALOGS.en.shell,
-    locales: { 'zh-CN': 'Simplified Chinese', en: 'English' },
     nav: { practice: 'Practice', statistics: 'Statistics', challenge: 'Free challenge', principles: 'Principles' }, navAria: 'Main pages',
     today: 'Today', streak: 'Streak', sourceCode: 'GitHub source code (opens in a new tab)',
     title: { practice: '活用道場 · Japanese Conjugation Practice', statistics: 'Learning Statistics · 活用道場', challenge: 'Free Challenge · 活用道場', principles: 'Principles · 活用道場' },

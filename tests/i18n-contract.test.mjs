@@ -55,6 +55,8 @@ test('locale labels and the brand resolve in every supported locale', () => {
     assert.equal(typeof messageAt(CORE_CATALOGS[locale], 'shell.language'), 'string');
     for (const option of SUPPORTED_LOCALES) {
       assert.equal(typeof messageAt(CORE_CATALOGS[locale], `shell.locales.${option}`), 'string');
+      assert.equal(messageAt(SITE_CATALOGS[locale], `shell.locales.${option}`),
+        option === 'zh-CN' ? '简体中文' : 'English');
     }
   }
 });

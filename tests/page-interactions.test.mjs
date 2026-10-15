@@ -176,7 +176,8 @@ test('language switching keeps the active challenge selection and learning profi
   const firstCourse = view.container.querySelector('.challenge-course-option input');
   fireEvent.click(firstCourse);
   assert.equal(firstCourse.checked, true);
-  fireEvent.change(view.getByRole('combobox', { name: '语言' }), { target: { value: 'en' } });
+  fireEvent.click(view.getByRole('button', { name: '语言: 简体中文' }));
+  fireEvent.click(view.getByRole('menuitemradio', { name: 'English' }));
   await waitFor(() => assert.equal(document.documentElement.lang, 'en'));
   assert.equal(window.location.pathname, '/katsuyo-dojo/en/');
   assert.equal(window.location.hash, '#/challenge');
@@ -259,7 +260,8 @@ test('a blocked localStorage getter does not crash locale detection or switching
   try {
     const view = await mount();
     assert.match(view.getByRole('alert').textContent, /暂存在本页/);
-    fireEvent.change(view.getByRole('combobox', { name: '语言' }), { target: { value: 'en' } });
+    fireEvent.click(view.getByRole('button', { name: '语言: 简体中文' }));
+    fireEvent.click(view.getByRole('menuitemradio', { name: 'English' }));
     await waitFor(() => assert.equal(document.documentElement.lang, 'en'));
     assert.equal(window.location.pathname, '/katsuyo-dojo/en/');
   } finally {
@@ -528,7 +530,8 @@ test('language switching relocalizes active diagnostic feedback without resettin
     fireEvent.submit(input.closest('form'));
   }
   await waitFor(() => assert.ok(region.querySelector('[role="status"]')));
-  fireEvent.change(view.getByRole('combobox', { name: '语言' }), { target: { value: 'en' } });
+  fireEvent.click(view.getByRole('button', { name: '语言: 简体中文' }));
+  fireEvent.click(view.getByRole('menuitemradio', { name: 'English' }));
   const english = await waitFor(() => view.getByRole('region', { name: 'Step practice' }));
   assert.doesNotMatch(english.textContent, /词类判断|本步正确|辅助练习|请检查输入/);
   assert.match(english.textContent, /verb class|This step|Check your entry/);
