@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "ok": true,
+  "sourceSha256": "e1b3b6afc7021c8d46097c13723721edb5df965b4a699b9fdc3ffab8c45e9379",
+  "pairs": 5479,
+  "families": {
+    "sans": {
+      "sha256": "26cb7afbcbe268b5417c0bffafad279d69e3c6dd534323fa16c97ac985adf508",
+      "bytes": 641400,
+      "pairs": 5479,
+      "shapes": 21916,
+      "weights": [
+        250,
+        400,
+        700,
+        900
+      ],
+      "inkAuditWeights": [
+        250,
+        299.98779296875,
+        350.0152587890625,
+        400,
+        400.0030517578125,
+        500.018310546875,
+        700,
+        700.0091552734375,
+        900
+      ],
+      "componentsChecked": 36485,
+      "sourceGlyphsVerified": 1613
+    },
+    "serif": {
+      "sha256": "fa35533a517123a5660706b3f2b2ebf682ba3d1eb9950a275d804785b58b145a",
+      "bytes": 835096,
+      "pairs": 5479,
+      "shapes": 21916,
+      "weights": [
+        200,
+        400,
+        700,
+        900
+      ],
+      "inkAuditWeights": [
+        200,
+        300.018310546875,
+        399.993896484375,
+        400,
+        500.01220703125,
+        599.98779296875,
+        700,
+        700.006103515625,
+        900
+      ],
+      "componentsChecked": 36485,
+      "sourceGlyphsVerified": 1613
+    },
+    "display": {
+      "sha256": "17e30d103f6b7db00f84915f38190e9f712fee0060d986bfb696a0b5f7402da1",
+      "bytes": 153720,
+      "pairs": 231,
+      "shapes": 924,
+      "weights": [
+        200,
+        400,
+        700,
+        900
+      ],
+      "inkAuditWeights": [
+        200,
+        300.018310546875,
+        399.993896484375,
+        400,
+        500.01220703125,
+        599.98779296875,
+        700,
+        700.006103515625,
+        900
+      ],
+      "componentsChecked": 727,
+      "sourceGlyphsVerified": 303
+    }
+  },
+  "harfbuzz": "14.6.0",
+  "readingSource": "reviewed-local-pairs-only",
+  "dictionaryUsed": false,
+  "failures": 0
+}

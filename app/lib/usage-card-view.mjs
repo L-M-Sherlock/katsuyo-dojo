@@ -2,6 +2,7 @@
 import { createElement as h } from 'react';
 import { normalizeLocale } from './i18n/locales.mjs';
 import { usageSentenceParts } from './usage-cards.mjs';
+import FuriganaText from './furigana-text.mjs';
 
 export const USAGE_CARD_MESSAGES = Object.freeze({
   'zh-CN': Object.freeze({
@@ -38,7 +39,7 @@ function message(t, locale, key, fallback, params = {}) {
 /** @param {{part: import('./usage-cards.mjs').SentencePart}} props */
 function Part({part}) {
   return usageSentenceParts(part).map((piece, index) => piece.reading
-    ? h('ruby', {key: index}, piece.text, h('rt', null, piece.reading)) : piece.text);
+    ? h(FuriganaText, {key: index, surface: piece.text, reading: piece.reading}) : piece.text);
 }
 
 /** @param {{card: import('./usage-cards.mjs').ResolvedUsageCard | null, revealed?: boolean, locale?: string, t?:(key:string, params?:Record<string, unknown>)=>string}} props */

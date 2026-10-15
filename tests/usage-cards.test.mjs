@@ -42,7 +42,7 @@ const card = {id:'test-negative',senseId:'verb:飲む:のむ',meaning:'喝',form
   scene:'明天要早起，今晚决定不喝酒。',before:[{text:'今夜はお酒を',reading:'こんやはおさけを'}],
   after:[{text:'。'}],translation:'今晚不喝酒。',note:'描述今晚的决定。',review:'approved'};
 const baseText = html => html.replace(/<rt>.*?<\/rt>/g, '').replace(/<[^>]+>/g, '');
-const kanaText = html => html.replace(/<ruby>.*?<rt>(.*?)<\/rt><\/ruby>/g, '$1').replace(/<[^>]+>/g, '');
+const kanaText = html => html.replace(/<ruby\b[^>]*>.*?<rt>(.*?)<\/rt><\/ruby>/g, '$1').replace(/<[^>]+>/g, '');
 
 test('usage cards require an exact reviewed sense and target, with no representative fallback', () => {
   const lookup=createUsageCardLookup([card]), item=usageCardItem(card.senseId);

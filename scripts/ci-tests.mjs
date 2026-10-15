@@ -6,7 +6,7 @@ export const TEST_SUITES = ['unit', 'ui', 'diagnosis', 'paths'];
 export function suiteForTest(file) {
   const browserI18nTest = /^i18n-/.test(file)
     && /(?:^|-)(?:browser|page|routing|switch|switching|ui)(?:-|\.test)/.test(file);
-  if (browserI18nTest || /(?:page-interactions|independent-retest-ui)\.test\.mjs$/.test(file)) return 'ui';
+  if (browserI18nTest || /(?:page-interactions|independent-retest-ui|furifont-ui)\.test\.mjs$/.test(file)) return 'ui';
   if (/(?:diagnostic-(?:plan|steps)|probe|universal-diagnosis|operation-coverage|nakute-guidance)/.test(file)) return 'paths';
   if (/(?:error|diagnosis|corpus|accepted-input|class-collision|learning-evidence|audit-contract)/.test(file)) return 'diagnosis';
   return 'unit';

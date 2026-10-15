@@ -32,6 +32,7 @@ body {
 
 button, input { font: inherit; }
 :lang(ja) { font-family: var(--font-jp-sans); }
+.furifont-ruby { display: inline-block; white-space: nowrap; font-variant-ligatures: normal; vertical-align: baseline; }
 button { color: inherit; }
 button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid rgba(201, 75, 61, .3); outline-offset: 3px; }
 .site-shell { min-height: 100vh; }
@@ -201,7 +202,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .word-display { display: flex; align-items: baseline; gap: 20px; min-height: 120px; font-family: var(--font-jp-serif); font-size: clamp(64px, 8vw, 88px); line-height: 1.45; }
 .word-display ruby { ruby-align: center; font-family: var(--font-jp-serif); }
 .word-display rt { color: var(--muted); font-size: 14px; font-family: var(--font-jp-sans); letter-spacing: .12em; }
-.word-display > span { font-family: var(--font-ui-sans); color: var(--muted); font-size: 14px; letter-spacing: .08em; }
+.word-display > .word-meaning { font-family: var(--font-ui-sans); color: var(--muted); font-size: 14px; letter-spacing: .08em; }
+.word-display .furigana-text { font-family: var(--font-jp-serif); }
 
 .exercise-card form { margin-top: 24px; }
 .exercise-card form label { display: block; margin-bottom: 9px; color: var(--muted); font-size: 13px; }
@@ -281,6 +283,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .accepted-variant-note > span { display: block; }
 .accepted-variant-note > span + span { margin-top: 3px; }
 .accepted-variant-note ruby { color: var(--ink); font-family: var(--font-jp-serif); font-size: 15px; ruby-align: center; }
+.accepted-variant-note .furigana-text { color: var(--ink); font-family: var(--font-jp-serif); font-size: 15px; }
 .accepted-variant-note rt { color: var(--muted); font-family: var(--font-jp-sans); font-size: 8px; }
 .your-answer { margin: 13px 0 0; color: #858780; font-size: 12px; }
 .semantic-details { margin: 13px 0 0; padding-top: 11px; border-top: 1px solid rgba(23,33,28,.1); display: grid; grid-template-columns: minmax(0,1fr); gap: 8px; }

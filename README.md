@@ -114,6 +114,7 @@ npm run dev
 npm test
 npm run test:independent
 npm run audit
+npm run audit:furifont
 npm run audit:diagnosis:parallel
 npm run audit:paths:parallel
 npm run simulate:perfect
@@ -122,6 +123,8 @@ npm run typecheck
 npm run lint
 npm run build
 ```
+
+振假名显示使用按本站读音生成的 Furifont，并保留原生 ruby 后备。字体生成、清单更新和显示验证见 [Furifont 迁移说明](docs/furifont-migration.md)。
 
 错误模式生成审计将声明的错误模式展开到题库，批量验证整题与拆步的归因、差异提示、独立补查、阶段定位、部分正确和计分，并输出明确约定的回归、探索缺口、逐目标形式的模式数量和知识点覆盖。包括同一接续内两处不连续的字符遗漏，例如「させられる → せれる」；必须直接归因的用例不能仅靠拆步回退通过。独立适用性测试检查每个支持的形式是否生成对应错误族。用法与边界见 [错误模式生成器](docs/error-pattern-generator.md)。
 

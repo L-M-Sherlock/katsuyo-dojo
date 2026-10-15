@@ -32,7 +32,7 @@ test('ordinary CI runs parallel regression suites and builds without large gener
   assert.ok(ci.jobs.catalog.steps.some(step=>step.run==='npm run audit:eligibility -- --output eligibility-audit.json'));
   const runs=Object.values(ci.jobs).flatMap(job=>(job.steps??[]).map(step=>step.run??'')).join('\n');
   assert.doesNotMatch(runs,/audit:diagnosis|audit:paths|audit-diagnosis\.mjs|audit-diagnostic-paths\.mjs|--representatives/);
-  for(const command of ['audit','audit:usage','audit:i18n','audit:integration','simulate:perfect','simulate:mixed','typecheck','lint','build'])assert.ok(ci.jobs.build.steps.some(step=>step.run===`npm run ${command}`));
+  for(const command of ['audit','audit:usage','audit:furifont','audit:i18n','audit:integration','simulate:perfect','simulate:mixed','typecheck','lint','build'])assert.ok(ci.jobs.build.steps.some(step=>step.run===`npm run ${command}`));
   const buildRuns=ci.jobs.build.steps.map(step=>step.run).filter(Boolean);
   assert.ok(buildRuns.indexOf('npm run audit:i18n') < buildRuns.indexOf('npm run build'));
   assert.equal(buildRuns.filter(run=>run==='npm run audit:i18n').length,1);

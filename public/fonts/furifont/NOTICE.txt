@@ -1,0 +1,42 @@
+Katsuyo Furifont Sans, Katsuyo Furifont Serif, Katsuyo Furifont Display
+
+These are custom font derivatives for Katsuyo Dojo. All fonts retain their
+source font's SIL Open Font License 1.1. The reserved source family names
+are not used as the derivative family names.
+
+Sans base: Source Han Sans JP VF, Copyright 2014-2025 Adobe.
+Source: https://github.com/adobe-fonts/source-han-sans
+Pinned commit: a4f7cf94edfb9d7ffbdfc4841de276358bd7e0f2
+Base SHA-256: 4acc34926098472741bbb7be5949b80afa7fc08f41ea3cd80dc34f12f7d55bbc
+License: OFL-Sans.txt
+
+Serif and Display base: Noto Serif JP VF.
+Source: https://github.com/google/fonts/tree/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/notoserifjp
+Pinned commit: 8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5
+Base SHA-256: 2fd527ba12b6a44ec30d796d633360da0aeba6c5d4af1304ce12bb4dc15a7dfc
+License and original copyright: OFL-Serif.txt
+
+Font generation uses Furifont 0.1.2, Copyright (c) 2025-PRESENT Anthony Fu,
+under the MIT License. See FURIFONT-LICENSE.md.
+Upstream release: https://github.com/antfu/furifont/releases/tag/v0.1.2
+Upstream source commit: e971bb5f0f371355ed3ea0dffcd5df6cf823c2af
+
+Text, group boundaries, and readings come exclusively from Katsuyo Dojo's
+local reviewed usage-card and lexical/conjugation data. The upstream
+dictionary datasets were not used. No external dictionary assigns readings.
+The shared corpus extraction and its exact layout overrides are in
+scripts/furigana-corpus.mjs and app/data/furigana-layouts.json.
+
+Rebuild: npm ci; npm run build:furifont
+Audit the served WOFF2: npm run audit:furifont
+The build downloads and checksums its pinned base fonts when the temporary
+directory cache is absent. Optional --base-sans=PATH and --base-serif=PATH
+arguments use local copies after the same checksum validation.
+The fonts preserve a true variable weight axis. Each exact reviewed pair
+uses an explicit, one-based salt selector, without changing the source text.
+
+app/data/furifont-manifest.json records source provenance, hashes, metrics,
+selectors and measured ink reservations. app/data/furifont-runtime.json is
+its compact browser projection, checked against the full manifest by the
+font audit. audit.json records HarfBuzz shaping
+and literal glyph-component checks on the actual delivered WOFF2 files.
