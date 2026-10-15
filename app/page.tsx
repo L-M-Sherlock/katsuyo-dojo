@@ -6,7 +6,7 @@ import StatisticsPage from "./lib/statistics-page.mjs";
 import LanguageSwitch from "./lib/language-switch.mjs";
 import PrinciplesPage, { principlesSectionFromHash } from "./lib/principles-page.mjs";
 import UsageCardView from "./lib/usage-card-view.mjs";
-import { createUsageCardLookup, USAGE_CARDS, usageCardFor } from "./lib/usage-cards.mjs";
+import { USAGE_CARDS, usageCardFor } from "./lib/usage-cards.mjs";
 import { emptyStatistics, recordActiveTime, statisticsSnapshot, localDay } from "./lib/statistics.mjs";
 import type { Statistics } from "./lib/statistics.mjs";
 import { createStatisticsClock, STATISTICS_FLUSH_MS } from "./lib/statistics-clock.mjs";
@@ -45,7 +45,7 @@ import { createUnifiedExport as createProfileExport, parseUnifiedImport as parse
 import { COURSE_STAGES, CURRICULUM_VERSION, UNIFIED_COURSES, sourceForForm } from "./lib/unified-curriculum.mjs";
 import { buildUnifiedKnowledge, deriveUnified } from "./lib/unified-knowledge.mjs";
 import { I18nProvider, useI18n } from "./lib/i18n/provider.mjs";
-import { detectLocale, localeFromPath, localizedPath, localizeUsageCards, readLocalePreference, writeLocalePreference } from "./lib/i18n/index.mjs";
+import { detectLocale, localeFromPath, localizedPath, loadLocalizedUsageCardLookup, readLocalePreference, writeLocalePreference } from "./lib/i18n/index.mjs";
 import { englishYokubiUrl, focusCopyForLocale, formLabel, knowledgeFamilyLabel, knowledgeLabel, lexicalMeaningFor, localizeCourse, localizeCourses, localizeCourseStages, localizedSemanticsForForm } from "./lib/i18n/content.mjs";
 import { SITE_CATALOGS } from "./lib/i18n/site-catalogs.mjs";
 import { formatDiagnosticMessage } from "./lib/i18n/diagnostics.mjs";
@@ -451,24 +451,24 @@ function HomeContent({ locale, onLocaleChange }: { locale: string; onLocaleChang
   const localizedCourses = useMemo(() => localizeCourses(COURSES, locale) as Course[], [locale]);
   const localizedCourseById = useMemo(() => new Map(localizedCourses.map(course => [course.id, course])), [localizedCourses]);
   const localizedStages = useMemo(() => localizeCourseStages(COURSE_STAGES, locale), [locale]);
-  const [englishUsageCards, setEnglishUsageCards] = useState<{ status: "idle" | "loading" | "ready" | "error"; lookup: ReturnType<typeof createUsageCardLookup> | null }>({ status: "idle", lookup: null });
+  const [englishUsageCards, setEnglishUsageCards] = useState<{ status: "idle" | "loading" | "ready" | "error"; lookup: typeof usageCardFor | null }>({ status: "idle", lookup: null });
   const [englishUsageRetry, setEnglishUsageRetry] = useState(0);
   useEffect(() => {
     if (locale !== "en") return;
     let active = true;
     void Promise.resolve().then(async () => {
       if (!active) return;
-      setEnglishUsageCards({ status: "loading", lookup: null });
+      setEnglishUsageCards(current => current.lookup ? current : { status: "loading", lookup: null });
       try {
-        const cards = await localizeUsageCards(USAGE_CARDS, locale);
-        if (active) setEnglishUsageCards({ status: "ready", lookup: createUsageCardLookup(cards) });
+        const lookup = await loadLocalizedUsageCardLookup(USAGE_CARDS, usageCardFor, locale);
+        if (active) setEnglishUsageCards(current => current.lookup === lookup ? current : { status: "ready", lookup });
       } catch {
         if (active) setEnglishUsageCards({ status: "error", lookup: null });
       }
     });
     return () => { active = false; };
   }, [locale, englishUsageRetry]);
-  const englishUsageUnavailable = locale === "en" && englishUsageCards.status !== "ready";
+  const englishUsageLoading = locale === "en" && englishUsageCards.status !== "ready";
   const localizedUsageCardFor = locale === "zh-CN" ? usageCardFor : englishUsageCards.lookup ?? (() => null);
   const [mode, setMode] = useState<PracticeMode>("adaptive");
   const [temporarilySkippedCourseId, setTemporarilySkippedCourseId] = useState<ModeId | null>(null);
@@ -563,6 +563,7 @@ function HomeContent({ locale, onLocaleChange }: { locale: string; onLocaleChang
   const activeVerification = verification?.exercise?.id === exercise.id ? verification : null;
   const practiceDomain = item.domain;
   const form = exercise.form;
+  const englishUsageUnavailable = englishUsageLoading && Boolean(form);
   const targetLabel = form
     ? item.domain === "adjective" && locale === "zh-CN"
       ? adjectiveTargetLabel(item, form)

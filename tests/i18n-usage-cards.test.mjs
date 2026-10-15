@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 import {
   UsageCardLocaleError,
   applyUsageCardLocale,
+  createLocalizedUsageCardLookup,
+  loadLocalizedUsageCardLookup,
   loadUsageCardLocale,
   usageCardLocaleIssues,
 } from '../app/lib/i18n/usage-card-locales.mjs';
-import { USAGE_CARDS } from '../app/lib/usage-cards.mjs';
+import { USAGE_CARDS, createUsageCardLookup, usageCardFor, usageCardItem } from '../app/lib/usage-cards.mjs';
 import {
   contentParityIssues,
   englishUsageCardIssues,
@@ -136,5 +138,60 @@ test('English usage overlays use a separate lazy module', async () => {
   assert.equal(await loadUsageCardLocale('zh-CN'), null);
   const english = await loadUsageCardLocale('en');
   assert.ok(Array.isArray(english));
+});
+
+test('canonical lookup validates only requested cards and caches resolved Japanese targets', () => {
+  const source = USAGE_CARDS[0];
+  let sentenceReads = 0;
+  const card = {...source, get before() { sentenceReads += 1; return source.before; }};
+  const lookup = createUsageCardLookup([card]);
+  assert.equal(sentenceReads, 0, 'startup must not parse the complete sentence catalog');
+  const item = usageCardItem(card.senseId);
+  const result = lookup(item, card.form);
+  assert.ok(result?.target.text);
+  assert.ok(sentenceReads > 0, 'requested cards still undergo the runtime guard');
+  const afterFirst = sentenceReads;
+  assert.equal(lookup(item, card.form), result);
+  assert.equal(sentenceReads, afterFirst, 'repeat lookup must reuse validation and Japanese derivation');
+  assert.equal(lookup(item, null), null);
+  const invalidLookup = createUsageCardLookup([{...source, translation: ''}]);
+  assert.equal(invalidLookup(item, source.form), null, 'lazy lookup must still reject invalid cards');
+});
+
+test('English lookup reuses resolved Japanese and never runs Chinese editorial rules on English prose', () => {
+  const source = USAGE_CARDS[0];
+  const item = usageCardItem(source.senseId);
+  const canonicalLookup = createUsageCardLookup([source]);
+  const original = canonicalLookup(item, source.form);
+  const overlay = {id: source.id, sourceHash: usageCardSourceHash(source),
+    scene: 'A detailed English scene that is longer than the Chinese thirty-two-character editorial limit.',
+    translation: 'The speaker describes the situation.', note: 'The Japanese form stays the same.'};
+  const lookup = createLocalizedUsageCardLookup([source], canonicalLookup, 'en', [overlay]);
+  const localized = lookup(item, source.form);
+  assert.equal(localized.scene, overlay.scene);
+  for (const key of ['before', 'after', 'target']) assert.equal(localized[key], original[key]);
+  assert.equal(lookup(item, source.form), localized);
+  assert.equal(original.scene, source.scene);
+  assert.equal(createLocalizedUsageCardLookup([source], canonicalLookup, 'zh-CN', []), canonicalLookup);
+  assert.throws(() => createLocalizedUsageCardLookup([source], canonicalLookup, 'en', []), UsageCardLocaleError);
+  const withoutNote = {...overlay}; delete withoutNote.note;
+  assert.equal(Object.hasOwn(createLocalizedUsageCardLookup([source], canonicalLookup, 'en', [withoutNote])(item, source.form), 'note'), false);
+});
+
+test('English lookup is cached across locale switches and preserves every active card', async () => {
+  const first = loadLocalizedUsageCardLookup(USAGE_CARDS, usageCardFor, 'en');
+  assert.equal(loadLocalizedUsageCardLookup(USAGE_CARDS, usageCardFor, 'en-US'), first);
+  const lookup = await first;
+  assert.equal(await loadLocalizedUsageCardLookup(USAGE_CARDS, usageCardFor, 'zh-CN'), usageCardFor);
+  assert.equal(await loadLocalizedUsageCardLookup(USAGE_CARDS, usageCardFor, 'en'), lookup);
+  const overlays = new Map((await loadUsageCardLocale('en')).map(row => [row.id, row]));
+  for (const card of USAGE_CARDS) {
+    const item = usageCardItem(card.senseId);
+    const localized = lookup(item, card.form);
+    assert.equal(localized?.id, card.id, card.id);
+    assert.equal(localized.scene, overlays.get(card.id).scene, card.id);
+    assert.equal(localized.translation, overlays.get(card.id).translation, card.id);
+    assert.equal(localized.target, usageCardFor(item, card.form).target, card.id);
+  }
 });
 

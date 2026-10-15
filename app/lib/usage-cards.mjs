@@ -210,15 +210,22 @@ export function usageCardIssues(cards, {requireCoverage = false, requireClassCov
 export function createUsageCardLookup(cards) {
   const byPair = new Map();
   for (const card of cards) {
-    if (card.review !== 'approved' || usageCardIssues([card]).length) continue;
-    const resolved = resolveUsageCard(card);
-    if (resolved) byPair.set(`${card.senseId}:${card.form}`, resolved);
+    if (card?.review === 'approved') byPair.set(`${card.senseId}:${card.form}`, card);
   }
+  const resolvedByPair = new Map();
   /** @returns {ResolvedUsageCard | null} */
   return (item, form) => {
     if (!form) return null;
     const sense = reviewedLexicalSense(item);
-    return sense ? byPair.get(`${sense.id}:${form}`) ?? null : null;
+    if (!sense) return null;
+    const key = `${sense.id}:${form}`;
+    if (!resolvedByPair.has(key)) {
+      const card = byPair.get(key);
+      // Full-catalog validation belongs to the build audit. Keep the runtime
+      // guard, but parse Japanese and derive the target only when requested.
+      resolvedByPair.set(key, card && !usageCardIssues([card]).length ? resolveUsageCard(card) : null);
+    }
+    return resolvedByPair.get(key);
   };
 }
 

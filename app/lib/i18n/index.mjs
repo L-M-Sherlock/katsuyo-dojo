@@ -11,8 +11,10 @@ export {
 export {
   UsageCardLocaleError,
   applyUsageCardLocale,
+  createLocalizedUsageCardLookup,
   defineUsageCardLocale,
   loadUsageCardLocale,
+  loadLocalizedUsageCardLookup,
   localizeUsageCards,
   usageCardLocaleIssues,
 } from './usage-card-locales.mjs';

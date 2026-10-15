@@ -33,7 +33,9 @@ test("declares localized entry points with complete metadata", async () => {
     assert.match(html, new RegExp(`<meta name="twitter:image" content="${SITE_ORIGIN}/${image}" />`));
     assert.match(html, new RegExp(title));
     assert.match(html, /<link rel="icon" type="image\/svg\+xml" href="\/favicon\.svg" \/>/);
-    assert.match(html, /<script type="module" src="\/main\.tsx"><\/script>/);
+    assert.match(html, locale === 'en'
+      ? /<script type="module" src="\/en\/start\.ts"><\/script>/
+      : /<script type="module" src="\/main\.tsx"><\/script>/);
   }
 
   assert.match(favicon, /<title>活用道場<\/title>/);

@@ -133,16 +133,59 @@ export function applyUsageCardLocale(canonicalCards, locale, overlays) {
   }));
 }
 
+/** Reuse the canonical Japanese target and localize only requested cards. */
+export function createLocalizedUsageCardLookup(canonicalCards, canonicalLookup, locale, overlays) {
+  const normalized = normalizeLocale(locale);
+  if (normalized === 'zh-CN') return canonicalLookup;
+  if (normalized !== 'en') throw new UsageCardLocaleError(`Unsupported usage-card locale: ${String(locale)}`);
+  const issues = usageCardLocaleIssues(overlays, {canonicalCards});
+  if (issues.length) throw new UsageCardLocaleError('English usage-card coverage is incomplete or invalid.', issues);
+  const localizedById = new Map(overlays.map(row => [row.id, row]));
+  const localizedByCard = new WeakMap();
+  return (item, form) => {
+    const card = canonicalLookup(item, form);
+    if (!card) return null;
+    if (!localizedByCard.has(card)) {
+      const localized = localizedById.get(card.id);
+      if (!localized) throw new UsageCardLocaleError(`Missing English usage card: ${card.id}`);
+      const stableCard = Object.fromEntries(Object.entries(card)
+        .filter(([key]) => !['scene', 'translation', 'note'].includes(key)));
+      localizedByCard.set(card, Object.freeze({...stableCard, scene: localized.scene,
+        translation: localized.translation, ...(localized.note === undefined ? {} : {note: localized.note})}));
+    }
+    return localizedByCard.get(card);
+  };
+}
+
+let englishOverlayPromise;
+const lookupPromises = new WeakMap();
+
 /** Load large locale content only when its language is active. */
 export async function loadUsageCardLocale(locale) {
   const normalized = normalizeLocale(locale);
   if (!normalized) throw new UsageCardLocaleError(`Unsupported usage-card locale: ${String(locale)}`);
   if (normalized === 'zh-CN') return null;
   if (normalized === 'en') {
-    const module = await import('./content/en/usage-cards.mjs');
-    return module.EN_USAGE_CARD_OVERLAYS;
+    if (!englishOverlayPromise) englishOverlayPromise = import('./content/en/usage-cards.mjs')
+      .then(module => module.EN_USAGE_CARD_OVERLAYS)
+      .catch(error => { englishOverlayPromise = undefined; throw error; });
+    return englishOverlayPromise;
   }
   throw new UsageCardLocaleError(`Unsupported usage-card locale: ${normalized}`);
+}
+
+/** Cache the shared English lookup across language switches and component mounts. */
+export function loadLocalizedUsageCardLookup(canonicalCards, canonicalLookup, locale) {
+  const normalized = normalizeLocale(locale);
+  if (normalized === 'zh-CN') return Promise.resolve(canonicalLookup);
+  if (normalized !== 'en') return Promise.reject(new UsageCardLocaleError(`Unsupported usage-card locale: ${String(locale)}`));
+  let entries = lookupPromises.get(canonicalCards);
+  if (!entries) { entries = new WeakMap(); lookupPromises.set(canonicalCards, entries); }
+  if (!entries.has(canonicalLookup)) entries.set(canonicalLookup,
+    loadUsageCardLocale(normalized)
+      .then(overlays => createLocalizedUsageCardLookup(canonicalCards, canonicalLookup, normalized, overlays))
+      .catch(error => { entries.delete(canonicalLookup); throw error; }));
+  return entries.get(canonicalLookup);
 }
 
 /** Load and apply the active locale in one operation. */

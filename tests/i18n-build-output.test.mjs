@@ -53,6 +53,14 @@ test('the production build emits complete localized entry points and assets', { 
   assert.ok(existsSync(join(output, 'og.png')), 'missing Chinese Open Graph image');
   assert.ok(existsSync(join(output, 'og-en.png')), 'missing English Open Graph image');
 
+  const englishEntryPath = entries.en.match(/src="\/katsuyo-dojo\/([^" ]+\.js)"/)?.[1];
+  assert.ok(englishEntryPath);
+  const englishEntry = readFileSync(join(output, englishEntryPath), 'utf8');
+  assert.match(englishEntry, /import\([`"]\.\/main-[^`"]+\.js[`"]\)/,
+    'the small English entry starts the shared app without waiting for the full usage-card download');
+  assert.doesNotMatch(entries['zh-CN'], /modulepreload[^>]+usage-cards-/,
+    'the Chinese entry must not preload English usage text');
+
   for (const [entry, html] of Object.entries(entries)) {
     for (const assetPath of localAssetPaths(html)) {
       const relative = assetPath.slice(PROJECT_BASE.length);
