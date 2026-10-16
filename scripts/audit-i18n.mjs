@@ -10,7 +10,7 @@ import { FORM_SEMANTICS_BY_LOCALE } from '../app/lib/i18n/content-semantics.mjs'
 import { DIAGNOSTIC_CATALOGS } from '../app/lib/i18n/diagnostics.mjs';
 import { SITE_CATALOGS } from '../app/lib/i18n/site-catalogs.mjs';
 import { usageCardLocaleIssues } from '../app/lib/i18n/usage-card-locales.mjs';
-import { EN_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/usage-cards.mjs';
+import { EN_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/current-usage-cards.mjs';
 import { REVIEWED_LEXICAL_SENSES } from '../app/lib/lexical-usage.mjs';
 import { PRINCIPLES_COPY } from '../app/lib/principles-page.mjs';
 import { STATISTICS_MESSAGES } from '../app/lib/statistics-page.mjs';
@@ -228,7 +228,7 @@ if (direct) {
   if (!report.ok) process.exitCode = 1;
   try {
     const proof = verifyEnglishUsageReleaseProof();
-    if (!process.argv.includes('--json')) console.log(`English usage-card release proof: ${proof.cards.length} current cards`);
+    if (!process.argv.includes('--json')) console.log(`English usage-card release proof: ${proof.currentCount} current cards, ${proof.baselineCount} historical baseline cards`);
   } catch (error) {
     console.error(`English usage-card release proof: ${error instanceof Error ? error.message : String(error)}`);
     process.exitCode = 1;

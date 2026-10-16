@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import layouts from '../app/data/furigana-layouts.json' with {type: 'json'};
 import {alignFuriganaParts, furiganaPairKey, isFuriganaHanGroup, knownFuriganaPairs, splitFuriganaParts} from '../app/lib/furigana-corpus.mjs';
 import {getFuriganaCorpus, getFuriganaPairs, getLexicalFuriganaPairs} from '../scripts/furigana-corpus.mjs';
+import {USAGE_CARDS} from '../app/lib/usage-cards.mjs';
 
 const normalized = text => text.normalize('NFKC').replace(/[ァ-ヶ]/gu, char => String.fromCharCode(char.charCodeAt(0) - 0x60))
   .replace(/\s/gu, '').replace(/,/gu, '、').replace(/\./gu, '。').replace(/[、。!?「」『』()：:；;]/gu, '');
@@ -33,7 +34,7 @@ test('retains whole authored ruby when kana boundaries are ambiguous', () => {
 
 test('current sentence, lexical, answer, and diagnostic corpus is completely covered', () => {
   const corpus = getFuriganaCorpus();
-  assert.equal(corpus.coverage.cards, 17261);
+  assert.equal(corpus.coverage.cards, USAGE_CARDS.length);
   assert.equal(corpus.coverage.sourcePairs, corpus.sources.length);
   assert.equal(corpus.coverage.direct + corpus.coverage.constrained + corpus.coverage.audited + corpus.coverage.fallbacks, corpus.sources.length);
   assert.deepEqual(corpus.extractionErrors, []);

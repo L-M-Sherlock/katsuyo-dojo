@@ -6,7 +6,8 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {readReleaseProof, verifyReleaseProof} from '../scripts/export-integration-batches.mjs';
 import {auditIntegrationCoverage} from '../scripts/audit-integration-coverage.mjs';
-import {USAGE_CARDS, usageCardStageRequirements, usageCardIssues} from '../app/lib/usage-cards.mjs';
+import {PRE_REVIEWED_USAGE_CARDS as USAGE_CARDS, USAGE_CARDS as CURRENT_USAGE_CARDS, usageCardStageRequirements, usageCardIssues} from '../app/lib/usage-cards.mjs';
+import {verifyCurrentReviewedUsageRevisions} from '../scripts/verify-reviewed-usage-revisions.mjs';
 import generated from '../app/lib/usage-cards/integration-generated.mjs';
 import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
 import {USER_DIRECTED_USAGE_CORRECTIONS} from '../app/lib/usage-cards/user-directed-corrections.mjs';
@@ -30,6 +31,7 @@ const userCorrected = new Map(USER_DIRECTED_USAGE_CORRECTIONS.map(row => [row.id
 // Every current object must still match its final reviewed hash, and deferred
 // objects must be absent; the old release proof itself is never rewritten.
 function preNaturalnessView() {
+  verifyCurrentReviewedUsageRevisions();
   const current = new Map(USAGE_CARDS.map(card => [card.id, card]));
   const statuses = new Map(fullNaturalness.statuses.map(row => [row.id, row]));
   assert.equal(current.size, USAGE_CARDS.length);
@@ -128,7 +130,7 @@ test('the completed integration release covers every eligible pair with no open 
   assert.deepEqual(frozen.required, original.required);
   const current = new Set(usageCardStageRequirements('integration'));
   assert.deepEqual(new Set([...current, ...frozen.deferred]), new Set(original.required));
-  const covered = USAGE_CARDS.filter(card => current.has(`${card.senseId}/${card.form}`));
+  const covered = CURRENT_USAGE_CARDS.filter(card => current.has(`${card.senseId}/${card.form}`));
   assert.deepEqual(new Set(covered.map(card => `${card.senseId}/${card.form}`)), new Set(frozen.approved));
   const partition = [...frozen.approved, ...frozen.deferred, ...frozen.open];
   assert.equal(new Set(partition).size, partition.length, 'release partitions must not overlap');
@@ -137,7 +139,7 @@ test('the completed integration release covers every eligible pair with no open 
   assert.equal(frozen.releaseStatus, 'complete');
   assert.deepEqual(frozen.open, []);
   assert.deepEqual(frozen.deferred, []);
-  assert.deepEqual(usageCardIssues(USAGE_CARDS, {requireStageCoverage:['integration']}), []);
+  assert.deepEqual(usageCardIssues(CURRENT_USAGE_CARDS, {requireStageCoverage:['integration']}), []);
   const report = await auditIntegrationCoverage({project: fileURLToPath(new URL('../', import.meta.url)),
     requirements: 'docs/integration-stage-requirements.v3.json', proofPath, strict: true});
   assert.equal(report.valid, true, report.errors.join('\n'));

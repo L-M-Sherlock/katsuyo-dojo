@@ -6,6 +6,7 @@ import reviewedActionReplacements from './usage-cards/actions-naturalness-202609
 import { FULL_NATURALNESS_REPLACEMENTS, FULL_NATURALNESS_DEFERRED_PAIRS } from './usage-cards/full-naturalness-overlay.mjs';
 import { USER_DIRECTED_DEFERRED_PAIRS } from './usage-cards/user-directed-deferrals.mjs';
 import { USER_DIRECTED_USAGE_CORRECTIONS } from './usage-cards/user-directed-corrections.mjs';
+import { REVIEWED_USAGE_CARD_REVISIONS, REVIEWED_USAGE_CARD_DEFERRED_PAIRS } from './usage-cards/reviewed-revisions.mjs';
 import { RETIRED_TEORU_NEGATIVE_FORMS } from './compound-forms.mjs';
 import combinations from './usage-cards/combinations.mjs';
 import integrationWordCards from './usage-cards/integration-generated.mjs';
@@ -40,12 +41,16 @@ const userDirectedCorrections = new Map(USER_DIRECTED_USAGE_CORRECTIONS.map(row 
 const originalCards = [...basics, ...linking, ...actions, ...actionsGenerated, ...combinations,
   ...classBasics, ...classLinking1, ...classLinking2, ...classActions1, ...classActions2, ...classCombinations1, ...classCombinations2,
   ...basicWordCards, ...voiceWordCards, ...linkingWordCards, ...intentionWordCards, ...integrationWordCards];
-export const USAGE_CARDS = /** @type {UsageCard[]} */ (originalCards
+export const PRE_REVIEWED_USAGE_CARDS = /** @type {UsageCard[]} */ (originalCards
   .filter(card => !RETIRED_TEORU_NEGATIVE_FORMS.has(card.form)
     && !NATURALNESS_DEFERRED_ACTION_PAIRS.has(`${card.senseId}/${card.form}`)
     && !FULL_NATURALNESS_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`)
     && !USER_DIRECTED_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`))
   .map(card => userDirectedCorrections.get(card.id) ?? fullNaturalnessReplacements.get(card.id) ?? actionReplacements.get(card.id) ?? card));
+const reviewedRevisions = new Map(REVIEWED_USAGE_CARD_REVISIONS.map(row => [row.id, row.card]));
+export const USAGE_CARDS = PRE_REVIEWED_USAGE_CARDS
+  .filter(card => !REVIEWED_USAGE_CARD_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`))
+  .map(card => reviewedRevisions.get(card.id) ?? card);
 export const USAGE_CARD_GROUPS = [
   {id: 'basics', stages: ['basics', 'voice']},
   {id: 'linking', stages: ['linking', 'intentions']},

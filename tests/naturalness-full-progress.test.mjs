@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
-import {USAGE_CARDS, resolveUsageCard, usageCardIssues} from '../app/lib/usage-cards.mjs';
+import {PRE_REVIEWED_USAGE_CARDS as USAGE_CARDS, resolveUsageCard, usageCardIssues} from '../app/lib/usage-cards.mjs';
+import {verifyCurrentReviewedUsageRevisions} from '../scripts/verify-reviewed-usage-revisions.mjs';
 import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
 import {USER_DIRECTED_USAGE_CORRECTIONS} from '../app/lib/usage-cards/user-directed-corrections.mjs';
 import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
@@ -14,6 +15,10 @@ const raw = zlib.gunzipSync(bytes);
 const proof = JSON.parse(raw);
 const sha = value => crypto.createHash('sha256').update(value).digest('hex');
 const cardHash = card => sha(JSON.stringify(card));
+
+test('subsequent independent revisions preserve the historical approval chain', () => {
+  verifyCurrentReviewedUsageRevisions();
+});
 
 test('portable naturalness audit progress preserves the frozen full scope and exact card reviews', () => {
   assert.equal(sha(bytes), status.proof.sha256);
@@ -68,7 +73,7 @@ test('portable naturalness audit progress preserves the frozen full scope and ex
   }
 });
 
-test('every displayed card has the final approved text hash, and exact deferrals stay absent', () => {
+test('the historical predecessor view preserves approved hashes and exact deferrals', () => {
   const live = new Map(USAGE_CARDS.map(card => [card.id, card]));
   const held = new Map(USER_DIRECTED_USAGE_DEFERRALS.map(row => [row.id, row]));
   const corrected = new Map(USER_DIRECTED_USAGE_CORRECTIONS.map(row => [row.id, row]));

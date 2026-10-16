@@ -16,6 +16,7 @@ import {reviewedLexicalSense} from '../app/lib/lexical-usage.mjs';
 import integrationCards from '../app/lib/usage-cards/integration-generated.mjs';
 import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
 import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
+import {reviewedDeferralHistory} from './helpers/reviewed-deferral-history.mjs';
 
 const baseline=JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json',import.meta.url),'utf8'));
 const hash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -74,6 +75,7 @@ const userDirectedRetired=userDirectedBefore.entries.filter(entry=>!RETIRED_TEOR
   return {...exercise,context:entry.previousUsage.context};
 });
 const retiredTeoruExercises=retiredTeoruBefore.exercises;
+const reviewedRevisionRetired=reviewedDeferralHistory(model);
 assert.equal(retiredTeoruExercises.length,292);
 const naturalnessPrevious=new Map(naturalnessReview.approvedRevisions.map(row=>[row.id,row.previousCard]));
 
@@ -81,10 +83,10 @@ test('approved intention and action-pair deferrals change only the documented ex
   assert.equal(USAGE_REVIEW_VERSION,baseline.reviewVersion+4);
   assert.deepEqual(new Set(baseline.retired.map(e=>`${e.senseId}/${e.form}`)),expectedPairs);
   const currentIds=new Set(model.exercises.map(e=>e.id));
-  for(const e of [...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,...userDirectedRetired,...retiredTeoruExercises])assert.ok(!currentIds.has(e.id),e.id);
+  for(const e of [...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired])assert.ok(!currentIds.has(e.id),e.id);
   const reconstructed=[...model.exercises,...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,
-    ...userDirectedRetired,...retiredTeoruExercises];
-  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length-userDirectedRetired.length-retiredTeoruExercises.length);
+    ...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired];
+  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length-userDirectedRetired.length-retiredTeoruExercises.length-reviewedRevisionRetired.length);
   assert.equal(hash(reconstructed.map(e=>e.id).sort()),baseline.eligibleExerciseIdsSha256,
     'no unrelated exercise may disappear or become eligible');
   // Preserve the frozen historical hash while accounting for the four

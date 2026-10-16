@@ -6,8 +6,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import zlib from 'node:zlib';
 
-import { USAGE_CARDS } from '../app/lib/usage-cards.mjs';
-import { EN_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/usage-cards.mjs';
+import { USAGE_CARDS, PRE_REVIEWED_USAGE_CARDS } from '../app/lib/usage-cards.mjs';
+import { EN_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/current-usage-cards.mjs';
+import { EN_USAGE_CARD_OVERLAYS as BASELINE_ENGLISH } from '../app/lib/i18n/content/en/usage-cards.mjs';
+import { REVIEWED_USAGE_CARD_REVISIONS, REVIEWED_USAGE_CARD_DEFERRALS } from '../app/lib/usage-cards/reviewed-revisions.mjs';
+import { EN_REVIEWED_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/reviewed-usage-card-revisions.mjs';
+import { verifyReviewedUsageRevisions } from './verify-reviewed-usage-revisions.mjs';
 import { loadFrozenBatches } from './sample-english-usage-review.mjs';
 import { verifyOriginalExpansionEvidence, verifySampleReport } from './verify-english-usage-review.mjs';
 
@@ -37,20 +41,31 @@ const cardRows = (cards, overlays) => {
 };
 
 export function verifyEnglishUsageReleaseProof({ cards = USAGE_CARDS, overlays = EN_USAGE_CARD_OVERLAYS,
-  proofPath = PROOF, modulePath = MODULE } = {}) {
+  proofPath = PROOF, modulePath = MODULE, baselineCards = PRE_REVIEWED_USAGE_CARDS,
+  baselineOverlays = BASELINE_ENGLISH, revisions = REVIEWED_USAGE_CARD_REVISIONS,
+  englishRevisions = EN_REVIEWED_USAGE_CARD_OVERLAYS, deferrals = REVIEWED_USAGE_CARD_DEFERRALS, revisionProof } = {}) {
+  // Run the current binding first so stale translations fail at their exact ID.
+  cardRows(cards, overlays);
   const proof = JSON.parse(zlib.gunzipSync(fs.readFileSync(proofPath)));
   ensure(proof.schemaVersion === 1 && proof.translatorId === 'gpt-6-luna-max'
-    && proof.unresolvedCount === 0 && proof.canonicalCount === cards.length
-    && proof.englishCount === overlays.length && proof.sample.count > 0
+    && proof.unresolvedCount === 0 && proof.canonicalCount === baselineCards.length
+    && proof.englishCount === baselineOverlays.length && proof.sample.count > 0
     && proof.expansion.count > 0 && proof.expansion.approvedCount === proof.expansion.count,
   'English release proof metadata is incomplete or unresolved');
-  const rows = cardRows(cards, overlays);
+  const rows = cardRows(baselineCards, baselineOverlays);
   ensure(same(rows, proof.cards)
     && proof.frozenRuntimeHash === jsonHash(rows.map(row => ({ id: row.id, sourceHash: row.sourceHash })))
-    && proof.finalOverlayHash === jsonHash(overlays)
+    && proof.finalOverlayHash === jsonHash(baselineOverlays)
     && proof.finalModuleHash === hash(fs.readFileSync(modulePath)),
   'English release proof differs from current canonical cards or English overlay');
-  return proof;
+  const subsequentReviews = verifyReviewedUsageRevisions({ cards, baselineCards, baselineOverlays,
+    revisions, englishRevisions, deferrals, ...(revisionProof === undefined ? {} : {proof: revisionProof}),
+    englishProofSha256: hash(fs.readFileSync(proofPath)) });
+  const replacements = new Map(englishRevisions.map(row => [row.id, row]));
+  const deferred = new Set(deferrals.map(row => row.id));
+  ensure(same(overlays, baselineOverlays.filter(row => !deferred.has(row.id)).map(row => replacements.get(row.id) ?? row)),
+    'English release proof differs from current canonical cards or English overlay');
+  return { ...proof, baselineCount: baselineCards.length, currentCount: cards.length, subsequentReviews };
 }
 
 async function readReceipt(dir) {
@@ -75,6 +90,8 @@ export async function freezeEnglishUsageReleaseProof({ cards = USAGE_CARDS,
   overlays = EN_USAGE_CARD_OVERLAYS, proofPath = PROOF,
   workDir = WORK, reviewDir = REVIEW, repairDirs = REPAIRS,
   modulePath = MODULE } = {}) {
+  ensure(REVIEWED_USAGE_CARD_REVISIONS.length === 0 && EN_REVIEWED_USAGE_CARD_OVERLAYS.length === 0 && REVIEWED_USAGE_CARD_DEFERRALS.length === 0,
+    'Subsequent reviews must preserve the historical English proof; freeze their independent revision proof instead');
   const rows = cardRows(cards, overlays);
   const current = await loadFrozenBatches(workDir, cards, overlays, modulePath);
   const original = await verifyOriginalExpansionEvidence(reviewDir);
@@ -209,7 +226,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       expansion: proof.expansion.count, unresolved: proof.unresolvedCount, proofPath: PROOF }));
   } else if (mode === 'verify') {
     const proof = verifyEnglishUsageReleaseProof();
-    console.log(JSON.stringify({ cards: proof.cards.length, expansion: proof.expansion.count,
-      unresolved: proof.unresolvedCount, proofPath: PROOF }));
+    console.log(JSON.stringify({ cards: proof.currentCount, baselineCount: proof.baselineCount, expansion: proof.expansion.count,
+      unresolved: proof.unresolvedCount, proofPath: PROOF, subsequentReviews: proof.subsequentReviews }));
   } else throw new Error('Usage: node scripts/verify-english-usage-release.mjs freeze|verify');
 }

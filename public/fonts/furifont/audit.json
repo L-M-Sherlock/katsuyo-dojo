@@ -1,14 +1,14 @@
 {
   "version": 1,
   "ok": true,
-  "sourceSha256": "e1b3b6afc7021c8d46097c13723721edb5df965b4a699b9fdc3ffab8c45e9379",
-  "pairs": 5479,
+  "sourceSha256": "0dd0309073ef5a8c4b9bdb046592471e270029a08dca23cb4ead3f4a16583d57",
+  "pairs": 5499,
   "families": {
     "sans": {
-      "sha256": "26cb7afbcbe268b5417c0bffafad279d69e3c6dd534323fa16c97ac985adf508",
-      "bytes": 641400,
-      "pairs": 5479,
-      "shapes": 21916,
+      "sha256": "7bee2faa20dd2ee04952c38c2a5f492b5913057a2e0d0a11147978032a48f68f",
+      "bytes": 652044,
+      "pairs": 5499,
+      "shapes": 21996,
       "weights": [
         250,
         400,
@@ -26,14 +26,14 @@
         700.0091552734375,
         900
       ],
-      "componentsChecked": 36485,
-      "sourceGlyphsVerified": 1613
+      "componentsChecked": 36647,
+      "sourceGlyphsVerified": 1615
     },
     "serif": {
-      "sha256": "fa35533a517123a5660706b3f2b2ebf682ba3d1eb9950a275d804785b58b145a",
-      "bytes": 835096,
-      "pairs": 5479,
-      "shapes": 21916,
+      "sha256": "d013ef1d19a6afbfb79ec7d8366d0a337dfe585e0992b4b107cdce1747258d23",
+      "bytes": 834856,
+      "pairs": 5499,
+      "shapes": 21996,
       "weights": [
         200,
         400,
@@ -51,8 +51,8 @@
         700.006103515625,
         900
       ],
-      "componentsChecked": 36485,
-      "sourceGlyphsVerified": 1613
+      "componentsChecked": 36647,
+      "sourceGlyphsVerified": 1615
     },
     "display": {
       "sha256": "17e30d103f6b7db00f84915f38190e9f712fee0060d986bfb696a0b5f7402da1",

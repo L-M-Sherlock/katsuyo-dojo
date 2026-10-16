@@ -89,7 +89,9 @@ fs.writeFileSync(`${overlayPath}.next`, generated);
 fs.renameSync(`${overlayPath}.next`, overlayPath);
 
 const runtime = await import(pathToFileURL(path.join(project, 'app/lib/usage-cards.mjs')).href);
-const live = new Map(runtime.USAGE_CARDS.map(card => [card.id, card]));
+// Validate the old release against its immutable predecessor view, then the
+// independently reviewed successor chain against the actual runtime objects.
+const live = new Map(runtime.PRE_REVIEWED_USAGE_CARDS.map(card => [card.id, card]));
 const heldIds = new Set(USER_DIRECTED_USAGE_DEFERRALS.map(row => row.id));
 const correctionById = new Map(USER_DIRECTED_USAGE_CORRECTIONS.map(row => [row.id, row]));
 const retiredIds = new Set(proof.sourceCards.filter(card => RETIRED_TEORU_NEGATIVE_FORMS.has(card.form)).map(card => card.id));
@@ -102,8 +104,12 @@ for (const row of proof.statuses) {
   else assert(card && hash(card) === (correctionById.get(row.id)?.finalHash ?? row.cardHash),
     `Runtime card differs from reviewed text or user correction: ${row.id}`);
 }
-console.log(JSON.stringify({active: live.size, replacements: replacements.length,
+// The verifier also imports the runtime. Load it only after materializing the
+// overlay, so missing files can be generated and all imports share fresh data.
+const {verifyCurrentReviewedUsageRevisions} = await import('./verify-reviewed-usage-revisions.mjs');
+const subsequentReviews = verifyCurrentReviewedUsageRevisions();
+console.log(JSON.stringify({active: subsequentReviews.cardCount, baselineActive: live.size, replacements: replacements.length,
   deferred: deferredPairs.length, userDirectedHolds: heldIds.size,
   userDirectedCorrections: correctionById.size,
   retiredForms: [...RETIRED_TEORU_NEGATIVE_FORMS], retiredCards: retiredIds.size,
-  overlay: path.relative(project, overlayPath)}));
+  overlay: path.relative(project, overlayPath), subsequentReviews}));

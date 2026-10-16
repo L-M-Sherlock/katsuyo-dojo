@@ -21,6 +21,7 @@ import reviewedActionReplacements from '../app/lib/usage-cards/actions-naturalne
 import integrationWordCards from '../app/lib/usage-cards/integration-generated.mjs';
 import {USER_DIRECTED_DEFERRED_PAIRS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
 import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
+import {REVIEWED_USAGE_CARD_DEFERRED_PAIRS} from '../app/lib/usage-cards/reviewed-revisions.mjs';
 const integrationIds = new Set(integrationWordCards.map(card => card.id));
 const actionReview = JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url), 'utf8'));
 const naturalnessReview = JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json', import.meta.url), 'utf8'));
@@ -97,7 +98,7 @@ test('reviewed stages retain exact eligible coverage and preserve the original r
   const seed=JSON.parse(readFileSync(new URL('./fixtures/usage-card-seed-pairs.json',import.meta.url),'utf8'));
   const expected=new Set([...seed,...basicUsageCardRequirements(),...usageCardStageRequirements('voice'),...usageCardStageRequirements('linking'),
     ...usageCardStageRequirements('intentions'),...usageCardStageRequirements('actions'),...integrationWordCards.map(card=>`${card.senseId}/${card.form}`)]
-    .filter(pair=>!USER_DIRECTED_DEFERRED_PAIRS.has(pair)&&!RETIRED_TEORU_NEGATIVE_FORMS.has(pair.split('/')[1])));
+    .filter(pair=>!USER_DIRECTED_DEFERRED_PAIRS.has(pair)&&!REVIEWED_USAGE_CARD_DEFERRED_PAIRS.has(pair)&&!RETIRED_TEORU_NEGATIVE_FORMS.has(pair.split('/')[1])));
   const actual=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   assert.deepEqual(actual,expected);
   assert.equal(USAGE_CARDS.length,expected.size);
@@ -126,11 +127,12 @@ test('published action cards match the approved review ledger and leave the hist
   const actionForms = new Set(UNIFIED_COURSES.filter(course=>course.stageId==='actions').flatMap(course=>course.forms));
   const fullDeferredActions = new Set([...fullNaturalnessDeferred].filter(pair=>actionForms.has(pair.split('/')[1])));
   const userDeferredActions = new Set([...USER_DIRECTED_DEFERRED_PAIRS].filter(pair=>actionForms.has(pair.split('/')[1])));
+  const reviewedDeferredActions = new Set([...REVIEWED_USAGE_CARD_DEFERRED_PAIRS].filter(pair=>actionForms.has(pair.split('/')[1])));
   const retiredActions = new Set(fullNaturalnessSource.filter(card=>RETIRED_TEORU_NEGATIVE_FORMS.has(card.form))
     .map(card=>`${card.senseId}/${card.form}`));
   const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
   assert.equal(required.size, actionReview.effectiveRequiredPairs - naturalnessDeferred.size - fullDeferredActions.size
-    - userDeferredActions.size - retiredActions.size);
+    - userDeferredActions.size - retiredActions.size - reviewedDeferredActions.size);
   assert.equal(pendingPairs.size, 0);
   assert.equal(pendingPairs.size, actionReview.pendingPairs);
   assert.equal(actionReview.deferredPairs, 32);
@@ -140,15 +142,17 @@ test('published action cards match the approved review ledger and leave the hist
   const deferred = DEFERRED_ACTION_PAIRS;
   for (const pair of pendingPairs) assert.ok(!covered.has(pair), pair);
   for (const pair of approvedPairs) assert.equal(required.has(pair), !naturalnessDeferred.has(pair) && !fullDeferredActions.has(pair)
-    && !userDeferredActions.has(pair) && !retiredActions.has(pair), pair);
+    && !userDeferredActions.has(pair) && !retiredActions.has(pair) && !reviewedDeferredActions.has(pair), pair);
   assert.ok([...deferred].every(pair=>!required.has(pair)&&!pendingPairs.has(pair)));
   assert.deepEqual(new Set([...covered, ...pendingPairs]), required);
-  assert.equal(required.size+deferred.size+fullDeferredActions.size+userDeferredActions.size+retiredActions.size,actionReview.originalRequiredPairs);
+  assert.equal(required.size+deferred.size+fullDeferredActions.size+userDeferredActions.size+retiredActions.size+reviewedDeferredActions.size,actionReview.originalRequiredPairs);
   const userDeferredNewActions = [...userDeferredActions].filter(pair=>approvedPairs.has(pair)).length;
   const retiredNewActions=[...retiredActions].filter(pair=>approvedPairs.has(pair)).length;
+  const reviewedDeferredNewActions=[...reviewedDeferredActions].filter(pair=>approvedPairs.has(pair)).length;
   assert.equal(covered.size - (approvedPairs.size - naturalnessDeferred.size - fullDeferredActions.size
-    - userDeferredNewActions - retiredNewActions), actionReview.originalActionPairs
-    - (userDeferredActions.size - userDeferredNewActions) - (retiredActions.size - retiredNewActions));
+    - userDeferredNewActions - retiredNewActions - reviewedDeferredNewActions), actionReview.originalActionPairs
+    - (userDeferredActions.size - userDeferredNewActions) - (retiredActions.size - retiredNewActions)
+    - (reviewedDeferredActions.size - reviewedDeferredNewActions));
   assert.ok(actionWordCards.every(card => card.review === 'approved'));
 });
 

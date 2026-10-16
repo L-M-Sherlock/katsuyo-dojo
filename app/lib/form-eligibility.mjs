@@ -1,6 +1,7 @@
 import { ACTION_PAIR_DEFERRALS } from './action-pair-deferrals.mjs';
 import { FULL_NATURALNESS_DEFERRED_PAIRS } from './usage-cards/full-naturalness-overlay.mjs';
 import { USER_DIRECTED_DEFERRED_PAIRS } from './usage-cards/user-directed-deferrals.mjs';
+import { REVIEWED_USAGE_CARD_DEFERRALS } from './usage-cards/reviewed-revisions.mjs';
 export { DEFERRED_ACTION_PAIRS } from './action-pair-deferrals.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
 import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
@@ -9,6 +10,7 @@ import { LEXICAL_REVIEW_VERSION, reviewedLexicalSense } from './lexical-usage.mj
 export const USAGE_REVIEW_VERSION = LEXICAL_REVIEW_VERSION;
 
 const words = text => new Set(text.split(' ').filter(Boolean));
+const reviewedDeferrals = new Map(REVIEWED_USAGE_CARD_DEFERRALS.map(row => [row.pair, row]));
 const verbForms = new Set(Object.keys(FORM_LABELS).filter(form => !form.startsWith('adjective')));
 const iForms = words('adjectiveNegative adjectivePast adjectiveNegativePast adjectiveTe adjectiveBa adjectiveAdverb');
 const naForms = words('adjectiveAttributive adjectivePredicative adjectiveNaNegative adjectiveNaPast adjectiveNaNegativePast adjectiveNaTe adjectiveBa adjectiveAdverb');
@@ -211,6 +213,11 @@ export function assessFormUsage(item, form) {
   if (!(adjective ? supportsAdjectiveForm(item, form) : supportsVerbForm(item, form))) return blocked('morphology', '这个词类不支持本题要求的构形规则。');
   const sense = reviewedLexicalSense(item);
   if (!sense) return blocked('semantic', '这个词条、读音或释义尚未完成适用性审核。', 'unreviewed-lexeme');
+  const reviewedDeferral = reviewedDeferrals.get(`${sense.id}/${form}`);
+  if (reviewedDeferral) return {
+    ...contextual(sense, form, reviewedDeferral.reason),
+    reasonCode: 'reviewed-revision-deferred',
+  };
   if (USER_DIRECTED_DEFERRED_PAIRS.has(`${sense.id}/${form}`)) return {
     ...contextual(sense, form,
       '用户对当前例句的教学自然度存疑，暂缓这个精确词义与形式的常规出题；保留构形、完整词形识别及历史复测记录。'),

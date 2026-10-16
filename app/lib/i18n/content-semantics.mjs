@@ -498,7 +498,7 @@ const EN_COMPOUND_MEANINGS = {
   },
   temorau: {
     past: ['received help with ...', 'States that the subject received help or a benefit through another person\'s action in the past.'],
-    negative: ['does not receive help with ...', 'States that the subject does not receive help or a benefit through another person\'s action.'],
+    negative: ['does not receive the benefit of someone ...ing / being ...', 'Negates receiving a benefit from another person’s action or state. Context can make it a decision not to receive that benefit. It does not itself imply a prior request, refusal, or inability. With conditional と, the complete sentence can express a need for that action or state.'],
     negativePast: ['did not receive help with ...', 'States that the subject did not receive help or a benefit through another person\'s action in the past.'],
   },
   tekureru: {

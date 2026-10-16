@@ -166,7 +166,7 @@ export async function loadUsageCardLocale(locale) {
   if (!normalized) throw new UsageCardLocaleError(`Unsupported usage-card locale: ${String(locale)}`);
   if (normalized === 'zh-CN') return null;
   if (normalized === 'en') {
-    if (!englishOverlayPromise) englishOverlayPromise = import('./content/en/usage-cards.mjs')
+    if (!englishOverlayPromise) englishOverlayPromise = import('./content/en/current-usage-cards.mjs')
       .then(module => module.EN_USAGE_CARD_OVERLAYS)
       .catch(error => { englishOverlayPromise = undefined; throw error; });
     return englishOverlayPromise;

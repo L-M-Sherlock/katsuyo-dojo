@@ -10,6 +10,7 @@ import { restoreLearningAssessment } from '../app/lib/assessment-transfer.mjs';
 import { emptySkillStats, updateSkillStats } from '../app/lib/adaptive.mjs';
 import { reviewedLexicalSense } from '../app/lib/lexical-usage.mjs';
 import { RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
+import { reviewedDeferralHistory } from './helpers/reviewed-deferral-history.mjs';
 
 const before = JSON.parse(readFileSync(new URL('./fixtures/natural-word-supply-before.json', import.meta.url), 'utf8'));
 const voiceReview = JSON.parse(readFileSync(new URL('./fixtures/voice-usage-review-before.json', import.meta.url), 'utf8'));
@@ -74,6 +75,7 @@ const userDirectedDeferred = userDirectedBefore.entries.filter(entry => !RETIRED
 });
 assert.deepEqual(new Set(retiredTeoruBefore.forms), RETIRED_TEORU_NEGATIVE_FORMS);
 const retiredTeoruExercises = retiredTeoruBefore.exercises;
+const reviewedRevisionDeferred = reviewedDeferralHistory(model);
 const find = (surface, form) => {
   const exercise = model.exercises.find(candidate => candidate.item.surface === surface && candidate.form === form);
   assert.ok(exercise, `Expected reviewed exercise: ${surface}/${form}`);
@@ -112,7 +114,7 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   // The only exceptions are the documented retirement/context delta and the
   // context IDs' review-version suffix; every unrelated text is still hashed.
   const originalExercises = [...model.exercises, ...retired, ...actionDeferred, ...fullNaturalnessDeferred,
-    ...userDirectedDeferred, ...retiredTeoruExercises].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
+    ...userDirectedDeferred, ...retiredTeoruExercises, ...reviewedRevisionDeferred].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
   assert.equal(originalExercises.length, before.counts.eligibleExercises);
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');

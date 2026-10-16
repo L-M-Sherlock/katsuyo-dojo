@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 import { USAGE_CARDS, resolveUsageCard } from '../app/lib/usage-cards.mjs';
+import { REVIEWED_USAGE_CARD_REVISIONS, REVIEWED_USAGE_CARD_DEFERRALS } from '../app/lib/usage-cards/reviewed-revisions.mjs';
 
 const GENERATOR_VERSION = 1;
 const MAX_BATCH_SIZE = 64;
@@ -12,6 +13,7 @@ const DEFAULT_WORK_DIR = 'work/i18n-english-usage-cards';
 const DEFAULT_AGENT_WORK_DIR = 'work/i18n-english-usage-cards-gpt';
 const DEFAULT_AGENT_IMPORT_DIR = 'work/i18n-gpt-assignments';
 const DEFAULT_OUTPUT = 'app/lib/i18n/content/en/usage-cards.mjs';
+const BASELINE_OUTPUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', DEFAULT_OUTPUT);
 const DEFAULT_GOOGLE_ENDPOINT = 'https://translate.googleapis.com/translate_a/single';
 const AGENT_TRANSLATOR_ID = 'gpt-6-luna-max';
 const CJK_RUN = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}々〇]+/gu;
@@ -22,6 +24,19 @@ const digest = value => crypto.createHash('sha256').update(value).digest('hex');
 const digestJson = value => digest(JSON.stringify(value));
 const byId = (a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
 const delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+
+async function outputIdentity(file) {
+  const resolved = path.resolve(file);
+  try { return await fs.realpath(resolved); }
+  catch (error) { if (error.code === 'ENOENT') return resolved; throw error; }
+}
+
+/** Successor reviews bind the original module bytes as a historical anchor. */
+async function assertEnglishUsageOutputWritable(outputPath) {
+  if (REVIEWED_USAGE_CARD_REVISIONS.length === 0 && REVIEWED_USAGE_CARD_DEFERRALS.length === 0) return;
+  const [destination, baseline] = await Promise.all([outputIdentity(outputPath), outputIdentity(BASELINE_OUTPUT)]);
+  if (destination === baseline) throw new Error('Cannot overwrite the historical English baseline after reviewed revisions. Use an explicit temporary output path.');
+}
 
 /** Bind localized text to the complete canonical runtime card. */
 export function usageCardSourceHash(card) {
@@ -431,6 +446,7 @@ export async function generateEnglishUsageOverlay({
   }
   if (typeof workDir !== 'string' || !workDir) throw new Error('workDir is required.');
   if (typeof outputPath !== 'string' || !outputPath) throw new Error('outputPath is required.');
+  await assertEnglishUsageOutputWritable(outputPath);
   assertPositiveInteger(batchSize, 'batchSize', MAX_BATCH_SIZE);
   assertPositiveInteger(concurrency, 'concurrency', MAX_BATCH_SIZE);
   if (!Number.isSafeInteger(retries) || retries < 0) throw new Error('retries must be a nonnegative integer.');
@@ -719,6 +735,7 @@ export async function mergeEnglishUsageAgentOutputs({
   if (!Array.isArray(cards)) throw new Error('cards must be an array.');
   if (typeof workDir !== 'string' || !workDir) throw new Error('workDir is required.');
   if (typeof outputPath !== 'string' || !outputPath) throw new Error('outputPath is required.');
+  await assertEnglishUsageOutputWritable(outputPath);
   const { value: manifest } = await jsonFileWithBytes(path.join(workDir, 'manifest.json'));
   if (manifest?.schemaVersion !== 1 || manifest.workflow !== 'english-usage-card-agent-files') {
     throw new Error('Agent manifest is missing or has an unsupported schema.');
