@@ -163,10 +163,14 @@ const ENDING_NAMES_EN = Object.freeze({
   'adj.suffix.i-negative':'negative ending','suffix.past':'past ending','suffix.te':'て-form ending',
   'suffix.potential':'potential ending','suffix.volitional':'volitional ending',
 });
+const CONNECTIVE_STEM_ENDINGS = Object.freeze({
+  masu:'ます',nasai:'なさい',tai:'たい',nagara:'ながら',tsutsu:'つつ',sugiru:'すぎる',tagaru:'たがる',
+});
 
 function containsChinese(value) { return typeof value === 'string' && /[\u3400-\u9FFF]/u.test(value); }
 
 function englishOperation(params) {
+  if(params.ruleId==='stem.irregular.connective')return 'Write only the connective stem';
   const localized=params.ruleId?knowledgeLabel('en',params.ruleId):null;
   if(localized)return localized;
   return ({row:'change the ending',drop:'remove the ending',sound:'apply the sound change',
@@ -197,10 +201,19 @@ function localizedParams(params, locale) {
   if(params.operation)result.action=({row:'change only the ending',drop:'remove only the final る',
     sound:`first ${englishOperation(params).toLowerCase()}`,append:`complete ${englishOperation(params).toLowerCase()}`,
     'verb-terminal':`complete ${englishOperation(params).toLowerCase()}`})[params.operation]??`complete ${englishOperation(params).toLowerCase()}`;
+  if(params.operation==='append'&&params.ruleId==='suffix.masu')result.action='add “ます” to the given stem';
   result.later=params.laterSuffix?`. Do not add “${params.laterSuffix}” yet`:'';
+  if(params.ruleId==='stem.irregular.connective'&&params.operation==='irregular') {
+    // goalForm identifies this construction stage, even inside a longer form.
+    const ending=CONNECTIVE_STEM_ENDINGS[params.goalForm];
+    result.action=ending?`write only the stem that comes before “${ending}”`:'write only the connective stem of the given form';
+    result.later=ending?`. Do not add “${ending}” yet`:'. Do not add the next ending yet';
+  }
   if(params.operation==='row')result.rule=`${englishOperation(params)}. ${params.uWa?'Final う changes to わ here. ':''}`;
   else if(containsChinese(result.rule))result.rule='';
-  if(params.needsCompletion!==undefined)result.completion=params.needsCompletion?'Enter the complete changed form.':'';
+  if(params.needsCompletion!==undefined)result.completion=params.needsCompletion
+    ? params.ruleId==='stem.irregular.connective'?'Enter the complete stem, including any unchanged part of the given form.':'Enter the complete changed form.'
+    :'';
   if(containsChinese(result.detail))result.detail='Check the highlighted rule. ';
   if(containsChinese(result.reason))result.reason='the expression needs a separate usage review';
   return result;

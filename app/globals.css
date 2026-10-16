@@ -251,6 +251,12 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .diagnostic-policy summary { cursor: pointer; }
 .diagnostic-practice .diagnostic-policy p { margin: 8px 0 0; font-size: 13px; }
 .diagnostic-practice .text-button { display: block; margin-top: 14px; }
+.diagnostic-next-button { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; min-height: 48px; margin-top: 16px; padding: 12px 16px; border: 0; border-radius: 5px; background: var(--ink); color: white; font-size: 14px; cursor: pointer; text-align: left; }
+.diagnostic-next-button:hover:not(:disabled) { background: #2c3932; }
+.diagnostic-next-button:disabled { opacity: .45; cursor: not-allowed; }
+.diagnostic-next-button > span { flex-shrink: 0; color: #b8bdb9; }
+.diagnostic-next-button kbd { border-color: #59625d; background: #303b35; color: #dfe2df; }
+.diagnostic-practice .diagnostic-continue-note { margin-bottom: 0; font-size: 14px; }
 
 .feedback { margin-top: 20px; padding: 19px 20px 20px; border-left: 3px solid; background: #eeece4; animation: fade-in .2s ease-out both; }
 .feedback.correct { border-color: var(--green); background: var(--green-soft); }
@@ -308,6 +314,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .feedback-meta a { color: var(--red-dark); text-underline-offset: 3px; }
 .next-button { width: 100%; margin-top: 18px; padding: 14px 17px; border: 0; border-radius: 5px; background: var(--ink); color: white; display: flex; justify-content: space-between; cursor: pointer; font-size: 14px; transition: background .18s; }
 .next-button:hover:not(:disabled) { background: #2c3932; }
+.next-button[hidden] { display: none; }
 .next-button:disabled { opacity: .45; cursor: not-allowed; }
 .next-button span { display: flex; align-items: center; gap: 9px; color: #b8bdb9; }
 .next-button kbd { border-color: #59625d; border-bottom-width: 1px; background: #303b35; color: #dfe2df; }

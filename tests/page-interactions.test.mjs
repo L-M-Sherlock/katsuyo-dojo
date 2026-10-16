@@ -1236,6 +1236,66 @@ test('Enter from a retained disabled answer or the page body also advances a dia
   assert.equal(saved.streak, before.streak);
 });
 
+for (const advanceWith of ['click', 'Enter', 'skip']) {
+  test(`English 来る ます step practice remains navigable after a wrong stem (${advanceWith})`, async () => {
+    window.history.replaceState(null, '', '/katsuyo-dojo/en/');
+    const exercise = KNOWLEDGE.exercises.find(candidate => candidate.item.surface === '来る' && candidate.form === 'masu');
+    assert.ok(exercise);
+    const initial = masteredProfile();
+    initial.assessment = recordIndependentAttempt(initial.assessment, { exercise, questionId: 'english-kuru-masu', correct: false });
+    for (const [index, filler] of KNOWLEDGE.exercises.filter(candidate => candidate.form === null).slice(0, 2).entries()) {
+      initial.assessment = recordIndependentAttempt(initial.assessment, { exercise: filler, questionId: `english-kuru-filler-${index}`, correct: true });
+    }
+    initial.attempted = 3; initial.correct = 2; initial.streak = 2;
+    storage.setItem(KEY, JSON.stringify(initial));
+    const view = await mount();
+    await waitFor(() => assert.ok(view.getByLabelText('Your answer')));
+    assert.equal(view.container.querySelector('.exercise-card').getAttribute('data-form'), 'masu');
+    assert.equal(displayedExercise(view).item.surface, '来る');
+    fireEvent.change(view.getByLabelText('Your answer'), { target: { value: '来る' } });
+    fireEvent.submit(view.getByLabelText('Your answer').closest('form'));
+    await waitFor(() => assert.ok(view.getByRole('region', { name: 'Step practice' })));
+    assert.match(view.container.querySelector('.diagnostic-practice h3').textContent, /Step 1 of 2/);
+    const beforeGuidance = JSON.parse(storage.getItem(KEY));
+    fireEvent.change(view.getByLabelText('Answer for this step'), { target: { value: '来る' } });
+    fireEvent.click(view.getByRole('button', { name: 'Check this step' }));
+    await waitFor(() => assert.ok(view.container.querySelector('[data-diagnostic-next]')));
+    assert.equal(view.getByLabelText('Answer for this step').disabled, true);
+    const advance = view.container.querySelector('[data-diagnostic-next]');
+    assert.equal(advance.disabled, false);
+    assert.equal(view.container.querySelector('.next-button').hidden, true);
+    assert.ok(view.getByText('Review the feedback, then continue. You do not need to retry this step.'));
+    if (advanceWith === 'skip') {
+      fireEvent.click(view.getByRole('button', { name: 'Skip the remaining steps and view the explanation' }));
+    } else {
+      if (advanceWith === 'Enter') fireEvent.keyDown(advance, { key: 'Enter' });
+      else fireEvent.click(advance);
+      await waitFor(() => assert.match(view.container.querySelector('.diagnostic-practice h3').textContent, /Step 2 of 2/));
+      assert.equal(view.getByLabelText('Answer for this step').disabled, false);
+      assert.equal(view.getByLabelText('Answer for this step').value, '');
+      fireEvent.change(view.getByLabelText('Answer for this step'), { target: { value: advanceWith === 'click' ? 'xyz' : 'きます' } });
+      fireEvent.submit(view.getByLabelText('Answer for this step').closest('form'));
+      await waitFor(() => assert.ok(view.getByRole('button', { name: 'Finish step practice' })));
+      assert.equal(view.container.querySelector('.next-button').hidden, true);
+      if (advanceWith === 'Enter') fireEvent.keyDown(view.getByRole('button', { name: 'Finish step practice' }), { key: 'Enter' });
+      else fireEvent.click(view.getByRole('button', { name: 'Finish step practice' }));
+    }
+    await waitFor(() => assert.equal(Boolean(view.queryByRole('region', { name: 'Step practice' })), false));
+    const nextButton = view.container.querySelector('.next-button');
+    assert.equal(nextButton.disabled, false);
+    assert.equal(nextButton.hidden, false);
+    const saved = JSON.parse(storage.getItem(KEY));
+    assert.equal(saved.attempted, beforeGuidance.attempted);
+    assert.equal(saved.correct, beforeGuidance.correct);
+    assert.deepEqual(saved.byKc, beforeGuidance.byKc);
+    assert.deepEqual(saved.assessment.independentByKc, beforeGuidance.assessment.independentByKc);
+    assert.deepEqual(Object.keys(saved.assessment.pending), Object.keys(beforeGuidance.assessment.pending));
+    const question = view.container.querySelector('.stage-meta').textContent;
+    fireEvent.click(nextButton);
+    await waitFor(() => assert.notEqual(view.container.querySelector('.stage-meta')?.textContent, question));
+  });
+}
+
 test('Enter cannot bypass unanswered steps or run behind the progress drawer', async () => {
   const { view, steps } = await startDiagnosticPractice();
   const before = storage.getItem(KEY);
