@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { createServer } from 'vite';
 import { REVIEWED_USAGE_CARD_DEFERRALS, REVIEWED_USAGE_CARD_DEFERRED_PAIRS } from '../app/lib/usage-cards/reviewed-revisions.mjs';
-import { PRE_REVIEWED_USAGE_CARDS, USAGE_CARDS, usageCardFor, usageCardItem, resolveUsageCard } from '../app/lib/usage-cards.mjs';
+import { PRE_REVIEWED_USAGE_CARDS, REVIEWED_USAGE_CARDS, USAGE_CARDS, usageCardFor, usageCardItem, resolveUsageCard } from '../app/lib/usage-cards.mjs';
+import { isTeachingFormDeferred } from '../app/lib/teaching-form-deferrals.mjs';
 import { EN_USAGE_CARD_OVERLAYS as CURRENT_ENGLISH } from '../app/lib/i18n/content/en/current-usage-cards.mjs';
 import { EN_USAGE_CARD_OVERLAYS as BASELINE_ENGLISH } from '../app/lib/i18n/content/en/usage-cards.mjs';
 import { assessFormUsage, eligibleVerbForm, supportsVerbForm, USAGE_REVIEW_VERSION } from '../app/lib/form-eligibility.mjs';
@@ -15,8 +17,12 @@ import { reviewedDeferralHistory } from './helpers/reviewed-deferral-history.mjs
 
 test('reviewed exact deferrals remove current bilingual cards while retaining source objects and complete morphology', () => {
   const summary = verifyCurrentReviewedUsageRevisions();
+  assert.equal(summary.deferredCount, 1);
   assert.equal(summary.deferredCount, REVIEWED_USAGE_CARD_DEFERRALS.length);
-  assert.equal(PRE_REVIEWED_USAGE_CARDS.length - USAGE_CARDS.length, REVIEWED_USAGE_CARD_DEFERRALS.length);
+  assert.equal(PRE_REVIEWED_USAGE_CARDS.length - REVIEWED_USAGE_CARDS.length, REVIEWED_USAGE_CARD_DEFERRALS.length);
+  assert.equal(summary.teachingHeldCount, 122);
+  assert.equal(REVIEWED_USAGE_CARDS.length - USAGE_CARDS.length, summary.teachingHeldCount);
+  assert.equal(PRE_REVIEWED_USAGE_CARDS.length - USAGE_CARDS.length, REVIEWED_USAGE_CARD_DEFERRALS.length + summary.teachingHeldCount);
   assert.equal(REVIEWED_USAGE_CARD_DEFERRED_PAIRS.size, REVIEWED_USAGE_CARD_DEFERRALS.length);
   for (const row of REVIEWED_USAGE_CARD_DEFERRALS) {
     const source = PRE_REVIEWED_USAGE_CARDS.find(card => card.id === row.id);
@@ -39,6 +45,32 @@ test('reviewed exact deferrals remove current bilingual cards while retaining so
     assert.ok(recognized, `${row.pair}: complete form remains recognizable`);
     assert.equal(recognized.usage.reasonCode, 'reviewed-revision-deferred');
   }
+});
+
+test('the later form-wide hold preserves its own source hashes and every card outside that form', () => {
+  const record = JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json', import.meta.url)));
+  const heldCards = REVIEWED_USAGE_CARDS.filter(card => isTeachingFormDeferred(card.form));
+  const heldIds = new Set(heldCards.map(card => card.id));
+  const reviewedIds = new Set(REVIEWED_USAGE_CARDS.map(card => card.id));
+  const currentById = new Map(USAGE_CARDS.map(card => [card.id, card]));
+  assert.equal(record.sourceCount, 122);
+  assert.equal(heldIds.size, 122);
+  assert.deepEqual(record.sourceRows.map(row => row.card), heldCards);
+  assert.equal(revisionHash(heldCards), record.sourceCardsHash);
+  assert.equal(revisionHash(record.sourceRows.map(row => row.english)), record.sourceEnglishHash);
+  assert.deepEqual(new Set([...reviewedIds].filter(id => !currentById.has(id))), heldIds);
+  assert.deepEqual(USAGE_CARDS, REVIEWED_USAGE_CARDS.filter(card => !heldIds.has(card.id)));
+  for (const card of REVIEWED_USAGE_CARDS) {
+    if (!heldIds.has(card.id)) assert.strictEqual(currentById.get(card.id), card, `${card.id}: outside-scope card is unchanged`);
+  }
+  for (const row of record.sourceRows) {
+    assert.equal(row.sourceHash, revisionHash(row.card), row.id);
+    assert.equal(row.englishHash, revisionHash(row.english), row.id);
+    assert.deepEqual(BASELINE_ENGLISH.find(english => english.id === row.id), row.english, row.id);
+    assert.ok(!REVIEWED_USAGE_CARD_DEFERRED_PAIRS.has(row.pair), row.id);
+    assert.ok(!CURRENT_ENGLISH.some(english => english.id === row.id), row.id);
+  }
+  for (const row of REVIEWED_USAGE_CARD_DEFERRALS) assert.ok(!reviewedIds.has(row.id) && !heldIds.has(row.id), row.id);
 });
 
 test('reviewed deferrals preserve old failures for compatible retests and suspend only unavailable paths', async () => {

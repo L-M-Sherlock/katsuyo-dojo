@@ -27,3 +27,19 @@ test("packs a second atom into the same round when enough focus slots remain", (
   assert.equal(report.questionCount, 11);
   assert.deepEqual(report.rounds[0].focusIds, ["kc-0", "kc-1"]);
 });
+
+test("a retained teaching hold is reported separately from learnable coverage", () => {
+  const component = { id: 'kc-0', order: 0, gating: true, firstCourseId: 'course', firstCourseIndex: 0,
+    prerequisites: [], coverageKcIds: ['facet.live'] };
+  const live = { ...component, id: 'facet.live', gating: false, coverageKcIds: [] };
+  const held = { ...live, id: 'facet.held', teachingDeferred: true };
+  const exercises = Array.from({ length: 12 }, (_, index) => ({ id: `live-${index}`, courseId: 'course',
+    courseIndex: 0, form: 'live', item: { surface: `word-${index}` }, kcIds: [component.id, live.id] }));
+  const report = simulatePerfectLearning({ components: [component, live, held], exercises,
+    courseKcIds: { course: [component.id, live.id] } });
+  assert.equal(report.completed, true);
+  assert.equal(report.facetCount, 1);
+  assert.equal(report.completedFacetCount, 1);
+  assert.equal(report.deferredFacetCount, 1);
+  assert.equal(report.byKc[held.id]?.attempts ?? 0, 0);
+});

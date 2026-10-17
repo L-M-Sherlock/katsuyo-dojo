@@ -11,6 +11,8 @@ import { emptySkillStats, updateSkillStats } from '../app/lib/adaptive.mjs';
 import { reviewedLexicalSense } from '../app/lib/lexical-usage.mjs';
 import { RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
 import { reviewedDeferralHistory } from './helpers/reviewed-deferral-history.mjs';
+import { isTeachingFormDeferred, USER_DIRECTED_DEFERRED_FORMS } from '../app/lib/teaching-form-deferrals.mjs';
+import { verbUsageFamily } from '../app/lib/form-eligibility.mjs';
 
 const before = JSON.parse(readFileSync(new URL('./fixtures/natural-word-supply-before.json', import.meta.url), 'utf8'));
 const voiceReview = JSON.parse(readFileSync(new URL('./fixtures/voice-usage-review-before.json', import.meta.url), 'utf8'));
@@ -22,6 +24,7 @@ const fullNaturalnessProof = JSON.parse(gunzipSync(readFileSync(new URL('../docs
 const fullNaturalnessBefore = JSON.parse(readFileSync(new URL('./fixtures/naturalness-full-deferred-before.json', import.meta.url), 'utf8'));
 const userDirectedBefore = JSON.parse(readFileSync(new URL('./fixtures/user-directed-deferrals-before.json', import.meta.url), 'utf8'));
 const retiredTeoruBefore = JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-negatives-before.json', import.meta.url), 'utf8'));
+const formHold = JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json', import.meta.url), 'utf8'));
 assert.equal(fullNaturalnessBefore.sourceCommit, fullNaturalnessProof.sourceCommit);
 assert.deepEqual(new Set(fullNaturalnessBefore.entries.map(row => row.pair)), new Set(fullNaturalnessProof.deferrals.map(row => row.pair)));
 const actionContexts = new Map((actionReview.contextChanges ?? []).map(row => [row.pair, row]));
@@ -76,6 +79,26 @@ const userDirectedDeferred = userDirectedBefore.entries.filter(entry => !RETIRED
 assert.deepEqual(new Set(retiredTeoruBefore.forms), RETIRED_TEORU_NEGATIVE_FORMS);
 const retiredTeoruExercises = retiredTeoruBefore.exercises;
 const reviewedRevisionDeferred = reviewedDeferralHistory(model);
+assert.deepEqual(USER_DIRECTED_DEFERRED_FORMS, new Set([formHold.form]));
+assert.equal(formHold.form, 'temiruNegativePast');
+assert.equal(formHold.sourceRows.length, formHold.sourceCount);
+assert.equal(hash(formHold.sourceRows.map(row => row.card)), formHold.sourceCardsHash);
+const formHeldExercises = formHold.sourceRows.map(row => {
+  assert.equal(row.card.form, formHold.form);
+  assert.equal(row.pair, `${row.card.senseId}/${row.card.form}`);
+  assert.equal(hash(row.card), row.sourceHash);
+  const exercise = model.registryExercises.find(candidate => `${reviewedLexicalSense(candidate.item)?.id}/${candidate.form}` === row.pair);
+  assert.ok(exercise, `${row.pair}: the held form remains in the full registry`);
+  assert.equal(model.exercises.some(candidate => candidate.id === exercise.id), false);
+  // All three endings use the same internal temiru family context. Rebuild
+  // that former context from its still-taught base; the frozen hash below
+  // continues to verify the exact historical text and complete old inventory.
+  const sibling = model.exercises.find(candidate => candidate.form === 'temiru'
+    && reviewedLexicalSense(candidate.item)?.id === row.card.senseId);
+  assert.ok(sibling, `${row.pair}: the base form remains taught`);
+  assert.equal(verbUsageFamily(exercise.form), verbUsageFamily(sibling.form));
+  return { ...exercise, context: sibling.context };
+});
 const find = (surface, form) => {
   const exercise = model.exercises.find(candidate => candidate.item.surface === surface && candidate.form === form);
   assert.ok(exercise, `Expected reviewed exercise: ${surface}/${form}`);
@@ -114,7 +137,7 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   // The only exceptions are the documented retirement/context delta and the
   // context IDs' review-version suffix; every unrelated text is still hashed.
   const originalExercises = [...model.exercises, ...retired, ...actionDeferred, ...fullNaturalnessDeferred,
-    ...userDirectedDeferred, ...retiredTeoruExercises, ...reviewedRevisionDeferred].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
+    ...userDirectedDeferred, ...retiredTeoruExercises, ...reviewedRevisionDeferred, ...formHeldExercises].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
   assert.equal(originalExercises.length, before.counts.eligibleExercises);
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');
@@ -216,11 +239,19 @@ test('the historical word expansion retains all original rule signatures and kno
   const actual = model.components.map(component => ({ id: component.id, gating: component.gating, firstCourseId: component.firstCourseId,
     prerequisites: component.prerequisites, coverageKcIds: component.coverageKcIds }));
   const retiredFacets=new Set(['facet.apply.teoru.negative','facet.apply.teoru.negativePast']);
+  const heldFacets=new Set(model.components.filter(component=>component.teachingDeferred).map(component=>component.id));
+  assert.deepEqual(heldFacets,new Set(['facet.apply.temiru.negativePast']));
+  for(const id of heldFacets) {
+    const declared=model.registryExercises.filter(exercise=>exercise.kcIds.includes(id));
+    assert.ok(declared.length>0);
+    assert.ok(declared.every(exercise=>isTeachingFormDeferred(exercise.form)),`${id}: only a held form may pause this facet`);
+  }
   const retiredPrerequisites=new Set(['stem.godan.a','suffix.negative','adj.suffix.i-past','compound.negative-past']);
   const expected=currentEligibilityBaseline().components.filter(component=>!retiredFacets.has(component.id)).map(component=>
     component.id==='apply.teoru.continuation' ? {...component,
       prerequisites:component.prerequisites.filter(id=>!retiredPrerequisites.has(id)),
-      coverageKcIds:component.coverageKcIds.filter(id=>!retiredFacets.has(id))} : component);
+      coverageKcIds:component.coverageKcIds.filter(id=>!retiredFacets.has(id))} : component)
+    .map(component=>({...component,coverageKcIds:component.coverageKcIds.filter(id=>!heldFacets.has(id))}));
   assert.deepEqual([...actual].sort((a,b)=>a.id.localeCompare(b.id)),expected.sort((a,b)=>a.id.localeCompare(b.id)));
   assert.equal(model.components.filter(component => component.gating).length, 132);
   assert.equal(model.components.filter(component => component.id.startsWith('facet.')).length, 128);

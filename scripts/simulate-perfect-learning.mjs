@@ -25,6 +25,7 @@ try {
       questions: report.questionCount,
       gatingKcs: `${report.masteredCount}/${report.gatingCount}`,
       coverageFacets: report.facetCount,
+      deferredCoverageFacets: report.deferredFacetCount,
       completedCoverageFacets: report.completedFacetCount,
       preMasteredIntroductions: report.preMasteredIntroductions,
       redundantFocusQuestions: report.redundantFocusQuestions,

@@ -9,6 +9,7 @@ import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import { EN_USAGE_CARD_OVERLAYS as BASELINE_ENGLISH } from '../app/lib/i18n/content/en/usage-cards.mjs';
 import { EN_REVIEWED_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/reviewed-usage-card-revisions.mjs';
 import { validateEnglishUsageAgentOverlay } from './generate-english-usage-overlay.mjs';
+import { isTeachingFormDeferred } from '../app/lib/teaching-form-deferrals.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const REVIEWED_REVISIONS_PROOF = path.join(ROOT, 'docs/usage-card-reviewed-revisions.v1.json');
@@ -258,9 +259,11 @@ export function verifyReviewedUsageRevisions({ cards, baselineCards, baselineOve
   indexById(englishRevisions, 'Runtime English revision rows');
   indexById(deferrals, 'Runtime deferral rows');
   if (!proof) {
-    ensure(revisions.length === 0 && englishRevisions.length === 0 && deferrals.length === 0 && same(cards, baselineCards), 'Missing independent revision proof');
+    const teachingCards = baselineCards.filter(card => !isTeachingFormDeferred(card.form));
+    ensure(revisions.length === 0 && englishRevisions.length === 0 && deferrals.length === 0 && same(cards, teachingCards), 'Missing independent revision proof');
     return { rounds: 0, sourceCount: 0, reviewedCount: 0, approvedCount: 0, deferredCount: 0,
-      changedCount: 0, baselineCount: baselineCards.length, cardCount: cards.length };
+      changedCount: 0, baselineCount: baselineCards.length, cardCount: cards.length,
+      teachingHeldCount: baselineCards.length - teachingCards.length };
   }
   ensure(proof.schemaVersion === 1 && proof.baseline?.naturalnessProofSha256 === naturalnessProofSha256
     && proof.baseline?.englishProofSha256 === englishProofSha256
@@ -309,10 +312,12 @@ export function verifyReviewedUsageRevisions({ cards, baselineCards, baselineOve
   const expectedDeferrals = [...latestDeferrals.values()].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
   ensure(same(revisions, expectedRevisions) && same(englishRevisions, expectedEnglish)
     && same(deferrals, expectedDeferrals), 'Runtime revision data differs from independent approved deliveries or exact deferrals');
-  ensure(same(cards, [...expected.values()]), 'Current cards differ from reviewed revisions or an out-of-scope card changed');
+  const reviewedCards = [...expected.values()];
+  const teachingCards = reviewedCards.filter(card => !isTeachingFormDeferred(card.form));
+  ensure(same(cards, teachingCards), 'Current cards differ from reviewed revisions or an out-of-scope card changed');
   return { rounds: proof.rounds.length, sourceCount, reviewedCount, approvedCount: reviewedCount, deferredCount: latestDeferrals.size,
     changedCount: revisions.filter(row => row.previousHash !== row.finalHash).length,
-    baselineCount: baselineCards.length, cardCount: cards.length };
+    baselineCount: baselineCards.length, cardCount: cards.length, teachingHeldCount: reviewedCards.length - teachingCards.length };
 }
 
 export function verifyCurrentReviewedUsageRevisions(options = {}) {

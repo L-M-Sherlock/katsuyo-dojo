@@ -1,5 +1,6 @@
 import { assessmentTarget } from '../../app/lib/learning-assessment.mjs';
 import { emptySkillStats, filterReadyExercises } from '../../app/lib/adaptive.mjs';
+import { isTeachingFormDeferred, USER_DIRECTED_DEFERRED_FORMS } from '../../app/lib/teaching-form-deferrals.mjs';
 
 const distinct = values => [...new Set(values)].sort();
 const formKey = exercise => exercise.form ?? 'classify';
@@ -48,6 +49,18 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
   const retiredTarget = id => retired.has(id.split(':')[2]);
   const before = model.registryExercises, after = model.exercises, issues = [];
   const byId = new Map(model.components.map(component => [component.id, component]));
+  const declaredByKc = indexExercises(before, exercise => exercise.kcIds);
+  const teachingDeferredFacetIds = new Set();
+  for (const component of model.components.filter(component => component.teachingDeferred)) {
+    const declared = declaredByKc.get(component.id) ?? [];
+    const valid = !component.gating && component.id.startsWith('facet.') && declared.length > 0
+      && declared.every(exercise => isTeachingFormDeferred(exercise.form))
+      && !after.some(exercise => exercise.kcIds.includes(component.id))
+      && !model.components.some(parent => parent.coverageKcIds.includes(component.id))
+      && !Object.values(model.courseKcIds ?? {}).some(ids => ids.includes(component.id));
+    if (valid) teachingDeferredFacetIds.add(component.id);
+    else issues.push({ code: 'invalid-teaching-deferred-kc', id: component.id });
+  }
   const currentIds = new Set(after.map(exercise => exercise.id));
   const registryIds = new Set(before.map(exercise => exercise.id));
   const components = compareGroups(before, after, exercise => exercise.kcIds, model.components.map(component => component.id));
@@ -86,6 +99,7 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
       status: usage.status, category: usage.category ?? null, reason: usage.reason ?? null });
   }
   for (const exercise of after) {
+    if (isTeachingFormDeferred(exercise.form)) issues.push({ code: 'teaching-deferred-form-in-practice', exerciseId: exercise.id });
     if (!registryIds.has(exercise.id)) issues.push({ code: 'exercise-outside-declared-registry', exerciseId: exercise.id });
     const usage = usageById.get(exercise.id);
     if (usage?.status === 'blocked') issues.push({ code: 'blocked-exercise-in-practice', exerciseId: exercise.id });
@@ -100,7 +114,8 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
       if (!byId.has(id)) issues.push({ code: 'unknown-exercise-requirement', id, exerciseId: exercise.id });
     }
   }
-  for (const group of courseForms) if (group.after.exercises === 0) issues.push({ code: 'empty-course-form', id: group.key });
+  for (const group of courseForms) if (group.after.exercises === 0
+      && !isTeachingFormDeferred(group.key.slice(group.key.indexOf(':') + 1))) issues.push({ code: 'empty-course-form', id: group.key });
   for (const group of coursesReport) if (group.after.exercises < 12) issues.push({ code: 'undersupplied-course', id: group.key, exercises: group.after.exercises });
   const mastered = Object.fromEntries(model.components.map(component => [component.id, { ...emptySkillStats(), attempts: 5, correct: 5, filteredAccuracy: 1, confidence: 1 }]));
   const introductionSupply = [];
@@ -113,7 +128,7 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
     for (const id of component.coverageKcIds) prior[id] = emptySkillStats();
     const ready = filterReadyExercises(candidates, component.id, model.components, prior);
     introductionSupply.push({ id: component.id, courseId: component.firstCourseId, ...summarize(ready) });
-    if (component.id.startsWith('facet.') && !ready.length) issues.push({ code: 'untrainable-facet', id: component.id });
+    if (component.id.startsWith('facet.') && !ready.length && !teachingDeferredFacetIds.has(component.id)) issues.push({ code: 'untrainable-facet', id: component.id });
     if (component.gating) {
       const minimum = component.coverageOnly ? component.coverageKcIds.length : 5;
       if (ready.length < minimum) issues.push({ code: 'undersupplied-gating-requirement', id: component.id, exercises: ready.length, minimum });
@@ -127,11 +142,13 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
       const current = byId.get(original.id);
       if (!current && !retiredFacetIds.has(original.id)) issues.push({ code: 'removed-original-component', id: original.id });
       else if (current) {
-        const expected = original.id === 'apply.teoru.continuation' && retired.size
+        const afterRetirement = original.id === 'apply.teoru.continuation' && retired.size
           ? {...original,
             prerequisites: original.prerequisites.filter(id => !retiredParentPrerequisites.has(id)),
             coverageKcIds: original.coverageKcIds.filter(id => !retiredFacetIds.has(id))}
           : original;
+        const expected = { ...afterRetirement,
+          coverageKcIds: afterRetirement.coverageKcIds.filter(id => !teachingDeferredFacetIds.has(id)) };
         if (JSON.stringify(snapshotComponent(current)) !== JSON.stringify(expected)) {
           issues.push({ code: 'changed-original-requirements', id: original.id });
         }
@@ -170,6 +187,7 @@ export function buildEligibilityReport(model, { courses, assessFormUsage, review
   return {
     reviewVersion, baselineCommit: baseline?.sourceCommit ?? null,
     intentionalRetirements: {forms: [...retired], courseForms: [...retiredCourseForms], facets: [...retiredFacetIds]},
+    intentionalTeachingHolds: {forms: [...USER_DIRECTED_DEFERRED_FORMS], facets: [...teachingDeferredFacetIds]},
     summary: { ...counts,
       before: summarize(before), after: summarize(after), removed: removed.length,
       retestPaths: { before: retestPaths.filter(path => path.before.exercises).length, after: retestPaths.filter(path => path.after.exercises).length,

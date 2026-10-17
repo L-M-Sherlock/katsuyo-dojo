@@ -8,6 +8,7 @@ import {DEFERRED_ACTION_PAIRS,USAGE_REVIEW_VERSION} from '../app/lib/form-eligib
 import {assessmentTarget,emptyAssessment,reconcileAssessmentCatalog,recordIndependentAttempt} from '../app/lib/learning-assessment.mjs';
 import {restoreLearningAssessment} from '../app/lib/assessment-transfer.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
+import {isTeachingFormDeferred} from '../app/lib/teaching-form-deferrals.mjs';
 
 const review=JSON.parse(readFileSync(new URL('../docs/usage-card-actions-review.json',import.meta.url),'utf8'));
 const naturalness=JSON.parse(readFileSync(new URL('../docs/usage-card-naturalness-20260923.json',import.meta.url),'utf8'));
@@ -66,7 +67,7 @@ test('action deferrals retain rejected drafts and affect only the documented sen
   const allowed=['verb:来る:くる/teikuPast','verb:終わる:おわる/teokuNegativePast','verb:間に合う:まにあう/teokuNegative'];
   for(const p of allowed)assert.ok(model.exercises.some(e=>pair(e)===p),p);
   for(const course of UNIFIED_COURSES.filter(c=>c.stageId==='actions'))for(const form of course.forms)
-    assert.ok(model.exercises.some(e=>e.courseId===course.id&&e.form===form),`${course.id}/${form}`);
+    assert.equal(model.exercises.some(e=>e.courseId===course.id&&e.form===form),!isTeachingFormDeferred(form),`${course.id}/${form}`);
 });
 
 test('death past-negative withdrawal retains one actual draft and two current reviews without broadening the exclusion',()=>{
@@ -92,8 +93,9 @@ test('death past-negative withdrawal retains one actual draft and two current re
     assert.ok(model.exercises.some(e=>pair(e)===`${sense}/teikuNegativePast`));
 });
 
-test('action-pair retirement preserves failures and suspends only the eight unavailable kuru rule paths',()=>{
+test('action-pair retirement preserves failures and accounts for later form-wide teaching holds',()=>{
   const expectedSuspended=new Set(['teiku','teku','teikuNegative','teikuNegativePast','tekuru','tekuruPast','tekuruNegative','tekuruNegativePast'].map(f=>`verb:来る:くる/${f}`));
+  for(const exercise of removed)if(isTeachingFormDeferred(exercise.form))expectedSuspended.add(pair(exercise));
   const actualSuspended=new Set();
   for(const e of removed){
     const key=assessmentTarget(e).key;

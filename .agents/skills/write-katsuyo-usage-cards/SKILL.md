@@ -28,7 +28,7 @@ description: 为 katsuyo-dojo（活用道场）编写、扩充或审核场景用
 - 编写可能、受身、使役或使役受身时，额外读[可能与态审核](references/voice-review.md)。清单的 `transitivity` 和 `usage` 用于核对角色与适用条件，不是现成例句，也不保证任意搭配自然。
 - 编写连接与条件阶段时，额外读[连接与条件审核](references/linking-review.md)，先确认前后项关系及本课采用的用义。
 - 编写意愿与要求阶段时，额外读[意愿与要求审核](references/intentions-review.md)，核对愿望主体、第三人称外在表现、非意志变化、许可／邀请和义务表达的否定方向。
-- 编写或审核动作与状态阶段时，额外读[动作与状态审核](references/actions-review.md)，核对体貌、准备结果、授受角色、否定范围、方向视点与语体。
+- 编写或审核动作与状态阶段时，额外读[动作与状态审核](references/actions-review.md)，核对体貌、准备结果、授受角色、否定范围、方向视点与语体；涉及 `てみる` 否定或过去否定时，必读其中的[专项规则](references/actions-review.md#否定与过去否定)。
 - 编写或审核综合运用阶段时，额外读[综合运用审核](references/integration-review.md)，按整条组合确认愿望、许可、授受和否定作用域。
 - 编写或审核英语等本地化内容时，额外读[本地化覆盖与英语审核](references/localization-review.md)，按当前最终在用卡冻结范围，逐 ID 生成独立覆盖层，并执行全量机械检查和确定性分层抽样。
 - 未指定分片文件时，主代理按课程或表达族划分互不重叠的输出文件。仅在任务已授权委派时使用子代理。

@@ -5,10 +5,14 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
-import { PRE_REVIEWED_USAGE_CARDS, resolveUsageCard, usageCardItem } from '../app/lib/usage-cards.mjs';
+import { USAGE_CARDS, PRE_REVIEWED_USAGE_CARDS, REVIEWED_USAGE_CARDS, resolveUsageCard, usageCardItem } from '../app/lib/usage-cards.mjs';
 import { EN_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/usage-cards.mjs';
+import { EN_REVIEWED_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/reviewed-usage-card-revisions.mjs';
+import { REVIEWED_USAGE_CARD_REVISIONS, REVIEWED_USAGE_CARD_DEFERRALS } from '../app/lib/usage-cards/reviewed-revisions.mjs';
+import { isTeachingFormDeferred } from '../app/lib/teaching-form-deferrals.mjs';
+import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import { createDelivery } from '../.agents/skills/write-katsuyo-usage-cards/scripts/delivery-store.mjs';
-import { revisionHash, verifyPortableRevisionDelivery, verifyReviewedUsageRevisions } from '../scripts/verify-reviewed-usage-revisions.mjs';
+import { revisionHash, verifyPortableRevisionDelivery, verifyReviewedUsageRevisions, verifyCurrentReviewedUsageRevisions } from '../scripts/verify-reviewed-usage-revisions.mjs';
 import { verifyEnglishUsageReleaseProof } from '../scripts/verify-english-usage-release.mjs';
 
 const clone = value => JSON.parse(JSON.stringify(value));
@@ -16,11 +20,11 @@ const sha = value => crypto.createHash('sha256').update(value).digest('hex');
 const ordered = rows => [...rows].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 const checks = () => Object.fromEntries(['englishNatural', 'meaning', 'roles', 'timeAndPolarity', 'register', 'scene', 'noAnswerLeak'].map(key => [key, true]));
 
-function fixture(t) {
+function fixture(t, otherForm) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'katsuyo-revision-proof-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const scope = PRE_REVIEWED_USAGE_CARDS.filter(card => card.form === 'temorauNegative').slice(0, 2);
-  const other = PRE_REVIEWED_USAGE_CARDS.find(card => card.form !== 'temorauNegative');
+  const other = PRE_REVIEWED_USAGE_CARDS.find(card => otherForm ? card.form === otherForm : card.form !== 'temorauNegative');
   const baselineCards = clone([...scope, other]);
   const englishById = new Map(EN_USAGE_CARD_OVERLAYS.map(row => [row.id, row]));
   const baselineOverlays = baselineCards.map(card => clone(englishById.get(card.id)));
@@ -180,13 +184,164 @@ function appendSubsetRound(data) {
 test('portable bilingual revisions verify retained and changed cards against actual delivery-store bytes', t => {
   const data = fixture(t);
   assert.deepEqual(verifyReviewedUsageRevisions(data), { rounds: 1, sourceCount: 2, reviewedCount: 2, approvedCount: 2,
-    deferredCount: 0, changedCount: 1, baselineCount: 3, cardCount: 3 });
+    deferredCount: 0, changedCount: 1, baselineCount: 3, cardCount: 3, teachingHeldCount: 0 });
   const delivery = data.proof.rounds[0].batches[0].authorDelivery;
   const changed = clone(delivery);
   changed.artifacts[Object.keys(changed.artifacts)[0]] = Buffer.from('[]').toString('base64');
   assert.throws(() => verifyPortableRevisionDelivery(changed, 'author', 'fixture/00'), /artifact drift/);
   const receipt = clone(delivery); receipt.receipt = '0'.repeat(64);
   assert.throws(() => verifyPortableRevisionDelivery(receipt, 'author', 'fixture/00'), /receipt drift/);
+});
+
+test('the teaching projection applies after complete review verification and leaves the frozen round unchanged', t => {
+  const data = fixture(t, 'temiruNegativePast'), reviewedCards = [...data.cards], frozenProof = clone(data.proof);
+  const held = reviewedCards[2];
+  assert.ok(isTeachingFormDeferred(held.form));
+  data.cards = reviewedCards.filter(card => !isTeachingFormDeferred(card.form));
+  const summary = verifyReviewedUsageRevisions(data);
+  assert.equal(summary.baselineCount, 3);
+  assert.equal(summary.reviewedCount, 2);
+  assert.equal(summary.deferredCount, 0, 'a user-directed form hold is separate from language-review exact deferrals');
+  assert.equal(summary.teachingHeldCount, 1);
+  assert.equal(summary.cardCount, 2);
+  assert.deepEqual(data.proof, frozenProof);
+  assert.deepEqual(data.cards, reviewedCards.slice(0, 2));
+  assert.throws(() => verifyReviewedUsageRevisions({ ...data, cards: reviewedCards }), /Current cards differ/,
+    'historical approval does not restore a held form');
+  assert.throws(() => verifyReviewedUsageRevisions({ ...data, cards: data.cards.slice(1) }), /Current cards differ/,
+    'a form hold cannot hide removal of a card outside that form');
+  const changed = clone(data);
+  changed.cards[0].scene += '范围外修改';
+  assert.throws(() => verifyReviewedUsageRevisions(changed), /Current cards differ/);
+});
+
+test('committed successor evidence preserves both old rounds while new reviews and teaching holds remain distinct', () => {
+  const proof = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-reviewed-revisions.v1.json', import.meta.url)));
+  const historicalRounds = proof.rounds.slice(0, 2);
+  assert.deepEqual(historicalRounds.map(round => round.id), [
+    'temorau-negative-20261016', 'temorau-negative-mamoru-followup-20261016',
+  ]);
+  assert.deepEqual(historicalRounds.map(revisionHash), [
+    'e8893d2134e5715dace44a786f0a8736727483093d5cac0bb77bfc740a4244cd',
+    '1e67ebc5ebbc947ef2818861bf92593c320a84b04ea8b3b185d9af2c2cfcc278',
+  ], 'every source, frozen delivery and independent report in each old round is immutable');
+  const historicalProof = { schemaVersion: proof.schemaVersion, baseline: proof.baseline,
+    rounds: historicalRounds, scopePreservation: {
+      unaffectedCardCount: 17137,
+      unaffectedCardsHash: 'eb4474a4117f05559c92d03a19f620066f9cbf2adc8b34be17d14911a7966c80',
+      unaffectedEnglishCount: 17137,
+      unaffectedEnglishHash: '94e91b1c5b9e83e1c483ed168580271e4a4fd6ce00a43e323881d1de4252df3c',
+    } };
+  assert.equal(sha(`${JSON.stringify(historicalProof, null, 2)}\n`),
+    'ddd0f0e6aba0fed7e772ccbd7c30ad2eb1075de1c96e8da17647234e6065975b',
+    'the original portable proof can still be reconstructed byte for byte');
+  const historicalRevisions = REVIEWED_USAGE_CARD_REVISIONS.filter(row => row.card.form === 'temorauNegative');
+  const historicalIds = new Set(historicalRounds[0].sourceCards.map(card => card.id));
+  const historicalEnglish = EN_REVIEWED_USAGE_CARD_OVERLAYS.filter(row => historicalIds.has(row.id));
+  const historicalDeferrals = REVIEWED_USAGE_CARD_DEFERRALS.filter(row => historicalIds.has(row.id));
+  assert.equal(revisionHash(historicalRevisions), 'f67d4f4db1cb3bebca392f2280c099b5d9f7c17a91961c07865f2755ef405ca1');
+  assert.equal(revisionHash(historicalEnglish), 'a341212843d2f503564bf105b2a9e16649676ef29716f857bb9fe118c8674ebd');
+  assert.equal(revisionHash(historicalDeferrals), '8bd58979b68a56b18079971bb56a9ccb99e12719728586e8c59d1b7b9b632942');
+  const previousById = new Map(historicalRevisions.map(row => [row.id, row.card]));
+  const historicalDeferredIds = new Set(historicalDeferrals.map(row => row.id));
+  const historicalCards = PRE_REVIEWED_USAGE_CARDS.filter(card => !historicalDeferredIds.has(card.id)
+    && !isTeachingFormDeferred(card.form)).map(card => previousById.get(card.id) ?? card);
+  const historicalSummary = verifyReviewedUsageRevisions({ cards: historicalCards,
+    baselineCards: PRE_REVIEWED_USAGE_CARDS, baselineOverlays: EN_USAGE_CARD_OVERLAYS,
+    revisions: historicalRevisions, englishRevisions: historicalEnglish,
+    deferrals: historicalDeferrals, proof: historicalProof });
+  assert.deepEqual(historicalSummary, { rounds: 2, sourceCount: 125, reviewedCount: 124, approvedCount: 124,
+    deferredCount: 1, changedCount: 76, baselineCount: 17261, cardCount: 17138, teachingHeldCount: 122 });
+
+  const invitation = proof.rounds[2];
+  assert.equal(proof.rounds.length, 3);
+  assert.equal(invitation.id, 'temiru-negative-invitation-20261017');
+  assert.equal(invitation.sourceCount, 123);
+  const newlyDeferred = invitation.deferrals?.length ?? 0;
+  const newlyApproved = 123 - newlyDeferred;
+  const summary = verifyCurrentReviewedUsageRevisions();
+  assert.equal(summary.rounds, historicalSummary.rounds + 1);
+  assert.equal(summary.sourceCount, historicalSummary.sourceCount + 123);
+  assert.equal(summary.reviewedCount, historicalSummary.reviewedCount + newlyApproved);
+  assert.equal(summary.approvedCount, historicalSummary.approvedCount + newlyApproved);
+  assert.equal(summary.changedCount, historicalSummary.changedCount + newlyApproved);
+  assert.equal(summary.baselineCount, 17261);
+  assert.equal(summary.deferredCount, historicalSummary.deferredCount + newlyDeferred);
+  assert.equal(summary.teachingHeldCount, 122);
+  assert.equal(summary.cardCount, historicalSummary.cardCount - newlyDeferred);
+  assert.equal(REVIEWED_USAGE_CARDS.length, summary.baselineCount - summary.deferredCount);
+  assert.equal(USAGE_CARDS.length, REVIEWED_USAGE_CARDS.length - summary.teachingHeldCount);
+  const reviewedIds = new Set(REVIEWED_USAGE_CARDS.map(card => card.id));
+  const currentIds = new Set(USAGE_CARDS.map(card => card.id));
+  const heldIds = new Set(REVIEWED_USAGE_CARDS.filter(card => isTeachingFormDeferred(card.form)).map(card => card.id));
+  assert.deepEqual(new Set([...reviewedIds].filter(id => !currentIds.has(id))), heldIds);
+  for (const row of REVIEWED_USAGE_CARD_DEFERRALS) {
+    assert.ok(!reviewedIds.has(row.id) && !currentIds.has(row.id) && !heldIds.has(row.id), row.id);
+  }
+  const options = { cards: REVIEWED_USAGE_CARDS, baselineCards: PRE_REVIEWED_USAGE_CARDS,
+    baselineOverlays: EN_USAGE_CARD_OVERLAYS, revisions: REVIEWED_USAGE_CARD_REVISIONS,
+    englishRevisions: EN_REVIEWED_USAGE_CARD_OVERLAYS, deferrals: REVIEWED_USAGE_CARD_DEFERRALS };
+  assert.throws(() => verifyReviewedUsageRevisions(options), /Current cards differ/,
+    'a full set of previous approvals does not bypass the current teaching hold');
+});
+
+test('the portable form-hold record preserves every source object and its complete initial audit', () => {
+  const record = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json', import.meta.url)));
+  const heldCards = REVIEWED_USAGE_CARDS.filter(card => isTeachingFormDeferred(card.form));
+  const englishById = new Map(EN_USAGE_CARD_OVERLAYS.map(row => [row.id, row]));
+  const sourceById = new Map(record.sourceRows.map(row => [row.id, row]));
+  assert.equal(record.form, 'temiruNegativePast');
+  assert.equal(record.basis, 'user-directed-teaching-hold');
+  assert.equal(record.sourceCount, 122);
+  assert.equal(sourceById.size, 122);
+  assert.deepEqual(record.sourceRows.map(row => row.card), heldCards);
+  assert.equal(record.sourceCardsHash, revisionHash(heldCards));
+  assert.equal(record.sourceEnglishHash, revisionHash(record.sourceRows.map(row => row.english)));
+  for (const row of record.sourceRows) {
+    assert.equal(row.pair, `${row.card.senseId}/${row.card.form}`, row.id);
+    assert.equal(row.sourceHash, revisionHash(row.card), row.id);
+    assert.deepEqual(row.english, englishById.get(row.id), row.id);
+    assert.equal(row.english.sourceHash, row.sourceHash, row.id);
+    assert.equal(row.englishHash, revisionHash(row.english), row.id);
+  }
+  assert.equal(record.initialAudit.batches.length, 8);
+  const reviewedIds = new Set(), counts = { approved: 0, revise: 0 };
+  for (const batch of record.initialAudit.batches) {
+    const sourceFiles = verifyPortableRevisionDelivery(batch.sourceDelivery, 'author', batch.id);
+    const reviewFiles = verifyPortableRevisionDelivery(batch.reviewDelivery, 'review', batch.id);
+    assert.equal(sourceFiles.size, 1, batch.id);
+    assert.equal(reviewFiles.size, 1, batch.id);
+    const input = JSON.parse([...sourceFiles.values()][0]);
+    const report = JSON.parse([...reviewFiles.values()][0]);
+    assert.equal(input.count, input.rows.length, batch.id);
+    assert.equal(report.count, report.rows.length, batch.id);
+    assert.equal(report.sourceReceipt, batch.sourceDelivery.receipt, batch.id);
+    assert.equal(report.reviewer, batch.reviewer, batch.id);
+    assert.notEqual(batch.reviewer, batch.sourceOwner, batch.id);
+    assert.equal(report.selfReview, false, batch.id);
+    const reportById = new Map(report.rows.map(row => [row.id, row]));
+    assert.deepEqual(new Set(input.rows.map(row => row.id)), new Set(reportById.keys()), batch.id);
+    for (const source of input.rows) {
+      const row = sourceById.get(source.id), review = reportById.get(source.id);
+      assert.ok(row && review && !reviewedIds.has(source.id), source.id);
+      reviewedIds.add(source.id);
+      assert.deepEqual(source.card, row.card, source.id);
+      assert.deepEqual(source.english, row.english, source.id);
+      assert.equal(source.sourceHash, row.sourceHash, source.id);
+      assert.equal(review.sourceHash, row.sourceHash, source.id);
+      const target = deriveUnified(usageCardItem(row.card.senseId), row.card.form).answer;
+      const sentence = [...row.card.before, { text: target }, ...row.card.after].map(part => part.text).join('');
+      assert.equal(source.sentence, sentence, source.id);
+      assert.equal(review.sentence, sentence, source.id);
+      assert.ok(Object.hasOwn(counts, review.status), source.id);
+      counts[review.status] += 1;
+    }
+  }
+  assert.deepEqual(reviewedIds, new Set(sourceById.keys()));
+  assert.deepEqual(counts, { approved: 56, revise: 66 });
+  assert.deepEqual(record.initialAudit.counts, counts);
+  assert.ok(record.stoppedRepairs.every(row => row.files.length === 0), 'interrupted authors supplied no approved successor cards');
+  assert.ok(USAGE_CARDS.every(card => !reviewedIds.has(card.id)), 'all initial dispositions remain held pending an explicit restoration');
 });
 
 test('revision proof rejects incomplete scope, baseline drift, unreviewed edits and fabricated reviewer identity', t => {
@@ -306,7 +461,7 @@ test('a later exact subset preserves existing deferrals and cannot silently rest
 test('a complete form scope partitions into bilingual approvals and three-evidence exact deferrals', t => {
   const data = deferralFixture(t);
   assert.deepEqual(verifyReviewedUsageRevisions(data), { rounds: 1, sourceCount: 2, reviewedCount: 1, approvedCount: 1,
-    deferredCount: 1, changedCount: 1, baselineCount: 3, cardCount: 2 });
+    deferredCount: 1, changedCount: 1, baselineCount: 3, cardCount: 2, teachingHeldCount: 0 });
   for (const mutate of [
     value => { value.proof.rounds[0].deferrals[0].attempts.pop(); },
     value => { value.proof.rounds[0].deferrals[0].attempts[1].authorDelivery = clone(value.proof.rounds[0].deferrals[0].attempts[0].authorDelivery); },

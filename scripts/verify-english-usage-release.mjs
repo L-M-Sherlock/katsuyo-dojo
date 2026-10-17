@@ -12,6 +12,7 @@ import { EN_USAGE_CARD_OVERLAYS as BASELINE_ENGLISH } from '../app/lib/i18n/cont
 import { REVIEWED_USAGE_CARD_REVISIONS, REVIEWED_USAGE_CARD_DEFERRALS } from '../app/lib/usage-cards/reviewed-revisions.mjs';
 import { EN_REVIEWED_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/reviewed-usage-card-revisions.mjs';
 import { verifyReviewedUsageRevisions } from './verify-reviewed-usage-revisions.mjs';
+import { isTeachingFormDeferred } from '../app/lib/teaching-form-deferrals.mjs';
 import { loadFrozenBatches } from './sample-english-usage-review.mjs';
 import { verifyOriginalExpansionEvidence, verifySampleReport } from './verify-english-usage-review.mjs';
 
@@ -63,6 +64,7 @@ export function verifyEnglishUsageReleaseProof({ cards = USAGE_CARDS, overlays =
     englishProofSha256: hash(fs.readFileSync(proofPath)) });
   const replacements = new Map(englishRevisions.map(row => [row.id, row]));
   const deferred = new Set(deferrals.map(row => row.id));
+  for (const card of baselineCards) if (isTeachingFormDeferred(card.form)) deferred.add(card.id);
   ensure(same(overlays, baselineOverlays.filter(row => !deferred.has(row.id)).map(row => replacements.get(row.id) ?? row)),
     'English release proof differs from current canonical cards or English overlay');
   return { ...proof, baselineCount: baselineCards.length, currentCount: cards.length, subsequentReviews };

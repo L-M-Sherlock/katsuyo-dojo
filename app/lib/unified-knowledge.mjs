@@ -12,6 +12,7 @@ import { diagnoseContinuationClassConflict, buildContinuationClassProbes, diagno
 import { diagnosePassiveStageError } from './passive-stage-diagnosis.mjs';
 import { prioritizeContinuation } from './probe-routing.mjs';
 import { UNIFIED_COURSES, COURSE_BY_ID, sourceForForm, VOICE_BASE_FORMS } from './unified-curriculum.mjs';
+import { isTeachingFormDeferred } from './teaching-form-deferrals.mjs';
 
 const unique = (ids) => [...new Set(ids)];
 const stemForms = new Set(['tai', 'nagara', 'tsutsu', 'sugiru', 'tagaru', 'nasai']);
@@ -628,6 +629,18 @@ export function buildUnifiedKnowledge(verbModel, adjectiveModel, verbs, adjectiv
         kcIds: derived.requiredKcIds, prerequisites: derived.prerequisiteIds ?? [], sourceUrl: sourceForForm(item.domain, form)?.url ?? course.url });
     }
   }
+  // Derive teaching pauses from the complete registry, never from a lexical
+  // supply gap. Keep the historical facet definition so saved atom scores and
+  // retest targets remain valid, but require only the still-taught coverage.
+  const declaredFormsByKc = new Map();
+  for (const exercise of registryExercises) for (const id of exercise.kcIds) {
+    if (!declaredFormsByKc.has(id)) declaredFormsByKc.set(id, new Set());
+    declaredFormsByKc.get(id).add(exercise.form);
+  }
+  const deferredFacetIds = new Set([...components.values()].filter(component =>
+    !component.gating && component.id.startsWith('facet.')
+    && declaredFormsByKc.get(component.id)?.size
+    && [...declaredFormsByKc.get(component.id)].every(isTeachingFormDeferred)).map(component => component.id));
   for (const component of components.values()) {
     const app = component.id.match(/^apply\.(.+)\.continuation$/);
     if (app) {
@@ -653,7 +666,8 @@ export function buildUnifiedKnowledge(verbModel, adjectiveModel, verbs, adjectiv
     }
     // The unified stem decomposition supersedes legacy per-form irregular
     // aliases. Resolve those against the complete registry before usage filters.
-    component.coverageKcIds = component.coverageKcIds.filter(id => components.has(id));
+    component.coverageKcIds = component.coverageKcIds.filter(id => components.has(id) && !deferredFacetIds.has(id));
+    if (deferredFacetIds.has(component.id)) component.teachingDeferred = true;
     for (const id of component.prerequisites) if (!components.has(id)) throw new Error(`Missing prerequisite ${id} for ${component.id}`);
   }
   const visiting = new Set(), visited = new Set();
@@ -673,5 +687,6 @@ export function buildUnifiedKnowledge(verbModel, adjectiveModel, verbs, adjectiv
     if (usage.status === 'blocked' || (usage.status === 'context-required' && !usage.context)) return [];
     return [{ ...exercise, usage, usageReviewVersion: usage.reviewVersion, ...(usage.context ? { context: usage.context } : {}) }];
   });
-  return { unified: true, components: ordered, exercises: exerciseList, registryExercises, courseKcIds: Object.fromEntries(UNIFIED_COURSES.map(c => [c.id, unique(registryExercises.filter(e => e.courseId === c.id).flatMap(e => e.kcIds))])) };
+  return { unified: true, components: ordered, exercises: exerciseList, registryExercises, courseKcIds: Object.fromEntries(UNIFIED_COURSES.map(c => [c.id,
+    unique(registryExercises.filter(e => e.courseId === c.id && !isTeachingFormDeferred(e.form)).flatMap(e => e.kcIds))])) };
 }

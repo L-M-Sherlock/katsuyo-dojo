@@ -1,6 +1,745 @@
 // Bilingual successor reviews; do not overwrite the historical English baseline.
 export const EN_REVIEWED_USAGE_CARD_OVERLAYS = Object.freeze([
   {
+    "id": "usage:temiruNegative",
+    "sourceHash": "6b42449285336ef14fc002294196592fdcbf89bf9e092597a35cf0cdb92db643",
+    "scene": "A friend is looking for a budgeting app, and I recommend a new one.",
+    "translation": "This budgeting app is easy to use. Why don’t you try it?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:いる:いる",
+    "sourceHash": "dfffdcd745d42f99ecd53b45682093d33ba4e32e735865ff94e2a012cbe0a6d2",
+    "scene": "A festivalgoer enjoys the shrine grounds at night and invites a friend to stay.",
+    "translation": "The shrine grounds are lovely at night too. Why don’t you stay here until the festival ends?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:する:する",
+    "sourceHash": "650c7d166fdd3e167e27701855b92be0c306ac93f9a29d35832e0164d15f852c",
+    "scene": "A friend has bought a new co-op game and invites someone over to play it this weekend.",
+    "translation": "I got the co-op game everyone's been talking about. Want to try it together at my place this weekend?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:もらう:もらう",
+    "sourceHash": "6409bc3ebe00d2e02b381eec8569f311f4a1af74027bf828cc01f4b3d68a9047",
+    "scene": "A coffee shop is giving away small bags of its coffee beans as samples.",
+    "translation": "This shop is handing out coffee bean samples. Want to take a bag?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:並ぶ:ならぶ",
+    "sourceHash": "88f9cf1227adffea35721f27ba9f644461908d6a3304c6d3b2f6dd4dcaecb12a",
+    "scene": "A friend points out that the line for limited-edition bread is short.",
+    "translation": "That bakery's line is short right now. Want to join it?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:乗る:のる",
+    "sourceHash": "eee8c14b821f89fbd0dc157839943db561ceac5111deedb342a4f5b680de496d",
+    "scene": "A friend suggests exploring a newly opened train line together.",
+    "translation": "Want to ride the newly opened line together to the last stop?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:付ける:つける",
+    "sourceHash": "66c8f4080280967ad86f138f5485cd1529d81d6ffa5a45d3648a4a232cda7fea",
+    "scene": "A friend suggests an accessory while an older sister is choosing what to wear.",
+    "translation": "Why don’t you try pinning this brooch to that jacket?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:休む:やすむ",
+    "sourceHash": "b78d190c08f951641698b070b43455550f74af3023550d2391046f9ceabf18e3",
+    "scene": "A colleague has worked a long day and looks worn out.",
+    "translation": "Why not wrap up work a little early today and try getting some rest?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:会う:あう",
+    "sourceHash": "f700bad74f3837c145d9d5e8723f9d25f9e311ff74d686bf07dbf9104bf951e2",
+    "scene": "An acquaintance who recently returned to Japan offers to introduce someone with the same hobby.",
+    "translation": "An acquaintance who just returned to Japan offered to introduce someone with the same hobby. Want to meet that person once and see if you hit it off?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:伝える:つたえる",
+    "sourceHash": "a4e498ddf0a9d4c7794befee11ce53ab6258bc4f3e2ac6e05954c87d3770780c",
+    "scene": "The person in charge has not heard why the change was made, so a team lead suggests explaining it before the meeting.",
+    "translation": "Want to try telling the person in charge why the change was made before the meeting?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:住む:すむ",
+    "sourceHash": "baf9185004f1c1af05fbceb4983c5883e65ec25c6040a57c4be8f7cf15b5be12",
+    "scene": "A friend is looking for a place to move and is considering a move to the countryside.",
+    "translation": "If you’re looking for a place to move, why not try living in this town for about a year?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:作る:つくる",
+    "sourceHash": "acce99e3b77b529c4e2a8c2b4b3a9271add691d9e1050299a35aa3b093fd7026",
+    "scene": "A roommate has bought more gyoza wrappers than needed.",
+    "translation": "I bought too many gyoza wrappers. Want to try making gyoza together this weekend?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:信じる:しんじる",
+    "sourceHash": "9eb16080a46e90318cf375bae194175be991575b4a04cbf575accac62bf66857",
+    "scene": "A friend points out that the person you distrust admitted their mistake and apologized sincerely.",
+    "translation": "He admitted his mistake and apologized sincerely. Want to try trusting him one more time?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:借りる:かりる",
+    "sourceHash": "5dcb5a6ed1c6590e17304d55a61dd863532e7ff9d36c95734ca74bbc3626c244",
+    "scene": "A friend points out a new book that has just arrived at the library.",
+    "translation": "A new release just arrived at the library. Want to borrow it first?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:働く:はたらく",
+    "sourceHash": "1a423031cbbb0ca194187dfbdd9a1e1b16a2b6a614900a0172ace6316b15716d",
+    "scene": "A shop owner needs extra help for the summer and is talking with a friend.",
+    "translation": "We're short-staffed just for the summer. Would you like to try working at my shop?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:入る:はいる",
+    "sourceHash": "2c5017b4782618ec232d43a17b882efbcf104fc69a42c6e548d1a859c0d62672",
+    "scene": "Two friends pause outside a new cafe in the shopping street.",
+    "translation": "A new cafe in the shopping street looks inviting from outside. Want to pop in together?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:出かける:でかける",
+    "sourceHash": "4cb870dae022e6790856e7ce25f98f7ed8aecb7a7700db02d5b7c947c3919310",
+    "scene": "The rain has cleared, and an older sister suggests an afternoon trip to a seaside town.",
+    "translation": "The rain has stopped. Want to try going out to the seaside town this afternoon?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:出す:だす",
+    "sourceHash": "f4fd3832ebcde47f456670e44c926df34e00ab0bbefcd51a3aaf79fbb17a83af",
+    "scene": "A friend praises an artist’s painting and encourages them to enter a local open-call exhibition.",
+    "translation": "This painting has lovely colors. Why don’t you submit it to the local open-call exhibition?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:出る:でる",
+    "sourceHash": "7ddb9cb334436ea958cd3a033f10b640e7e4e664990b38541c7050cadcc07471",
+    "scene": "While exploring on a trip, a companion spots an alley leading to the shopping street.",
+    "translation": "I heard there's a shopping street behind the station. Want to walk through this alley and come out onto the shopping street?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:切る:きる",
+    "sourceHash": "ac2da2e1cdc72a01ddfd3e278d2d18790c98dcc9cc64c29c2d360896e276a6d3",
+    "scene": "While cooking, a friend worries that the squash is too hard, so I suggest starting with a small one.",
+    "translation": "This small squash looks easier to cut. Why don’t you try cutting it in half?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:助ける:たすける",
+    "sourceHash": "5c63a66d7a58c12c837f7c778f885b62abccb5d92c92f47f2bcd18c5413fa577",
+    "scene": "A friend is looking for community volunteer work, and you suggest a neighborhood shopping assistance program.",
+    "translation": "If you’re looking for volunteer work, why don’t we try helping older neighbors through the community shopping assistance program?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:動く:うごく",
+    "sourceHash": "1e336bf490e3242865b51c8af0e4612dbea938ffe40b0188aba3d63d045f74f2",
+    "scene": "A dance instructor invites a beginner to move freely before learning the choreography.",
+    "translation": "Before you learn the choreography, why don’t you try moving freely to the music?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:勝つ:かつ",
+    "sourceHash": "a8021780cd40685b7dac4821617ee530f4c3b5fe3f3da4d636c435c6a67ebee0",
+    "scene": "Before their next game, one chess friend playfully challenges the other.",
+    "translation": "Want to try beating me in the next game?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:包む:つつむ",
+    "sourceHash": "dbdf124970792572cb14aa80bf5fdf720d4bbd463c42ebc52878002eb0fee128",
+    "scene": "A farewell gift still needs wrapping, and a friend suggests using a furoshiki.",
+    "translation": "Want to try wrapping this gift in a furoshiki?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:取る:とる",
+    "sourceHash": "9fb6750a5952161e270ce7304b7d7ecb97b78d0783670276e1e716824b245fc5",
+    "scene": "They see freshly baked cakes at a self-service dessert table.",
+    "translation": "They have fresh cakes out. Want to pick one that looks good?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:受ける:うける",
+    "sourceHash": "892ca74fd66c1ed640373fc2bef40d8efeb047b0324b7a8ed6ac74e3b2a16dd4",
+    "scene": "A friend recommends a pottery studio and invites a companion to its trial class.",
+    "translation": "A friend recommended that pottery studio. Why don’t we take a trial class together sometime?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:向かう:むかう",
+    "sourceHash": "a4f55175730f7fce3cc9df6a607118cd31c35056a554cfe227ad7064bd1c7b49",
+    "scene": "The rain has stopped, and a friend would like to get out of the house.",
+    "translation": "The rain has stopped. Want to head toward the beach first?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:呼ぶ:よぶ",
+    "sourceHash": "c9c024cc390576dc3a569265896d4a4a118f17fbfd335eb83db34e3243f8e8b9",
+    "scene": "There is an open seat at lunch, so I suggest inviting Tanaka too.",
+    "translation": "There’s still an open seat. Why don’t we invite Tanaka to lunch too?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:喋る:しゃべる",
+    "sourceHash": "d940e933880da05259a3cfe59acf5c8edb3df9c12646b0e1b3d2770d91567561",
+    "scene": "Two language partners are starting a conversation practice session.",
+    "translation": "For today's practice, want to chat only in English?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:売る:うる",
+    "sourceHash": "a8ec8b1023648b183f728212a07c71465ef5c8246fc8325134aee15a4732d715",
+    "scene": "A friend’s handmade accessories have received good feedback.",
+    "translation": "Your friends like these accessories too. Why not try selling them on a flea-market app?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:変える:かえる",
+    "sourceHash": "a3c506adb4ce056924ea2f6896a39f27d940bb895617c15ee8a2e7f7fccd7ef4",
+    "scene": "The usual lunch spot has a long line, so a coworker suggests switching to a nearby restaurant.",
+    "translation": "We always go to the same place for lunch. Want to switch to the place by the station today?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:変わる:かわる",
+    "sourceHash": "5f16563d4dad7586d5cbfab741770d280eebd68b571c362c9288300443f1b959",
+    "scene": "A colleague who usually listens quietly is invited to share one of their own opinions at the next meeting.",
+    "translation": "You usually just listen; at the next meeting, want to try changing that by sharing one of your own opinions?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:始める:はじめる",
+    "sourceHash": "c621dc7715f0f371dfdd36caa6c2bdb87b8d2e7a739a126d55dff086b78b5f20",
+    "scene": "As spring approaches, a father invites his daughter to garden with him.",
+    "translation": "Why don’t we start a vegetable garden together this year?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:学ぶ:まなぶ",
+    "sourceHash": "b27b60487b6eecd31c2c4b4666fe04af3181e65adda8d599a060fde20a03bbcc",
+    "scene": "A friend who signed up for a weekend pottery class invites someone to join.",
+    "translation": "Want to learn the basics together in the pottery class this weekend?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:守る:まもる",
+    "sourceHash": "e7f8bba71176338bdb04d041bb50e57124a35b8358ca739621a492b52f8f01c9",
+    "scene": "A friend suggests putting up deer netting to protect seedlings in a forest.",
+    "translation": "Want to put up deer netting to protect the seedlings in this forest?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:寝る:ねる",
+    "sourceHash": "e5fd808829e6ba48d02c8735eac38bd38de853366873d4ff60899bdf969bcf41",
+    "scene": "You and a companion are staying at a traditional inn with a tatami room.",
+    "translation": "Since we’re staying in a Japanese-style room tonight, want to try sleeping on a futon?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:届ける:とどける",
+    "sourceHash": "23463f3076cdc9c6bf90999b724c342267a07a5dcb6d102d9fde67c0e13b873d",
+    "scene": "The family garden has produced plenty of tomatoes, and a mother suggests taking some to the neighbors.",
+    "translation": "The garden has produced plenty of tomatoes. Want to take some to the neighbors?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:帰る:かえる",
+    "sourceHash": "e81bf496973532f386c5dc2b858902d23921f84ffdebb4970c5d170b86c80905",
+    "scene": "After work, I invite a coworker to take the riverside path home.",
+    "translation": "I hear the riverside path is scenic. Why don’t you try going home that way today?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:座る:すわる",
+    "sourceHash": "6c2bd3395c5cc22165eb7624a3c34dd947fde7a93379aaf61c4ab17950b5a562",
+    "scene": "A new chair has just arrived, and its owner invites a friend to test it.",
+    "translation": "The new chair arrived. Want to try sitting in it?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:弾く:ひく",
+    "sourceHash": "1a20c33e5ca23f138f567fe26fdea523fb40ec35207a13b9efac093f9a452e35",
+    "scene": "A friend is interested in a piano piece, and I suggest starting with a trial.",
+    "translation": "This piece seems easy if you play just the right-hand part. Why don’t you try it on the piano first?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:待つ:まつ",
+    "sourceHash": "06bbf73fb2eacbcb65205729fb33cfc64e9742b39198721c5b4f5a4f47c068ec",
+    "scene": "The bus is delayed while a friend and I wait at the stop.",
+    "translation": "The bus might be here soon. Why don’t we try waiting just five more minutes?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:急ぐ:いそぐ",
+    "sourceHash": "37813dfac6fd71a1bcca144761ef854b510b2d69131cf52f95d61214bd33a19f",
+    "scene": "Two friends are on their way to the theater, and the movie is about to begin.",
+    "translation": "The movie is about to start. Want to pick up the pace a little and get to the theater?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:戻る:もどる",
+    "sourceHash": "638bbaba7e3d1bf3325e46f91dc135fb2c872596b47e7e7fa93d390a0dfb892c",
+    "scene": "After hearing that the lanterns are lovely at night, a friend suggests returning to the shopping street they visited earlier.",
+    "translation": "I hear the lanterns look lovely at night. Want to go back to the shopping street we visited earlier once evening comes?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:手伝う:てつだう",
+    "sourceHash": "04538e1a92c7e911e8be5155953ba991663c302fa0cbce9fb16b7fc18492528b",
+    "scene": "A young person is attending a neighborhood festival for the first time.",
+    "translation": "Is this your first neighborhood festival? Why not try helping set up the reception area?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:打つ:うつ",
+    "sourceHash": "f350d7419f2660264975c1940213a413b91186ac94efbb51c652208f9ad16eae",
+    "scene": "A first-time visitor is at a batting center where a cage is available.",
+    "translation": "There is an open cage at the batting center. Want to try hitting one pitch?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:払う:はらう",
+    "sourceHash": "6919097bb41d414380f74658f46475827e5a128b0c45bfac15909feec9cbda04",
+    "scene": "A father has just finished setting up a payment app on his phone.",
+    "translation": "Now that the app is set up, why not try paying with your phone on your next shopping trip?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:押す:おす",
+    "sourceHash": "66c5dd0d7107e36041fcd1a718932ae92e5260a5f11c7f44d802a5f87fec7832",
+    "scene": "A friend notices that a new vending machine has voice guidance and invites someone to try a button.",
+    "translation": "I hear the new vending machine has voice guidance. Why don’t you try pressing a button?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:拾う:ひろう",
+    "sourceHash": "cab2b7848985c0fa6f2b331df7990875f64a7e54f3fc909e9f20747806d9381a",
+    "scene": "Two friends spot an unusually shaped shell while walking by the shore.",
+    "translation": "This shell has an interesting shape. Want to try picking it up?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:持つ:もつ",
+    "sourceHash": "d2576e898931f5dec335d0f86a92c60211b6598a95abc954757953ed1c080c40",
+    "scene": "One friend is showing another a new, lightweight camera.",
+    "translation": "This new camera is lighter than it looks. Want to hold it and see?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:指す:さす",
+    "sourceHash": "2a196fec3cb9a6009bad899644fcea606351d58f60d2520b37156011ee0af283",
+    "scene": "A parent invites a child who is unsure what to order to point to a dish in the menu pictures.",
+    "translation": "If you’re not sure what to order, why don’t you point to a dish you’d like from the menu pictures?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:捨てる:すてる",
+    "sourceHash": "1e8701d689649d637eda467a340cbe9ebdd545854c53682315f6cd640f53ed75",
+    "scene": "A father and daughter are sorting things before a move, and the chair is no longer used.",
+    "translation": "We don’t use this chair anymore. Why don’t we bite the bullet and throw it out before the move?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:探す:さがす",
+    "sourceHash": "9a07e45e8cb2a4e466e52486b73a9b32a23cbbe7093d2b4495f70fa18a95e6f9",
+    "scene": "At a used-book fair, one book lover invites a friend to look for a book by their favorite author.",
+    "translation": "The used-book fair by the station is supposed to have lots of bargains today. Why don’t you look for a book by your favorite author?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:描く:えがく",
+    "sourceHash": "42a879c082f5bcd85b67e1cdbd50e98476604fca5861dc38c84ae59d47ff911b",
+    "scene": "A classmate is skilled at landscape painting but usually draws landscapes.",
+    "translation": "You’re good at landscapes. Why not try drawing a picture of a person today?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:教える:おしえる",
+    "sourceHash": "2bb59f8e047c9cebc8e945622bbba046baa25f68765e497592b7120de403b3f1",
+    "scene": "A neighbor is organizing a shogi class for children in the community.",
+    "translation": "We’re holding a beginner shogi class for the neighborhood kids next week. Would you like to try teaching them?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:曲がる:まがる",
+    "sourceHash": "6d5477195c2d0d57bfd5ab9a063beb855b28e51b3aed4a0a657650687df66a5a",
+    "scene": "Roadwork seems to be blocking the main street, so a passenger suggests trying a side route.",
+    "translation": "The main road seems to be under construction. Want to turn right at the next corner?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:書く:かく",
+    "sourceHash": "085929958a06006276f90e29e14bf7bbf76cc35664d429e514b10be4f389c909",
+    "scene": "During calligraphy practice, I encourage my hesitant younger brother to try writing his name.",
+    "translation": "This brush seems easy to use. Why don’t you try writing your name with it?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:来る:くる",
+    "sourceHash": "e7ae142141f0a810912a4849efcf7067467285df49f8f0436bfec2157379cf34",
+    "scene": "A shop owner is launching a new wagashi this weekend and invites a regular customer to come sample it.",
+    "translation": "We have a new wagashi at the shop this weekend. Would you like to come by for a taste?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:楽しむ:たのしむ",
+    "sourceHash": "7e71c325a79fe5131b08f1f0e2d9b0f0d5c5e9dd6eac4e30d96cb3274831d20c",
+    "scene": "On a day off by the sea, a friend suggests taking a relaxed walk together.",
+    "translation": "Since it's your day off, want to enjoy a walk by the sea?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:歌う:うたう",
+    "sourceHash": "8fc179f8dc2376b9a9c2fb91383fd8f09c01e400a40764ae19c43c2c65202eb7",
+    "scene": "The friends are discussing what to do for a wedding reception.",
+    "translation": "They have not decided on the wedding reception entertainment yet. Want to try singing something together?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:止める:とめる",
+    "sourceHash": "607f5b24695ec653906a1157774b511f4172d8321a1d38fb5413f20cb7b5546e",
+    "scene": "Several fans are running, and a technician is tracing an unusual noise.",
+    "translation": "To identify the source of the noise, why don’t we try switching this fan off first?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:歩く:あるく",
+    "sourceHash": "708ec0213b4266a4523daaedb0167f6ce420260ec7268c1265dc7cbca64fe551",
+    "scene": "A friend suggests walking from the station to a nearby park on a pleasant day.",
+    "translation": "The weather's nice. Want to try walking from the station to the park?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:残る:のこる",
+    "sourceHash": "43539a054cb42d763713530a264b3eaceb8248f8139c738395b8a8b38f7ea2fc",
+    "scene": "A classmate mentions a social gathering after class and invites a friend to stay.",
+    "translation": "There's also a social gathering after class. Want to stay for a bit?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:決める:きめる",
+    "sourceHash": "70a6d33b04c408714b216cb157f06fb69029c8898e269211880f71ca45d82467",
+    "scene": "Two travel companions have narrowed their destination choices to two.",
+    "translation": "We’re down to two options. Why don’t we decide on our destination together?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:泣く:なく",
+    "sourceHash": "4d239c3c514429f486d9020d17f7eb8e8edb12b37d2ba7ed9ee6913920680f18",
+    "scene": "A director is discussing how to play a sad scene with an actor.",
+    "translation": "For this sad scene, why don’t you try crying once on the final line?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:注ぐ:そそぐ",
+    "sourceHash": "be59ab5394668c8238cdc206f073343ab75a61bf90a16e62085279f10228368f",
+    "scene": "A host invites a guest to try a new teapot that is said not to drip.",
+    "translation": "I hear this teapot is less likely to drip. Why don’t you try pouring some tea into a cup?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:泳ぐ:およぐ",
+    "sourceHash": "f503cfeb4d9c8cf3affc18e9a84b2ff908818936711c215aa4752ebf28d936e3",
+    "scene": "The sea is calm, so I invite a friend to swim for a while in the shallow area.",
+    "translation": "You can touch the bottom in the shallow area. Why don’t you try swimming for a little while?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:洗う:あらう",
+    "sourceHash": "32b82dbb3905c32fb478f6b6a8b0605b740942309b56f37d9f4c90e90250135c",
+    "scene": "A family member usually takes the car through an automatic car wash.",
+    "translation": "The weather looks nice. Why not try washing the car yourself this weekend?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:浴びる:あびる",
+    "sourceHash": "6aff4413f1f0c7330391c388571fe23f4ec3b123d463babd5337642e9b3b1dcf",
+    "scene": "A companion points out a mist shower that lets visitors choose a scent after exercise.",
+    "translation": "Apparently you can choose a scent for this mist shower. Want to try it after your workout?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:消す:けす",
+    "sourceHash": "798608660553d85fad6deb9abff230d0247954628f6b7d9a69414afd5d801a88",
+    "scene": "The movie subtitles are difficult to read during a projection.",
+    "translation": "The subtitles are a little hard to see. Want to try turning off the room lights?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:渡す:わたす",
+    "sourceHash": "00d72fc7592a8c0d24d2287fecc52bacfecc03e7e1a1305310dde84758ac036b",
+    "scene": "A supervisor invites a new employee to hand a certificate to the recipient at the next awards ceremony.",
+    "translation": "At the next awards ceremony, why don’t you hand the certificate to the award winner?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:渡る:わたる",
+    "sourceHash": "6f50ce2a373f23abc48bc5762c6b82f3b1cc0fa76ac0ea90da1db32e6da6ee61",
+    "scene": "After the rain, your companion suggests crossing a suspension bridge to see the view on the far bank.",
+    "translation": "The rain has stopped, and I’d like to see the far bank too. Want to cross this suspension bridge?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:焼く:やく",
+    "sourceHash": "4a54eff48d57af2c71f7e4df4fa0694e53ff3561509eea2477407a47da8ba852",
+    "scene": "A friend wants to test a new oven and invites another friend to bake cookies together.",
+    "translation": "I want to see how this new oven bakes. Why don’t we try baking cookies together this weekend?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:片付ける:かたづける",
+    "sourceHash": "5990261123b86f310e9ef2b370d05f632dd52032185ccedcb0204e346b18af40",
+    "scene": "Their cousin is staying next week, so an older sister suggests tidying the closet while they get out the guest futon.",
+    "translation": "Our cousin is staying over next week. Want to tidy the closet while we get the guest futon out?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:申し込む:もうしこむ",
+    "sourceHash": "123366313343e055b7b700ea6179426e8194e0502e09d79845f23fef5fbcdfb8",
+    "scene": "Two friends are planning to run a city race next month.",
+    "translation": "Want to sign up together for next month's city marathon?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:直す:なおす",
+    "sourceHash": "fa7f4720ddfad38a6184e4c986ebe11299a853508da2c5a2466e800c33d92729",
+    "scene": "A father notices a loose chair leg and invites his child to help repair it.",
+    "translation": "It looks like tightening the leg screws should fix this chair. Why don’t we try repairing it together on Sunday?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:眠る:ねむる",
+    "sourceHash": "0aae7e7b89aae6d69f267bda51e8ef0c1c359cc2dbcbecd94487619d4d74692e",
+    "scene": "You and a companion are spending the night on a sleeper train.",
+    "translation": "Since we get to take a sleeper train, want to try sleeping on board tonight?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:着く:つく",
+    "sourceHash": "38c012baf517d87c193430b1d6862f35437ae0bd13393c58e47fc677cf4c1d70",
+    "scene": "Two friends often arrive early for meetups and end up waiting a long time.",
+    "translation": "We often arrive early and end up waiting. Why not try arriving in front of the station right at the agreed time next time?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:着る:きる",
+    "sourceHash": "7d5d3ae47a67bd167276a2317d5c8fa9f0e13a388bed1eaaea68b1788ad8d3d8",
+    "scene": "An older sister is helping a friend shop for a jacket.",
+    "translation": "The color of this jacket is nice too. Why don’t you try it on?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:磨く:みがく",
+    "sourceHash": "013df7620ef43e5d3e6aa426fcc91e8529d1b1633009ad1aa89410b744264526",
+    "scene": "A parent has a sample of children’s toothpaste and invites their child to try it that evening.",
+    "translation": "I got this children’s toothpaste. Would you like to try brushing your teeth with it tonight?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:稼ぐ:かせぐ",
+    "sourceHash": "9f2ccb5e4e64e4a9862f9e33ef45909091fc935e39a978f6e33de785b0757183",
+    "scene": "A student sees a real summer job opening and invites a classmate to work there.",
+    "translation": "A shop by the station is hiring for summer jobs. Why don’t we work there together and try earning some money?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:立つ:たつ",
+    "sourceHash": "5c99066e3978d833c034bbcc672d770b242e9b7d04e1447295f09d2a09515e49",
+    "scene": "During yoga class, I encourage a friend to try standing on one leg with a hand on the wall.",
+    "translation": "You’ll be steadier with a hand on the wall. Why don’t you try standing on one leg?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:笑う:わらう",
+    "sourceHash": "9e76fcb090284c3ff5462381cf212545dbca4b8f01a7baf86942a8a2fd6ef9c9",
+    "scene": "The speaker suggests watching a comedy clip together to change things up.",
+    "translation": "To change things up, want to watch a funny clip together and laugh a little?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:答える:こたえる",
+    "sourceHash": "ac3823c44495afa33f7a0c29f7a8e375b1962a47e057fa513f1b6604620371ca",
+    "scene": "In class, the teacher encourages a shy student to answer an accessible question.",
+    "translation": "You can answer just the part you know. Why don’t you try answering this question?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:終わる:おわる",
+    "sourceHash": "52b461e326203f79d6a725ba0e4e5df5df7ff500da80d04fefb4f0262cfffc4f",
+    "scene": "Team members have been losing focus in the second half of practice, so one suggests trying a shorter session.",
+    "translation": "Everyone tends to lose focus in the second half of practice lately. Why don’t we try ending our next practice half an hour earlier than usual? I’d like to narrow the drills to the essentials and see whether we can stay focused through the end of practice.",
+    "note": "Observe whether the team can stay focused through the end of the shortened practice."
+  },
+  {
+    "id": "usage:temiruNegative:verb:続ける:つづける",
+    "sourceHash": "a122dde807b7e883dbee723bd0dfbc74c6c3ed4d5a65bb2ce4c626613e1daa5a",
+    "scene": "A friend is thinking of quitting a practice that is starting to pay off.",
+    "translation": "You’re improving little by little. Why don’t you keep this practice up a little longer?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:置く:おく",
+    "sourceHash": "7880d2cf6f2a2caa159c36022b2230ed41aa8e44216661336c34a08bb33c4813",
+    "scene": "Roommates are rearranging the living room and notice the plant is in a dim spot.",
+    "translation": "The plant does not get much light where it is. Want to try placing it by the window?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:習う:ならう",
+    "sourceHash": "36fdb20385c1ca069f52224a8a31ba4e5071934f92db1e98011340ba51b37901",
+    "scene": "A pottery class near the station has trial lessons available.",
+    "translation": "I heard the pottery studio by the station has trial lessons. Want to try taking a pottery class this weekend?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:考える:かんがえる",
+    "sourceHash": "d3ce04db84cc7e8a58cf2a7e23deceee8648c32757fcccc510b2b91ac7e61286",
+    "scene": "Coworkers see that their current approach may be difficult to carry out.",
+    "translation": "This approach seems difficult. Why don’t we think of another plan together?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:聞く:きく",
+    "sourceHash": "b9a77f6febf0d0b0c72022545b8f348453fc7ccc8e6cdc35f7f8451e0a5b6f56",
+    "scene": "A friend and I are unsure about a transfer at the station, so I suggest asking a station attendant.",
+    "translation": "We’re not sure how to transfer. Why don’t we ask a station attendant?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:脱ぐ:ぬぐ",
+    "sourceHash": "cbe1a02adc0877dcaedd7549f9f284683220f6cca18cb17bfc5ffe98ede4cee2",
+    "scene": "A friend has come into a warm shop wearing a jacket.",
+    "translation": "It's warm inside. Want to try taking off your jacket before you get too hot?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:落とす:おとす",
+    "sourceHash": "35529bc9ac425a0c559797232e045f803b3050f70ec88fd577b672cdd3e29b5e",
+    "scene": "Members of a science club are comparing cushioning materials and plan a controlled steel-ball test.",
+    "translation": "We want to compare how well this new cushioning material absorbs impact. Why don’t you try dropping a steel ball onto it?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:行く:いく",
+    "sourceHash": "3dd71d0d47b7fcf5fc9c13aca6329eddc363fb7af6a21a6d80b789924bf18afd",
+    "scene": "A new café has opened nearby, so I invite a friend to check it out next week.",
+    "translation": "A new café has opened. Why don’t we go and check it out together next week?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:見せる:みせる",
+    "sourceHash": "c6a33999ada1a3f1bc57afd583ee06f85320153fdfbaf8590e52459907e7c0a4",
+    "scene": "A younger brother has just finished a new picture, and his sister encourages him to share it with the family.",
+    "translation": "Since you took the time to finish your new picture, why don’t you show it to your family too?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:見る:みる",
+    "sourceHash": "b1b8a26e17e8eee7349451033b7c48bfd7349e753aa05d9e8038ed6b8c9e0078",
+    "scene": "A new photo exhibit has opened near the station, and a coworker suggests visiting after work.",
+    "translation": "A new photo exhibit has opened near the station. Want to check it out together on our way home?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:覚える:おぼえる",
+    "sourceHash": "ff43bca00c72b94f7611d4775af0d5b5bd8ec1f382453e40099f30296d6bacfe",
+    "scene": "A teacher is helping a learner prepare a useful greeting before a trip.",
+    "translation": "Want to try memorizing a short greeting we can use on our trip before we leave?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:言う:いう",
+    "sourceHash": "aefc59254a124adcd6fa78748aa4205a27674fdc3967da6e65715d310a34e230",
+    "scene": "A newcomer feels nervous before a Japanese-language exchange meetup.",
+    "translation": "If you’re nervous, why not start by saying just, “Nice to meet you”?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:話す:はなす",
+    "sourceHash": "ca73f41c47f71f385279bbc8b765a3c6904344b097a449b098282f762b955932",
+    "scene": "The new classmate seems friendly, so I encourage my older brother to talk with him at lunch.",
+    "translation": "He seems easy to talk to. Why don’t you try talking with him a little during lunch?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:読む:よむ",
+    "sourceHash": "bed9dc9e72347025d23f9928d8f04b644ccc901e551165117a9233803957a891",
+    "scene": "A friend has picked up a mystery short story, and I recommend its opening.",
+    "translation": "The title of this short story is intriguing. Why don’t you try reading the opening?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:調べる:しらべる",
+    "sourceHash": "75afffdee72347ed37e6d0551ca224f254b3995480fb1847c0cb92c0f36612af",
+    "scene": "Two friends are unsure whether an online claim is reliable.",
+    "translation": "Why don’t we look into the source of that story together?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:買う:かう",
+    "sourceHash": "6deb9a178d79149942cedb478cae50fcc4a1d9aa3174dbe68e6ba33f8136655b",
+    "scene": "While shopping for coffee beans, I suggest that a friend try a new variety in a small pack.",
+    "translation": "They also have these beans in small packs. Why don’t we try buying a different variety?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:貸す:かす",
+    "sourceHash": "61bc24ae302c113a4ba5ef183f058d89f4ebe86558cb9ee6e2b7dad1cbd1d19b",
+    "scene": "Someone wants to test a microphone before buying one; a friend has a spare.",
+    "translation": "They want to test a microphone before buying one. Want to lend them your spare mic overnight?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:走る:はしる",
+    "sourceHash": "f0ec0683bcf9a64583e4a29966bc1a2c998263be9c0d344c325628b4b21efc43",
+    "scene": "A friend’s knee has recovered, and a companion suggests an easy run.",
+    "translation": "Your knee seems better. Want to try running one lap around the park today?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:起きる:おきる",
+    "sourceHash": "4ec9206ffe15f5d8e44bfce9ee551a34812f89edd7cba27e9e5144b194b82263",
+    "scene": "You and a travel companion are staying by the sea; they suggest getting up early to see the sunrise.",
+    "translation": "Apparently you can see the sunrise from the seaside inn. Want to get up a little early tomorrow?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:起こす:おこす",
+    "sourceHash": "0091efd7826b2461b94210e01c14a4190efaf8da2a54ff38843d94d52806a433",
+    "scene": "A family must leave early the next morning, so a father asks the older sibling to wake the younger one.",
+    "translation": "I borrowed a sunrise alarm clock. Since your younger brother has trouble waking to alarm sounds alone and you need to leave early tomorrow, why don’t you try using it to wake him?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:迎える:むかえる",
+    "sourceHash": "bbd7035095a4abb4f8979346f8cf8c15d019477b90194a6683277a2338e9284f",
+    "scene": "A new exchange student is arriving today, and one club member invites another to greet them with a sign.",
+    "translation": "An exchange student will arrive at the station today. Want to greet them at the ticket gate with a sign showing their name?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:返す:かえす",
+    "sourceHash": "4b5b9112af467281a79ac654d91c9baf77b60f76a8c25ebaec401074ccbe1472",
+    "scene": "A friend points out a new self-service return machine at the library and invites another person to try it.",
+    "translation": "The library has a new self-service return machine. Why don’t you try returning the book you’ve finished reading there?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:送る:おくる",
+    "sourceHash": "6ec886c06dfcf9a317355fef66dbeb89996ca29ae072ac5a909c6f11221e48f9",
+    "scene": "A friend is testing a new photo-sharing app and asks you to try sending a picture.",
+    "translation": "I’m trying a new photo-sharing app. Want to send me a picture to test it out?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:逃げる:にげる",
+    "sourceHash": "4aacafc89bb1555726c7203014c6f24a876bac7760479835a31dece5ac5b04e2",
+    "scene": "A friend who usually plays tag as “it” is invited to switch roles.",
+    "translation": "I’ll be “it” today, so why don’t you try running away?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:進む:すすむ",
+    "sourceHash": "08f0cd33891cfce865e09df2cbf605143e804cbec4d3170d7d4385bcc1e9c899",
+    "scene": "After the rain stops on a hike, one friend suggests continuing toward the lookout.",
+    "translation": "The rain has stopped. Want to go a little farther toward the lookout?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:遅れる:おくれる",
+    "sourceHash": "725435df5fc86fb55a4f12183a88ec9cf6e23b61812e4e890ed7ac00346080c0",
+    "scene": "The school festival has a long entrance line at opening, while the exhibit they want to see stays open until noon.",
+    "translation": "The school festival starts at ten, and the line at the entrance is long right at opening, but the exhibit we want to see stays open until noon. Want to try arriving a little after the scheduled start?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:遊ぶ:あそぶ",
+    "sourceHash": "43b795ed96047b26f6409d7485fc5f745097e792d80cdaa7da3e2c73f7de554c",
+    "scene": "A friend is interested in a new board game, so I invite him to play it with me this weekend.",
+    "translation": "This board game has good reviews. Why don’t we try playing it together this weekend?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:運ぶ:はこぶ",
+    "sourceHash": "c0fefb8526fb9692b596f0c7ceb2eaad6e690913cce663149cbcc63285c26db4",
+    "scene": "While moving into a studio, one friend asks another to help move a small shelf.",
+    "translation": "Want to carry this small shelf together to the next room?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:選ぶ:えらぶ",
+    "sourceHash": "2d0f3e1ab1467b25a950553eff826cb4b7184b0de151aa10e660369ee2f8e059",
+    "scene": "A younger brother usually depends on other people’s recommendations when choosing books.",
+    "translation": "Recommendations are great, but why not try picking out a book you like yourself today?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:閉める:しめる",
+    "sourceHash": "286d5001cc4dfbe9d085bba6be069f9426587916a0cf05867ca1ef4f8fba49cb",
+    "scene": "You and a friend are trying out a soundproof window at a showroom.",
+    "translation": "You can barely hear outside once the showroom window is closed. Want to try closing it yourself?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:開ける:あける",
+    "sourceHash": "41c04dca83c456575a660003d1dd72fbee9b590b2b9b7d9e26bdb4be653d5bd1",
+    "scene": "A friend notices your curiosity about what might be inside an old box.",
+    "translation": "If you’re curious what’s inside, want to try gently opening this old box?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:防ぐ:ふせぐ",
+    "sourceHash": "b74610fc42860e5db29960a978caf10e5f7872ff747ec76a3ff4612f6b5099e8",
+    "scene": "Before an outdoor activity, a friend offers sunscreen and suggests trying it against UV rays.",
+    "translation": "The sun is strong today. Why don’t you try this sunscreen to protect yourself from UV rays?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:降りる:おりる",
+    "sourceHash": "53c02d19b98147fc4024cb2884ae8ffc70e22cbfb316599b2da1935f9e0a97e5",
+    "scene": "A harbor comes into view from the train, and one traveler suggests getting off at the next station.",
+    "translation": "A harbor came into view through the window. Want to try getting off at the next station?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:集める:あつめる",
+    "sourceHash": "38c63ea5f90d9ef86454c2a832810339dfd6622b880caebcac948f3d53f67813",
+    "scene": "Two travel companions plan to collect commemorative stamps they find on their next trip.",
+    "translation": "Why don’t we collect the commemorative stamps we find on our next trip?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:頼む:たのむ",
+    "sourceHash": "0b0026b5ce4870b5957ba375d0ae82f6724ab76ff7e9da46c536ac7849cc60eb",
+    "scene": "A friend introduces a new pasta restaurant and recommends its seasonal special.",
+    "translation": "Want to order the seasonal pasta here?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:飛ぶ:とぶ",
+    "sourceHash": "dc27499c0b54488e2f0b1dac10c3b4f817cf3cde7e1b1023b38d01fd6ea1b50f",
+    "scene": "A coastal paragliding experience offers beginners tandem flights with an instructor.",
+    "translation": "There is a coastal paragliding experience where beginners can fly tandem with an instructor. Want to try flying together sometime?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:食べる:たべる",
+    "sourceHash": "2c7101d6ef8f9879c389a05afe798c927fcc28dfd8cf139c9422df8dedb1e714",
+    "scene": "A visitor is new to the area, and the shopkeeper offers them a piece of the local specialty.",
+    "translation": "This shop's specialty is grilled mackerel sushi. Want to try a piece?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:飲む:のむ",
+    "sourceHash": "cd693e5d4129a31e1f954b6c57c7fa62c0ed353e9dcfb03122dddddddee0e460",
+    "scene": "A friend is curious about the plum juice, so I offer him a taste.",
+    "translation": "This plum juice is sweet and sour, and it’s delicious. Why don’t you try a sip?"
+  },
+  {
+    "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
+    "sourceHash": "7c23b4dc7d6fa9d04b7ce03335f9690705f24cdebf4891a98d4d6971dae1db00",
+    "scene": "Friends are at a live show as the band reaches its final song.",
+    "translation": "I hear everyone gets really hyped for the band’s final song. Want to head up front and make some noise together?"
+  },
+  {
     "id": "usage:temorauNegative",
     "sourceHash": "071e6658a25a254316d7d9deb9ce155224de7aeb01dac613e3fd3b5dd82d4429",
     "scene": "This time, I’m going to look it up myself instead of relying on a coworker to teach me.",

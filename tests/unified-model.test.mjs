@@ -13,6 +13,7 @@ import { parseUnifiedImport, createUnifiedExport } from '../app/lib/unified-prof
 import { deriveAdjectiveExercise } from '../app/lib/adjective-knowledge-model.mjs';
 import { summarizeUnifiedCourse } from '../app/lib/unified-progress.mjs';
 import { focusCopy } from '../app/lib/focus-copy.mjs';
+import { USER_DIRECTED_DEFERRED_FORMS, isTeachingFormDeferred } from '../app/lib/teaching-form-deferrals.mjs';
 
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
 let page;
@@ -90,12 +91,17 @@ test('all real continuation pools cover missing endings and avoid round and rece
   }
 });
 
-test('the unified curriculum keeps all 43 courses and 170 current forms in prerequisite order', () => {
+test('the unified curriculum keeps 43 courses and 170 registry forms, with only explicit teaching holds excluded from active forms', () => {
   assert.equal(UNIFIED_COURSES.length, 43);
   assert.equal(new Set(COURSE_ORDER).size, 43);
   const oldForms = new Set([...COURSES,...ADJECTIVE_COURSES].flatMap(c => c.forms));
   assert.equal(oldForms.size, 170);
-  assert.deepEqual(new Set(model.exercises.map(e => e.form).filter(Boolean)), oldForms);
+  assert.deepEqual(new Set(UNIFIED_COURSES.flatMap(course => course.forms)), oldForms);
+  assert.deepEqual(new Set(model.registryExercises.map(e => e.form).filter(Boolean)), oldForms);
+  const activeForms = new Set(model.exercises.map(e => e.form).filter(Boolean));
+  assert.equal(activeForms.size, 169);
+  assert.deepEqual(activeForms, new Set([...oldForms].filter(form => !isTeachingFormDeferred(form))));
+  assert.deepEqual(new Set([...oldForms].filter(form => !activeForms.has(form))), USER_DIRECTED_DEFERRED_FORMS);
   assert.ok(COURSE_ORDER.indexOf('adjectiveIBase') < COURSE_ORDER.indexOf('basicCompound'));
   assert.ok(UNIFIED_COURSES.find(c => c.id === 'desire').forms.includes('taiNegativePast'));
   assert.deepEqual(UNIFIED_COURSES.at(-1).forms, ['passiveDesireNegativePast',...Object.keys(CHAIN_FORM_SPECS)]);

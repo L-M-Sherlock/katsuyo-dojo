@@ -1,6 +1,3206 @@
 // Reviewed successor cards; history and bilingual receipts are in docs/usage-card-reviewed-revisions.v1.json.
 export const REVIEWED_USAGE_CARD_REVISIONS = [
   {
+    "id": "usage:temiruNegative",
+    "pair": "verb:使う:つかう/temiruNegative",
+    "previousHash": "a062305462048974a9b58cd0300800fb3fe259b879a8da71743f28ea419905e2",
+    "finalHash": "6b42449285336ef14fc002294196592fdcbf89bf9e092597a35cf0cdb92db643",
+    "card": {
+      "id": "usage:temiruNegative",
+      "senseId": "verb:使う:つかう",
+      "meaning": "使用",
+      "form": "temiruNegative",
+      "scene": "朋友挑选记账应用，我推荐他试用新软件。",
+      "before": [
+        {
+          "text": "この家計簿アプリ、操作が簡単だよ。",
+          "reading": "このかけいぼアプリ、そうさがかんたんだよ。"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这个记账应用操作很简单。要不要试用一下？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:いる:いる",
+    "pair": "verb:いる:いる/temiruNegative",
+    "previousHash": "7eaf3ec8878192d0975d6d9f841f3c72c59134e8c3b21af43904664784ab33db",
+    "finalHash": "dfffdcd745d42f99ecd53b45682093d33ba4e32e735865ff94e2a012cbe0a6d2",
+    "card": {
+      "id": "usage:temiruNegative:verb:いる:いる",
+      "senseId": "verb:いる:いる",
+      "meaning": "在；有（生物）",
+      "form": "temiruNegative",
+      "scene": "神社夜间景色很美，邀请朋友留到祭典结束。",
+      "before": [
+        {
+          "text": "夜の境内もきれいだし、祭りが終わるまでここに",
+          "reading": "よるのけいだいもきれいだし、まつりがおわるまでここに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "神社境内的夜景也很美，要不要留到祭典结束？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:する:する",
+    "pair": "verb:する:する/temiruNegative",
+    "previousHash": "53f37013c75fa6542c778d6efc13333294ef5a09787cf04893ec62e770e1fd31",
+    "finalHash": "650c7d166fdd3e167e27701855b92be0c306ac93f9a29d35832e0164d15f852c",
+    "card": {
+      "id": "usage:temiruNegative:verb:する:する",
+      "senseId": "verb:する:する",
+      "meaning": "做",
+      "form": "temiruNegative",
+      "scene": "朋友新买了合作桌游，邀同伴周末到家一起体验。",
+      "before": [
+        {
+          "text": "話題の協力ゲームを買ったんだ。今週末、うちで一緒に",
+          "reading": "わだいのきょうりょくげーむをかったんだ。こんしゅうまつ、うちでいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "我买了最近很火的合作游戏。周末要不要来我家一起试着玩？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:もらう:もらう",
+    "pair": "verb:もらう:もらう/temiruNegative",
+    "previousHash": "477b7a6e02f74353b5fb293ff15df5f7526dd676658b3b1fcaa6e7a68e70257c",
+    "finalHash": "6409bc3ebe00d2e02b381eec8569f311f4a1af74027bf828cc01f4b3d68a9047",
+    "card": {
+      "id": "usage:temiruNegative:verb:もらう:もらう",
+      "senseId": "verb:もらう:もらう",
+      "meaning": "得到",
+      "form": "temiruNegative",
+      "scene": "咖啡店提供豆子试用包，朋友邀同伴领一小袋。",
+      "before": [
+        {
+          "text": "この店、コーヒー豆の試供品を配ってるよ。一袋",
+          "reading": "このみせ、コーヒーまめのしきょうひんをくばってるよ。ひとふくろ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这家店在发咖啡豆试用包，要不要拿一袋试试？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:並ぶ:ならぶ",
+    "pair": "verb:並ぶ:ならぶ/temiruNegative",
+    "previousHash": "dc51cfd6221b7df8f67dad1b6d4d198a6cc34e1befe680895d74ce2f072641aa",
+    "finalHash": "88f9cf1227adffea35721f27ba9f644461908d6a3304c6d3b2f6dd4dcaecb12a",
+    "card": {
+      "id": "usage:temiruNegative:verb:並ぶ:ならぶ",
+      "senseId": "verb:並ぶ:ならぶ",
+      "meaning": "排队；排列",
+      "form": "temiruNegative",
+      "scene": "面包店队伍不长，朋友邀同伴排队买限定面包。",
+      "before": [
+        {
+          "text": "あのパン屋、今なら列が短いよ。",
+          "reading": "あのぱんや、いまなられつがみじかいよ。"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "那家面包店现在队伍不长。要不要去排队？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:乗る:のる",
+    "pair": "verb:乗る:のる/temiruNegative",
+    "previousHash": "dc7f47659e80b05a751f8af63cac7ede1ecfee922fb94407998b36fe3b2001d6",
+    "finalHash": "eee8c14b821f89fbd0dc157839943db561ceac5111deedb342a4f5b680de496d",
+    "card": {
+      "id": "usage:temiruNegative:verb:乗る:のる",
+      "senseId": "verb:乗る:のる",
+      "meaning": "乘坐",
+      "form": "temiruNegative",
+      "scene": "新线路刚开通，朋友邀同伴坐到终点体验。",
+      "before": [
+        {
+          "text": "新しく開通した路線に、終点まで一緒に",
+          "reading": "あたらしくかいつうしたろせんに、しゅうてんまでいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要不要一起乘坐新开通的线路到终点？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:付ける:つける",
+    "pair": "verb:付ける:つける/temiruNegative",
+    "previousHash": "5646bb56b8816371f7241bba7d1c8183a2859c934eddcec20eb6fb649b4e0c2a",
+    "finalHash": "66c8f4080280967ad86f138f5485cd1529d81d6ffa5a45d3648a4a232cda7fea",
+    "card": {
+      "id": "usage:temiruNegative:verb:付ける:つける",
+      "senseId": "verb:付ける:つける",
+      "meaning": "附上；打开",
+      "form": "temiruNegative",
+      "scene": "姐姐挑中一枚胸针，朋友建议别在外套上试试。",
+      "before": [
+        {
+          "text": "そのジャケットに、このブローチを",
+          "reading": "そのジャケットに、このブローチを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要不要试着把这枚胸针别在那件夹克上？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:休む:やすむ",
+    "pair": "verb:休む:やすむ/temiruNegative",
+    "previousHash": "d962117530b47ad97196d7f213f772e904b0231fe698042705bb9fae91d3e510",
+    "finalHash": "b78d190c08f951641698b070b43455550f74af3023550d2391046f9ceabf18e3",
+    "card": {
+      "id": "usage:temiruNegative:verb:休む:やすむ",
+      "senseId": "verb:休む:やすむ",
+      "meaning": "休息",
+      "form": "temiruNegative",
+      "scene": "加班的同事仍忙个不停，朋友劝他歇会儿。",
+      "before": [
+        {
+          "text": "今日は仕事を早めに切り上げて、少し",
+          "reading": "きょうはしごとをはやめにきりあげて、すこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "今天早点收工，试着休息一会儿怎么样？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:会う:あう",
+    "pair": "verb:会う:あう/temiruNegative",
+    "previousHash": "98f88c6f82cfae75b7ddd0d92217e001d23ae21743e30c071c870cd1c28067c4",
+    "finalHash": "f700bad74f3837c145d9d5e8723f9d25f9e311ff74d686bf07dbf9104bf951e2",
+    "card": {
+      "id": "usage:temiruNegative:verb:会う:あう",
+      "senseId": "verb:会う:あう",
+      "meaning": "见面",
+      "form": "temiruNegative",
+      "scene": "刚回国的熟人愿介绍同好，建议见面看看是否合拍。",
+      "before": [
+        {
+          "text": "帰国したばかりの知人が、同じ趣味の人を紹介してくれるって。話が合うか、一度その人に",
+          "reading": "きこくしたばかりのちじんが、おなじしゅみのひとをしょうかいしてくれるって。はなしがあうか、いちどそのひとに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "刚回国的熟人说能介绍一位同好，要不要见一面，看看聊不聊得来？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:伝える:つたえる",
+    "pair": "verb:伝える:つたえる/temiruNegative",
+    "previousHash": "fc3be47be233f8a07ed72171a641dab28b9cdb8a0bc9aa2bc579ee7885f19929",
+    "finalHash": "a4e498ddf0a9d4c7794befee11ce53ab6258bc4f3e2ac6e05954c87d3770780c",
+    "card": {
+      "id": "usage:temiruNegative:verb:伝える:つたえる",
+      "senseId": "verb:伝える:つたえる",
+      "meaning": "传达",
+      "form": "temiruNegative",
+      "scene": "修改理由尚未说明，组长邀同事会前告诉负责人。",
+      "before": [
+        {
+          "text": "変更の理由を会議の前に担当者へ",
+          "reading": "へんこうのりゆうをかいぎのまえにたんとうしゃへ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要不要试着在开会前把修改理由告诉负责人？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:住む:すむ",
+    "pair": "verb:住む:すむ/temiruNegative",
+    "previousHash": "6e081dc763169273abe3a1a01ec7d2c9b9c83fc1c38ada1bcd37e26661749de5",
+    "finalHash": "baf9185004f1c1af05fbceb4983c5883e65ec25c6040a57c4be8f7cf15b5be12",
+    "card": {
+      "id": "usage:temiruNegative:verb:住む:すむ",
+      "senseId": "verb:住む:すむ",
+      "meaning": "居住",
+      "form": "temiruNegative",
+      "scene": "朋友正在考虑移居，受邀先到新城试住一年。",
+      "before": [
+        {
+          "text": "移住先を探してるなら、この町に一年くらい",
+          "reading": "いじゅうさきをさがしてるなら、このまちにいちねんくらい"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "如果你在找移居的地方，要不要试着先在这座城住上一年？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:作る:つくる",
+    "pair": "verb:作る:つくる/temiruNegative",
+    "previousHash": "c3bcd4e20250f9a9a849bf39da78848b1d81ef4401ece0ad266a1e9d0492e589",
+    "finalHash": "acce99e3b77b529c4e2a8c2b4b3a9271add691d9e1050299a35aa3b093fd7026",
+    "card": {
+      "id": "usage:temiruNegative:verb:作る:つくる",
+      "senseId": "verb:作る:つくる",
+      "meaning": "制作",
+      "form": "temiruNegative",
+      "scene": "室友买多了饺子皮，邀朋友周末一起包饺子。",
+      "before": [
+        {
+          "text": "餃子の皮を買いすぎちゃったんだけど、週末に一緒に餃子を",
+          "reading": "ぎょうざのかわをかいすぎちゃったんだけど、しゅうまつにいっしょにぎょうざを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "我买多了饺子皮，周末要不要一起试着做饺子？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:信じる:しんじる",
+    "pair": "verb:信じる:しんじる/temiruNegative",
+    "previousHash": "769ab3e7070f6e131f703abbe2f923fc76c18d8fc05fcb330c7821aa747f478f",
+    "finalHash": "9eb16080a46e90318cf375bae194175be991575b4a04cbf575accac62bf66857",
+    "card": {
+      "id": "usage:temiruNegative:verb:信じる:しんじる",
+      "senseId": "verb:信じる:しんじる",
+      "meaning": "相信",
+      "form": "temiruNegative",
+      "scene": "朋友劝你再相信那个认真道歉的人一次",
+      "before": [
+        {
+          "text": "彼は自分の間違いを認めて、きちんと謝っていたよ。もう一度",
+          "reading": "かれはじぶんのまちがいをみとめて、きちんとあやまっていたよ。もういちど"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "他承认了自己的错误，也认真道了歉。要不要再试着相信他一次？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:借りる:かりる",
+    "pair": "verb:借りる:かりる/temiruNegative",
+    "previousHash": "eac4a7fc71c508db4100f879b7c95b71f3856be5a57be0ee08aad51fb65c7ac9",
+    "finalHash": "5dcb5a6ed1c6590e17304d55a61dd863532e7ff9d36c95734ca74bbc3626c244",
+    "card": {
+      "id": "usage:temiruNegative:verb:借りる:かりる",
+      "senseId": "verb:借りる:かりる",
+      "meaning": "借入",
+      "form": "temiruNegative",
+      "scene": "朋友邀你从图书馆借阅刚上架的新书",
+      "before": [
+        {
+          "text": "図書館に入ったばかりの新刊、まず",
+          "reading": "としょかんにはいったばかりのしんかん、まず"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "图书馆刚上架的新书，要不要先借来试试？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:働く:はたらく",
+    "pair": "verb:働く:はたらく/temiruNegative",
+    "previousHash": "5e36f9b32c34af1366f1a773aef2b12b201d992319fd673647c0660eafa14e3f",
+    "finalHash": "1a423031cbbb0ca194187dfbdd9a1e1b16a2b6a614900a0172ace6316b15716d",
+    "card": {
+      "id": "usage:temiruNegative:verb:働く:はたらく",
+      "senseId": "verb:働く:はたらく",
+      "meaning": "工作",
+      "form": "temiruNegative",
+      "scene": "暑假店里临时缺人，店主邀朋友来店里打工。",
+      "before": [
+        {
+          "text": "夏の間だけ人手が足りないんだけど、うちの店で",
+          "reading": "なつのあいだだけひとでがたりないんだけど、うちのみせで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "夏天店里暂时缺人，要不要来我店里试着工作一阵？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:入る:はいる",
+    "pair": "verb:入る:はいる/temiruNegative",
+    "previousHash": "bff33303b0b38f5801c86061a3f8bcf8d5818d39cbb258d33ab8664bc8b4e5f4",
+    "finalHash": "2c5017b4782618ec232d43a17b882efbcf104fc69a42c6e548d1a859c0d62672",
+    "card": {
+      "id": "usage:temiruNegative:verb:入る:はいる",
+      "senseId": "verb:入る:はいる",
+      "meaning": "进入",
+      "form": "temiruNegative",
+      "scene": "商店街新开咖啡馆，朋友邀请同伴进去看看环境。",
+      "before": [
+        {
+          "text": "商店街にできた喫茶店、外から見ても雰囲気がよさそうだね。ちょっと一緒に",
+          "reading": "しょうてんがいにできたきっさてん、そとからみてもふんいきがよさそうだね。ちょっといっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "商店街新开的咖啡馆看起来氛围不错，要不要一起进去看看？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:出かける:でかける",
+    "pair": "verb:出かける:でかける/temiruNegative",
+    "previousHash": "d59426e6098689e3fd0f4845da19f1b967e8fe9b1db5771f9e50d1207de313db",
+    "finalHash": "4cb870dae022e6790856e7ce25f98f7ed8aecb7a7700db02d5b7c947c3919310",
+    "card": {
+      "id": "usage:temiruNegative:verb:出かける:でかける",
+      "senseId": "verb:出かける:でかける",
+      "meaning": "出门",
+      "form": "temiruNegative",
+      "scene": "雨停后天色转晴，姐姐邀弟弟下午去海边小镇。",
+      "before": [
+        {
+          "text": "雨も上がったし、午後は海沿いの町まで",
+          "reading": "あめもあがったし、ごごはうみぞいのまちまで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "雨也停了，下午要不要试着出门去海边的小镇？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:出す:だす",
+    "pair": "verb:出す:だす/temiruNegative",
+    "previousHash": "f69567c13dfd8c51018f7201ac5a517b70dae5c794b5380bf56f804199715d74",
+    "finalHash": "f4fd3832ebcde47f456670e44c926df34e00ab0bbefcd51a3aaf79fbb17a83af",
+    "card": {
+      "id": "usage:temiruNegative:verb:出す:だす",
+      "senseId": "verb:出す:だす",
+      "meaning": "拿出；提交",
+      "form": "temiruNegative",
+      "scene": "朋友夸赞画作，鼓励作者投稿参加本地公募展。",
+      "before": [
+        {
+          "text": "この絵、色使いがすてきだね。地元の公募展に",
+          "reading": "このえ、いろづかいがすてきだね。じもとのこうぼてんに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这幅画的配色真好，要不要把它投给本地的公募展？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:出る:でる",
+    "pair": "verb:出る:でる/temiruNegative",
+    "previousHash": "1ccc5b10cdf739d9d61ab2ff253562f853a143f91578334a9ec245740e134553",
+    "finalHash": "7ddb9cb334436ea958cd3a033f10b640e7e4e664990b38541c7050cadcc07471",
+    "card": {
+      "id": "usage:temiruNegative:verb:出る:でる",
+      "senseId": "verb:出る:でる",
+      "meaning": "出去",
+      "form": "temiruNegative",
+      "scene": "旅行时朋友邀你穿过小巷走到商店街",
+      "before": [
+        {
+          "text": "駅の裏に商店街があるらしいよ。この路地を抜けて商店街に",
+          "reading": "えきのうらにしょうてんがいがあるらしいよ。このろじをぬけてしょうてんがいに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说车站后面有条商店街，要不要穿过这条小巷走到那边？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:切る:きる",
+    "pair": "verb:切る:きる/temiruNegative",
+    "previousHash": "f2275bfe1a06aa2eab5c902d578ed6ace90ecd8f6d6976866703bd277a9f179a",
+    "finalHash": "ac2da2e1cdc72a01ddfd3e278d2d18790c98dcc9cc64c29c2d360896e276a6d3",
+    "card": {
+      "id": "usage:temiruNegative:verb:切る:きる",
+      "senseId": "verb:切る:きる",
+      "meaning": "切；剪",
+      "form": "temiruNegative",
+      "scene": "做饭时朋友怕南瓜太硬，我提议先切小只的。",
+      "before": [
+        {
+          "text": "この小さいかぼちゃなら切りやすそうだよ。半分に",
+          "reading": "このちいさいかぼちゃならきりやすそうだよ。はんぶんに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这只小南瓜似乎比较好切。要不要试着把它切成两半？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:助ける:たすける",
+    "pair": "verb:助ける:たすける/temiruNegative",
+    "previousHash": "ddc5681842fc220e4bdf6c869d5c4810b246647567a518918aeb0f65363fa08d",
+    "finalHash": "5c63a66d7a58c12c837f7c778f885b62abccb5d92c92f47f2bcd18c5413fa577",
+    "card": {
+      "id": "usage:temiruNegative:verb:助ける:たすける",
+      "senseId": "verb:助ける:たすける",
+      "meaning": "帮助",
+      "form": "temiruNegative",
+      "scene": "朋友想参加社区志愿活动，另一人建议帮扶长者购物。",
+      "before": [
+        {
+          "text": "地域のボランティアを探しているなら、町内会の買い物支援で近所のお年寄りを",
+          "reading": "ちいきのボランティアをさがしているなら、ちょうないかいのかいものしえんできんじょのおとしよりを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "如果想参加志愿活动，要不要试着通过社区购物帮扶活动帮助附近长者？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:動く:うごく",
+    "pair": "verb:動く:うごく/temiruNegative",
+    "previousHash": "618b34fb8749db61cb469d25c6aeba79fc14630ccd6c00de542deaf7357e7258",
+    "finalHash": "1e336bf490e3242865b51c8af0e4612dbea938ffe40b0188aba3d63d045f74f2",
+    "card": {
+      "id": "usage:temiruNegative:verb:動く:うごく",
+      "senseId": "verb:動く:うごく",
+      "meaning": "移动；运转",
+      "form": "temiruNegative",
+      "scene": "舞蹈老师请初学者按音乐自由活动身体。",
+      "before": [
+        {
+          "text": "振り付けを覚える前に、音楽に合わせて自由に",
+          "reading": "ふりつけをおぼえるまえに、おんがくにあわせてじゆうに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "记舞步之前，要不要先跟着音乐自由动一动？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:勝つ:かつ",
+    "pair": "verb:勝つ:かつ/temiruNegative",
+    "previousHash": "e96bac7a538b085a0e00650f84ac1ae04046cba6be982a29aad8062d2fc6da53",
+    "finalHash": "a8021780cd40685b7dac4821617ee530f4c3b5fe3f3da4d636c435c6a67ebee0",
+    "card": {
+      "id": "usage:temiruNegative:verb:勝つ:かつ",
+      "senseId": "verb:勝つ:かつ",
+      "meaning": "获胜",
+      "form": "temiruNegative",
+      "scene": "棋友在下盘棋前邀对手尝试赢过自己。",
+      "before": [
+        {
+          "text": "次の対局では、僕に",
+          "reading": "つぎのたいきょくでは、ぼくに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "下一盘要不要试着赢我？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:包む:つつむ",
+    "pair": "verb:包む:つつむ/temiruNegative",
+    "previousHash": "b2c2c36d419213414c9e910bf5b5c07d18731921e87d528dcde1a6528f814f59",
+    "finalHash": "dbdf124970792572cb14aa80bf5fdf720d4bbd463c42ebc52878002eb0fee128",
+    "card": {
+      "id": "usage:temiruNegative:verb:包む:つつむ",
+      "senseId": "verb:包む:つつむ",
+      "meaning": "包裹",
+      "form": "temiruNegative",
+      "scene": "送别礼物还没包装，朋友邀同伴试用风吕敷包好。",
+      "before": [
+        {
+          "text": "この贈り物、風呂敷で",
+          "reading": "このおくりもの、ふろしきで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要不要试着用风吕敷包这个礼物？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:取る:とる",
+    "pair": "verb:取る:とる/temiruNegative",
+    "previousHash": "d22833a44aa07cd9fcc37addf82cc50369a6b12f57929eea718f5e20d4bde7af",
+    "finalHash": "9fb6750a5952161e270ce7304b7d7ecb97b78d0783670276e1e716824b245fc5",
+    "card": {
+      "id": "usage:temiruNegative:verb:取る:とる",
+      "senseId": "verb:取る:とる",
+      "meaning": "拿取",
+      "form": "temiruNegative",
+      "scene": "自助甜点台摆着刚出炉的蛋糕，朋友邀同伴拿一块。",
+      "before": [
+        {
+          "text": "焼きたてのケーキが並んでるよ。気になるのを一つ",
+          "reading": "やきたてのケーキがならんでるよ。きになるのをひとつ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "刚出炉的蛋糕摆在那儿，要不要挑一块拿？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:受ける:うける",
+    "pair": "verb:受ける:うける/temiruNegative",
+    "previousHash": "6230493b7715a48105dd613b0c7df95eff837239ad5a43b980a2eb6e018d0142",
+    "finalHash": "892ca74fd66c1ed640373fc2bef40d8efeb047b0324b7a8ed6ac74e3b2a16dd4",
+    "card": {
+      "id": "usage:temiruNegative:verb:受ける:うける",
+      "senseId": "verb:受ける:うける",
+      "meaning": "接受；参加",
+      "form": "temiruNegative",
+      "scene": "朋友推荐陶艺体验课，邀请同伴一起参加。",
+      "before": [
+        {
+          "text": "友達が勧めていた陶芸教室、今度一緒に体験授業を",
+          "reading": "ともだちがすすめていたとうげいきょうしつ、こんどいっしょにたいけんじゅぎょうを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "朋友推荐了那家陶艺教室，要不要下次一起上体验课？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:向かう:むかう",
+    "pair": "verb:向かう:むかう/temiruNegative",
+    "previousHash": "1ad85cb480a026b9da6d6664feeafcf32e8c4bdd3b980c6914aa09629b73b38e",
+    "finalHash": "a4f55175730f7fce3cc9df6a607118cd31c35056a554cfe227ad7064bd1c7b49",
+    "card": {
+      "id": "usage:temiruNegative:verb:向かう:むかう",
+      "senseId": "verb:向かう:むかう",
+      "meaning": "前往；面向",
+      "form": "temiruNegative",
+      "scene": "雨停后朋友不想待在家，邀她先朝海边走走。",
+      "before": [
+        {
+          "text": "雨も上がったし、まずは海の方へ",
+          "reading": "あめもあがったし、まずはうみのほうへ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "雨停了，我们先朝海边那边走走看，好吗？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:呼ぶ:よぶ",
+    "pair": "verb:呼ぶ:よぶ/temiruNegative",
+    "previousHash": "4aac78912e9fc92ad5560c66051d1fe3f9517782d4174120b2118ca44c0b4b97",
+    "finalHash": "c9c024cc390576dc3a569265896d4a4a118f17fbfd335eb83db34e3243f8e8b9",
+    "card": {
+      "id": "usage:temiruNegative:verb:呼ぶ:よぶ",
+      "senseId": "verb:呼ぶ:よぶ",
+      "meaning": "呼叫",
+      "form": "temiruNegative",
+      "scene": "午饭还有空位，我建议朋友也邀田中一起来。",
+      "before": [
+        {
+          "text": "まだ席が空いてるね。田中さんも昼食に",
+          "reading": "まだせきがあいてるね。たなかさんもちゅうしょくに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "还空着一个座位呢。要不要也叫田中来一起吃午饭？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:喋る:しゃべる",
+    "pair": "verb:喋る:しゃべる/temiruNegative",
+    "previousHash": "22fa4fc08e3e97e0724d36f3e8228de4080fa4ce3ae3a114a1823416bb2f4dd9",
+    "finalHash": "d940e933880da05259a3cfe59acf5c8edb3df9c12646b0e1b3d2770d91567561",
+    "card": {
+      "id": "usage:temiruNegative:verb:喋る:しゃべる",
+      "senseId": "verb:喋る:しゃべる",
+      "meaning": "说话；聊天",
+      "form": "temiruNegative",
+      "scene": "日语伙伴约练会话，邀对方今天用英语聊一聊。",
+      "before": [
+        {
+          "text": "今日の練習、英語だけで",
+          "reading": "きょうのれんしゅう、えいごだけで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "今天练习时，要不要只用英语聊天？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:売る:うる",
+    "pair": "verb:売る:うる/temiruNegative",
+    "previousHash": "18cc2a4a601774de9c445bf6d01aee82f61707a301950b16419d1c33f8411ef5",
+    "finalHash": "a8ec8b1023648b183f728212a07c71465ef5c8246fc8325134aee15a4732d715",
+    "card": {
+      "id": "usage:temiruNegative:verb:売る:うる",
+      "senseId": "verb:売る:うる",
+      "meaning": "售卖",
+      "form": "temiruNegative",
+      "scene": "手作饰品反响不错，朋友邀她放上平台试卖。",
+      "before": [
+        {
+          "text": "このアクセサリー、友達にも評判いいね。フリマアプリで",
+          "reading": "このアクセサリー、ともだちにもひょうばんいいね。フリマアプリで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这款饰品朋友们也都说不错，要不要试着放到二手平台卖卖看？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:変える:かえる",
+    "pair": "verb:変える:かえる/temiruNegative",
+    "previousHash": "4e02fb9a111cd4b1349c838df4c867d714d9211234356f8ca950f9e63400ac68",
+    "finalHash": "a3c506adb4ce056924ea2f6896a39f27d940bb895617c15ee8a2e7f7fccd7ef4",
+    "card": {
+      "id": "usage:temiruNegative:verb:変える:かえる",
+      "senseId": "verb:変える:かえる",
+      "meaning": "改变",
+      "form": "temiruNegative",
+      "scene": "常去的小馆排起长队，同事邀朋友换家店吃午饭。",
+      "before": [
+        {
+          "text": "昼はいつも同じ店だし、今日は駅前の店に",
+          "reading": "ひるはいつもおなじみせだし、きょうはえきまえのみせに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "午饭总去同一家店，今天要不要试着换到车站前那家？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:変わる:かわる",
+    "pair": "verb:変わる:かわる/temiruNegative",
+    "previousHash": "8030690ede37204109ad8a3395ed44f161607d649fd24341e5a1d657dbf75be8",
+    "finalHash": "5f16563d4dad7586d5cbfab741770d280eebd68b571c362c9288300443f1b959",
+    "card": {
+      "id": "usage:temiruNegative:verb:変わる:かわる",
+      "senseId": "verb:変わる:かわる",
+      "meaning": "改变",
+      "form": "temiruNegative",
+      "scene": "总是倾听的同事，邀他下次开会也说一条自己的意见。",
+      "before": [
+        {
+          "text": "いつも聞き役だけど、次の会議では自分の意見も一つ言うように少し",
+          "reading": "いつもききやくだけど、つぎのかいぎではじぶんのいけんもひとついうようにすこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "你平时总是倾听，下次开会要不要试着也说一条自己的意见？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:始める:はじめる",
+    "pair": "verb:始める:はじめる/temiruNegative",
+    "previousHash": "2d13376b2e6b0b5bcf3b65f59ae34281947fbcd0ea279d37637ed5995f984df2",
+    "finalHash": "c621dc7715f0f371dfdd36caa6c2bdb87b8d2e7a739a126d55dff086b78b5f20",
+    "card": {
+      "id": "usage:temiruNegative:verb:始める:はじめる",
+      "senseId": "verb:始める:はじめる",
+      "meaning": "开始",
+      "form": "temiruNegative",
+      "scene": "春天将至，父亲邀请女儿一起开始种家庭菜园。",
+      "before": [
+        {
+          "text": "今年は一緒に家庭菜園を",
+          "reading": "ことしはいっしょにかていさいえんを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "今年要不要一起开始种家庭菜园？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:学ぶ:まなぶ",
+    "pair": "verb:学ぶ:まなぶ/temiruNegative",
+    "previousHash": "ac1cbb3dee425de5610deaae62f1716de4a70feba0e5aa72b2dacd8009a3828e",
+    "finalHash": "b27b60487b6eecd31c2c4b4666fe04af3181e65adda8d599a060fde20a03bbcc",
+    "card": {
+      "id": "usage:temiruNegative:verb:学ぶ:まなぶ",
+      "senseId": "verb:学ぶ:まなぶ",
+      "meaning": "学习",
+      "form": "temiruNegative",
+      "scene": "报名陶艺体验课的朋友，邀同伴从基础一起学。",
+      "before": [
+        {
+          "text": "週末の陶芸教室で、基礎から一緒に",
+          "reading": "しゅうまつのとうげいきょうしつで、きそからいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "周末在陶艺课上，要不要一起从基础学起？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:守る:まもる",
+    "pair": "verb:守る:まもる/temiruNegative",
+    "previousHash": "396bc253e3adfcbfe33ea351beb6d313be81644f5ee65f24b54a06da53d7ecf1",
+    "finalHash": "e7f8bba71176338bdb04d041bb50e57124a35b8358ca739621a492b52f8f01c9",
+    "card": {
+      "id": "usage:temiruNegative:verb:守る:まもる",
+      "senseId": "verb:守る:まもる",
+      "meaning": "遵守；保护",
+      "form": "temiruNegative",
+      "scene": "朋友邀你给林间苗木搭防鹿网",
+      "before": [
+        {
+          "text": "鹿よけのネットを張って、この森の苗木を",
+          "reading": "しかよけのネットをはって、このもりのなえぎを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要不要给这片森林的树苗搭防鹿网，保护它们？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:寝る:ねる",
+    "pair": "verb:寝る:ねる/temiruNegative",
+    "previousHash": "0727e0cca57241d56607bf2a8b2faba112d383771bf0053660d7ac7228ab934d",
+    "finalHash": "e5fd808829e6ba48d02c8735eac38bd38de853366873d4ff60899bdf969bcf41",
+    "card": {
+      "id": "usage:temiruNegative:verb:寝る:ねる",
+      "senseId": "verb:寝る:ねる",
+      "meaning": "睡觉",
+      "form": "temiruNegative",
+      "scene": "同伴邀你在日式旅馆的榻榻米房睡一晚",
+      "before": [
+        {
+          "text": "この旅館、今夜は和室に泊まるんだし、布団で",
+          "reading": "このりょかん、こんやはわしつにとまるんだし、ふとんで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "反正今晚要住日式旅馆的和室，要不要试试睡布团？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:届ける:とどける",
+    "pair": "verb:届ける:とどける/temiruNegative",
+    "previousHash": "88bbfae85dbb8941fae62823d38e2c522ddebe9bd616d7f7f71e6c9fd5c374f7",
+    "finalHash": "23463f3076cdc9c6bf90999b724c342267a07a5dcb6d102d9fde67c0e13b873d",
+    "card": {
+      "id": "usage:temiruNegative:verb:届ける:とどける",
+      "senseId": "verb:届ける:とどける",
+      "meaning": "送到；申报",
+      "form": "temiruNegative",
+      "scene": "家里菜园番茄丰收，母亲邀孩子给邻居送些。",
+      "before": [
+        {
+          "text": "畑のトマトがたくさん採れたね。お隣さんに少し",
+          "reading": "はたけのとまとがたくさんとれたね。おとなりさんにすこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "菜园里的番茄收成很多。要不要给邻居送一些过去？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:帰る:かえる",
+    "pair": "verb:帰る:かえる/temiruNegative",
+    "previousHash": "aa69af032e0e8fd6cdd94bed7d9b4fbba4c8a59c7d4b26dd99eefe71d24feead",
+    "finalHash": "e81bf496973532f386c5dc2b858902d23921f84ffdebb4970c5d170b86c80905",
+    "card": {
+      "id": "usage:temiruNegative:verb:帰る:かえる",
+      "senseId": "verb:帰る:かえる",
+      "meaning": "回去",
+      "form": "temiruNegative",
+      "scene": "下班后我邀同事走河边小路回家。",
+      "before": [
+        {
+          "text": "川沿いの道、景色がいいらしいよ。今日はそっちを通って",
+          "reading": "かわぞいのみち、けしきがいいらしいよ。きょうはそっちをとおって"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说河边的路风景很好。今天要不要试着从那边回家？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:座る:すわる",
+    "pair": "verb:座る:すわる/temiruNegative",
+    "previousHash": "df532df0750d513228e5cd8cdbf7621818d8ffc2d7e76df3f30d36ed4699c3c5",
+    "finalHash": "6c2bd3395c5cc22165eb7624a3c34dd947fde7a93379aaf61c4ab17950b5a562",
+    "card": {
+      "id": "usage:temiruNegative:verb:座る:すわる",
+      "senseId": "verb:座る:すわる",
+      "meaning": "坐",
+      "form": "temiruNegative",
+      "scene": "新椅子刚送到，朋友邀同伴坐坐看舒不舒服。",
+      "before": [
+        {
+          "text": "新しい椅子が届いたよ。少し",
+          "reading": "あたらしいいすがとどいたよ。すこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "新椅子送到了。要不要坐坐看？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:弾く:ひく",
+    "pair": "verb:弾く:ひく/temiruNegative",
+    "previousHash": "9786e2dd1978c81060e100a495f5fff131617afa23ba1a894dbbf2e0bd7063f2",
+    "finalHash": "1a20c33e5ca23f138f567fe26fdea523fb40ec35207a13b9efac093f9a452e35",
+    "card": {
+      "id": "usage:temiruNegative:verb:弾く:ひく",
+      "senseId": "verb:弾く:ひく",
+      "meaning": "弹奏",
+      "form": "temiruNegative",
+      "scene": "朋友对这首钢琴曲感兴趣，我提议先试弹。",
+      "before": [
+        {
+          "text": "この曲、右手だけなら簡単そうだよ。まずピアノで",
+          "reading": "このきょく、みぎてだけならかんたんそうだよ。まずピアノで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这首曲子只弹右手部分似乎不难。要不要先用钢琴试着弹一下？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:待つ:まつ",
+    "pair": "verb:待つ:まつ/temiruNegative",
+    "previousHash": "2a9c96e931914f463a868da8d0b2f9c20dade877b9a06246f71fedd1a2cb5077",
+    "finalHash": "06bbf73fb2eacbcb65205729fb33cfc64e9742b39198721c5b4f5a4f47c068ec",
+    "card": {
+      "id": "usage:temiruNegative:verb:待つ:まつ",
+      "senseId": "verb:待つ:まつ",
+      "meaning": "等待",
+      "form": "temiruNegative",
+      "scene": "车站候车时公交晚点，我建议朋友再等五分钟。",
+      "before": [
+        {
+          "text": "バス、もうすぐ来るかもしれないよ。あと五分だけ",
+          "reading": "バス、もうすぐくるかもしれないよ。あとごふんだけ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "公交可能很快就来了。要不要再等五分钟看看？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:急ぐ:いそぐ",
+    "pair": "verb:急ぐ:いそぐ/temiruNegative",
+    "previousHash": "5d28f902a7d1062e2c31eb5fea80ede4cbf41f5b555b9fd866d5cd2da1eef54e",
+    "finalHash": "37813dfac6fd71a1bcca144761ef854b510b2d69131cf52f95d61214bd33a19f",
+    "card": {
+      "id": "usage:temiruNegative:verb:急ぐ:いそぐ",
+      "senseId": "verb:急ぐ:いそぐ",
+      "meaning": "赶快",
+      "form": "temiruNegative",
+      "scene": "电影快开场，同行者提议朋友加快脚步赶到影院。",
+      "before": [
+        {
+          "text": "映画の開演に間に合うように、映画館まで少し",
+          "reading": "えいがのかいえんにまにあうように、えいがかんまですこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "电影快开场了，要不要稍微加快脚步赶到影院？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:戻る:もどる",
+    "pair": "verb:戻る:もどる/temiruNegative",
+    "previousHash": "2c8c633c4e840da12d6f66ad1e7cea38535f5aab84f02bb1a035e4c8447a2429",
+    "finalHash": "638bbaba7e3d1bf3325e46f91dc135fb2c872596b47e7e7fa93d390a0dfb892c",
+    "card": {
+      "id": "usage:temiruNegative:verb:戻る:もどる",
+      "senseId": "verb:戻る:もどる",
+      "meaning": "返回",
+      "form": "temiruNegative",
+      "scene": "听说夜里提灯很好看，朋友邀同伴晚些再回商店街。",
+      "before": [
+        {
+          "text": "夜は提灯がきれいに見えるらしいよ。夕方になったら、さっきの商店街にもう一度",
+          "reading": "よるはちょうちんがきれいにみえるらしいよ。ゆうがたになったら、さっきのしょうてんがいにもういちど"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说夜里的灯笼很漂亮。傍晚时要不要再回到刚才那条商店街？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:手伝う:てつだう",
+    "pair": "verb:手伝う:てつだう/temiruNegative",
+    "previousHash": "3ecc866fe678d4a6216cd1a880a30b83b07cf7a11cf207bcf74f339951354577",
+    "finalHash": "04538e1a92c7e911e8be5155953ba991663c302fa0cbce9fb16b7fc18492528b",
+    "card": {
+      "id": "usage:temiruNegative:verb:手伝う:てつだう",
+      "senseId": "verb:手伝う:てつだう",
+      "meaning": "帮忙",
+      "form": "temiruNegative",
+      "scene": "首次参加社区祭典的青年，朋友邀他帮忙布置接待台。",
+      "before": [
+        {
+          "text": "町内会の祭りは初めて？受付の準備を",
+          "reading": "ちょうないかいのまつりははじめて？うけつけのじゅんびを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "第一次参加社区祭典吧？要不要试着帮忙准备接待处？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:打つ:うつ",
+    "pair": "verb:打つ:うつ/temiruNegative",
+    "previousHash": "443d03629654363d0aa3ceedcbf648b88043b11295b946473e315cd062afe12b",
+    "finalHash": "f350d7419f2660264975c1940213a413b91186ac94efbb51c652208f9ad16eae",
+    "card": {
+      "id": "usage:temiruNegative:verb:打つ:うつ",
+      "senseId": "verb:打つ:うつ",
+      "meaning": "敲打",
+      "form": "temiruNegative",
+      "scene": "初次来打击练习场的朋友看到空打席，受邀试打一球。",
+      "before": [
+        {
+          "text": "バッティングセンターの打席、今空いてるよ。一球だけ",
+          "reading": "バッティングセンターのだせき、いまあいてるよ。いっきゅうだけ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "打击练习场现在有空打席，要不要试着打一球？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:払う:はらう",
+    "pair": "verb:払う:はらう/temiruNegative",
+    "previousHash": "c97c43ac75efa5e36ea329838160f0d721312582a218f262172375100daf2e20",
+    "finalHash": "6919097bb41d414380f74658f46475827e5a128b0c45bfac15909feec9cbda04",
+    "card": {
+      "id": "usage:temiruNegative:verb:払う:はらう",
+      "senseId": "verb:払う:はらう",
+      "meaning": "支付",
+      "form": "temiruNegative",
+      "scene": "父亲刚装好支付应用，女儿邀他试着用手机付款。",
+      "before": [
+        {
+          "text": "アプリの設定もできたし、次の買い物はスマホで",
+          "reading": "アプリのせっていもできたし、つぎのかいものはスマホで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "应用已经设置好了，下次购物要不要试试用手机付款？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:押す:おす",
+    "pair": "verb:押す:おす/temiruNegative",
+    "previousHash": "10e0e11aa6add7401ced06c610e9102a5a2fdab9817c1efbf4be866603a6ad03",
+    "finalHash": "66c5dd0d7107e36041fcd1a718932ae92e5260a5f11c7f44d802a5f87fec7832",
+    "card": {
+      "id": "usage:temiruNegative:verb:押す:おす",
+      "senseId": "verb:押す:おす",
+      "meaning": "按；推",
+      "form": "temiruNegative",
+      "scene": "新款自动售货机有语音提示，朋友邀同伴按键体验。",
+      "before": [
+        {
+          "text": "新しい自販機は音声案内付きらしいよ。ボタンを",
+          "reading": "あたらしいじはんきはおんせいあんないつきらしいよ。ボタンを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说新自动售货机带语音提示，要不要按一下按钮看看？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:拾う:ひろう",
+    "pair": "verb:拾う:ひろう/temiruNegative",
+    "previousHash": "162f4e44695458586e2bd171e470e9138832ffc5c3f65758e6ee70c700dbc27a",
+    "finalHash": "cab2b7848985c0fa6f2b331df7990875f64a7e54f3fc909e9f20747806d9381a",
+    "card": {
+      "id": "usage:temiruNegative:verb:拾う:ひろう",
+      "senseId": "verb:拾う:ひろう",
+      "meaning": "捡；拾",
+      "form": "temiruNegative",
+      "scene": "海边发现形状特别的贝壳，朋友邀她捡起观赏。",
+      "before": [
+        {
+          "text": "この貝殻、形が面白いね。",
+          "reading": "このかいがら、かたちがおもしろいね。"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这个贝壳形状真特别，要不要试着捡起来？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:持つ:もつ",
+    "pair": "verb:持つ:もつ/temiruNegative",
+    "previousHash": "f27f6c5734c415f3bee5ad749a317d9743bc3c95aadcd35a04f56374b38305d0",
+    "finalHash": "d2576e898931f5dec335d0f86a92c60211b6598a95abc954757953ed1c080c40",
+    "card": {
+      "id": "usage:temiruNegative:verb:持つ:もつ",
+      "senseId": "verb:持つ:もつ",
+      "meaning": "持有",
+      "form": "temiruNegative",
+      "scene": "朋友展示新相机，邀请同伴拿在手里感受重量。",
+      "before": [
+        {
+          "text": "この新しいカメラ、見た目より軽いよ。ちょっと",
+          "reading": "このあたらしいカメラ、みためよりかるいよ。ちょっと"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这台新相机比看起来轻，要不要拿在手里试试？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:指す:さす",
+    "pair": "verb:指す:さす/temiruNegative",
+    "previousHash": "b25c030118ea316b52490fd033edf760769052ebd211edfb669b845aca32c7d1",
+    "finalHash": "2a196fec3cb9a6009bad899644fcea606351d58f60d2520b37156011ee0af283",
+    "card": {
+      "id": "usage:temiruNegative:verb:指す:さす",
+      "senseId": "verb:指す:さす",
+      "meaning": "指；指向",
+      "form": "temiruNegative",
+      "scene": "孩子在餐厅难以点餐，家长请他指选想吃的菜。",
+      "before": [
+        {
+          "text": "どれにするか迷っているなら、メニューの写真を見て食べたい料理を",
+          "reading": "どれにするかまよっているなら、メニューのしゃしんをみてたべたいりょうりを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "还没想好点什么的话，要不要从菜单照片里指一指想吃的菜？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:捨てる:すてる",
+    "pair": "verb:捨てる:すてる/temiruNegative",
+    "previousHash": "406c9b128fddffbebb6bfc217017a6b4826b30aac2cfb5cc35d24efffe6533a9",
+    "finalHash": "1e8701d689649d637eda467a340cbe9ebdd545854c53682315f6cd640f53ed75",
+    "card": {
+      "id": "usage:temiruNegative:verb:捨てる:すてる",
+      "senseId": "verb:捨てる:すてる",
+      "meaning": "丢弃",
+      "form": "temiruNegative",
+      "scene": "搬家前整理物品，父亲建议女儿扔掉闲置椅子。",
+      "before": [
+        {
+          "text": "引っ越し前に、もう使わないこの椅子を思い切って",
+          "reading": "ひっこしまえに、もうつかわないこのいすをおもいきって"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "搬家前要不要把这把不用的椅子果断扔掉？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:探す:さがす",
+    "pair": "verb:探す:さがす/temiruNegative",
+    "previousHash": "4d888046b2e42178be3b8ef7b5d8c8658f6cbe0756ee3e25aa08ab798bb8ee28",
+    "finalHash": "9a07e45e8cb2a4e466e52486b73a9b32a23cbbe7093d2b4495f70fa18a95e6f9",
+    "card": {
+      "id": "usage:temiruNegative:verb:探す:さがす",
+      "senseId": "verb:探す:さがす",
+      "meaning": "寻找",
+      "form": "temiruNegative",
+      "scene": "周末旧书市开场，爱书的朋友邀同伴找作品。",
+      "before": [
+        {
+          "text": "駅前の古本市、今日は掘り出し物が多いらしいよ。好きな作家の本を",
+          "reading": "えきまえのふるほんいち、きょうはほりだしものがおおいらしいよ。すきなさっかのほんを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说车站前的旧书市今天有不少好东西，要不要找找你喜欢的作家的书？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:描く:えがく",
+    "pair": "verb:描く:えがく/temiruNegative",
+    "previousHash": "851374b7ce2de4ccbe49117802769b79caf9e4c59a3ae83e2e11bf14dc151442",
+    "finalHash": "42a879c082f5bcd85b67e1cdbd50e98476604fca5861dc38c84ae59d47ff911b",
+    "card": {
+      "id": "usage:temiruNegative:verb:描く:えがく",
+      "senseId": "verb:描く:えがく",
+      "meaning": "描绘",
+      "form": "temiruNegative",
+      "scene": "画惯风景的同学，朋友邀他试画一张人物画。",
+      "before": [
+        {
+          "text": "風景画が得意だね。今日は人物画を一枚",
+          "reading": "ふうけいががとくいだね。きょうはじんぶつがをいちまい"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "你很擅长画风景呢，今天要不要试着画一张人物画？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:教える:おしえる",
+    "pair": "verb:教える:おしえる/temiruNegative",
+    "previousHash": "5f67a5a2a0fe5ff1589d0ed53f3f2d1771de53abcaf06338cd6c70e1dd637416",
+    "finalHash": "2bb59f8e047c9cebc8e945622bbba046baa25f68765e497592b7120de403b3f1",
+    "card": {
+      "id": "usage:temiruNegative:verb:教える:おしえる",
+      "senseId": "verb:教える:おしえる",
+      "meaning": "教；告诉",
+      "form": "temiruNegative",
+      "scene": "邻居邀你给社区孩子们教一次将棋",
+      "before": [
+        {
+          "text": "町内の子ども会で将棋の初心者講座を開くんだ。来週、一度子どもたちに",
+          "reading": "ちょうないのこどもかいでしょうぎのしょしんしゃこうざをひらくんだ。らいしゅう、いちどこどもたちに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "社区儿童会要办将棋入门课。下周要不要给孩子们试着教一次？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:曲がる:まがる",
+    "pair": "verb:曲がる:まがる/temiruNegative",
+    "previousHash": "8a551e8108554f1853bf8d8725f9eb4fe0f43328324e6c73a83a736800b6937a",
+    "finalHash": "6d5477195c2d0d57bfd5ab9a063beb855b28e51b3aed4a0a657650687df66a5a",
+    "card": {
+      "id": "usage:temiruNegative:verb:曲がる:まがる",
+      "senseId": "verb:曲がる:まがる",
+      "meaning": "转弯；弯曲",
+      "form": "temiruNegative",
+      "scene": "主路施工时，朋友邀你右转试走旁边小路",
+      "before": [
+        {
+          "text": "大通りは工事中らしいから、次の角を右に",
+          "reading": "おおどおりはこうじちゅうらしいから、つぎのかどをみぎに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说主路在施工，要不要在下个路口右转试走一下？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:書く:かく",
+    "pair": "verb:書く:かく/temiruNegative",
+    "previousHash": "571d4fc7b6e4954d066dc74aa78396101faf6089ae3a5f9f259462ec22079122",
+    "finalHash": "085929958a06006276f90e29e14bf7bbf76cc35664d429e514b10be4f389c909",
+    "card": {
+      "id": "usage:temiruNegative:verb:書く:かく",
+      "senseId": "verb:書く:かく",
+      "meaning": "写；书写",
+      "form": "temiruNegative",
+      "scene": "书法练习时，我鼓励犹豫的弟弟先写名字。",
+      "before": [
+        {
+          "text": "この筆なら書きやすそうだよ。自分の名前を筆で",
+          "reading": "このふでならかきやすそうだよ。じぶんのなまえをふでで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这支毛笔似乎很好写。要不要用它试写一下自己的名字？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:来る:くる",
+    "pair": "verb:来る:くる/temiruNegative",
+    "previousHash": "b11fb1b84260e3aff49e664fa111e6ab3159dad89648ba3743dd0586fe70957a",
+    "finalHash": "e7ae142141f0a810912a4849efcf7067467285df49f8f0436bfec2157379cf34",
+    "card": {
+      "id": "usage:temiruNegative:verb:来る:くる",
+      "senseId": "verb:来る:くる",
+      "meaning": "来",
+      "form": "temiruNegative",
+      "scene": "店里周末推出新和果子，店主邀熟客来试吃。",
+      "before": [
+        {
+          "text": "今週末、うちの店で新作の和菓子を出すんだ。よかったら試食に",
+          "reading": "こんしゅうまつ、うちのみせでしんさくのわがしをだすんだ。よかったらししょくに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这周末，本店会推出新款和果子。方便的话，要不要来试吃？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:楽しむ:たのしむ",
+    "pair": "verb:楽しむ:たのしむ/temiruNegative",
+    "previousHash": "9a0743ca37b87a9314dfd2ca501552d7396d2e67d5ce1680ff289a20cda4f4d5",
+    "finalHash": "7e71c325a79fe5131b08f1f0e2d9b0f0d5c5e9dd6eac4e30d96cb3274831d20c",
+    "card": {
+      "id": "usage:temiruNegative:verb:楽しむ:たのしむ",
+      "senseId": "verb:楽しむ:たのしむ",
+      "meaning": "享受；期待",
+      "form": "temiruNegative",
+      "scene": "海边风景正好，朋友邀同伴悠闲享受一段散步。",
+      "before": [
+        {
+          "text": "せっかくの休みだし、海辺の散歩を",
+          "reading": "せっかくのやすみだし、うみべのさんぽを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "难得休息，要不要享受一段海边散步？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:歌う:うたう",
+    "pair": "verb:歌う:うたう/temiruNegative",
+    "previousHash": "736b573cc4581dae6ab4bb262e829fb309d0453af5bf49f2fd439b1361a59300",
+    "finalHash": "8fc179f8dc2376b9a9c2fb91383fd8f09c01e400a40764ae19c43c2c65202eb7",
+    "card": {
+      "id": "usage:temiruNegative:verb:歌う:うたう",
+      "senseId": "verb:歌う:うたう",
+      "meaning": "唱歌",
+      "form": "temiruNegative",
+      "scene": "好友婚宴余兴尚未定，提议朋友两人一起唱歌。",
+      "before": [
+        {
+          "text": "披露宴の余興、何をするかまだ決まってないらしいよ。一緒に",
+          "reading": "ひろうえんのよきょう、なにをするかまだきまってないらしいよ。いっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说婚宴余兴节目还没定，要不要一起唱首歌？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:止める:とめる",
+    "pair": "verb:止める:とめる/temiruNegative",
+    "previousHash": "5099b5d24740a53283ed16fa8f235125c1f771000f35c3072b13caa299160d71",
+    "finalHash": "607f5b24695ec653906a1157774b511f4172d8321a1d38fb5413f20cb7b5546e",
+    "card": {
+      "id": "usage:temiruNegative:verb:止める:とめる",
+      "senseId": "verb:止める:とめる",
+      "meaning": "停止；阻止",
+      "form": "temiruNegative",
+      "scene": "几台风扇同时运行并出现异响，维修员建议先停一台排查。",
+      "before": [
+        {
+          "text": "異音の原因を確かめるため、まずこの扇風機を",
+          "reading": "いおんのげんいんをたしかめるため、まずこのせんぷうきを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要查清异响的来源，要不要先试着停掉这台风扇？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:歩く:あるく",
+    "pair": "verb:歩く:あるく/temiruNegative",
+    "previousHash": "349a628752bb0ab747798486dec221977433af2d348fddc7a832578c44f80d48",
+    "finalHash": "708ec0213b4266a4523daaedb0167f6ce420260ec7268c1265dc7cbca64fe551",
+    "card": {
+      "id": "usage:temiruNegative:verb:歩く:あるく",
+      "senseId": "verb:歩く:あるく",
+      "meaning": "走路",
+      "form": "temiruNegative",
+      "scene": "天气晴朗，朋友提议从车站步行去附近公园。",
+      "before": [
+        {
+          "text": "天気もいいし、駅から公園まで",
+          "reading": "てんきもいいし、えきからこうえんまで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "天气也不错，要不要试着从车站走到公园？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:残る:のこる",
+    "pair": "verb:残る:のこる/temiruNegative",
+    "previousHash": "8d4ce35dc57e402ebc34ac9c346db1c5ac910e6373e7c7b16d788e7d586cc9c6",
+    "finalHash": "43539a054cb42d763713530a264b3eaceb8248f8139c738395b8a8b38f7ea2fc",
+    "card": {
+      "id": "usage:temiruNegative:verb:残る:のこる",
+      "senseId": "verb:残る:のこる",
+      "meaning": "留下；剩余",
+      "form": "temiruNegative",
+      "scene": "课后还有交流会，朋友邀同伴留下聊一会儿。",
+      "before": [
+        {
+          "text": "授業のあと交流会もあるけど、少し",
+          "reading": "じゅぎょうのあとこうりゅうかいもあるけど、すこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "课后还有交流会，要不要稍微留一会儿？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:決める:きめる",
+    "pair": "verb:決める:きめる/temiruNegative",
+    "previousHash": "3bef1905a1555c6ba94e33b5f5ab714ccd9a09392ac73c9aac9ccc630abad30a",
+    "finalHash": "70a6d33b04c408714b216cb157f06fb69029c8898e269211880f71ca45d82467",
+    "card": {
+      "id": "usage:temiruNegative:verb:決める:きめる",
+      "senseId": "verb:決める:きめる",
+      "meaning": "决定",
+      "form": "temiruNegative",
+      "scene": "旅行目的地只剩两处候选，邀请朋友一起选定。",
+      "before": [
+        {
+          "text": "候補が二つに絞れたし、旅行先を一緒に",
+          "reading": "こうほがふたつにしぼれたし、りょこうさきをいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "候选只剩两处了，要不要一起定下旅行目的地？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:泣く:なく",
+    "pair": "verb:泣く:なく/temiruNegative",
+    "previousHash": "381fcfbfbbd5c4afe0315093d32b922cd324e2b731924a55a785b41ab1cec3e4",
+    "finalHash": "4d239c3c514429f486d9020d17f7eb8e8edb12b37d2ba7ed9ee6913920680f18",
+    "card": {
+      "id": "usage:temiruNegative:verb:泣く:なく",
+      "senseId": "verb:泣く:なく",
+      "meaning": "哭",
+      "form": "temiruNegative",
+      "scene": "导演和演员讨论悲伤戏的哭戏表现。",
+      "before": [
+        {
+          "text": "この悲しい場面、最後の台詞で一度",
+          "reading": "このかなしいばめん、さいごのせりふでいちど"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这段悲伤戏，要不要试着在最后一句台词时哭一次？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:注ぐ:そそぐ",
+    "pair": "verb:注ぐ:そそぐ/temiruNegative",
+    "previousHash": "a9cb5338ba4c9c93c6a16e5d84115c1daf1b19e7482f3ed87a7414e4ce558e30",
+    "finalHash": "be59ab5394668c8238cdc206f073343ab75a61bf90a16e62085279f10228368f",
+    "card": {
+      "id": "usage:temiruNegative:verb:注ぐ:そそぐ",
+      "senseId": "verb:注ぐ:そそぐ",
+      "meaning": "倒入；注入",
+      "form": "temiruNegative",
+      "scene": "新茶壶不易漏水，主人邀请客人试着倒茶。",
+      "before": [
+        {
+          "text": "この急須は液だれしにくいらしいよ。試しにお茶を湯のみに",
+          "reading": "このきゅうすはえきだれしにくいらしいよ。ためしにおちゃをゆのみに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说这把茶壶不容易滴漏，要不要试着往茶杯里倒些茶？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:泳ぐ:およぐ",
+    "pair": "verb:泳ぐ:およぐ/temiruNegative",
+    "previousHash": "4e95d129e5457bb4a44d270d0ddcea6e4c446f2426c6eb4e955d668b6a83af89",
+    "finalHash": "f503cfeb4d9c8cf3affc18e9a84b2ff908818936711c215aa4752ebf28d936e3",
+    "card": {
+      "id": "usage:temiruNegative:verb:泳ぐ:およぐ",
+      "senseId": "verb:泳ぐ:およぐ",
+      "meaning": "游泳",
+      "form": "temiruNegative",
+      "scene": "海边风平浪静，我邀请朋友在浅处游一会儿。",
+      "before": [
+        {
+          "text": "浅いところなら足が届くよ。少し",
+          "reading": "あさいところならあしがとどくよ。すこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "浅的地方能踩到底。要不要试着游一会儿？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:洗う:あらう",
+    "pair": "verb:洗う:あらう/temiruNegative",
+    "previousHash": "f91fe1ec18c4531483febaa0024e12c66006b03e8629dc01c6756fa9607cd4a2",
+    "finalHash": "32b82dbb3905c32fb478f6b6a8b0605b740942309b56f37d9f4c90e90250135c",
+    "card": {
+      "id": "usage:temiruNegative:verb:洗う:あらう",
+      "senseId": "verb:洗う:あらう",
+      "meaning": "清洗",
+      "form": "temiruNegative",
+      "scene": "家人平时依赖洗车机，晴天时提议自己洗车。",
+      "before": [
+        {
+          "text": "天気もいいし、今週末は車を自分で",
+          "reading": "てんきもいいし、こんしゅうまつはくるまをじぶんで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "天气也很好，这周末要不要试着自己洗车？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:浴びる:あびる",
+    "pair": "verb:浴びる:あびる/temiruNegative",
+    "previousHash": "5c6b9b1fbb61a45460f0cf2fa770eedb4e2dc632d36c5fda10d8844fe6656853",
+    "finalHash": "6aff4413f1f0c7330391c388571fe23f4ec3b123d463babd5337642e9b3b1dcf",
+    "card": {
+      "id": "usage:temiruNegative:verb:浴びる:あびる",
+      "senseId": "verb:浴びる:あびる",
+      "meaning": "淋；沐浴",
+      "form": "temiruNegative",
+      "scene": "同伴邀你运动后体验能选香味的雾状淋浴",
+      "before": [
+        {
+          "text": "このミストシャワーは香りも選べるんだって。運動のあとに",
+          "reading": "このミストシャワーはかおりもえらべるんだって。うんどうのあとに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说这款雾状淋浴还可以选香味，运动后要不要试着淋一下？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:消す:けす",
+    "pair": "verb:消す:けす/temiruNegative",
+    "previousHash": "15cf9709a5d63cf5f3d6c3262b6cbffdd7f3ab60d64c8c88dae7b2ed1c67df95",
+    "finalHash": "798608660553d85fad6deb9abff230d0247954628f6b7d9a69414afd5d801a88",
+    "card": {
+      "id": "usage:temiruNegative:verb:消す:けす",
+      "senseId": "verb:消す:けす",
+      "meaning": "关闭；消除",
+      "form": "temiruNegative",
+      "scene": "投影字幕有反光，提议朋友先关掉房间照明试试。",
+      "before": [
+        {
+          "text": "映画の字幕が少し見づらいね。部屋の照明を",
+          "reading": "えいがのじまくがすこしみづらいね。へやのしょうめいを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "电影字幕有点看不清，要不要试着关掉房间照明？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:渡す:わたす",
+    "pair": "verb:渡す:わたす/temiruNegative",
+    "previousHash": "0a1377d20fd8c1f9e118a014be1c014741af7d88d93dc83b704d8fb934d2da60",
+    "finalHash": "00d72fc7592a8c0d24d2287fecc52bacfecc03e7e1a1305310dde84758ac036b",
+    "card": {
+      "id": "usage:temiruNegative:verb:渡す:わたす",
+      "senseId": "verb:渡す:わたす",
+      "meaning": "交给",
+      "form": "temiruNegative",
+      "scene": "主管邀请新人在下次表彰会上亲手交奖状。",
+      "before": [
+        {
+          "text": "次の表彰式で、君が受賞者に賞状を",
+          "reading": "つぎのひょうしょうしきで、きみがじゅしょうしゃにしょうじょうを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "下次表彰会上，要不要由你把奖状交给获奖者？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:渡る:わたる",
+    "pair": "verb:渡る:わたる/temiruNegative",
+    "previousHash": "cd23530a96417832bf847302c781c41e67d7685bd5bdaaf47dba85b8e0451ee6",
+    "finalHash": "6f50ce2a373f23abc48bc5762c6b82f3b1cc0fa76ac0ea90da1db32e6da6ee61",
+    "card": {
+      "id": "usage:temiruNegative:verb:渡る:わたる",
+      "senseId": "verb:渡る:わたる",
+      "meaning": "渡过",
+      "form": "temiruNegative",
+      "scene": "雨停后，朋友邀你走过一座吊桥",
+      "before": [
+        {
+          "text": "雨も上がったし、川の向こうの景色も見たいし、この吊り橋を",
+          "reading": "あめもあがったし、かわのむこうのけしきもみたいし、このつりばしを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "雨停了，也想看看河对岸的风景，要不要走过这座吊桥？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:焼く:やく",
+    "pair": "verb:焼く:やく/temiruNegative",
+    "previousHash": "729ac37e679be8e5e4b1aaaa801ea0f643e957d6605ccd2f989d610c7dcf4d83",
+    "finalHash": "4a54eff48d57af2c71f7e4df4fa0694e53ff3561509eea2477407a47da8ba852",
+    "card": {
+      "id": "usage:temiruNegative:verb:焼く:やく",
+      "senseId": "verb:焼く:やく",
+      "meaning": "烤；烧",
+      "form": "temiruNegative",
+      "scene": "朋友想测试新烤箱，约同伴周末烤饼干。",
+      "before": [
+        {
+          "text": "この新しいオーブンの焼き加減を試したいんだ。週末、一緒にクッキーを",
+          "reading": "このあたらしいオーブンのやきかげんをためしたいんだ。しゅうまつ、いっしょにクッキーを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "我想试试这台新烤箱的烘烤效果，周末要不要一起烤饼干？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:片付ける:かたづける",
+    "pair": "verb:片付ける:かたづける/temiruNegative",
+    "previousHash": "44eb52180494f3a1653ff0f64472461b9378870465ae4e29a49405da3e8fc590",
+    "finalHash": "5990261123b86f310e9ef2b370d05f632dd52032185ccedcb0204e346b18af40",
+    "card": {
+      "id": "usage:temiruNegative:verb:片付ける:かたづける",
+      "senseId": "verb:片付ける:かたづける",
+      "meaning": "收拾；整理",
+      "form": "temiruNegative",
+      "scene": "表亲下周留宿，姐姐邀弟弟整理客用壁橱。",
+      "before": [
+        {
+          "text": "来週いとこが泊まりに来るから、客用の布団を出すついでに押し入れを",
+          "reading": "らいしゅういとこがとまりにくるから、きゃくようのふとんをだすついでにおしいれを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "表亲下周要来留宿。要不要拿出客用被褥时顺便整理一下壁橱？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:申し込む:もうしこむ",
+    "pair": "verb:申し込む:もうしこむ/temiruNegative",
+    "previousHash": "b50d3e3c7ee6a9c1da810eb5b84035fdf230d2239ec591c5549f191227838cf2",
+    "finalHash": "123366313343e055b7b700ea6179426e8194e0502e09d79845f23fef5fbcdfb8",
+    "card": {
+      "id": "usage:temiruNegative:verb:申し込む:もうしこむ",
+      "senseId": "verb:申し込む:もうしこむ",
+      "meaning": "申请；报名",
+      "form": "temiruNegative",
+      "scene": "约好参加路跑，朋友邀同伴一起报名下月比赛。",
+      "before": [
+        {
+          "text": "来月の市民マラソン、一緒に",
+          "reading": "らいげつのしみんまらそん、いっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "下个月的市民马拉松，要不要一起报名？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:直す:なおす",
+    "pair": "verb:直す:なおす/temiruNegative",
+    "previousHash": "11ae46d7e134d63277d989ee2f8816b8c297506c273e5b21bfb71424c0065b50",
+    "finalHash": "fa7f4720ddfad38a6184e4c986ebe11299a853508da2c5a2466e800c33d92729",
+    "card": {
+      "id": "usage:temiruNegative:verb:直す:なおす",
+      "senseId": "verb:直す:なおす",
+      "meaning": "修理；改正",
+      "form": "temiruNegative",
+      "scene": "椅子腿松动，父亲邀请孩子一起尝试修理。",
+      "before": [
+        {
+          "text": "この椅子、脚のねじを締めれば直りそうだよ。日曜日に一緒に",
+          "reading": "このいす、あしのねじをしめればなおりそうだよ。にちようびにいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "看样子拧紧椅腿的螺丝就能修好，周日要不要一起试着修？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:眠る:ねむる",
+    "pair": "verb:眠る:ねむる/temiruNegative",
+    "previousHash": "b1c84dfb796b73ce33bdc370a03726994f0d732bae0b7816f723a969782ff4f1",
+    "finalHash": "0aae7e7b89aae6d69f267bda51e8ef0c1c359cc2dbcbecd94487619d4d74692e",
+    "card": {
+      "id": "usage:temiruNegative:verb:眠る:ねむる",
+      "senseId": "verb:眠る:ねむる",
+      "meaning": "睡眠",
+      "form": "temiruNegative",
+      "scene": "同行者邀你今晚在卧铺列车上睡一晚",
+      "before": [
+        {
+          "text": "せっかく寝台列車に乗るんだから、今夜は車内で",
+          "reading": "せっかくしんだいれっしゃにのるんだから、こんやはしゃないで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "难得坐一次卧铺列车，今晚要不要试着在车上睡？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:着く:つく",
+    "pair": "verb:着く:つく/temiruNegative",
+    "previousHash": "eb6493b49a46cd0ea40fb418e7ec7de53a49aea2fb909f6150ac5fb4c864882a",
+    "finalHash": "38c012baf517d87c193430b1d6862f35437ae0bd13393c58e47fc677cf4c1d70",
+    "card": {
+      "id": "usage:temiruNegative:verb:着く:つく",
+      "senseId": "verb:着く:つく",
+      "meaning": "到达",
+      "form": "temiruNegative",
+      "scene": "两位朋友常提前赴约久等，商量下次准时到场。",
+      "before": [
+        {
+          "text": "いつも早く来すぎて、待つ時間が長くなるね。次は約束の時間ぴったりに駅前に",
+          "reading": "いつもはやくきすぎて、まつじかんがながくなるね。つぎはやくそくのじかんぴったりにえきまえに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "我们常常早到后等很久。下次要不要试着正好在约定时间抵达车站前？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:着る:きる",
+    "pair": "verb:着る:きる/temiruNegative",
+    "previousHash": "af37bbcec85a6a88dccbb3cb583614da668efda762b21876c2857867780e3cde",
+    "finalHash": "7d5d3ae47a67bd167276a2317d5c8fa9f0e13a388bed1eaaea68b1788ad8d3d8",
+    "card": {
+      "id": "usage:temiruNegative:verb:着る:きる",
+      "senseId": "verb:着る:きる",
+      "meaning": "穿",
+      "form": "temiruNegative",
+      "scene": "姐姐陪朋友挑外套，邀请她试穿一件。",
+      "before": [
+        {
+          "text": "このジャケット、色もいいし、",
+          "reading": "このジャケット、いろもいいし、"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这件夹克颜色也不错，要不要试穿看看？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:磨く:みがく",
+    "pair": "verb:磨く:みがく/temiruNegative",
+    "previousHash": "5ea8ddd8bda41c01ef186d1a06eb38a567f7d79b65c9d752ff4a1cbf25a4475c",
+    "finalHash": "013df7620ef43e5d3e6aa426fcc91e8529d1b1633009ad1aa89410b744264526",
+    "card": {
+      "id": "usage:temiruNegative:verb:磨く:みがく",
+      "senseId": "verb:磨く:みがく",
+      "meaning": "刷；磨",
+      "form": "temiruNegative",
+      "scene": "亲子拿到儿童牙膏试用装，晚间邀请孩子试刷。",
+      "before": [
+        {
+          "text": "この子ども用の歯磨き粉をもらったよ。今夜、これで歯を",
+          "reading": "このこどもようのはみがきこをもらったよ。こんや、これではを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "我拿到这支儿童牙膏了，今晚要不要用它刷刷牙？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:稼ぐ:かせぐ",
+    "pair": "verb:稼ぐ:かせぐ/temiruNegative",
+    "previousHash": "af68b7e4475fd8d142623b5f03328d978bb5dfb2d60d2f91f2789aeda5623307",
+    "finalHash": "9f2ccb5e4e64e4a9862f9e33ef45909091fc935e39a978f6e33de785b0757183",
+    "card": {
+      "id": "usage:temiruNegative:verb:稼ぐ:かせぐ",
+      "senseId": "verb:稼ぐ:かせぐ",
+      "meaning": "挣钱",
+      "form": "temiruNegative",
+      "scene": "同学看到暑期短工招聘，约朋友一起挣钱。",
+      "before": [
+        {
+          "text": "駅前の店で夏休みの短期アルバイトを募集しているよ。一緒に働いてお金を",
+          "reading": "えきまえのみせでなつやすみのたんきアルバイトをぼしゅうしているよ。いっしょにはたらいておかねを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "车站前的店在招暑期短工，要不要一起去打工挣钱？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:立つ:たつ",
+    "pair": "verb:立つ:たつ/temiruNegative",
+    "previousHash": "4f75475198bb7095982e6b51b2a6d37985bb699e70ffe6b659c54168a33509c8",
+    "finalHash": "5c99066e3978d833c034bbcc672d770b242e9b7d04e1447295f09d2a09515e49",
+    "card": {
+      "id": "usage:temiruNegative:verb:立つ:たつ",
+      "senseId": "verb:立つ:たつ",
+      "meaning": "站立",
+      "form": "temiruNegative",
+      "scene": "瑜伽课上，我鼓励朋友扶墙试试单脚站立。",
+      "before": [
+        {
+          "text": "壁に手を添えれば安定するよ。片足で",
+          "reading": "かべにてをそえればあんていするよ。かたあしで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "扶着墙会更稳。要不要试着单脚站一站？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:笑う:わらう",
+    "pair": "verb:笑う:わらう/temiruNegative",
+    "previousHash": "69b51cc30846621acaf03399246e52eedc70c57ae35900c5a0fd9a6c89a4b570",
+    "finalHash": "9e76fcb090284c3ff5462381cf212545dbca4b8f01a7baf86942a8a2fd6ef9c9",
+    "card": {
+      "id": "usage:temiruNegative:verb:笑う:わらう",
+      "senseId": "verb:笑う:わらう",
+      "meaning": "笑",
+      "form": "temiruNegative",
+      "scene": "心情低落的好友想放松，提议一起看喜剧笑一笑。",
+      "before": [
+        {
+          "text": "気分転換に、面白いコメディ動画を一緒に見て",
+          "reading": "きぶんてんかんに、おもしろいコメディどうがをいっしょにみて"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "想换换心情的话，要不要一起看段喜剧视频笑一笑？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:答える:こたえる",
+    "pair": "verb:答える:こたえる/temiruNegative",
+    "previousHash": "50f8c197ff06330197de4be02936e0828ba8e4570b169855966e7ac883e1c8b7",
+    "finalHash": "ac3823c44495afa33f7a0c29f7a8e375b1962a47e057fa513f1b6604620371ca",
+    "card": {
+      "id": "usage:temiruNegative:verb:答える:こたえる",
+      "senseId": "verb:答える:こたえる",
+      "meaning": "回答",
+      "form": "temiruNegative",
+      "scene": "课堂上有道题简单，老师鼓励害羞的学生作答。",
+      "before": [
+        {
+          "text": "分かるところだけでいいから、この問題に",
+          "reading": "わかるところだけでいいから、このもんだいに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "只答你会的部分就好，要不要试着回答这道题？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:終わる:おわる",
+    "pair": "verb:終わる:おわる/temiruNegative",
+    "previousHash": "1eacf5d019d918c7ebadb736c4eae44378b1742ccac54b4aef8eaafdabf1d06d",
+    "finalHash": "52b461e326203f79d6a725ba0e4e5df5df7ff500da80d04fefb4f0262cfffc4f",
+    "card": {
+      "id": "usage:temiruNegative:verb:終わる:おわる",
+      "senseId": "verb:終わる:おわる",
+      "meaning": "结束",
+      "form": "temiruNegative",
+      "scene": "队员发现练习后半段易分神，提议缩短一次训练。",
+      "before": [
+        {
+          "text": "最近、練習の後半はみんな集中が切れがちだよね。次の練習はいつもより三十分早く",
+          "reading": "さいきん、れんしゅうのこうはんはみんなしゅうちゅうがきれがちだよね。つぎのれんしゅうはいつもよりさんじゅっぷんはやく"
+        }
+      ],
+      "after": [
+        {
+          "text": "？必要なメニューだけに絞って、練習の終わりまで集中が続くか確かめたいんだ。",
+          "reading": "？ひつようなメニューだけにしぼって、れんしゅうのおわりまでしゅうちゅうがつづくかたしかめたいんだ。"
+        }
+      ],
+      "translation": "最近大家到练习后半段就容易分心。下次练习要不要比平时提前半小时结束一次？我想把训练项目精简到必要内容，看看大家能否一直集中到练习结束。",
+      "review": "approved",
+      "note": "观察队员能否专注到缩短后的练习结束。"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:続ける:つづける",
+    "pair": "verb:続ける:つづける/temiruNegative",
+    "previousHash": "255c25febd15af14dd2b2b0de3cf459acfcf2fd79fa44647cc87b8ba5bab067c",
+    "finalHash": "a122dde807b7e883dbee723bd0dfbc74c6c3ed4d5a65bb2ce4c626613e1daa5a",
+    "card": {
+      "id": "usage:temiruNegative:verb:続ける:つづける",
+      "senseId": "verb:続ける:つづける",
+      "meaning": "继续",
+      "form": "temiruNegative",
+      "scene": "练习渐有进步，朋友想放弃时邀请他再坚持一阵。",
+      "before": [
+        {
+          "text": "少しずつ上達しているし、この練習をもう少し",
+          "reading": "すこしずつじょうたつしているし、このれんしゅうをもうすこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "你在慢慢进步，要不要再继续练一阵？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:置く:おく",
+    "pair": "verb:置く:おく/temiruNegative",
+    "previousHash": "9f68bf4ec987e4f29bfaf02bea5bfbdc70be18da8edfe7b71a0ca51a3dd0d8c9",
+    "finalHash": "7880d2cf6f2a2caa159c36022b2230ed41aa8e44216661336c34a08bb33c4813",
+    "card": {
+      "id": "usage:temiruNegative:verb:置く:おく",
+      "senseId": "verb:置く:おく",
+      "meaning": "放置",
+      "form": "temiruNegative",
+      "scene": "客厅采光偏暗，室友提议把观叶植物摆到窗边试试。",
+      "before": [
+        {
+          "text": "観葉植物、今の場所だと少し暗いね。窓辺に",
+          "reading": "かんようしょくぶつ、いまのばしょだとすこしくらいね。まどべに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "观叶植物放在现在的位置有点暗，要不要试着摆到窗边？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:習う:ならう",
+    "pair": "verb:習う:ならう/temiruNegative",
+    "previousHash": "3897feb4aed67c5eca4a7d35b5f319dbdd0420e65f4b656ce68876f34bb89a7c",
+    "finalHash": "36fdb20385c1ca069f52224a8a31ba4e5071934f92db1e98011340ba51b37901",
+    "card": {
+      "id": "usage:temiruNegative:verb:習う:ならう",
+      "senseId": "verb:習う:ならう",
+      "meaning": "学习；练习",
+      "form": "temiruNegative",
+      "scene": "车站前新开陶艺课，朋友邀同伴报名体验。",
+      "before": [
+        {
+          "text": "駅前の陶芸教室、体験枠があるって。週末に陶芸を",
+          "reading": "えきまえのとうげいきょうしつ、たいけんわくがあるって。しゅうまつにとうげいを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说车站前的陶艺教室有体验名额，周末要不要试着学陶艺？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:考える:かんがえる",
+    "pair": "verb:考える:かんがえる/temiruNegative",
+    "previousHash": "9d2539ee60edf862f4cd3df2481eacdb085f0f880187d2839ec9449886d31558",
+    "finalHash": "d3ce04db84cc7e8a58cf2a7e23deceee8648c32757fcccc510b2b91ac7e61286",
+    "card": {
+      "id": "usage:temiruNegative:verb:考える:かんがえる",
+      "senseId": "verb:考える:かんがえる",
+      "meaning": "思考；考虑",
+      "form": "temiruNegative",
+      "scene": "现有方案难以实施，同事邀请大家一起想新办法。",
+      "before": [
+        {
+          "text": "この方法では難しそうだし、別の案を一緒に",
+          "reading": "このほうほうではむずかしそうだし、べつのあんをいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这个办法似乎行不通，要不要一起想个新方案？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:聞く:きく",
+    "pair": "verb:聞く:きく/temiruNegative",
+    "previousHash": "2019cdd71343b2c3759c1c9adab3c8593c8fbb0d78b560900b10f8f146a40ea6",
+    "finalHash": "b9a77f6febf0d0b0c72022545b8f348453fc7ccc8e6cdc35f7f8451e0a5b6f56",
+    "card": {
+      "id": "usage:temiruNegative:verb:聞く:きく",
+      "senseId": "verb:聞く:きく",
+      "meaning": "听；询问",
+      "form": "temiruNegative",
+      "scene": "车站里弄不清换乘路线，我建议朋友问站员。",
+      "before": [
+        {
+          "text": "乗り換えが分からないね。駅員さんに",
+          "reading": "のりかえがわからないね。えきいんさんに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "我们不清楚该怎么换乘。要不要问问站务员？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:脱ぐ:ぬぐ",
+    "pair": "verb:脱ぐ:ぬぐ/temiruNegative",
+    "previousHash": "6011ea2104e3e884bec8cecaf75b9142c0d2e6d5d2fadac8c01d18dcb9c64079",
+    "finalHash": "cbe1a02adc0877dcaedd7549f9f284683220f6cca18cb17bfc5ffe98ede4cee2",
+    "card": {
+      "id": "usage:temiruNegative:verb:脱ぐ:ぬぐ",
+      "senseId": "verb:脱ぐ:ぬぐ",
+      "meaning": "脱下",
+      "form": "temiruNegative",
+      "scene": "暖气很足的店里，朋友建议同伴试着脱下外套。",
+      "before": [
+        {
+          "text": "店の中は暖房が効いてるね。暑くなる前に、上着を",
+          "reading": "みせのなかはだんぼうがきいてるね。あつくなるまえに、うわぎを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "店里暖气很足，趁还没觉得热，要不要试着脱下外套？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:落とす:おとす",
+    "pair": "verb:落とす:おとす/temiruNegative",
+    "previousHash": "60dd02f06b52440320a24f5fda43c467add5d7a7332ff5750c94e076753df1ad",
+    "finalHash": "35529bc9ac425a0c559797232e045f803b3050f70ec88fd577b672cdd3e29b5e",
+    "card": {
+      "id": "usage:temiruNegative:verb:落とす:おとす",
+      "senseId": "verb:落とす:おとす",
+      "meaning": "弄掉；丢失",
+      "form": "temiruNegative",
+      "scene": "科学社比较缓冲材料，社员邀请搭档做铁球测试。",
+      "before": [
+        {
+          "text": "新しいクッション材の衝撃吸収力を比べたいんだ。この上に鉄球を",
+          "reading": "あたらしいクッションざいのしょうげききゅうしゅうりょくをくらべたいんだ。このうえにてっきゅうを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "我们想比较新缓冲材料的吸震效果，要不要试着把铁球落到这块材料上？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:行く:いく",
+    "pair": "verb:行く:いく/temiruNegative",
+    "previousHash": "465ed4094ef0f23c071127319c37a923f427513606c50d90dc209374efd07c4a",
+    "finalHash": "3dd71d0d47b7fcf5fc9c13aca6329eddc363fb7af6a21a6d80b789924bf18afd",
+    "card": {
+      "id": "usage:temiruNegative:verb:行く:いく",
+      "senseId": "verb:行く:いく",
+      "meaning": "去；前往",
+      "form": "temiruNegative",
+      "scene": "街上新开咖啡馆，我约朋友下周去看看。",
+      "before": [
+        {
+          "text": "新しくできた喫茶店、来週一緒に",
+          "reading": "あたらしくできたきっさてん、らいしゅういっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "新开了一家咖啡馆。下周要不要一起去看看？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:見せる:みせる",
+    "pair": "verb:見せる:みせる/temiruNegative",
+    "previousHash": "295f3f9d94cb2cb86c6b936fde2c9757dc6541005581756c4c4c5e671ce1218c",
+    "finalHash": "c6a33999ada1a3f1bc57afd583ee06f85320153fdfbaf8590e52459907e7c0a4",
+    "card": {
+      "id": "usage:temiruNegative:verb:見せる:みせる",
+      "senseId": "verb:見せる:みせる",
+      "meaning": "给……看",
+      "form": "temiruNegative",
+      "scene": "弟弟刚画好新图，姐姐鼓励他展示给妈妈看。",
+      "before": [
+        {
+          "text": "せっかく新しい絵を完成させたんだし、家族にも",
+          "reading": "せっかくあたらしいえをかんせいさせたんだし、かぞくにも"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "好不容易完成了新画，要不要也给家人看看？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:見る:みる",
+    "pair": "verb:見る:みる/temiruNegative",
+    "previousHash": "987a2a99f6dd4c0465ed2de65143d118b4d989ef75a677200c75ea2c80807505",
+    "finalHash": "b1b8a26e17e8eee7349451033b7c48bfd7349e753aa05d9e8038ed6b8c9e0078",
+    "card": {
+      "id": "usage:temiruNegative:verb:見る:みる",
+      "senseId": "verb:見る:みる",
+      "meaning": "看",
+      "form": "temiruNegative",
+      "scene": "同事邀你下班后看车站前新开幕的摄影展",
+      "before": [
+        {
+          "text": "駅前で新しい写真展が始まったんだ。帰りに一緒に",
+          "reading": "えきまえであたらしいしゃしんてんがはじまったんだ。かえりにいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "车站前的新摄影展已经开幕了。下班回去时要不要一起去看看？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:覚える:おぼえる",
+    "pair": "verb:覚える:おぼえる/temiruNegative",
+    "previousHash": "0a43db23ab7fb59a77cd38e4f2ea32bf6736859b215b892b74a5ec3c13a80c68",
+    "finalHash": "ff43bca00c72b94f7611d4775af0d5b5bd8ec1f382453e40099f30296d6bacfe",
+    "card": {
+      "id": "usage:temiruNegative:verb:覚える:おぼえる",
+      "senseId": "verb:覚える:おぼえる",
+      "meaning": "记住",
+      "form": "temiruNegative",
+      "scene": "老师邀你出发前记住旅行时用的问候语",
+      "before": [
+        {
+          "text": "旅行で使える短い挨拶を、出発前に一緒に",
+          "reading": "りょこうでつかえるみじかいあいさつを、しゅっぱつまえにいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "旅行中用得上的简短问候语，出发前要不要一起记一记？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:言う:いう",
+    "pair": "verb:言う:いう/temiruNegative",
+    "previousHash": "b527a405fffc5d01051e09c0af5822e23efd655f5db18dde3908c2988a843c56",
+    "finalHash": "aefc59254a124adcd6fa78748aa4205a27674fdc3967da6e65715d310a34e230",
+    "card": {
+      "id": "usage:temiruNegative:verb:言う:いう",
+      "senseId": "verb:言う:いう",
+      "meaning": "说",
+      "form": "temiruNegative",
+      "scene": "日语交流会前紧张的新人，朋友鼓励他先开口。",
+      "before": [
+        {
+          "text": "緊張してるなら、まず「よろしくお願いします」だけ",
+          "reading": "きんちょうしてるなら、まず「よろしくおねがいします」だけ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "如果紧张，要不要先试着只说一句“请多关照”？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:話す:はなす",
+    "pair": "verb:話す:はなす/temiruNegative",
+    "previousHash": "ffb885f6cc96ef3a32cf632f9f7f62159d3c5d79f76f2770020c057499246c29",
+    "finalHash": "ca73f41c47f71f385279bbc8b765a3c6904344b097a449b098282f762b955932",
+    "card": {
+      "id": "usage:temiruNegative:verb:話す:はなす",
+      "senseId": "verb:話す:はなす",
+      "meaning": "说；交谈",
+      "form": "temiruNegative",
+      "scene": "新同学看起来亲切，我鼓励哥哥午休时聊聊。",
+      "before": [
+        {
+          "text": "彼は話しやすそうだよ。昼休みに彼と少し",
+          "reading": "かれははなしやすそうだよ。ひるやすみにかれとすこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "他看起来很容易交谈。午休时要不要试着和他聊聊？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:読む:よむ",
+    "pair": "verb:読む:よむ/temiruNegative",
+    "previousHash": "bac29ddb88106f9e6359db421026392c42a55d704cc03472be2a9dcd2347f71c",
+    "finalHash": "bed9dc9e72347025d23f9928d8f04b644ccc901e551165117a9233803957a891",
+    "card": {
+      "id": "usage:temiruNegative:verb:読む:よむ",
+      "senseId": "verb:読む:よむ",
+      "meaning": "阅读",
+      "form": "temiruNegative",
+      "scene": "朋友拿到推理短篇，我建议他先读开头。",
+      "before": [
+        {
+          "text": "この短編、題名が気になるね。冒頭だけ",
+          "reading": "このたんぺん、だいめいがきになるね。ぼうとうだけ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这个短篇的标题很吸引人。要不要试着读读开头？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:調べる:しらべる",
+    "pair": "verb:調べる:しらべる/temiruNegative",
+    "previousHash": "d9f843ab96ee849313e63ba873f5a7787455859332d831eea1236114108956ab",
+    "finalHash": "75afffdee72347ed37e6d0551ca224f254b3995480fb1847c0cb92c0f36612af",
+    "card": {
+      "id": "usage:temiruNegative:verb:調べる:しらべる",
+      "senseId": "verb:調べる:しらべる",
+      "meaning": "调查",
+      "form": "temiruNegative",
+      "scene": "朋友担心网上消息不实，邀请同伴一起查来源。",
+      "before": [
+        {
+          "text": "その話の出どころを一緒に",
+          "reading": "そのはなしのでどころをいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要不要一起查查那条消息的来源？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:買う:かう",
+    "pair": "verb:買う:かう/temiruNegative",
+    "previousHash": "f69d03763f75d2cf265d98a62ef6502e143ffb3779fdebbad032bf344539e09d",
+    "finalHash": "6deb9a178d79149942cedb478cae50fcc4a1d9aa3174dbe68e6ba33f8136655b",
+    "card": {
+      "id": "usage:temiruNegative:verb:買う:かう",
+      "senseId": "verb:買う:かう",
+      "meaning": "购买",
+      "form": "temiruNegative",
+      "scene": "买咖啡豆时，我建议朋友试试小包装的新口味。",
+      "before": [
+        {
+          "text": "この豆、少量パックもあるよ。いつもと違う種類を",
+          "reading": "このまめ、しょうりょうパックもあるよ。いつもとちがうしゅるいを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这种咖啡豆也有小包装。要不要试着买种平时不常买的？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:貸す:かす",
+    "pair": "verb:貸す:かす/temiruNegative",
+    "previousHash": "1340693bca7ea1ca4ad4150524f1ae7621f6606bf0aea0fd94e5c64b6a6b2730",
+    "finalHash": "61bc24ae302c113a4ba5ef183f058d89f4ebe86558cb9ee6e2b7dad1cbd1d19b",
+    "card": {
+      "id": "usage:temiruNegative:verb:貸す:かす",
+      "senseId": "verb:貸す:かす",
+      "meaning": "借出",
+      "form": "temiruNegative",
+      "scene": "熟人想买麦克风前先试音，好友建议借出闲置麦克风。",
+      "before": [
+        {
+          "text": "その人はマイクを買う前に音を確かめたいそうだよ。君の予備のマイクを一晩",
+          "reading": "そのひとはマイクをかうまえにおとをたしかめたいそうだよ。きみのよびのマイクをひとばん"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "那人想买麦克风前先试试音质，要不要把你的备用麦克风借给他一晚？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:走る:はしる",
+    "pair": "verb:走る:はしる/temiruNegative",
+    "previousHash": "e510de695b481fbc311c64ade9273e1be423a698244c1d575fa9a0f959b697d7",
+    "finalHash": "f0ec0683bcf9a64583e4a29966bc1a2c998263be9c0d344c325628b4b21efc43",
+    "card": {
+      "id": "usage:temiruNegative:verb:走る:はしる",
+      "senseId": "verb:走る:はしる",
+      "meaning": "奔跑",
+      "form": "temiruNegative",
+      "scene": "膝伤已恢复，朋友邀他沿公园慢跑一圈。",
+      "before": [
+        {
+          "text": "膝の痛みも治ったみたいだし、今日は公園を一周だけ",
+          "reading": "ひざのいたみもなおったみたいだし、きょうはこうえんをいっしゅうだけ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "膝盖好像已经好了，今天要不要试着绕公园跑一圈？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:起きる:おきる",
+    "pair": "verb:起きる:おきる/temiruNegative",
+    "previousHash": "febb6aa837a027c3fc120d5847f9a580d1ab0b99a1c5efce3518b613a222532f",
+    "finalHash": "4ec9206ffe15f5d8e44bfce9ee551a34812f89edd7cba27e9e5144b194b82263",
+    "card": {
+      "id": "usage:temiruNegative:verb:起きる:おきる",
+      "senseId": "verb:起きる:おきる",
+      "meaning": "起床",
+      "form": "temiruNegative",
+      "scene": "旅伴邀你明早早起去海边看日出",
+      "before": [
+        {
+          "text": "海辺の宿から日の出が見えるらしいよ。明日は少し早く",
+          "reading": "うみべのやどからひのでがみえるらしいよ。あしたはすこしはやく"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说从海边的旅馆能看到日出，明天要不要稍微早起一些？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:起こす:おこす",
+    "pair": "verb:起こす:おこす/temiruNegative",
+    "previousHash": "84e4fbb128b83267cf112f55aead88ad052c7416ffb1dea8e93ed65b6377a274",
+    "finalHash": "0091efd7826b2461b94210e01c14a4190efaf8da2a54ff38843d94d52806a433",
+    "card": {
+      "id": "usage:temiruNegative:verb:起こす:おこす",
+      "senseId": "verb:起こす:おこす",
+      "meaning": "叫醒；引起",
+      "form": "temiruNegative",
+      "scene": "弟弟听闹铃不易醒，明早全家早出发，父亲邀哥哥试用新光闹钟。",
+      "before": [
+        {
+          "text": "光目覚まし時計を借りてきたよ。弟はアラームの音だけだと起きにくいし、明日は家を早く出るから、これで弟を",
+          "reading": "ひかりめざましどけいをかりてきたよ。おとうとはアラームのおとだけだとおきにくいし、あしたはいえをはやくでるから、これでおとうとを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "我借来了渐亮式光照闹钟。弟弟单靠闹铃声不容易醒，明早又要早出门，要不要试试用它叫醒他？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:迎える:むかえる",
+    "pair": "verb:迎える:むかえる/temiruNegative",
+    "previousHash": "fdc23f16585d6054c145dfb20ba6fe69c88189fc8cf84625a2568d6dac56d1c9",
+    "finalHash": "bbd7035095a4abb4f8979346f8cf8c15d019477b90194a6683277a2338e9284f",
+    "card": {
+      "id": "usage:temiruNegative:verb:迎える:むかえる",
+      "senseId": "verb:迎える:むかえる",
+      "meaning": "迎接",
+      "form": "temiruNegative",
+      "scene": "新来的留学生今天抵站，社团同学邀同伴举牌迎接。",
+      "before": [
+        {
+          "text": "留学生が今日駅に着くよ。名前を書いたボードを持って、改札で",
+          "reading": "りゅうがくせいがきょうえきにつくよ。なまえをかいたぼーどをもって、かいさつで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "留学生今天会到车站。要不要拿着写有名字的牌子，在检票口迎接？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:返す:かえす",
+    "pair": "verb:返す:かえす/temiruNegative",
+    "previousHash": "6761395e2d6a016e4c87d907017b8a9395e2077184e1b86b0e6a2b4821af8b96",
+    "finalHash": "4b5b9112af467281a79ac654d91c9baf77b60f76a8c25ebaec401074ccbe1472",
+    "card": {
+      "id": "usage:temiruNegative:verb:返す:かえす",
+      "senseId": "verb:返す:かえす",
+      "meaning": "归还",
+      "form": "temiruNegative",
+      "scene": "图书馆添了自助还书机，朋友邀同伴试用。",
+      "before": [
+        {
+          "text": "図書館に新しい自動返却機が入ったよ。読み終わった本を、そこで",
+          "reading": "としょかんにあたらしいじどうへんきゃくきがはいったよ。よみおわったほんを、そこで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "图书馆添了自助还书机，读完的书要不要试着在那里归还？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:送る:おくる",
+    "pair": "verb:送る:おくる/temiruNegative",
+    "previousHash": "0bc93dac319e094f4c512cc209044d84b737816fb73d8b80c643c2eebe6ec0b8",
+    "finalHash": "6ec886c06dfcf9a317355fef66dbeb89996ca29ae072ac5a909c6f11221e48f9",
+    "card": {
+      "id": "usage:temiruNegative:verb:送る:おくる",
+      "senseId": "verb:送る:おくる",
+      "meaning": "发送；送行",
+      "form": "temiruNegative",
+      "scene": "朋友请你用新照片应用向她试发一张照片",
+      "before": [
+        {
+          "text": "新しい写真共有アプリを試しているんだ。まず一枚、私に",
+          "reading": "あたらしいしゃしんきょうゆうアプリをためしているんだ。まずいちまい、わたしに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "我在试用一款新的照片分享应用。要不要先给我发一张照片试试？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:逃げる:にげる",
+    "pair": "verb:逃げる:にげる/temiruNegative",
+    "previousHash": "8afb5f05baa08f675ef976c2db186aa94776e0b2096b35326087ac28dc411639",
+    "finalHash": "4aacafc89bb1555726c7203014c6f24a876bac7760479835a31dece5ac5b04e2",
+    "card": {
+      "id": "usage:temiruNegative:verb:逃げる:にげる",
+      "senseId": "verb:逃げる:にげる",
+      "meaning": "逃跑",
+      "form": "temiruNegative",
+      "scene": "朋友总在鬼捉人时当鬼，这次邀他试着逃跑。",
+      "before": [
+        {
+          "text": "今日は僕が鬼になるから、君は",
+          "reading": "きょうはぼくがおにになるから、きみは"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "今天我来当鬼，你要不要试着逃跑？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:進む:すすむ",
+    "pair": "verb:進む:すすむ/temiruNegative",
+    "previousHash": "ab6f7cdcbf95d467e97fa0a71461cf74acdf90f831b30d691dac544a8469c175",
+    "finalHash": "08f0cd33891cfce865e09df2cbf605143e804cbec4d3170d7d4385bcc1e9c899",
+    "card": {
+      "id": "usage:temiruNegative:verb:進む:すすむ",
+      "senseId": "verb:進む:すすむ",
+      "meaning": "前进；进展",
+      "form": "temiruNegative",
+      "scene": "雨停后天色转晴，朋友邀同伴朝展望台再走一段。",
+      "before": [
+        {
+          "text": "雨もやんだし、展望台の方へもう少し",
+          "reading": "あめもやんだし、てんぼうだいのほうへもうすこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "雨也停了，要不要再朝展望台方向走一段？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:遅れる:おくれる",
+    "pair": "verb:遅れる:おくれる/temiruNegative",
+    "previousHash": "13f8d4d927fb2b5b243b6faf034dbb3c76051fe628f6d7fe3eddb938a85d3411",
+    "finalHash": "725435df5fc86fb55a4f12183a88ec9cf6e23b61812e4e890ed7ac00346080c0",
+    "card": {
+      "id": "usage:temiruNegative:verb:遅れる:おくれる",
+      "senseId": "verb:遅れる:おくれる",
+      "meaning": "迟到；延误",
+      "form": "temiruNegative",
+      "scene": "校园祭开场排长队，展览到中午，邀同伴迟到。",
+      "before": [
+        {
+          "text": "文化祭は十時からだけど、開場直後は列が長いし、目当ての展示は昼まで見られるから、開始時刻より少し",
+          "reading": "ぶんかさいはじゅうじからだけど、かいじょうちょくごはれつがながいし、めあてのてんじはひるまでみられるから、かいしじこくよりすこし"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "校园祭十点开始，但刚开放时入口排长队，想看的展览中午前都能参观。要不要试着比开始时间晚一点到？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:遊ぶ:あそぶ",
+    "pair": "verb:遊ぶ:あそぶ/temiruNegative",
+    "previousHash": "87fde5ca5c2c32129f0a352f587aa6899dc3ea42facce2ed25364b523d7ec7bc",
+    "finalHash": "43b795ed96047b26f6409d7485fc5f745097e792d80cdaa7da3e2c73f7de554c",
+    "card": {
+      "id": "usage:temiruNegative:verb:遊ぶ:あそぶ",
+      "senseId": "verb:遊ぶ:あそぶ",
+      "meaning": "玩耍",
+      "form": "temiruNegative",
+      "scene": "朋友对新桌游感兴趣，我约他周末一起玩。",
+      "before": [
+        {
+          "text": "このボードゲーム、評判がいいよ。週末に一緒に",
+          "reading": "このボードゲーム、ひょうばんがいいよ。しゅうまつにいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这款桌游口碑不错。周末要不要一起玩一玩？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:運ぶ:はこぶ",
+    "pair": "verb:運ぶ:はこぶ/temiruNegative",
+    "previousHash": "a4912a7bc102d66e875191b295f4209ba3fe4bee521ed1b72a070c6d2755276e",
+    "finalHash": "c0fefb8526fb9692b596f0c7ceb2eaad6e690913cce663149cbcc63285c26db4",
+    "card": {
+      "id": "usage:temiruNegative:verb:運ぶ:はこぶ",
+      "senseId": "verb:運ぶ:はこぶ",
+      "meaning": "搬运",
+      "form": "temiruNegative",
+      "scene": "朋友搬工作室，邀同伴把小书架搬到隔壁房间。",
+      "before": [
+        {
+          "text": "この小さな棚を隣の部屋まで一緒に",
+          "reading": "このちいさなたなをとなりのへやまでいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要不要一起把这个小架子搬到隔壁房间？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:選ぶ:えらぶ",
+    "pair": "verb:選ぶ:えらぶ/temiruNegative",
+    "previousHash": "eab7ac3ce7a8b7f2dbed821eaff59b2605af55a62650e7db4a267a27d5848220",
+    "finalHash": "2d0f3e1ab1467b25a950553eff826cb4b7184b0de151aa10e660369ee2f8e059",
+    "card": {
+      "id": "usage:temiruNegative:verb:選ぶ:えらぶ",
+      "senseId": "verb:選ぶ:えらぶ",
+      "meaning": "选择",
+      "form": "temiruNegative",
+      "scene": "弟弟挑书总依赖推荐，姐姐邀他自选一本。",
+      "before": [
+        {
+          "text": "人のおすすめもいいけど、今日は自分で好きな本を一冊",
+          "reading": "ひとのおすすめもいいけど、きょうはじぶんですきなほんをいっさつ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "别人推荐的书也不错，不过今天要不要试着自己挑一本喜欢的？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:閉める:しめる",
+    "pair": "verb:閉める:しめる/temiruNegative",
+    "previousHash": "c74084b785fe0ff364c1d6571516b8ddd9ca87c8cb367d5015ebeb12afc032fd",
+    "finalHash": "286d5001cc4dfbe9d085bba6be069f9426587916a0cf05867ca1ef4f8fba49cb",
+    "card": {
+      "id": "usage:temiruNegative:verb:閉める:しめる",
+      "senseId": "verb:閉める:しめる",
+      "meaning": "关闭",
+      "form": "temiruNegative",
+      "scene": "朋友陪你参观展厅，邀你亲手关隔音窗听效果",
+      "before": [
+        {
+          "text": "ショールームの防音窓は、閉めると外の音がほとんど聞こえなくなるよ。自分で",
+          "reading": "ショールームのぼうおんまどは、しめるとそとのおとがほとんどきこえなくなるよ。じぶんで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "展厅的隔音窗关上后几乎听不见外面的声音。要不要亲手试着关一下？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:開ける:あける",
+    "pair": "verb:開ける:あける/temiruNegative",
+    "previousHash": "24d9deb52e5d0c8ae398d13328c508fa752bd0a474633b5dfbd576257db51393",
+    "finalHash": "41c04dca83c456575a660003d1dd72fbee9b590b2b9b7d9e26bdb4be653d5bd1",
+    "card": {
+      "id": "usage:temiruNegative:verb:開ける:あける",
+      "senseId": "verb:開ける:あける",
+      "meaning": "打开",
+      "form": "temiruNegative",
+      "scene": "朋友邀你好奇地打开旧礼物盒看看里面",
+      "before": [
+        {
+          "text": "中身が気になるなら、この古い箱をそっと",
+          "reading": "なかみがきになるなら、このふるいはこをそっと"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "如果你好奇里面有什么，要不要轻轻打开这个旧盒子？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:防ぐ:ふせぐ",
+    "pair": "verb:防ぐ:ふせぐ/temiruNegative",
+    "previousHash": "f70381892867de0d48a424b819baab2363bff13ff4930179adb5270a828f1345",
+    "finalHash": "b74610fc42860e5db29960a978caf10e5f7872ff747ec76a3ff4612f6b5099e8",
+    "card": {
+      "id": "usage:temiruNegative:verb:防ぐ:ふせぐ",
+      "senseId": "verb:防ぐ:ふせぐ",
+      "meaning": "防止",
+      "form": "temiruNegative",
+      "scene": "户外活动前，朋友提议试用防晒霜挡紫外线。",
+      "before": [
+        {
+          "text": "今日は日差しが強いね。この日焼け止めで紫外線を",
+          "reading": "きょうはひざしがつよいね。このひやけどめでしがいせんを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "今天阳光很强，要不要试着用这款防晒霜阻挡紫外线？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:降りる:おりる",
+    "pair": "verb:降りる:おりる/temiruNegative",
+    "previousHash": "f213963ebe2c7e4930b28fcbc1523495cce8a8e75f73afbe5851e79bd5c2ea0f",
+    "finalHash": "53c02d19b98147fc4024cb2884ae8ffc70e22cbfb316599b2da1935f9e0a97e5",
+    "card": {
+      "id": "usage:temiruNegative:verb:降りる:おりる",
+      "senseId": "verb:降りる:おりる",
+      "meaning": "下车；下来",
+      "form": "temiruNegative",
+      "scene": "窗外出现港口，同伴邀朋友在下一站下车看看。",
+      "before": [
+        {
+          "text": "窓から港が見えたよ。次の駅で",
+          "reading": "まどからみなとがみえたよ。つぎのえきで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "窗外看得到港口。要不要试着在下一站下车？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:集める:あつめる",
+    "pair": "verb:集める:あつめる/temiruNegative",
+    "previousHash": "95b00bc2247479687701bcb60d20e3031212945051c545a784b848e1f602656a",
+    "finalHash": "38c63ea5f90d9ef86454c2a832810339dfd6622b880caebcac948f3d53f67813",
+    "card": {
+      "id": "usage:temiruNegative:verb:集める:あつめる",
+      "senseId": "verb:集める:あつめる",
+      "meaning": "收集",
+      "form": "temiruNegative",
+      "scene": "朋友计划下次旅行收集沿途发现的纪念邮票，邀请同伴一起。",
+      "before": [
+        {
+          "text": "次の旅行先で見つける記念切手を二人で",
+          "reading": "つぎのりょこうさきでみつけるきねんきってをふたりで"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要不要一起收集下次旅行时发现的纪念邮票？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:頼む:たのむ",
+    "pair": "verb:頼む:たのむ/temiruNegative",
+    "previousHash": "340a793d732bf180fb4d967ec0f8f02c12dc395790071309aa32fa514d00c414",
+    "finalHash": "0b0026b5ce4870b5957ba375d0ae82f6724ab76ff7e9da46c536ac7849cc60eb",
+    "card": {
+      "id": "usage:temiruNegative:verb:頼む:たのむ",
+      "senseId": "verb:頼む:たのむ",
+      "meaning": "拜托；点单",
+      "form": "temiruNegative",
+      "scene": "朋友介绍新开的意面店，邀同伴点季节限定款。",
+      "before": [
+        {
+          "text": "ここの季節限定パスタ、",
+          "reading": "ここのきせつげんていぱすた、"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "要不要点这家店的季节限定意面？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:飛ぶ:とぶ",
+    "pair": "verb:飛ぶ:とぶ/temiruNegative",
+    "previousHash": "5e2abdde6c657cbd3deaeee02f10d6b7e73699a7da3c6d7313bc1d92951b1a16",
+    "finalHash": "dc27499c0b54488e2f0b1dac10c3b4f817cf3cde7e1b1023b38d01fd6ea1b50f",
+    "card": {
+      "id": "usage:temiruNegative:verb:飛ぶ:とぶ",
+      "senseId": "verb:飛ぶ:とぶ",
+      "meaning": "飞",
+      "form": "temiruNegative",
+      "scene": "海岸的滑翔伞体验有教练陪飞，好友邀同伴报名体验。",
+      "before": [
+        {
+          "text": "海岸のパラグライダー体験、初心者はインストラクターと二人乗りできるんだって。今度、一緒に",
+          "reading": "かいがんのパラグライダーたいけん、しょしんしゃはインストラクターとふたりのりできるんだって。こんど、いっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说海边的滑翔伞体验有教练陪飞，下次要不要一起飞一次？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:食べる:たべる",
+    "pair": "verb:食べる:たべる/temiruNegative",
+    "previousHash": "a1ae53eab5413a79db6fd34f25dd1c53da253fe6c63891bc7a2f664d78deaa10",
+    "finalHash": "2c7101d6ef8f9879c389a05afe798c927fcc28dfd8cf139c9422df8dedb1e714",
+    "card": {
+      "id": "usage:temiruNegative:verb:食べる:たべる",
+      "senseId": "verb:食べる:たべる",
+      "meaning": "吃",
+      "form": "temiruNegative",
+      "scene": "同伴第一次来当地，店主邀他尝一片招牌寿司。",
+      "before": [
+        {
+          "text": "この店の名物は焼き鯖寿司だよ。ひと切れ",
+          "reading": "このみせのめいぶつはやきさばずしだよ。ひときれ"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这家店的招牌是烤青花鱼寿司。要不要尝一片？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:飲む:のむ",
+    "pair": "verb:飲む:のむ/temiruNegative",
+    "previousHash": "fcd1b81a447c0044dd41448084fdde5d5ac859edc99566b6e4b060959ec22c0a",
+    "finalHash": "cd693e5d4129a31e1f954b6c57c7fa62c0ed353e9dcfb03122dddddddee0e460",
+    "card": {
+      "id": "usage:temiruNegative:verb:飲む:のむ",
+      "senseId": "verb:飲む:のむ",
+      "meaning": "喝",
+      "form": "temiruNegative",
+      "scene": "朋友好奇梅子汁，我问他要不要尝一口。",
+      "before": [
+        {
+          "text": "この梅ジュース、甘酸っぱくておいしいよ。一口",
+          "reading": "このうめジュース、あまずっぱくておいしいよ。ひとくち"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "这杯梅子汁酸甜可口。要不要试着喝一口？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
+    "pair": "verb:騒ぐ:さわぐ/temiruNegative",
+    "previousHash": "1a936c42e51e99b181519502b084e7960b2d701a4008b130fb59f72dbd3beb90",
+    "finalHash": "7c23b4dc7d6fa9d04b7ce03335f9690705f24cdebf4891a98d4d6971dae1db00",
+    "card": {
+      "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
+      "senseId": "verb:騒ぐ:さわぐ",
+      "meaning": "吵闹",
+      "form": "temiruNegative",
+      "scene": "乐队现场演出气氛正热，好友邀朋友到前排一起欢呼。",
+      "before": [
+        {
+          "text": "ライブの最後の曲、みんなで盛り上がるらしいよ。前の方で一緒に",
+          "reading": "ライブのさいごのきょく、みんなでもりあがるらしいよ。まえのほうでいっしょに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "听说乐队最后一首歌全场都会嗨起来，要不要一起到前面热闹一下？",
+      "review": "approved"
+    }
+  },
+  {
     "id": "usage:temorauNegative",
     "pair": "verb:教える:おしえる/temorauNegative",
     "previousHash": "071e6658a25a254316d7d9deb9ce155224de7aeb01dac613e3fd3b5dd82d4429",

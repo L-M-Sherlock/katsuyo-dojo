@@ -2,6 +2,7 @@ import { ACTION_PAIR_DEFERRALS } from './action-pair-deferrals.mjs';
 import { FULL_NATURALNESS_DEFERRED_PAIRS } from './usage-cards/full-naturalness-overlay.mjs';
 import { USER_DIRECTED_DEFERRED_PAIRS } from './usage-cards/user-directed-deferrals.mjs';
 import { REVIEWED_USAGE_CARD_DEFERRALS } from './usage-cards/reviewed-revisions.mjs';
+import { USER_DIRECTED_FORM_DEFERRALS } from './teaching-form-deferrals.mjs';
 export { DEFERRED_ACTION_PAIRS } from './action-pair-deferrals.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
 import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
@@ -11,6 +12,7 @@ export const USAGE_REVIEW_VERSION = LEXICAL_REVIEW_VERSION;
 
 const words = text => new Set(text.split(' ').filter(Boolean));
 const reviewedDeferrals = new Map(REVIEWED_USAGE_CARD_DEFERRALS.map(row => [row.pair, row]));
+const deferredForms = new Map(USER_DIRECTED_FORM_DEFERRALS.map(row => [row.form, row]));
 const verbForms = new Set(Object.keys(FORM_LABELS).filter(form => !form.startsWith('adjective')));
 const iForms = words('adjectiveNegative adjectivePast adjectiveNegativePast adjectiveTe adjectiveBa adjectiveAdverb');
 const naForms = words('adjectiveAttributive adjectivePredicative adjectiveNaNegative adjectiveNaPast adjectiveNaNegativePast adjectiveNaTe adjectiveBa adjectiveAdverb');
@@ -213,6 +215,11 @@ export function assessFormUsage(item, form) {
   if (!(adjective ? supportsAdjectiveForm(item, form) : supportsVerbForm(item, form))) return blocked('morphology', '这个词类不支持本题要求的构形规则。');
   const sense = reviewedLexicalSense(item);
   if (!sense) return blocked('semantic', '这个词条、读音或释义尚未完成适用性审核。', 'unreviewed-lexeme');
+  const deferredForm = deferredForms.get(form);
+  if (deferredForm) return {
+    ...contextual(sense, form, deferredForm.reason),
+    reasonCode: 'user-directed-form-hold',
+  };
   const reviewedDeferral = reviewedDeferrals.get(`${sense.id}/${form}`);
   if (reviewedDeferral) return {
     ...contextual(sense, form, reviewedDeferral.reason),

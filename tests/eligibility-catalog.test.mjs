@@ -7,6 +7,8 @@ import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import { RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
 import { reconcileAssessmentCatalog } from '../app/lib/learning-assessment.mjs';
 import { readFileSync } from 'node:fs';
+import { USER_DIRECTED_DEFERRED_FORMS } from '../app/lib/teaching-form-deferrals.mjs';
+import { auditKnowledgeModel } from '../app/lib/knowledge-model.mjs';
 
 const allowed = () => ({ status: 'allowed', category: 'semantic', reason: '已审核' });
 const retiredTeoru=JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-negatives-before.json',import.meta.url)));
@@ -92,6 +94,60 @@ test('eligibility cannot weaken a frozen knowledge requirement to hide a catalog
   assert.ok(report.issues.some(issue => issue.code === 'changed-original-requirements' && issue.id === 'suffix.past'));
 });
 
+function teachingHoldFixture() {
+  const model = fixture(), facetId = 'facet.held-example';
+  const source = model.registryExercises.map(exercise => ({ ...exercise,
+    id: `held:${exercise.item.surface}`, form: 'temiruNegativePast', kcIds: [...exercise.kcIds, facetId] }));
+  const facet = { id: facetId, gating: false, firstCourseId: 'past', firstCourseIndex: 0,
+    prerequisites: [], coverageKcIds: [], teachingDeferred: true };
+  model.components.push(facet);
+  model.registryExercises.push(...source);
+  model.courseKcIds = { past: [...new Set(model.exercises.flatMap(exercise => exercise.kcIds))] };
+  const baseline = { sourceCommit: 'before-user-hold', courseForms: {},
+    components: model.components.map(component => ({ id: component.id, gating: component.gating,
+      firstCourseId: component.firstCourseId, prerequisites: [...component.prerequisites],
+      coverageKcIds: component.id === 'suffix.past' ? [facetId] : [...component.coverageKcIds] })) };
+  const assess = (_item, form) => form === 'temiruNegativePast'
+    ? { status: 'context-required', reason: '用户指定暂缓' } : allowed();
+  return { model, facet, facetId, baseline, assess,
+    report: () => reportFor(model, { assessFormUsage: assess, baseline }) };
+}
+
+test('only an explicit teaching hold can pause an exclusive facet while preserving frozen registry requirements', () => {
+  const f = teachingHoldFixture(), report = f.report();
+  assert.deepEqual(report.issues, []);
+  assert.deepEqual(report.intentionalTeachingHolds, { forms: [...USER_DIRECTED_DEFERRED_FORMS], facets: [f.facetId] });
+  assert.equal(report.courseForms.find(row => row.key === 'past:temiruNegativePast').before.exercises, 12);
+  assert.equal(report.courseForms.find(row => row.key === 'past:temiruNegativePast').after.exercises, 0);
+  assert.equal(report.summary.components, f.baseline.components.length);
+  assert.deepEqual(auditKnowledgeModel(f.model), []);
+  f.model.components.find(component => component.id === 'suffix.past').prerequisites.push('class.godan');
+  assert.ok(f.report().issues.some(issue => issue.code === 'changed-original-requirements' && issue.id === 'suffix.past'));
+});
+
+test('teachingDeferred cannot hide an ordinary or shared facet gap or leave a held target active', () => {
+  const ordinary = teachingHoldFixture();
+  ordinary.model.registryExercises.push({ ...ordinary.model.registryExercises[0], id: 'ordinary-facet-source',
+    kcIds: [...ordinary.model.registryExercises[0].kcIds, ordinary.facetId] });
+  assert.ok(ordinary.report().issues.some(issue => issue.code === 'invalid-teaching-deferred-kc'));
+  assert.ok(ordinary.report().issues.some(issue => issue.code === 'untrainable-facet' && issue.id === ordinary.facetId));
+  assert.ok(auditKnowledgeModel(ordinary.model).some(issue => issue.code === 'invalid-teaching-deferred-kc'));
+
+  for (const putBack of ['exercise', 'parent', 'course']) {
+    const f = teachingHoldFixture();
+    if (putBack === 'exercise') f.model.exercises.push(f.model.registryExercises.find(exercise => exercise.form === 'temiruNegativePast'));
+    if (putBack === 'parent') f.model.components.find(component => component.id === 'suffix.past').coverageKcIds.push(f.facetId);
+    if (putBack === 'course') f.model.courseKcIds.past.push(f.facetId);
+    assert.ok(f.report().issues.some(issue => issue.code === 'invalid-teaching-deferred-kc'), putBack);
+    assert.ok(auditKnowledgeModel(f.model).some(issue => issue.code === 'invalid-teaching-deferred-kc'), putBack);
+    if (putBack === 'exercise') assert.ok(f.report().issues.some(issue => issue.code === 'teaching-deferred-form-in-practice'));
+  }
+  const unexplained = teachingHoldFixture();
+  delete unexplained.facet.teachingDeferred;
+  assert.ok(unexplained.report().issues.some(issue => issue.code === 'untrainable-facet' && issue.id === unexplained.facetId));
+  assert.ok(unexplained.report().issues.some(issue => issue.code === 'changed-original-requirements' && issue.id === 'suffix.past'));
+});
+
 test('all declared courses, forms, gating knowledge and coverage remain trainable after usage filtering', async () => {
   const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
   try {
@@ -104,6 +160,7 @@ test('all declared courses, forms, gating knowledge and coverage remain trainabl
       reviewVersion: usage.USAGE_REVIEW_VERSION, reviewedLexicalSense, baseline,
       retiredForms: RETIRED_TEORU_NEGATIVE_FORMS });
     assert.deepEqual(report.issues, []);
+    assert.deepEqual(report.intentionalTeachingHolds, { forms: ['temiruNegativePast'], facets: ['facet.apply.temiru.negativePast'] });
     for (const field of ['courses', 'forms', 'components', 'gating', 'facets']) {
       const expected=baseline.summary[field]-(['forms','components','facets'].includes(field)?RETIRED_TEORU_NEGATIVE_FORMS.size:0);
       assert.equal(report.summary[field], expected, field);

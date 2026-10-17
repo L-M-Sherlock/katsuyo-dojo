@@ -80,7 +80,15 @@ test('the real mixed learner no longer pads the final masu recovery with mastere
     } });
     assert.equal(report.completed, true);
     assert.equal(report.masteredCount, 132);
-    assert.equal(report.completedFacetCount, 128);
+    const historicalFacets = KNOWLEDGE.components.filter(component => component.id.startsWith('facet.'));
+    const deferredFacets = historicalFacets.filter(component => component.teachingDeferred);
+    assert.equal(historicalFacets.length, 128);
+    assert.deepEqual(deferredFacets.map(component => component.id), ['facet.apply.temiru.negativePast']);
+    assert.equal(report.facetCount, 127);
+    assert.equal(report.deferredFacetCount, 1);
+    assert.equal(report.facetCount + report.deferredFacetCount, historicalFacets.length);
+    assert.equal(report.completedFacetCount, report.facetCount);
+    for (const component of deferredFacets) assert.equal(report.byKc[component.id]?.attempts ?? 0, 0, 'paused coverage is not practiced or awarded');
     assert.ok(rows.length < 60, `previously 97 masu questions; got ${rows.length}`);
     const tail = rows.filter(row => ['stem.ichidan.drop-ru', 'stem.godan.i', 'suffix.masu'].every(id => row.byKc[id]?.confidence >= 1)
       && ['facet.form.masu.suru', 'facet.form.masu.kuru'].every(id => row.byKc[id]?.correct >= 1));

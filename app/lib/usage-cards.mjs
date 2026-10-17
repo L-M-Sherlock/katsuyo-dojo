@@ -25,6 +25,7 @@ import { REVIEWED_LEXICAL_SENSES, reviewedLexicalSense } from './lexical-usage.m
 import { ADJECTIVES } from './adjective-catalog.mjs';
 import { assessFormUsage } from './form-eligibility.mjs';
 import { NATURALNESS_DEFERRED_ACTION_PAIRS } from './action-pair-deferrals.mjs';
+import { isTeachingFormDeferred } from './teaching-form-deferrals.mjs';
 import { UNIFIED_COURSES } from './unified-curriculum.mjs';
 import { deriveUnified } from './unified-knowledge.mjs';
 
@@ -48,16 +49,18 @@ export const PRE_REVIEWED_USAGE_CARDS = /** @type {UsageCard[]} */ (originalCard
     && !USER_DIRECTED_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`))
   .map(card => userDirectedCorrections.get(card.id) ?? fullNaturalnessReplacements.get(card.id) ?? actionReplacements.get(card.id) ?? card));
 const reviewedRevisions = new Map(REVIEWED_USAGE_CARD_REVISIONS.map(row => [row.id, row.card]));
-export const USAGE_CARDS = PRE_REVIEWED_USAGE_CARDS
+export const REVIEWED_USAGE_CARDS = PRE_REVIEWED_USAGE_CARDS
   .filter(card => !REVIEWED_USAGE_CARD_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`))
   .map(card => reviewedRevisions.get(card.id) ?? card);
+// Keep the historical views above intact for the immutable review proofs.
+export const USAGE_CARDS = REVIEWED_USAGE_CARDS.filter(card => !isTeachingFormDeferred(card.form));
 export const USAGE_CARD_GROUPS = [
   {id: 'basics', stages: ['basics', 'voice']},
   {id: 'linking', stages: ['linking', 'intentions']},
   {id: 'actions', stages: ['actions']},
   {id: 'combinations', stages: ['integration']},
 ];
-const forms = new Set(UNIFIED_COURSES.flatMap(course => course.forms));
+const forms = new Set(UNIFIED_COURSES.flatMap(course => course.forms).filter(form => !isTeachingFormDeferred(form)));
 const senses = new Map(REVIEWED_LEXICAL_SENSES.map(sense => [sense.id, sense]));
 const kanji = /[\u3400-\u9fff々〇]/u;
 const length = text => Array.from(text).length;

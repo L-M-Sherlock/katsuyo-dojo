@@ -210,7 +210,7 @@ const EN_COURSE_CONTENT = Object.freeze({
   }),
   temiru: Object.freeze({
     title: 'てみる',
-    description: 'First use てみる to express an attempt. Then practice the negative and past forms of the complete expression.',
+    description: 'Practice てみる for an attempt, its past form, and invitations with 〜てみない？. Negative-past questions are on hold.',
   }),
   teshimauChau: Object.freeze({
     title: 'てしまう and ちゃう',

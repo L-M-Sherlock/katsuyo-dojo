@@ -10,12 +10,13 @@ import {recognizeForms} from '../app/lib/form-recognition.mjs';
 import {normalizeAnswer} from '../app/lib/answer-analysis.mjs';
 import {assessmentTarget, emptyAssessment, reconcileAssessmentCatalog, recordIndependentAttempt, retestStatus} from '../app/lib/learning-assessment.mjs';
 import {restoreLearningAssessment} from '../app/lib/assessment-transfer.mjs';
-import {USAGE_CARDS, usageCardStageRequirements} from '../app/lib/usage-cards.mjs';
+import {USAGE_CARDS, REVIEWED_USAGE_CARDS, usageCardStageRequirements} from '../app/lib/usage-cards.mjs';
 import {UNIFIED_COURSES} from '../app/lib/unified-curriculum.mjs';
 import {reviewedLexicalSense} from '../app/lib/lexical-usage.mjs';
 import integrationCards from '../app/lib/usage-cards/integration-generated.mjs';
 import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
 import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
+import {USER_DIRECTED_DEFERRED_FORMS, isTeachingFormDeferred} from '../app/lib/teaching-form-deferrals.mjs';
 import {reviewedDeferralHistory} from './helpers/reviewed-deferral-history.mjs';
 
 const baseline=JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json',import.meta.url),'utf8'));
@@ -76,6 +77,22 @@ const userDirectedRetired=userDirectedBefore.entries.filter(entry=>!RETIRED_TEOR
 });
 const retiredTeoruExercises=retiredTeoruBefore.exercises;
 const reviewedRevisionRetired=reviewedDeferralHistory(model);
+const formHold=JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json',import.meta.url),'utf8'));
+const formHeldCards=REVIEWED_USAGE_CARDS.filter(card=>isTeachingFormDeferred(card.form));
+assert.equal(formHold.sourceCount,122);
+assert.deepEqual(formHold.sourceRows.map(row=>row.card),formHeldCards);
+assert.equal(hash(formHeldCards),formHold.sourceCardsHash);
+const teachingFormHeld=formHold.sourceRows.map(row=>{
+  assert.equal(hash(row.card),row.sourceHash,row.id);
+  const exercise=model.registryExercises.find(e=>`${reviewedLexicalSense(e.item)?.id}/${e.form}`===row.pair);
+  assert.ok(exercise,`${row.pair}: remains in the morphology registry`);
+  assert.equal(isTeachingFormDeferred(exercise.form),true,row.pair);
+  // These endings share the same temiru-family applicability context. The
+  // frozen baseline context hash below also binds the reconstructed notes.
+  const affirmative=model.exercises.find(e=>e.form==='temiru'&&reviewedLexicalSense(e.item)?.id===row.card.senseId);
+  assert.ok(affirmative,`${row.pair}: its approved affirmative family example remains available`);
+  return {...exercise,context:affirmative.context};
+});
 assert.equal(retiredTeoruExercises.length,292);
 const naturalnessPrevious=new Map(naturalnessReview.approvedRevisions.map(row=>[row.id,row.previousCard]));
 
@@ -83,10 +100,14 @@ test('approved intention and action-pair deferrals change only the documented ex
   assert.equal(USAGE_REVIEW_VERSION,baseline.reviewVersion+4);
   assert.deepEqual(new Set(baseline.retired.map(e=>`${e.senseId}/${e.form}`)),expectedPairs);
   const currentIds=new Set(model.exercises.map(e=>e.id));
-  for(const e of [...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired])assert.ok(!currentIds.has(e.id),e.id);
+  const precedingRetired=[...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired];
+  const precedingRetiredIds=new Set(precedingRetired.map(e=>e.id));
+  assert.equal(teachingFormHeld.length,122);
+  assert.ok(teachingFormHeld.every(e=>!precedingRetiredIds.has(e.id)),'the form hold counts only newly removed exercises');
+  for(const e of [...precedingRetired,...teachingFormHeld])assert.ok(!currentIds.has(e.id),e.id);
   const reconstructed=[...model.exercises,...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,
-    ...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired];
-  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length-userDirectedRetired.length-retiredTeoruExercises.length-reviewedRevisionRetired.length);
+    ...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired,...teachingFormHeld];
+  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length-userDirectedRetired.length-retiredTeoruExercises.length-reviewedRevisionRetired.length-teachingFormHeld.length);
   assert.equal(hash(reconstructed.map(e=>e.id).sort()),baseline.eligibleExerciseIdsSha256,
     'no unrelated exercise may disappear or become eligible');
   // Preserve the frozen historical hash while accounting for the four
@@ -231,7 +252,7 @@ test('user-requested holds preserve every old failed target for a different-word
   }
 });
 
-test('every eligible intention pair now has an approved example with all course forms still trainable',()=>{
+test('every eligible intention pair has an approved example and all course forms outside explicit holds remain trainable',()=>{
   const pairs=new Set(USAGE_CARDS.map(c=>`${c.senseId}/${c.form}`));
   const requirements=usageCardStageRequirements('intentions');
   const intentionForms=new Set(UNIFIED_COURSES.filter(course=>course.stageId==='intentions').flatMap(course=>course.forms));
@@ -241,6 +262,11 @@ test('every eligible intention pair now has an approved example with all course 
   assert.ok(requirements.every(pair=>pairs.has(pair)));
   assert.equal(model.components.filter(c=>c.gating).length,132);
   assert.equal(model.components.filter(c=>c.id.startsWith('facet.')).length,128);
-  for(const course of UNIFIED_COURSES)for(const form of course.forms)
-    assert.ok(model.exercises.some(e=>e.courseId===course.id&&e.form===form),`${course.id}/${form}`);
+  const heldForms=new Set();
+  for(const course of UNIFIED_COURSES)for(const form of course.forms){
+    assert.ok(model.registryExercises.some(e=>e.courseId===course.id&&e.form===form),`${course.id}/${form}: remains registered`);
+    assert.equal(model.exercises.some(e=>e.courseId===course.id&&e.form===form),!isTeachingFormDeferred(form),`${course.id}/${form}`);
+    if(isTeachingFormDeferred(form))heldForms.add(form);
+  }
+  assert.deepEqual(heldForms,USER_DIRECTED_DEFERRED_FORMS);
 });

@@ -68,3 +68,14 @@ test('locale accessors normalize supported locales and reject unsupported locale
   assert.equal(localizedSemanticsForForm('teiru', 'zh-CN'), FORM_SEMANTICS.teiru);
   assert.equal(localizedSemanticsForForm('not-a-form', 'en'), null);
 });
+
+test('English temiru negative teaching guidance carries the invitation through locale accessors', () => {
+  const entry = localizedSemanticsForForm('temiruNegative', 'en-US');
+  assert.equal(entry.concise, 'Would you like to try ...?');
+  assert.match(entry.coreMeaning, /〜てみない？/);
+  assert.match(entry.coreMeaning, /invite someone to try/);
+  assert.match(entry.coreMeaning, /does not express refusal or prohibition/);
+  assert.equal(entry.baseForm, 'temiru');
+  assert.equal(entry.continuation, 'negative');
+  assert.equal(localizedSemanticsForForm('temiruNegativePast', 'en').concise, 'did not try ...');
+});

@@ -9,6 +9,7 @@ import {
 } from "./conjugation.mjs";
 import { COMPOUND_FORM_SPECS } from "./compound-forms.mjs";
 import { diagnoseCommonVerbError, commonVerbErrorKcIds } from "./verb-common-errors.mjs";
+import { isTeachingFormDeferred } from './teaching-form-deferrals.mjs';
 
 export const KC_FAMILY_LABELS = {
   classification: "词类判断",
@@ -370,7 +371,17 @@ export function auditKnowledgeModel(model, { minEvidence = 5, sessionLength = 12
     if (component.gating && (/^exception\.(suru|kuru)\./.test(component.id) || component.id === "exception.iku-onbin")) {
       issues.push({ code: "isolated-lexical-gate", id: component.id });
     }
-    if (!component.gating && component.id.startsWith("facet.")) {
+    let deferredFacet = false;
+    if (component.teachingDeferred) {
+      const declared = model.registryExercises?.filter(exercise => exercise.kcIds.includes(component.id)) ?? [];
+      deferredFacet = !component.gating && component.id.startsWith('facet.') && declared.length > 0
+        && declared.every(exercise => isTeachingFormDeferred(exercise.form))
+        && !model.exercises.some(exercise => exercise.kcIds.includes(component.id))
+        && !model.components.some(parent => parent.coverageKcIds.includes(component.id))
+        && !Object.values(model.courseKcIds).some(ids => ids.includes(component.id));
+      if (!deferredFacet) issues.push({ code: 'invalid-teaching-deferred-kc', id: component.id });
+    }
+    if (!component.gating && component.id.startsWith("facet.") && !deferredFacet) {
       const parents = model.components.filter((candidate) => candidate.coverageKcIds.includes(component.id));
       if (parents.length !== 1) issues.push({ code: "facet-parent-count", id: component.id, parentCount: parents.length });
       const parent = parents[0];

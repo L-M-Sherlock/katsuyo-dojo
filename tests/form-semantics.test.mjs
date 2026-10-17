@@ -91,3 +91,14 @@ test('tewa explains the repetition taught by its course rather than leading with
   assert.match(semantics.coreMeaning, /反复/);
   assert.match(semantics.usageNote, /条件.*禁止/);
 });
+
+test('the current temiru negative teaching purpose explains an invitation to try', () => {
+  const entry = semanticsForForm('temiruNegative');
+  assert.equal(entry.concise, '要不要试着……？');
+  assert.match(entry.coreMeaning, /〜てみない？/);
+  assert.match(entry.coreMeaning, /邀请|提议/);
+  assert.match(entry.coreMeaning, /不表示拒绝或禁止/);
+  assert.equal(entry.baseForm, 'temiru');
+  assert.equal(entry.continuation, 'negative');
+  assert.equal(semanticsForForm('temiruNegativePast').concise, '过去没有尝试做……');
+});

@@ -538,7 +538,7 @@ const EN_COMPOUND_MEANINGS = {
   },
   temiru: {
     past: ['tried doing ... / experienced ...', 'States that someone tried an action in the past. With a following form such as ら, it can introduce a judgment or discovery after the experience.'],
-    negative: ['does not try ... / has not experienced ... yet', 'Negates an actual trial. In a condition such as 〜てみないとわからない, it can mean that no judgment is possible without the experience. The full sentence does not necessarily express refusal.'],
+    negative: ['Would you like to try ...?', 'This course uses 〜てみない？ to invite someone to try an action or suggest a trial. The negative question does not express refusal or prohibition. Negative statements and conditions such as 〜てみないとわからない need a separate interpretation from their full context.'],
     negativePast: ['did not try ...', 'States that someone did not try an action in the past.'],
   },
   teshimau: {
