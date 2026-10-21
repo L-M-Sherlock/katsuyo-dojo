@@ -6,6 +6,7 @@ const zhCN = {
   ...DIAGNOSTIC_CATALOGS['zh-CN'],
   shell: {
     ...CORE_CATALOGS['zh-CN'].shell,
+    furigana: { show: '显示注音', hide: '隐藏注音' },
     nav: { practice: '练习', statistics: '统计', challenge: '自由挑战', principles: '原理' }, navAria: '主要页面',
     today: '今日', streak: '连续答对', sourceCode: 'GitHub 源代码（新标签页打开）',
     title: { practice: '活用道場 · 日语动词与形容词活用练习', statistics: '学习统计 · 活用道場', challenge: '自由挑战 · 活用道場', principles: '原理介绍 · 活用道場' },
@@ -39,6 +40,7 @@ const en = {
   ...DIAGNOSTIC_CATALOGS.en,
   shell: {
     ...CORE_CATALOGS.en.shell,
+    furigana: { show: 'Show furigana', hide: 'Hide furigana' },
     nav: { practice: 'Practice', statistics: 'Statistics', challenge: 'Free challenge', principles: 'Principles' }, navAria: 'Main pages',
     today: 'Today', streak: 'Streak', sourceCode: 'GitHub source code (opens in a new tab)',
     title: { practice: '活用道場 · Japanese Conjugation Practice', statistics: 'Learning Statistics · 活用道場', challenge: 'Free Challenge · 活用道場', principles: 'Principles · 活用道場' },

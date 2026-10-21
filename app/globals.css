@@ -61,6 +61,9 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .brand small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; letter-spacing: .2em; }
 
 .topbar-actions { display: flex; align-items: center; gap: 28px; }
+.display-preferences { display: flex; align-items: center; gap: 8px; }
+.furigana-toggle { padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--paper-light); font-size: 12px; white-space: nowrap; cursor: pointer; }
+.furigana-toggle:hover { border-color: var(--red); }
 .language-switch { position: relative; display: inline-flex; align-items: center; z-index: 5; }
 .language-switch-trigger {
   display: inline-flex;
@@ -490,8 +493,7 @@ kbd { padding: 2px 7px; border: 1px solid #ccc8be; border-bottom-width: 2px; bor
   .main-view-nav { width: 100%; min-width: 0; flex: 1 1 100%; }
   .main-view-nav :is(button, a) { min-width: 0; flex: 1 1 auto; padding-inline: 5px; text-align: center; }
   .daily-summary { order: 2; margin-left: auto; }
-  .github-link { order: 2; }
-  .github-link { padding-inline: 10px; }
+  .github-link { position: absolute; top: 12px; right: 16px; padding-inline: 10px; }
   .brand small { display: none; }
   .daily-summary div + div { display: none; }
   .migration-notice { align-items: flex-start; }

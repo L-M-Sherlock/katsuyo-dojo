@@ -2,6 +2,7 @@ import {createElement as h, useSyncExternalStore} from 'react';
 import {furiganaFor} from './furigana.mjs';
 import {splitFuriganaParts} from './furigana-corpus.mjs';
 import {furifontEntry, furifontStyle, getFurifontLoader} from './furifont.mjs';
+import {useFuriganaPreference} from './furigana-preference.mjs';
 
 /**
  * Font selection changes glyphs only. Original text and reviewed readings stay
@@ -9,6 +10,19 @@ import {furifontEntry, furifontStyle, getFurifontLoader} from './furifont.mjs';
  * @param {{surface: string, reading?: string, family?: 'sans' | 'serif' | 'display', forceRuby?: boolean}} props
  */
 export default function FuriganaText({surface, reading = surface, family = 'sans', forceRuby = false}) {
+  const {showFurigana} = useFuriganaPreference();
+  // Use the original Japanese font, not a Furifont glyph with built-in readings.
+  // Unmounting only the annotation renderer also avoids font downloads when off.
+  return showFurigana
+    ? h(AnnotatedText, {surface, reading, family, forceRuby})
+    : h('span', {
+      className: 'furigana-text', lang: 'ja',
+      style: family === 'sans' ? undefined : {fontFamily: 'var(--font-jp-serif)'},
+    }, surface);
+}
+
+/** @param {{surface: string, reading: string, family: 'sans' | 'serif' | 'display', forceRuby: boolean}} props */
+function AnnotatedText({surface, reading, family, forceRuby}) {
   const loader = getFurifontLoader(family);
   const ready = useSyncExternalStore(loader.subscribe, loader.getSnapshot, loader.getSnapshot);
   const annotation = furiganaFor(surface, reading);

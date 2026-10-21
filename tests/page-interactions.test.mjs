@@ -1,4 +1,5 @@
 import { exerciseKey } from '../app/lib/exercise-selection.mjs';
+import { FURIGANA_PREFERENCE_KEY } from '../app/lib/furigana-preference.mjs';
 import { createAnswerAnalyzer } from '../app/lib/answer-analysis.mjs';
 import assert from 'node:assert/strict';
 import { after, afterEach, beforeEach, test } from 'node:test';
@@ -535,6 +536,60 @@ test('language switching relocalizes active diagnostic feedback without resettin
   const english = await waitFor(() => view.getByRole('region', { name: 'Step practice' }));
   assert.doesNotMatch(english.textContent, /词类判断|本步正确|辅助练习|请检查输入/);
   assert.match(english.textContent, /verb class|This step|Check your entry/);
+});
+
+test('furigana preference preserves the question, drafts and diagnostic step across languages and reloads', async () => {
+  const { view, form, item } = await mountCompoundPast();
+  const input = view.getByLabelText('你的答案');
+  fireEvent.change(input, { target: { value: 'まだ入力中' } });
+  const baseText = element => {
+    const copy = element.cloneNode(true);
+    copy.querySelectorAll('rt').forEach(node => node.remove());
+    return copy.textContent;
+  };
+  const question = baseText(view.container.querySelector('.exercise-card'));
+  const profileBefore = storage.getItem(KEY);
+  assert.ok(view.container.querySelector('.usage-sentence ruby'));
+  fireEvent.click(view.getByRole('button', { name: '隐藏注音' }));
+  assert.equal(view.container.querySelector('ruby, .furifont-ruby'), null);
+  assert.equal(baseText(view.container.querySelector('.exercise-card')), question);
+  assert.equal(view.getByLabelText('你的答案'), input);
+  assert.equal(input.value, 'まだ入力中');
+  assert.equal(storage.getItem(KEY), profileBefore);
+  assert.equal(storage.getItem(FURIGANA_PREFERENCE_KEY), 'false');
+
+  fireEvent.click(view.getByRole('button', { name: '语言: 简体中文' }));
+  fireEvent.click(view.getByRole('menuitemradio', { name: 'English' }));
+  await waitFor(() => assert.ok(view.getByRole('button', { name: 'Show furigana' })));
+  assert.equal(view.getByLabelText('Your answer'), input);
+  assert.equal(input.value, 'まだ入力中');
+  assert.equal(view.container.querySelector('ruby, .furifont-ruby'), null);
+  assert.equal(storage.getItem(KEY), profileBefore);
+
+  // Hidden readings do not change grading or the subsequent diagnostic plan.
+  fireEvent.change(input, { target: { value: conjugate(item.reading, item.class, form.replace(/Past$/, 'Negative')) } });
+  fireEvent.click(view.getByRole('button', { name: 'Check answer' }));
+  const region = await waitFor(() => view.getByRole('region', { name: 'Step practice' }));
+  const step = region.querySelector('h3').textContent;
+  const stepInput = region.querySelector('input');
+  if (stepInput) fireEvent.change(stepInput, { target: { value: '入力中' } });
+  const profileAfterAnswer = storage.getItem(KEY);
+  fireEvent.click(view.getByRole('button', { name: 'Show furigana' }));
+  assert.ok(region.querySelector('ruby'));
+  assert.equal(region.querySelector('h3').textContent, step);
+  if (stepInput) assert.equal(region.querySelector('input').value, '入力中');
+  assert.equal(storage.getItem(KEY), profileAfterAnswer);
+  fireEvent.click(view.getByRole('button', { name: 'Hide furigana' }));
+  assert.equal(view.container.querySelector('ruby, .furifont-ruby'), null);
+  assert.equal(region.querySelector('h3').textContent, step);
+  if (stepInput) assert.equal(region.querySelector('input').value, '入力中');
+  assert.equal(storage.getItem(KEY), profileAfterAnswer);
+
+  view.unmount();
+  const restored = await mount();
+  await waitFor(() => assert.ok(restored.getByRole('button', { name: 'Show furigana' })));
+  assert.equal(restored.container.querySelector('ruby, .furifont-ruby'), null);
+  assert.equal(Object.hasOwn(JSON.parse(storage.getItem(KEY)), 'showFurigana'), false);
 });
 
 test('an unrecognized compound answer gives no partial credit', async () => {

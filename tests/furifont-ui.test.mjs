@@ -165,4 +165,13 @@ test('a font becoming ready leaves the active question, answer draft and learnin
   assert.equal(view.getByLabelText('你的答案').value, 'まだ入力中');
   assert.equal(window.localStorage.getItem('katsuyo-practice-profile-v8'), beforeProfile);
   assert.equal(window.location.hash, '#/challenge/play');
+  fireEvent.click(view.getByRole('button', {name: '隐藏注音'}));
+  assert.equal(view.container.querySelector('ruby, .furifont-ruby'), null);
+  assert.equal(baseText(view.container.querySelector('.exercise-card')), beforeQuestion);
+  assert.equal(view.getByLabelText('你的答案').value, 'まだ入力中');
+  assert.equal(window.localStorage.getItem('katsuyo-practice-profile-v8'), beforeProfile);
+  assert.equal(window.location.hash, '#/challenge/play');
+  fireEvent.click(view.getByRole('button', {name: '显示注音'}));
+  assert.ok(fontSpans(view.container).length);
+  assert.equal(view.getByLabelText('你的答案').value, 'まだ入力中');
 });
