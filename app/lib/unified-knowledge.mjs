@@ -10,6 +10,8 @@ import { diagnoseEndingOmission } from './ending-omission.mjs';
 import { hasLexicalTypo } from './lexical-typo.mjs';
 import { diagnoseContinuationClassConflict, buildContinuationClassProbes, diagnoseGivenClassPast, diagnoseMixedContinuationPast } from './continuation-class-probes.mjs';
 import { diagnosePassiveStageError } from './passive-stage-diagnosis.mjs';
+import { buildDiagnosticPlan } from './diagnostic-plan.mjs';
+import { atomicInstruction } from './diagnostic-instructions.mjs';
 import { prioritizeContinuation } from './probe-routing.mjs';
 import { UNIFIED_COURSES, COURSE_BY_ID, sourceForForm, VOICE_BASE_FORMS } from './unified-curriculum.mjs';
 import { isTeachingFormDeferred } from './teaching-form-deferrals.mjs';
@@ -304,14 +306,15 @@ function passiveProbes(item, splitStem = false) {
     kcIds: base.requiredKcIds, focusId: 'suffix.passive', continuation: false, targetLabel: '受身形' }];
   const stem = base.answer.slice(0, -2), stemReading = kana.answer.slice(0, -2);
   const stemIds = base.requiredKcIds.filter(id => id.startsWith('stem.godan.'));
+  const plan = buildDiagnosticPlan(item, 'passive');
   return [
     { kind: 'stem', analysisItem: item, surface: item.surface, reading: item.reading, form: 'passive',
       answers: [stem], readings: [stemReading], kcIds: stemIds, focusId: stemIds.at(-1),
-      continuation: false, targetLabel: '受身形 · ア段词尾变化', stepTitle: '受身形的词尾变化', prompt: '受身形：只变化词尾，暂时不要接受身词尾。', note: '已知这是五段动词，本步只变化词尾，暂不接受身词尾。' },
+      continuation: false, ...atomicInstruction(plan, 0) },
     { kind: 'attachment', analysisItem: item, surface: stem, reading: stemReading, form: 'passive',
       providedAnswers: [stem, stemReading], answers: base.acceptedVariants, readings: kana.acceptedVariants,
-      kcIds: ['suffix.passive'], focusId: 'suffix.passive', continuation: true, targetLabel: '受身形',
-      stepTitle: '补上受身词尾', prompt: '词尾变化已完成。请在给定形式后接上受身词尾，填写完整的受身形。', note: `本段起点「${item.surface}」是五段动词。` },
+      kcIds: ['suffix.passive'], focusId: 'suffix.passive', continuation: true,
+      ...atomicInstruction(plan, 1) },
   ];
 }
 

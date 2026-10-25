@@ -73,6 +73,17 @@ const zhCN = {
   'diagnostics.instruction.prompt.attach': '{preparation}。请在给定形式后接上{endingLabel}，填写完整的{goalLabel}。',
   'diagnostics.instruction.prompt.action': '{goalLabel}：{action}{later}。',
   'diagnostics.instruction.note': '已提供正确输入和词类：本段起点「{source}」按{classLabel}变化。{rule}{completion}',
+  'diagnostics.instruction.local.masuStem': '写出ます词干（不含ます）',
+  'diagnostics.instruction.local.masuForm': '写出完整ます形（包含ます）',
+  'diagnostics.instruction.local.stem': '写出「{ending}」前的词干',
+  'diagnostics.instruction.local.add': '接上「{ending}」',
+  'diagnostics.instruction.local.form': '写出{goalLabel}',
+  'diagnostics.instruction.local.stemPrompt': '{action}{later}。请填写完整词干。',
+  'diagnostics.instruction.local.actionPrompt': '{action}{later}。请填写本步变化后的整个形式。',
+  'diagnostics.instruction.local.masuFormPrompt': '在给定词干后接上「ます」。请填写完整ます形。',
+  'diagnostics.instruction.local.attachPrompt': '{preparation}。请在给定形式后接上{endingLabel}。请填写本步变化后的整个形式。',
+  'diagnostics.instruction.local.addPrompt': '在给定形式后接上「{ending}」。请填写本步变化后的整个形式。',
+  'diagnostics.instruction.local.formPrompt': '写出{goalLabel}{later}。请填写本步变化后的整个形式。',
 };
 
 const en = {
@@ -144,6 +155,17 @@ const en = {
   'diagnostics.instruction.prompt.attach': '{preparation}. Add the {endingLabel} to the given form. Enter the complete {goalLabel}.',
   'diagnostics.instruction.prompt.action': '{goalLabel}: {action}{later}.',
   'diagnostics.instruction.note': 'The correct input and word class are given. At the start of this section, “{source}” follows the {classLabel} pattern. {rule}{completion}',
+  'diagnostics.instruction.local.masuStem': 'Write the ます-stem',
+  'diagnostics.instruction.local.masuForm': 'Write the complete ます-form',
+  'diagnostics.instruction.local.stem': 'Write the stem before “{ending}”',
+  'diagnostics.instruction.local.add': 'Add “{ending}”',
+  'diagnostics.instruction.local.form': 'Write the {goalLabel}',
+  'diagnostics.instruction.local.stemPrompt': '{action}{later}. Enter the complete stem.',
+  'diagnostics.instruction.local.actionPrompt': '{action}{later}. Enter the complete result for this step.',
+  'diagnostics.instruction.local.masuFormPrompt': 'Add “ます” to the given stem. Enter the complete ます-form.',
+  'diagnostics.instruction.local.attachPrompt': '{preparation}. Add the {endingLabel} to the given form. Enter the complete result for this step.',
+  'diagnostics.instruction.local.addPrompt': 'Add “{ending}” to the given form. Enter the complete result for this step.',
+  'diagnostics.instruction.local.formPrompt': 'Write the {goalLabel}{later}. Enter the complete result for this step.',
 };
 
 export const DIAGNOSTIC_CATALOGS = Object.freeze({
@@ -170,6 +192,15 @@ const CONNECTIVE_STEM_ENDINGS = Object.freeze({
 function containsChinese(value) { return typeof value === 'string' && /[\u3400-\u9FFF]/u.test(value); }
 
 function englishOperation(params) {
+  if(params.localInstruction) {
+    const local={
+      'adj.stem.i-ku':'Change final い to く',
+      'adj.suffix.i-past':'Change final い to かった',
+      'adj.suffix.i-ba':'Change final い to ければ',
+      'adj.exception.ii-yo':'Use the よ-form of the いい family',
+    }[params.ruleId];
+    if(local)return local;
+  }
   if(params.ruleId==='stem.irregular.connective')return 'Write only the connective stem';
   const localized=params.ruleId?knowledgeLabel('en',params.ruleId):null;
   if(localized)return localized;
@@ -203,7 +234,7 @@ function localizedParams(params, locale) {
     'verb-terminal':`complete ${englishOperation(params).toLowerCase()}`})[params.operation]??`complete ${englishOperation(params).toLowerCase()}`;
   if(params.operation==='append'&&params.ruleId==='suffix.masu')result.action='add “ます” to the given stem';
   result.later=params.laterSuffix?`. Do not add “${params.laterSuffix}” yet`:'';
-  if(params.ruleId==='stem.irregular.connective'&&params.operation==='irregular') {
+  if(params.ruleId==='stem.irregular.connective'&&params.operation==='irregular'&&!params.localInstruction) {
     // goalForm identifies this construction stage, even inside a longer form.
     const ending=CONNECTIVE_STEM_ENDINGS[params.goalForm];
     result.action=ending?`write only the stem that comes before “${ending}”`:'write only the connective stem of the given form';
@@ -214,6 +245,14 @@ function localizedParams(params, locale) {
   if(params.needsCompletion!==undefined)result.completion=params.needsCompletion
     ? params.ruleId==='stem.irregular.connective'?'Enter the complete stem, including any unchanged part of the given form.':'Enter the complete changed form.'
     :'';
+  if(params.localInstruction) {
+    result.action=params.masuStem?'Write only the ます-stem'
+      : params.operation==='contract'?'Write the contracted form'
+        : ['row','drop'].includes(params.operation)?result.action
+          : params.operation==='sound'&&params.ruleId?.startsWith('onbin.')?`Apply the ${englishOperation(params).toLowerCase()}`
+          : englishOperation(params);
+    if(result.action)result.action=result.action[0].toUpperCase()+result.action.slice(1);
+  }
   if(containsChinese(result.detail))result.detail='Check the highlighted rule. ';
   if(containsChinese(result.reason))result.reason='the expression needs a separate usage review';
   return result;

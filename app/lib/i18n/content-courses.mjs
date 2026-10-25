@@ -69,8 +69,8 @@ const EN_COURSE_CONTENT = Object.freeze({
     description: 'Distinguish i-adjectives from na-adjectives, including na-adjectives that end in i.',
   }),
   masu: Object.freeze({
-    title: 'Verb connective stems and the ます-form',
-    description: 'Practice verb connective stems and the ます-form, including the irregular changes of する and くる.',
+    title: 'Verb ます-stems and the ます-form',
+    description: 'A ます-stem does not include ます. Add ます to write the complete ます-form. Practice regular verbs, する, and くる.',
   }),
   adjectiveIBase: Object.freeze({
     title: 'Basic i-adjective conjugation',

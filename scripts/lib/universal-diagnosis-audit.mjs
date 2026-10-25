@@ -1,5 +1,5 @@
 import { auditGuidance } from './diagnostic-contracts.mjs';
-import { referenceNodeOutputs, referenceLabelMatches, correctSpellings } from './diagnostic-oracle.mjs';
+import { referenceNodeOutputs, referenceInstructionLabelMatches, correctSpellings } from './diagnostic-oracle.mjs';
 import { updateKnowledgeStats, emptySkillStats } from '../../app/lib/adaptive.mjs';
 import { applyLearningObservation } from '../../app/lib/learning-profile.mjs';
 import { emptyAssessment } from '../../app/lib/learning-assessment.mjs';
@@ -27,7 +27,7 @@ export function auditUniversalCase(c,analyze,options = {}) {
     for(const step of result.steps) {
       if(step.kcIds.some(id=>!c.kcIds.includes(id)||known.has(id)))problem('repeated-or-unsafe-probe','探针重复已确认规则或引入原题以外规则');
       if(step.kind==='atomic')for(const w of ['surface','reading']) {
-        if(!referenceLabelMatches(step.atomic,step.targetLabel))problem('wrong-probe-label','显示目标与所测规则不一致');
+        if(!referenceInstructionLabelMatches(step.atomic,step.targetLabel))problem('wrong-probe-label','显示目标与所测规则不一致');
         const expected=referenceNodeOutputs(step.atomic,w);
         if(step[w==='surface'?'answers':'readings'].some(a=>!expected.includes(a)))problem('wrong-probe-answer','给定输入、规则与接受答案不一致');
       }

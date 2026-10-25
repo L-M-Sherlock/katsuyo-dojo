@@ -19,26 +19,31 @@ test('a te-based expression first checks a full te form, then expands only if th
   assert.deepEqual(auditGuidance({item:write,form:'temo',kcIds:deriveUnified(write,'temo').requiredKcIds},whole),[]);
   const smaller=unknown(write,'te',whole.steps[0]);
   assert.ok(smaller.steps.every(s=>s.kind==='atomic'));
-  assert.match(smaller.steps[0].prompt,/て形.*音便/);
+  assert.match(smaller.steps[0].prompt,/音便/);
+  assert.doesNotMatch(smaller.steps[0].prompt,/て形：/);
   assert.match(smaller.steps[0].prompt,/不要接「て」/);
 });
 
-test('a single complete conjugation is not asked again and its partial instructions retain the goal',()=>{
+test('a partial instruction requests only its own output and keeps the construction goal as metadata',()=>{
   const result=unknown(write,'negative');
   assert.ok(result.steps.every(s=>s.kind==='atomic'));
   const [stem,suffix]=result.steps;
   assert.equal(stem.readings[0],'かか');
-  assert.match(stem.prompt,/否定形.*只变化词尾.*不要接「ない」/);
-  assert.match(stem.note,/ア段/);assert.match(stem.note,/整个形式/);
-  assert.match(suffix.prompt,/接上否定词尾.*完整.*否定形/);
+  assert.match(stem.prompt,/只变化词尾.*不要接「ない」.*完整词干/);
+  assert.doesNotMatch(stem.prompt,/否定形/);
+  assert.equal(stem.goalLabel,'普通体否定形');
+  assert.match(stem.note,/ア段/);
+  assert.match(suffix.prompt,/接上否定词尾.*本步变化后的整个形式/);
   assert.ok(!stem.prompt.includes('かか'));
 });
 
-test('all four godan rows name their actual conjugation rather than an isolated vowel row',()=>{
-  for(const [form,goal,row] of [['negative','否定','ア'],['masu','ます','イ'],['potential','可能','エ'],['volitional','意向','オ']]){
+test('godan preparation steps name the requested stem instead of the completed conjugation',()=>{
+  for(const [form,ending,row] of [['negative','ない','ア'],['masu','ます','イ'],['potential','る','エ'],['volitional','う','オ']]){
     const stem=unknown(write,form).steps[0];
-    assert.match(stem.prompt,new RegExp(goal));assert.match(stem.prompt,/只变化词尾/);
+    assert.match(stem.prompt,new RegExp('不要接「'+ending+'」'));
+    assert.match(stem.prompt,/完整词干/);
     assert.match(stem.note,new RegExp(row+'段'));
+    assert.match(stem.stepTitle,/词干/);
     assert.notEqual(stem.targetLabel,row+'段词干');
   }
 });
@@ -109,7 +114,7 @@ test('the supplied 売ら step asks for a passive ending and attributes godan to
   const steps=atomicSteps(buildDiagnosticPlan(item,form),form,deriveUnified(item,form).requiredKcIds);
   const step=steps.find(s=>s.reading==='うら');
   assert.equal(step.stepTitle,'补上受身词尾');
-  assert.match(step.prompt,/词尾变化已完成.*接上受身词尾.*完整的受身形/);
+  assert.match(step.prompt,/词尾变化已完成.*接上受身词尾.*本步变化后的整个形式/);
   assert.match(step.note,/「売る」按五段动词变化/);
   assert.doesNotMatch(step.note,/「売ら」.*五段/);
   assert.deepEqual(step.kcIds,['suffix.passive']);

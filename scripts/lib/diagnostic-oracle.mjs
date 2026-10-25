@@ -203,6 +203,30 @@ export function referenceLabelMatches(n,label) {
   }[id];
   return required?required.test(label):/接续|变化/.test(label);
 }
+
+// A learner-facing instruction can name a local stem or the actual suffix
+// instead of the internal rule. Keep the rule-label checks above unchanged.
+export function referenceInstructionLabelMatches(n,label) {
+  if(referenceLabelMatches(n,label))return true;
+  if(typeof label!=='string')return false;
+  const rule=n.ruleKcIds[0];
+  if(/^写出ます词干（不含ます）$/.test(label)) {
+    return ['stem.godan.i','stem.ichidan.drop-ru','stem.irregular.connective'].includes(rule);
+  }
+  const following=label.match(/^写出「([^」]+)」前的词干$/)?.[1];
+  if(following) {
+    const complete=n.practiceStage?.output??n.conjugationStage?.output;
+    return ['row','drop','irregular'].includes(n.operation)
+      &&Boolean(complete?.reading.startsWith(n.output.reading))
+      &&complete.reading.slice(n.output.reading.length)===following;
+  }
+  const suffix=label.match(/^接上「([^」]+)」$/)?.[1];
+  if(suffix&&['append','verb-terminal'].includes(n.operation)) {
+    return referenceNodeOutputs(n,'reading').some(output=>output===n.input.reading+suffix);
+  }
+  return n.operation==='irregular'&&['construction.zu','construction.zuni'].includes(rule)
+    &&label===`写出${rule==='construction.zu'?'ず':'ずに'}形`;
+}
 export function auditPlan(item,form,plan) {
   const problems=[],report=(code,detail)=>problems.push({code,detail});
   const reference=referenceStages(item,form);

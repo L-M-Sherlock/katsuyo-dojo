@@ -4,7 +4,7 @@ import { buildDiagnosticPlan,atomicSteps } from '../app/lib/diagnostic-plan.mjs'
 import { createAnswerAnalyzer } from '../app/lib/answer-analysis.mjs';
 import { unifiedDiagnosticSteps,deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import { planDiagnosticTransition } from '../app/lib/diagnostic-session.mjs';
-import { auditPlan } from '../scripts/lib/diagnostic-oracle.mjs';
+import { auditPlan, referenceInstructionLabelMatches, referenceLabelMatches } from '../scripts/lib/diagnostic-oracle.mjs';
 import { wholeErrorCases,atomicErrorCases,shrinkCounterexample } from '../scripts/lib/universal-error-cases.mjs';
 import { auditUniversalCase,auditFlow } from '../scripts/lib/universal-diagnosis-audit.mjs';
 import { mergeDiagnosticPaths } from '../scripts/lib/merge-diagnostic-paths.mjs';
@@ -13,6 +13,25 @@ const close={domain:'verb',surface:'閉める',reading:'しめる',class:'ichida
 const write={domain:'verb',surface:'書く',reading:'かく',class:'godan'};
 const exercise=(item,form)=>({item,form,kcIds:deriveUnified(item,form).requiredKcIds});
 const inspect=(c)=>auditUniversalCase(c,createAnswerAnalyzer(c.item,c.form,c.step?{step:c.step}:{}));
+test('instruction checks accept local stems and exact suffixes without weakening internal rule labels',()=>{
+  const plan=buildDiagnosticPlan(write,'masu'),[stem,attachment]=plan.nodes;
+  assert.equal(referenceInstructionLabelMatches(stem,'写出ます词干（不含ます）'),true);
+  assert.equal(referenceInstructionLabelMatches(stem,'过去形'),false);
+  assert.equal(referenceInstructionLabelMatches(stem,'写出完整ます形（包含ます）'),false);
+  assert.equal(referenceInstructionLabelMatches(stem,'写出「ない」前的词干'),false);
+  assert.equal(referenceInstructionLabelMatches(stem,'写出「ます」前的词干'),true);
+  assert.equal(referenceLabelMatches(stem,'写出ます词干（不含ます）'),false);
+  assert.equal(referenceInstructionLabelMatches(attachment,'接上「ます」'),true);
+  assert.equal(referenceInstructionLabelMatches(attachment,'接上「ない」'),false);
+  const high={domain:'adjective',surface:'高い',reading:'たかい',class:'i'};
+  const suffix=buildDiagnosticPlan(high,'adjectiveTe').nodes.at(-1);
+  assert.equal(referenceInstructionLabelMatches(suffix,'接上「て」'),true);
+  assert.equal(referenceInstructionLabelMatches(suffix,'接上「くて」'),false);
+  const suru={domain:'verb',surface:'する',reading:'する',class:'irregular'};
+  assert.equal(referenceInstructionLabelMatches(buildDiagnosticPlan(suru,'zu').nodes[0],'写出ず形'),true);
+  assert.equal(referenceInstructionLabelMatches(buildDiagnosticPlan(suru,'zuni').nodes[0],'写出ずに形'),true);
+  assert.equal(referenceInstructionLabelMatches(buildDiagnosticPlan(suru,'zu').nodes[0],'写出ずに形'),false);
+});
 test('independent plan assertions reject deleted steps, swapped operations, wrong classes, rules and targets',()=>{
   const item=close,form='tagaruNegativePast',plan=buildDiagnosticPlan(item,form);
   assert.deepEqual(auditPlan(item,form,plan),[]);

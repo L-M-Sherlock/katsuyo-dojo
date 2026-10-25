@@ -210,6 +210,41 @@ test('the English entry localizes practice and auxiliary pages without changing 
   await waitFor(() => assert.ok(view.getByRole('heading', { name: /How does 活用道場 plan your practice/ })));
 });
 
+test('English step practice distinguishes the ます-stem from the complete ます-form', async () => {
+  window.history.replaceState(null, '', '/katsuyo-dojo/en/');
+  const view = await mount();
+  await waitFor(() => assert.equal(view.container.querySelector('.practice-controls').disabled, false));
+  fireEvent.click(view.getByRole('button', { name: 'Free challenge', exact: true }));
+  fireEvent.click(view.getByRole('checkbox', { name: 'Verb ます-stems and the ます-form', exact: true }));
+  fireEvent.click(view.getByRole('button', { name: 'Start selected courses', exact: true }));
+  const input = await waitFor(() => view.getByLabelText('Your answer'));
+  const exercise = displayedExercise(view);
+  assert.equal(exercise.form, 'masu');
+  const full = conjugate(exercise.item.reading, exercise.item.class, 'masu');
+  const stem = full.slice(0, -2);
+  fireEvent.change(input, { target: { value: 'xyz§' } });
+  fireEvent.click(view.getByRole('button', { name: 'Check answer', exact: true }));
+  const region = await waitFor(() => view.getByRole('region', { name: 'Step practice' }));
+  assert.equal(region.querySelector('.diagnostic-step-title').textContent, 'Write the ます-stem');
+  assert.doesNotMatch(region.querySelector('.diagnostic-instruction').textContent, /ます-form/);
+  assert.match(region.querySelector('.diagnostic-goal').textContent, /Full-answer target: ます-form/);
+  const stepInput = view.getByLabelText('Answer for this step');
+  fireEvent.change(stepInput, { target: { value: full } });
+  fireEvent.click(view.getByRole('button', { name: 'Check this step', exact: true }));
+  await waitFor(() => assert.equal(stepInput.disabled, false));
+  assert.equal(region.querySelector('[data-diagnostic-next]'), null);
+  fireEvent.change(stepInput, { target: { value: stem } });
+  fireEvent.click(view.getByRole('button', { name: 'Check this step', exact: true }));
+  await waitFor(() => assert.ok(view.getByRole('button', { name: /Next step/ })));
+  fireEvent.click(view.getByRole('button', { name: /Next step/ }));
+  assert.equal(region.querySelector('.diagnostic-step-title').textContent, 'Write the complete ます-form');
+  assert.match(region.querySelector('.diagnostic-instruction').textContent, /Add “ます” to the given stem/);
+  fireEvent.change(view.getByLabelText('Answer for this step'), { target: { value: full } });
+  fireEvent.click(view.getByRole('button', { name: 'Check this step', exact: true }));
+  await waitFor(() => assert.ok(view.getByRole('button', { name: /Finish step practice/ })));
+  assert.match(region.querySelector('[role="status"]').textContent, /This step is correct/);
+});
+
 test('page preserves hint assistance after collapse and clears the manual hint on the next question', async () => {
   const view = await mount();
   await showHint(view);
@@ -744,7 +779,7 @@ for (const localized of [false, true]) test(`passive desire probes show each tar
   // borrowing the diagnostic generator's own KC list as a grading oracle.
   const steps = [
     ...(localized ? [
-      { surface: item.surface, target: /受身形.*只变化词尾/, answer: passiveReading.slice(0, -2), kcIds: ['stem.godan.a', ...(item.reading.endsWith('う') ? ['stem.godan.u-wa'] : [])] },
+      { surface: item.surface, target: /只变化词尾.*不要接「れる」.*完整词干/, answer: passiveReading.slice(0, -2), kcIds: ['stem.godan.a', ...(item.reading.endsWith('う') ? ['stem.godan.u-wa'] : [])] },
       { surface: passive.slice(0, -2), target: /受身/, answer: passiveReading, kcIds: ['suffix.passive'] },
     ] : [
       { surface: item.surface, target: /受身/, answer: passiveReading, kcIds: passiveKcIds },
@@ -1671,7 +1706,7 @@ for (const outcome of ['correct','wrong','malformed','skip']) test(`negative-pas
   for(const [i,check] of checks.entries()) {
     if(outcome==='skip'&&i===1){fireEvent.click(view.getByRole('button',{name:'跳过剩余拆步，查看解析'}));break;}
     if(outcome==='malformed'&&i===1){
-      assert.match(region.querySelector('.diagnostic-instruction').textContent,/否定形.*只变化词尾.*不要接「ない」/);
+      assert.match(region.querySelector('.diagnostic-instruction').textContent,/只变化词尾.*不要接「ない」.*完整词干/);
       assert.match(region.querySelector('.diagnostic-goal').textContent,/たがる.*否定过去/);
     }
     const input=check.input;
