@@ -203,8 +203,8 @@ export function createGoogleTranslateHttpAdapter({
   });
 }
 
-function translationTask(card) {
-  const resolved = resolveUsageCard(card);
+function translationTask(card, options) {
+  const resolved = resolveUsageCard(card, options);
   const target = resolved?.target ?? null;
   const beforeText = textFromParts(card.before);
   const afterText = textFromParts(card.after);
@@ -686,8 +686,8 @@ function strictAgentOverlay(task, row) {
 }
 
 /** Apply the frozen agent-output language and field checks to one current card. */
-export function validateEnglishUsageAgentOverlay(card, row) {
-  return strictAgentOverlay(translationTask(card), row);
+export function validateEnglishUsageAgentOverlay(card, row, options) {
+  return strictAgentOverlay(translationTask(card, options), row);
 }
 
 async function jsonFileWithBytes(file) {

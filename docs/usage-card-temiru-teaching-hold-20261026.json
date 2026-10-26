@@ -1,0 +1,376 @@
+{
+  "schemaVersion": 1,
+  "kind": "user-directed-exact-pair-hold",
+  "sourceCommit": "30f336a4b730a6433f4b72b645ecd3f57424a974",
+  "request": "对截图中的「展望台にもう少しいてみた。雲の間から山頂が見えた。」暂缓出题，并排查类似题型。",
+  "sourceRows": [
+    {
+      "id": "usage:temiruPast:verb:いる:いる",
+      "pair": "verb:いる:いる/temiruPast",
+      "senseId": "verb:いる:いる",
+      "form": "temiruPast",
+      "sourceHash": "a4ad13dba3ad52a35685af8b666295dd3016b7c6218c7cad9664e74f0cd59ec4",
+      "englishHash": "1964405880ef5a66fc2a43fc8f018bfa789a049efb2a1b9a07218fe65e0b2b33",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户对当前「いる＋てみた」例句的日常教学自然度提出具体疑点并要求暂缓；明确地点、时段或主动停留的解释不足以单独作为恢复依据。保留构形、词形识别及历史复测，不断言该表达在所有语境下都不成立。",
+      "restoreCondition": "用户同意恢复，且新的自然日常场景已完成独立审核，并核验中英内容、注音与教学供应后，按精确配对恢复。",
+      "card": {
+        "id": "usage:temiruPast:verb:いる:いる",
+        "senseId": "verb:いる:いる",
+        "meaning": "在；有（生物）",
+        "form": "temiruPast",
+        "scene": "在展望台多待一会儿，看到了云间的山顶。",
+        "before": [
+          {
+            "text": "展望台にもう少し",
+            "reading": "てんぼうだいにもうすこし"
+          }
+        ],
+        "after": [
+          {
+            "text": "。雲の間から山頂が見えた。",
+            "reading": "。くものあいだからさんちょうがみえた。"
+          }
+        ],
+        "translation": "试着在展望台又待了一会儿，从云间看到了山顶。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:temiruPast:verb:いる:いる",
+        "sourceHash": "a4ad13dba3ad52a35685af8b666295dd3016b7c6218c7cad9664e74f0cd59ec4",
+        "scene": "I stayed longer at the observation deck and caught sight of a mountain peak through the clouds.",
+        "translation": "I tried staying a little longer at the observation deck. I could see the mountain peak through the clouds."
+      },
+      "fullSentence": "展望台にもう少しいてみた。雲の間から山頂が見えた。",
+      "reading": "てんぼうだいにもうすこしいてみた。くものあいだからさんちょうがみえた。",
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用人主动留下、停留或陪伴的存在义场景。",
+        "context": {
+          "id": "verb:いる:いる:temiru:v7",
+          "text": "为了体验一个场所的环境，安排在那里待一段时间。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:temiruDesireNegativePast:verb:帰る:かえる",
+      "pair": "verb:帰る:かえる/temiruDesireNegativePast",
+      "senseId": "verb:帰る:かえる",
+      "form": "temiruDesireNegativePast",
+      "sourceHash": "117b56bb89bb06b0dda4246a139af7af52c09bd8be4b3fc3e98435c1d17da8f8",
+      "englishHash": "c68775da002d99fdf1942bb4e7f6eb02d586adfc8f788c0b9a9e815d7d5ad03e",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户审阅原句后认为该处境将普通行为或自发反应勉强包装成尝试，明确要求暂缓这个精确配对；保留构形、词形识别和历史复测，不将这一教学选择扩成整个语法形式禁用。",
+      "restoreCondition": "用户同意恢复，且新例句在固定词义、目标形式下通过独立自然度与中英注音审核后，按精确配对恢复。",
+      "card": {
+        "id": "usage:temiruDesireNegativePast:verb:帰る:かえる",
+        "senseId": "verb:帰る:かえる",
+        "meaning": "回去",
+        "form": "temiruDesireNegativePast",
+        "scene": "晚会结束后，回想自己不愿独自走回家。",
+        "before": [
+          {
+            "text": "あの夜は、一人で歩いて家に",
+            "reading": "あのよるは、ひとりであるいていえに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "那天晚上，我不想尝试独自步行回家。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:temiruDesireNegativePast:verb:帰る:かえる",
+        "sourceHash": "117b56bb89bb06b0dda4246a139af7af52c09bd8be4b3fc3e98435c1d17da8f8",
+        "scene": "After the party, I thought back to how I didn't want to walk home alone.",
+        "translation": "That night, I didn't want to try walking home alone."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已按整条组合的参与者关系和含义人工审核。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:temiruDesireNegativePast:verb:手伝う:てつだう",
+      "pair": "verb:手伝う:てつだう/temiruDesireNegativePast",
+      "senseId": "verb:手伝う:てつだう",
+      "form": "temiruDesireNegativePast",
+      "sourceHash": "693fc07207a74034b097977c71a4e5a82a84c1be01ea48b1a8b36354e2998b19",
+      "englishHash": "9aec098dd4e2b05873ed7f7f028316afaf103c46c87c49a0df6a0f5eaa08c52c",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户审阅原句后认为该处境将普通行为或自发反应勉强包装成尝试，明确要求暂缓这个精确配对；保留构形、词形识别和历史复测，不将这一教学选择扩成整个语法形式禁用。",
+      "restoreCondition": "用户同意恢复，且新例句在固定词义、目标形式下通过独立自然度与中英注音审核后，按精确配对恢复。",
+      "card": {
+        "id": "usage:temiruDesireNegativePast:verb:手伝う:てつだう",
+        "senseId": "verb:手伝う:てつだう",
+        "meaning": "帮忙",
+        "form": "temiruDesireNegativePast",
+        "scene": "上次搬家时嫌打包麻烦，当时连尝试帮忙也不愿。",
+        "before": [
+          {
+            "text": "前の引っ越しの時は、面倒で荷造りを",
+            "reading": "まえのひっこしのときは、めんどうでにづくりを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "上次搬家时，我嫌麻烦，不想试着帮忙打包。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:temiruDesireNegativePast:verb:手伝う:てつだう",
+        "sourceHash": "693fc07207a74034b097977c71a4e5a82a84c1be01ea48b1a8b36354e2998b19",
+        "scene": "During my last move, there were boxes everywhere and a lot of packing to do.",
+        "translation": "During my last move, packing seemed like a hassle, and I didn't want to try helping pack."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已按整条组合的参与者关系和含义人工审核。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:temiruPast:verb:笑う:わらう",
+      "pair": "verb:笑う:わらう/temiruPast",
+      "senseId": "verb:笑う:わらう",
+      "form": "temiruPast",
+      "sourceHash": "3bd34fac869fbb2228f9a4b05b5f82f901db6bb69e35283e1921b7bbb609cb65",
+      "englishHash": "03d6f9597a327ec5f607220470629b6c9856a8676a950a78bb925fb2118ba7a2",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户审阅原句后认为该处境将普通行为或自发反应勉强包装成尝试，明确要求暂缓这个精确配对；保留构形、词形识别和历史复测，不将这一教学选择扩成整个语法形式禁用。",
+      "restoreCondition": "用户同意恢复，且新例句在固定词义、目标形式下通过独立自然度与中英注音审核后，按精确配对恢复。",
+      "card": {
+        "id": "usage:temiruPast:verb:笑う:わらう",
+        "senseId": "verb:笑う:わらう",
+        "meaning": "笑",
+        "form": "temiruPast",
+        "scene": "听到那个冷笑话后，大家试着笑了。",
+        "before": [
+          {
+            "text": "その冗談を聞いて、みんなで",
+            "reading": "そのじょうだんをきいて、みんなで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "听到那个玩笑，大家试着笑了笑。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:temiruPast:verb:笑う:わらう",
+        "sourceHash": "3bd34fac869fbb2228f9a4b05b5f82f901db6bb69e35283e1921b7bbb609cb65",
+        "scene": "Everyone tries to laugh after hearing that corny joke.",
+        "translation": "After hearing that joke, everyone tried laughing."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于尝试、行动准备或事先安排。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:temiruNegative:verb:運ぶ:はこぶ",
+      "pair": "verb:運ぶ:はこぶ/temiruNegative",
+      "senseId": "verb:運ぶ:はこぶ",
+      "form": "temiruNegative",
+      "sourceHash": "c0fefb8526fb9692b596f0c7ceb2eaad6e690913cce663149cbcc63285c26db4",
+      "englishHash": "5ffcd192f16a5bc70372d4efea649711972f2035f21534bc92650f4b94e8eedf",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户审阅原句后认为该处境将普通行为或自发反应勉强包装成尝试，明确要求暂缓这个精确配对；保留构形、词形识别和历史复测，不将这一教学选择扩成整个语法形式禁用。",
+      "restoreCondition": "用户同意恢复，且新例句在固定词义、目标形式下通过独立自然度与中英注音审核后，按精确配对恢复。",
+      "card": {
+        "id": "usage:temiruNegative:verb:運ぶ:はこぶ",
+        "senseId": "verb:運ぶ:はこぶ",
+        "meaning": "搬运",
+        "form": "temiruNegative",
+        "scene": "朋友搬工作室，邀同伴把小书架搬到隔壁房间。",
+        "before": [
+          {
+            "text": "この小さな棚を隣の部屋まで一緒に",
+            "reading": "このちいさなたなをとなりのへやまでいっしょに"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "要不要一起把这个小架子搬到隔壁房间？",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:temiruNegative:verb:運ぶ:はこぶ",
+        "sourceHash": "c0fefb8526fb9692b596f0c7ceb2eaad6e690913cce663149cbcc63285c26db4",
+        "scene": "While moving into a studio, one friend asks another to help move a small shelf.",
+        "translation": "Want to carry this small shelf together to the next room?"
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于尝试、行动准备或事先安排。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:temiruNegative:verb:終わる:おわる",
+      "pair": "verb:終わる:おわる/temiruNegative",
+      "senseId": "verb:終わる:おわる",
+      "form": "temiruNegative",
+      "sourceHash": "52b461e326203f79d6a725ba0e4e5df5df7ff500da80d04fefb4f0262cfffc4f",
+      "englishHash": "b649af85409b4d15e87c41a8255b537885b1656c8a568df2843ce0bb040f9ba3",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在明确获知建议需要更换原动词后，选择暂缓这三个原配对以避免继续硬造句；此处仅记录精确教学选择，不宣称该形式在所有语境下都不存在自然表达。",
+      "restoreCondition": "用户同意恢复，且固定原词义、目标形式的新例句通过独立自然度、中英内容和注音审核后，按配对恢复。",
+      "card": {
+        "id": "usage:temiruNegative:verb:終わる:おわる",
+        "senseId": "verb:終わる:おわる",
+        "meaning": "结束",
+        "form": "temiruNegative",
+        "scene": "队员发现练习后半段易分神，提议缩短一次训练。",
+        "before": [
+          {
+            "text": "最近、練習の後半はみんな集中が切れがちだよね。次の練習はいつもより三十分早く",
+            "reading": "さいきん、れんしゅうのこうはんはみんなしゅうちゅうがきれがちだよね。つぎのれんしゅうはいつもよりさんじゅっぷんはやく"
+          }
+        ],
+        "after": [
+          {
+            "text": "？必要なメニューだけに絞って、練習の終わりまで集中が続くか確かめたいんだ。",
+            "reading": "？ひつようなメニューだけにしぼって、れんしゅうのおわりまでしゅうちゅうがつづくかたしかめたいんだ。"
+          }
+        ],
+        "translation": "最近大家到练习后半段就容易分心。下次练习要不要比平时提前半小时结束一次？我想把训练项目精简到必要内容，看看大家能否一直集中到练习结束。",
+        "review": "approved",
+        "note": "观察队员能否专注到缩短后的练习结束。"
+      },
+      "english": {
+        "id": "usage:temiruNegative:verb:終わる:おわる",
+        "sourceHash": "52b461e326203f79d6a725ba0e4e5df5df7ff500da80d04fefb4f0262cfffc4f",
+        "scene": "Team members have been losing focus in the second half of practice, so one suggests trying a shorter session.",
+        "translation": "Everyone tends to lose focus in the second half of practice lately. Why don’t we try ending our next practice half an hour earlier than usual? I’d like to narrow the drills to the essentials and see whether we can stay focused through the end of practice.",
+        "note": "Observe whether the team can stay focused through the end of the shortened practice."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于尝试、行动准备或事先安排。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:temiruNegative:verb:遅れる:おくれる",
+      "pair": "verb:遅れる:おくれる/temiruNegative",
+      "senseId": "verb:遅れる:おくれる",
+      "form": "temiruNegative",
+      "sourceHash": "725435df5fc86fb55a4f12183a88ec9cf6e23b61812e4e890ed7ac00346080c0",
+      "englishHash": "23535ffad37e0276dfefd003d5086f14b8691b8891f12d54cf66e47c5f83b17e",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在明确获知建议需要更换原动词后，选择暂缓这三个原配对以避免继续硬造句；此处仅记录精确教学选择，不宣称该形式在所有语境下都不存在自然表达。",
+      "restoreCondition": "用户同意恢复，且固定原词义、目标形式的新例句通过独立自然度、中英内容和注音审核后，按配对恢复。",
+      "card": {
+        "id": "usage:temiruNegative:verb:遅れる:おくれる",
+        "senseId": "verb:遅れる:おくれる",
+        "meaning": "迟到；延误",
+        "form": "temiruNegative",
+        "scene": "校园祭开场排长队，展览到中午，邀同伴迟到。",
+        "before": [
+          {
+            "text": "文化祭は十時からだけど、開場直後は列が長いし、目当ての展示は昼まで見られるから、開始時刻より少し",
+            "reading": "ぶんかさいはじゅうじからだけど、かいじょうちょくごはれつがながいし、めあてのてんじはひるまでみられるから、かいしじこくよりすこし"
+          }
+        ],
+        "after": [
+          {
+            "text": "？"
+          }
+        ],
+        "translation": "校园祭十点开始，但刚开放时入口排长队，想看的展览中午前都能参观。要不要试着比开始时间晚一点到？",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:temiruNegative:verb:遅れる:おくれる",
+        "sourceHash": "725435df5fc86fb55a4f12183a88ec9cf6e23b61812e4e890ed7ac00346080c0",
+        "scene": "The school festival has a long entrance line at opening, while the exhibit they want to see stays open until noon.",
+        "translation": "The school festival starts at ten, and the line at the entrance is long right at opening, but the exhibit we want to see stays open until noon. Want to try arriving a little after the scheduled start?"
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于尝试、行动准备或事先安排。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:temiruRequest:verb:貸す:かす",
+      "pair": "verb:貸す:かす/temiruRequest",
+      "senseId": "verb:貸す:かす",
+      "form": "temiruRequest",
+      "sourceHash": "e8425f066a9589228f4b366e533fb5b465f9c479ba8af4241a5a457e27a85793",
+      "englishHash": "3cb1335a5b6291a17a4f628a9f658591fb0762b948d92af7114ba6fdd8bd3f58",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在明确获知建议需要更换原动词后，选择暂缓这三个原配对以避免继续硬造句；此处仅记录精确教学选择，不宣称该形式在所有语境下都不存在自然表达。",
+      "restoreCondition": "用户同意恢复，且固定原词义、目标形式的新例句通过独立自然度、中英内容和注音审核后，按配对恢复。",
+      "card": {
+        "id": "usage:temiruRequest:verb:貸す:かす",
+        "senseId": "verb:貸す:かす",
+        "meaning": "借出",
+        "form": "temiruRequest",
+        "scene": "老师建议家长把自己的绘本借给女儿阅读。",
+        "before": [
+          {
+            "text": "娘さんに、まず簡単な絵本を一冊",
+            "reading": "むすめさんに、まずかんたんなえほんをいっさつ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "请先试着借一本简单的绘本给您的女儿。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:temiruRequest:verb:貸す:かす",
+        "sourceHash": "e8425f066a9589228f4b366e533fb5b465f9c479ba8af4241a5a457e27a85793",
+        "scene": "A teacher suggests that a parent lend a simple picture book to their daughter.",
+        "translation": "Please try lending your daughter one simple picture book first."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已按整条组合的参与者关系和含义人工审核。",
+        "reviewVersion": 7
+      }
+    }
+  ],
+  "note": "This records a user teaching choice. It does not replace or rewrite earlier language approval evidence.",
+  "followupRequest": "暂缓用户列为严重不自然的四个精确配对：帰る／temiruDesireNegativePast、手伝う／temiruDesireNegativePast、笑う／temiruPast、運ぶ／temiruNegative；其余按分组修订或保留。",
+  "wordChangeChoice": "用户明确回复：暂缓这三个原配对，避免继续硬造句。"
+}

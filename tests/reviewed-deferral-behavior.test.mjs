@@ -1,3 +1,4 @@
+import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -5,6 +6,7 @@ import { createServer } from 'vite';
 import { REVIEWED_USAGE_CARD_DEFERRALS, REVIEWED_USAGE_CARD_DEFERRED_PAIRS } from '../app/lib/usage-cards/reviewed-revisions.mjs';
 import { PRE_REVIEWED_USAGE_CARDS, REVIEWED_USAGE_CARDS, USAGE_CARDS, usageCardFor, usageCardItem, resolveUsageCard } from '../app/lib/usage-cards.mjs';
 import { isTeachingFormDeferred } from '../app/lib/teaching-form-deferrals.mjs';
+import { TEACHING_PAIR_DEFERRALS } from '../app/lib/teaching-pair-deferrals.mjs';
 import { EN_USAGE_CARD_OVERLAYS as CURRENT_ENGLISH } from '../app/lib/i18n/content/en/current-usage-cards.mjs';
 import { EN_USAGE_CARD_OVERLAYS as BASELINE_ENGLISH } from '../app/lib/i18n/content/en/usage-cards.mjs';
 import { assessFormUsage, eligibleVerbForm, supportsVerbForm, USAGE_REVIEW_VERSION } from '../app/lib/form-eligibility.mjs';
@@ -20,7 +22,7 @@ test('reviewed exact deferrals remove current bilingual cards while retaining so
   assert.equal(summary.deferredCount, 1);
   assert.equal(summary.deferredCount, REVIEWED_USAGE_CARD_DEFERRALS.length);
   assert.equal(PRE_REVIEWED_USAGE_CARDS.length - REVIEWED_USAGE_CARDS.length, REVIEWED_USAGE_CARD_DEFERRALS.length);
-  assert.equal(summary.teachingHeldCount, 122);
+  assert.equal(summary.teachingHeldCount, 130);
   assert.equal(REVIEWED_USAGE_CARDS.length - USAGE_CARDS.length, summary.teachingHeldCount);
   assert.equal(PRE_REVIEWED_USAGE_CARDS.length - USAGE_CARDS.length, REVIEWED_USAGE_CARD_DEFERRALS.length + summary.teachingHeldCount);
   assert.equal(REVIEWED_USAGE_CARD_DEFERRED_PAIRS.size, REVIEWED_USAGE_CARD_DEFERRALS.length);
@@ -47,10 +49,12 @@ test('reviewed exact deferrals remove current bilingual cards while retaining so
   }
 });
 
-test('the later form-wide hold preserves its own source hashes and every card outside that form', () => {
+test('the later form-wide hold preserves its source hashes while exact-pair holds remain separate', () => {
   const record = JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json', import.meta.url)));
   const heldCards = REVIEWED_USAGE_CARDS.filter(card => isTeachingFormDeferred(card.form));
   const heldIds = new Set(heldCards.map(card => card.id));
+  const pairHeldIds = new Set(TEACHING_PAIR_DEFERRALS.map(row => row.id));
+  const allHeldIds = new Set([...heldIds, ...pairHeldIds]);
   const reviewedIds = new Set(REVIEWED_USAGE_CARDS.map(card => card.id));
   const currentById = new Map(USAGE_CARDS.map(card => [card.id, card]));
   assert.equal(record.sourceCount, 122);
@@ -58,10 +62,12 @@ test('the later form-wide hold preserves its own source hashes and every card ou
   assert.deepEqual(record.sourceRows.map(row => row.card), heldCards);
   assert.equal(revisionHash(heldCards), record.sourceCardsHash);
   assert.equal(revisionHash(record.sourceRows.map(row => row.english)), record.sourceEnglishHash);
-  assert.deepEqual(new Set([...reviewedIds].filter(id => !currentById.has(id))), heldIds);
-  assert.deepEqual(USAGE_CARDS, REVIEWED_USAGE_CARDS.filter(card => !heldIds.has(card.id)));
+  assert.deepEqual(pairHeldIds, EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
+  assert.equal(allHeldIds.size, heldIds.size + 8);
+  assert.deepEqual(new Set([...reviewedIds].filter(id => !currentById.has(id))), allHeldIds);
+  assert.deepEqual(USAGE_CARDS, REVIEWED_USAGE_CARDS.filter(card => !allHeldIds.has(card.id)));
   for (const card of REVIEWED_USAGE_CARDS) {
-    if (!heldIds.has(card.id)) assert.strictEqual(currentById.get(card.id), card, `${card.id}: outside-scope card is unchanged`);
+    if (!allHeldIds.has(card.id)) assert.strictEqual(currentById.get(card.id), card, `${card.id}: outside-scope card is unchanged`);
   }
   for (const row of record.sourceRows) {
     assert.equal(row.sourceHash, revisionHash(row.card), row.id);

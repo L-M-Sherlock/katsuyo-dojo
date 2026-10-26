@@ -1,15 +1,15 @@
 {
   "version": 1,
   "method": "unique-kana-anchor-alignment-constrained-by-existing-authored-Han-pairs",
-  "sourceHash": "3c035aae305e992adaca047c484031335331f5a22d159b853747416cc64d8d46",
+  "sourceHash": "bb7c4bf03586d7e730aec265db3b67c691ddebd1a5f7eb56f37af8eae2c81e50",
   "coverage": {
-    "cards": 17138,
-    "sourcePairs": 59784,
-    "direct": 59243,
+    "cards": 17130,
+    "sourcePairs": 59774,
+    "direct": 59233,
     "constrained": 539,
     "audited": 2,
     "fallbacks": 0,
-    "fontPairs": 5518,
+    "fontPairs": 5516,
     "lexicalFontPairs": 231,
     "extractionErrors": 0,
     "unsupportedPairs": 526

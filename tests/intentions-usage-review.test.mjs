@@ -1,3 +1,4 @@
+import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS, EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS } from './helpers/temiru-teaching-hold-scope.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFileSync} from 'node:fs';
@@ -17,6 +18,7 @@ import integrationCards from '../app/lib/usage-cards/integration-generated.mjs';
 import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
 import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
 import {USER_DIRECTED_DEFERRED_FORMS, isTeachingFormDeferred} from '../app/lib/teaching-form-deferrals.mjs';
+import {TEACHING_PAIR_DEFERRALS, isTeachingPairDeferred} from '../app/lib/teaching-pair-deferrals.mjs';
 import {reviewedDeferralHistory} from './helpers/reviewed-deferral-history.mjs';
 
 const baseline=JSON.parse(readFileSync(new URL('./fixtures/intentions-usage-review-before.json',import.meta.url),'utf8'));
@@ -93,6 +95,18 @@ const teachingFormHeld=formHold.sourceRows.map(row=>{
   assert.ok(affirmative,`${row.pair}: its approved affirmative family example remains available`);
   return {...exercise,context:affirmative.context};
 });
+const pairHold=JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-teaching-hold-20261026.json',import.meta.url),'utf8'));
+assert.deepEqual(new Set(pairHold.sourceRows.map(row=>row.id)),EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
+const teachingPairHeld=pairHold.sourceRows.map(row=>{
+  const source=REVIEWED_USAGE_CARDS.find(card=>card.id===row.id);
+  assert.ok(source,row.id);
+  assert.equal(hash(source),row.sourceHash,row.id);
+  const exercise=model.registryExercises.find(e=>`${reviewedLexicalSense(e.item)?.id}/${e.form}`===row.pair);
+  assert.ok(exercise,`${row.pair}: remains in the morphology registry`);
+  assert.equal(isTeachingPairDeferred(source.senseId,source.form),true,row.pair);
+  assert.ok(row.previousUsage?.status==='allowed'||(row.previousUsage?.status==='context-required'&&row.previousUsage.context),row.pair);
+  return {...exercise,context:row.previousUsage.context};
+});
 assert.equal(retiredTeoruExercises.length,292);
 const naturalnessPrevious=new Map(naturalnessReview.approvedRevisions.map(row=>[row.id,row.previousCard]));
 
@@ -104,10 +118,14 @@ test('approved intention and action-pair deferrals change only the documented ex
   const precedingRetiredIds=new Set(precedingRetired.map(e=>e.id));
   assert.equal(teachingFormHeld.length,122);
   assert.ok(teachingFormHeld.every(e=>!precedingRetiredIds.has(e.id)),'the form hold counts only newly removed exercises');
-  for(const e of [...precedingRetired,...teachingFormHeld])assert.ok(!currentIds.has(e.id),e.id);
+  assert.equal(teachingPairHeld.length,8);
+  assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.pair)),EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS);
+  const priorTeachingHeldIds=new Set([...precedingRetiredIds,...teachingFormHeld.map(e=>e.id)]);
+  assert.ok(teachingPairHeld.every(e=>!priorTeachingHeldIds.has(e.id)),'the exact-pair hold is additional and disjoint');
+  for(const e of [...precedingRetired,...teachingFormHeld,...teachingPairHeld])assert.ok(!currentIds.has(e.id),e.id);
   const reconstructed=[...model.exercises,...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,
-    ...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired,...teachingFormHeld];
-  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length-userDirectedRetired.length-retiredTeoruExercises.length-reviewedRevisionRetired.length-teachingFormHeld.length);
+    ...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired,...teachingFormHeld,...teachingPairHeld];
+  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length-userDirectedRetired.length-retiredTeoruExercises.length-reviewedRevisionRetired.length-teachingFormHeld.length-teachingPairHeld.length);
   assert.equal(hash(reconstructed.map(e=>e.id).sort()),baseline.eligibleExerciseIdsSha256,
     'no unrelated exercise may disappear or become eligible');
   // Preserve the frozen historical hash while accounting for the four

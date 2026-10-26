@@ -26,6 +26,7 @@ import { ADJECTIVES } from './adjective-catalog.mjs';
 import { assessFormUsage } from './form-eligibility.mjs';
 import { NATURALNESS_DEFERRED_ACTION_PAIRS } from './action-pair-deferrals.mjs';
 import { isTeachingFormDeferred } from './teaching-form-deferrals.mjs';
+import { isUsageCardTeachingDeferred } from './teaching-pair-deferrals.mjs';
 import { UNIFIED_COURSES } from './unified-curriculum.mjs';
 import { deriveUnified } from './unified-knowledge.mjs';
 
@@ -53,14 +54,15 @@ export const REVIEWED_USAGE_CARDS = PRE_REVIEWED_USAGE_CARDS
   .filter(card => !REVIEWED_USAGE_CARD_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`))
   .map(card => reviewedRevisions.get(card.id) ?? card);
 // Keep the historical views above intact for the immutable review proofs.
-export const USAGE_CARDS = REVIEWED_USAGE_CARDS.filter(card => !isTeachingFormDeferred(card.form));
+export const USAGE_CARDS = REVIEWED_USAGE_CARDS.filter(card => !isUsageCardTeachingDeferred(card));
 export const USAGE_CARD_GROUPS = [
   {id: 'basics', stages: ['basics', 'voice']},
   {id: 'linking', stages: ['linking', 'intentions']},
   {id: 'actions', stages: ['actions']},
   {id: 'combinations', stages: ['integration']},
 ];
-const forms = new Set(UNIFIED_COURSES.flatMap(course => course.forms).filter(form => !isTeachingFormDeferred(form)));
+const registeredForms = new Set(UNIFIED_COURSES.flatMap(course => course.forms));
+const forms = new Set([...registeredForms].filter(form => !isTeachingFormDeferred(form)));
 const senses = new Map(REVIEWED_LEXICAL_SENSES.map(sense => [sense.id, sense]));
 const kanji = /[\u3400-\u9fff々〇]/u;
 const length = text => Array.from(text).length;
@@ -157,18 +159,20 @@ export function basicUsageCardRequirements() {
 }
 
 /** Exactly one slot: before + the generated WHOLE target form + after. */
-export function resolveUsageCard(card) {
+export function resolveUsageCard(card, {allowTeachingHolds = false} = {}) {
   const item = usageCardItem(card.senseId);
-  if (!item || item.meaning !== card.meaning || !forms.has(card.form)) return null;
+  if (!item || item.meaning !== card.meaning || !(allowTeachingHolds ? registeredForms : forms).has(card.form)) return null;
   const usage = assessFormUsage(item, card.form);
-  if (usage.status === 'blocked' || (usage.status === 'context-required' && !usage.context)) return null;
+  const retainedTeachingHold = allowTeachingHolds
+    && ['user-directed-form-hold', 'user-directed-pair-hold'].includes(usage.reasonCode);
+  if (!retainedTeachingHold && (usage.status === 'blocked' || (usage.status === 'context-required' && !usage.context))) return null;
   return {...card, target: {
     text: deriveUnified(item, card.form).answer,
     reading: deriveUnified({...item, surface: item.reading, lexicalSurface: item.surface}, card.form).answer,
   }};
 }
 
-export function usageCardIssues(cards, {requireCoverage = false, requireClassCoverage = false, requireBasicCoverage = false, requireStageCoverage = []} = {}) {
+export function usageCardIssues(cards, {requireCoverage = false, requireClassCoverage = false, requireBasicCoverage = false, requireStageCoverage = [], allowTeachingHolds = false} = {}) {
   const issues = [], ids = new Set(), pairs = new Set(), covered = new Set(), coveredClasses = new Set(), coveredPairs = new Set();
   for (const card of cards) {
     if (!card || typeof card !== 'object' || Array.isArray(card)) { issues.push('Card must be an object'); continue; }
@@ -198,7 +202,7 @@ export function usageCardIssues(cards, {requireCoverage = false, requireClassCov
         if (/[{}<>]/.test(part.text)) fail(`${key} must be plain sentence text, with no extra placeholders or markup`);
       }
     }
-    const resolved = resolveUsageCard(card);
+    const resolved = resolveUsageCard(card, {allowTeachingHolds});
     if (!resolved) { fail('unknown/changed sense, unsupported form, or ineligible pairing'); continue; }
     const visible = [card.before, card.after].filter(Array.isArray).flat().filter(Boolean).map(part => `${part.text ?? ''}${part.reading ?? ''}`).join('');
     if ([resolved.target.text, resolved.target.reading].some(answer => length(answer) >= 4 && visible.includes(answer))) fail('the full answer is repeated outside the target slot');

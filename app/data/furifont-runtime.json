@@ -4,7 +4,7 @@
     "sans": {
       "family": "Katsuyo Furifont Sans",
       "fontUrl": "fonts/furifont/katsuyo-furifont-sans.woff2",
-      "sha256": "b3075b79e3cf34000e0c40b2a2a36a72dd76b441605d8dd864d65ac52fc548bf",
+      "sha256": "1cfcb0fb431a00cd03c5ff3047b4339cc135f5aa1d787a098474b58a6d75bafd",
       "weights": [
         250,
         900
@@ -13,7 +13,7 @@
     "serif": {
       "family": "Katsuyo Furifont Serif",
       "fontUrl": "fonts/furifont/katsuyo-furifont-serif.woff2",
-      "sha256": "3aeb0a5d54993b063bbba0e68d88ae2a78714b667691da8cbcb7700ebc2f9c9b",
+      "sha256": "6072c1bc7c545e4812c21b8b5682af9f664657cd758282bfdd54be3c6da0fadf",
       "weights": [
         200,
         900
@@ -1637,26 +1637,14 @@
       }
     },
     {
-      "text": "三十分早",
-      "reading": "さんじゅっぷんはや",
-      "families": {
-        "sans": {
-          "salt": 15
-        },
-        "serif": {
-          "salt": 15
-        }
-      }
-    },
-    {
       "text": "三十年間",
       "reading": "さんじゅうねんかん",
       "families": {
         "sans": {
-          "salt": 16
+          "salt": 15
         },
         "serif": {
-          "salt": 16
+          "salt": 15
         }
       }
     },
@@ -1665,10 +1653,10 @@
       "reading": "さんじゅうにちかん",
       "families": {
         "sans": {
-          "salt": 17
+          "salt": 16
         },
         "serif": {
-          "salt": 17
+          "salt": 16
         }
       }
     },
@@ -1677,10 +1665,10 @@
       "reading": "さんしゅう",
       "families": {
         "sans": {
-          "salt": 18
+          "salt": 17
         },
         "serif": {
-          "salt": 18
+          "salt": 17
         }
       }
     },
@@ -1689,10 +1677,10 @@
       "reading": "しゃみせん",
       "families": {
         "sans": {
-          "salt": 19
+          "salt": 18
         },
         "serif": {
-          "salt": 19
+          "salt": 18
         }
       }
     },
@@ -1701,10 +1689,10 @@
       "reading": "さんかい",
       "families": {
         "sans": {
-          "salt": 20
+          "salt": 19
         },
         "serif": {
-          "salt": 20
+          "salt": 19
         }
       }
     },
@@ -1713,10 +1701,10 @@
       "reading": "さんかいつづ",
       "families": {
         "sans": {
-          "salt": 21
+          "salt": 20
         },
         "serif": {
-          "salt": 21
+          "salt": 20
         }
       }
     },
@@ -1725,10 +1713,10 @@
       "reading": "さんねんれんしゅう",
       "families": {
         "sans": {
-          "salt": 22
+          "salt": 21
         },
         "serif": {
-          "salt": 22
+          "salt": 21
         }
       }
     },
@@ -1737,10 +1725,10 @@
       "reading": "さんねんけいかく",
       "families": {
         "sans": {
-          "salt": 23
+          "salt": 22
         },
         "serif": {
-          "salt": 23
+          "salt": 22
         }
       }
     },
@@ -1749,10 +1737,10 @@
       "reading": "さんねんかん",
       "families": {
         "sans": {
-          "salt": 24
+          "salt": 23
         },
         "serif": {
-          "salt": 24
+          "salt": 23
         }
       }
     },
@@ -1761,10 +1749,10 @@
       "reading": "みっか",
       "families": {
         "sans": {
-          "salt": 25
+          "salt": 24
         },
         "serif": {
-          "salt": 25
+          "salt": 24
         }
       }
     },
@@ -1773,10 +1761,10 @@
       "reading": "さんじ",
       "families": {
         "sans": {
-          "salt": 26
+          "salt": 25
         },
         "serif": {
-          "salt": 26
+          "salt": 25
         }
       }
     },
@@ -1785,10 +1773,10 @@
       "reading": "さんじかん",
       "families": {
         "sans": {
-          "salt": 27
+          "salt": 26
         },
         "serif": {
-          "salt": 27
+          "salt": 26
         }
       }
     },
@@ -1797,10 +1785,10 @@
       "reading": "さんじかんつづ",
       "families": {
         "sans": {
-          "salt": 28
+          "salt": 27
         },
         "serif": {
-          "salt": 28
+          "salt": 27
         }
       }
     },
@@ -1809,10 +1797,10 @@
       "reading": "さんきょく",
       "families": {
         "sans": {
-          "salt": 29
+          "salt": 28
         },
         "serif": {
-          "salt": 29
+          "salt": 28
         }
       }
     },
@@ -1821,10 +1809,10 @@
       "reading": "さんがつ",
       "families": {
         "sans": {
-          "salt": 30
+          "salt": 29
         },
         "serif": {
-          "salt": 30
+          "salt": 29
         }
       }
     },
@@ -1833,10 +1821,10 @@
       "reading": "さんがつなか",
       "families": {
         "sans": {
-          "salt": 31
+          "salt": 30
         },
         "serif": {
-          "salt": 31
+          "salt": 30
         }
       }
     },
@@ -1845,10 +1833,10 @@
       "reading": "さんぼんのこ",
       "families": {
         "sans": {
-          "salt": 32
+          "salt": 31
         },
         "serif": {
-          "salt": 32
+          "salt": 31
         }
       }
     },
@@ -1857,10 +1845,10 @@
       "reading": "さんあん",
       "families": {
         "sans": {
-          "salt": 33
+          "salt": 32
         },
         "serif": {
-          "salt": 33
+          "salt": 32
         }
       }
     },
@@ -1869,10 +1857,10 @@
       "reading": "さんてん",
       "families": {
         "sans": {
-          "salt": 34
+          "salt": 33
         },
         "serif": {
-          "salt": 34
+          "salt": 33
         }
       }
     },
@@ -1881,10 +1869,10 @@
       "reading": "さんさら",
       "families": {
         "sans": {
-          "salt": 35
+          "salt": 34
         },
         "serif": {
-          "salt": 35
+          "salt": 34
         }
       }
     },
@@ -1893,10 +1881,10 @@
       "reading": "さんちゃく",
       "families": {
         "sans": {
-          "salt": 36
+          "salt": 35
         },
         "serif": {
-          "salt": 36
+          "salt": 35
         }
       }
     },
@@ -1905,10 +1893,10 @@
       "reading": "さんしゅるい",
       "families": {
         "sans": {
-          "salt": 37
+          "salt": 36
         },
         "serif": {
-          "salt": 37
+          "salt": 36
         }
       }
     },
@@ -1917,10 +1905,10 @@
       "reading": "さんしょく",
       "families": {
         "sans": {
-          "salt": 38
+          "salt": 37
         },
         "serif": {
-          "salt": 38
+          "salt": 37
         }
       }
     },
@@ -1929,10 +1917,10 @@
       "reading": "さんしあい",
       "families": {
         "sans": {
-          "salt": 39
+          "salt": 38
         },
         "serif": {
-          "salt": 39
+          "salt": 38
         }
       }
     },
@@ -63779,26 +63767,14 @@
       }
     },
     {
-      "text": "開場直後",
-      "reading": "かいじょうちょくご",
-      "families": {
-        "sans": {
-          "salt": 7
-        },
-        "serif": {
-          "salt": 7
-        }
-      }
-    },
-    {
       "text": "開始",
       "reading": "かいし",
       "families": {
         "sans": {
-          "salt": 8
+          "salt": 7
         },
         "serif": {
-          "salt": 8
+          "salt": 7
         }
       }
     },
@@ -63807,10 +63783,10 @@
       "reading": "かいしまえ",
       "families": {
         "sans": {
-          "salt": 9
+          "salt": 8
         },
         "serif": {
-          "salt": 9
+          "salt": 8
         }
       }
     },
@@ -63819,10 +63795,10 @@
       "reading": "かいしじ",
       "families": {
         "sans": {
-          "salt": 10
+          "salt": 9
         },
         "serif": {
-          "salt": 10
+          "salt": 9
         }
       }
     },
@@ -63831,10 +63807,10 @@
       "reading": "かいしじこく",
       "families": {
         "sans": {
-          "salt": 11
+          "salt": 10
         },
         "serif": {
-          "salt": 11
+          "salt": 10
         }
       }
     },
@@ -63843,10 +63819,10 @@
       "reading": "かいしじてん",
       "families": {
         "sans": {
-          "salt": 12
+          "salt": 11
         },
         "serif": {
-          "salt": 12
+          "salt": 11
         }
       }
     },
@@ -63855,10 +63831,10 @@
       "reading": "かいしちょくぜん",
       "families": {
         "sans": {
-          "salt": 13
+          "salt": 12
         },
         "serif": {
-          "salt": 13
+          "salt": 12
         }
       }
     },
@@ -63867,10 +63843,10 @@
       "reading": "かいてん",
       "families": {
         "sans": {
-          "salt": 14
+          "salt": 13
         },
         "serif": {
-          "salt": 14
+          "salt": 13
         }
       }
     },
@@ -63879,10 +63855,10 @@
       "reading": "かいてんまえ",
       "families": {
         "sans": {
-          "salt": 15
+          "salt": 14
         },
         "serif": {
-          "salt": 15
+          "salt": 14
         }
       }
     },
@@ -63891,10 +63867,10 @@
       "reading": "かいてんご",
       "families": {
         "sans": {
-          "salt": 16
+          "salt": 15
         },
         "serif": {
-          "salt": 16
+          "salt": 15
         }
       }
     },
@@ -63903,10 +63879,10 @@
       "reading": "かいてんじこく",
       "families": {
         "sans": {
-          "salt": 17
+          "salt": 16
         },
         "serif": {
-          "salt": 17
+          "salt": 16
         }
       }
     },
@@ -63915,10 +63891,10 @@
       "reading": "かいてんじかん",
       "families": {
         "sans": {
-          "salt": 18
+          "salt": 17
         },
         "serif": {
-          "salt": 18
+          "salt": 17
         }
       }
     },
@@ -63927,10 +63903,10 @@
       "reading": "かいてんじゅんび",
       "families": {
         "sans": {
-          "salt": 19
+          "salt": 18
         },
         "serif": {
-          "salt": 19
+          "salt": 18
         }
       }
     },
@@ -63939,10 +63915,10 @@
       "reading": "かいほう",
       "families": {
         "sans": {
-          "salt": 20
+          "salt": 19
         },
         "serif": {
-          "salt": 20
+          "salt": 19
         }
       }
     },
@@ -63951,10 +63927,10 @@
       "reading": "かいぎょういらい",
       "families": {
         "sans": {
-          "salt": 21
+          "salt": 20
         },
         "serif": {
-          "salt": 21
+          "salt": 20
         }
       }
     },
@@ -63963,10 +63939,10 @@
       "reading": "かいぎょうご",
       "families": {
         "sans": {
-          "salt": 22
+          "salt": 21
         },
         "serif": {
-          "salt": 22
+          "salt": 21
         }
       }
     },
@@ -63975,10 +63951,10 @@
       "reading": "かいぎょうけいかく",
       "families": {
         "sans": {
-          "salt": 23
+          "salt": 22
         },
         "serif": {
-          "salt": 23
+          "salt": 22
         }
       }
     },
@@ -63987,10 +63963,10 @@
       "reading": "かいえん",
       "families": {
         "sans": {
-          "salt": 24
+          "salt": 23
         },
         "serif": {
-          "salt": 24
+          "salt": 23
         }
       }
     },
@@ -63999,10 +63975,10 @@
       "reading": "かいえんいちじかんまえ",
       "families": {
         "sans": {
-          "salt": 25
+          "salt": 24
         },
         "serif": {
-          "salt": 25
+          "salt": 24
         }
       }
     },
@@ -64011,10 +63987,10 @@
       "reading": "かいえんまえ",
       "families": {
         "sans": {
-          "salt": 26
+          "salt": 25
         },
         "serif": {
-          "salt": 26
+          "salt": 25
         }
       }
     },
@@ -64023,10 +63999,10 @@
       "reading": "かいえんじ",
       "families": {
         "sans": {
-          "salt": 27
+          "salt": 26
         },
         "serif": {
-          "salt": 27
+          "salt": 26
         }
       }
     },
@@ -64035,10 +64011,10 @@
       "reading": "かいえんじこく",
       "families": {
         "sans": {
-          "salt": 28
+          "salt": 27
         },
         "serif": {
-          "salt": 28
+          "salt": 27
         }
       }
     },
@@ -64047,10 +64023,10 @@
       "reading": "かいえんじかん",
       "families": {
         "sans": {
-          "salt": 29
+          "salt": 28
         },
         "serif": {
-          "salt": 29
+          "salt": 28
         }
       }
     },
@@ -64059,10 +64035,10 @@
       "reading": "かいはつちゅう",
       "families": {
         "sans": {
-          "salt": 30
+          "salt": 29
         },
         "serif": {
-          "salt": 30
+          "salt": 29
         }
       }
     },
@@ -64071,10 +64047,10 @@
       "reading": "かいはつぎょうしゃ",
       "families": {
         "sans": {
-          "salt": 31
+          "salt": 30
         },
         "serif": {
-          "salt": 31
+          "salt": 30
         }
       }
     },
@@ -64083,10 +64059,10 @@
       "reading": "かいかじき",
       "families": {
         "sans": {
-          "salt": 32
+          "salt": 31
         },
         "serif": {
-          "salt": 32
+          "salt": 31
         }
       }
     },
@@ -64095,10 +64071,10 @@
       "reading": "かいかき",
       "families": {
         "sans": {
-          "salt": 33
+          "salt": 32
         },
         "serif": {
-          "salt": 33
+          "salt": 32
         }
       }
     },
@@ -64107,10 +64083,10 @@
       "reading": "かいこうまえ",
       "families": {
         "sans": {
-          "salt": 34
+          "salt": 33
         },
         "serif": {
-          "salt": 34
+          "salt": 33
         }
       }
     },
@@ -64119,10 +64095,10 @@
       "reading": "かいつう",
       "families": {
         "sans": {
-          "salt": 35
+          "salt": 34
         },
         "serif": {
-          "salt": 35
+          "salt": 34
         }
       }
     },
@@ -64131,10 +64107,10 @@
       "reading": "かいへい",
       "families": {
         "sans": {
-          "salt": 36
+          "salt": 35
         },
         "serif": {
-          "salt": 36
+          "salt": 35
         }
       }
     },
@@ -64143,10 +64119,10 @@
       "reading": "かいかん",
       "families": {
         "sans": {
-          "salt": 37
+          "salt": 36
         },
         "serif": {
-          "salt": 37
+          "salt": 36
         }
       }
     },
@@ -64155,10 +64131,10 @@
       "reading": "かいかんまえ",
       "families": {
         "sans": {
-          "salt": 38
+          "salt": 37
         },
         "serif": {
-          "salt": 38
+          "salt": 37
         }
       }
     },

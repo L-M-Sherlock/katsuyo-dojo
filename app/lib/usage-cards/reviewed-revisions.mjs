@@ -1,5 +1,111 @@
-// Reviewed successor cards; history and bilingual receipts are in docs/usage-card-reviewed-revisions.v1.json.
+// Reviewed successor cards; portable receipts are in docs/usage-card-reviewed-revisions.v1.json.
 export const REVIEWED_USAGE_CARD_REVISIONS = [
+  {
+    "id": "usage:temiru:verb:取る:とる",
+    "pair": "verb:取る:とる/temiru",
+    "previousHash": "61d94950e50dfc2ff1277f35928153810e4b19d8f8fbec2acc829445d138effc",
+    "finalHash": "334029d9b26be80ac3c1001f377cf767d6019020dc8f6edd5bcf720590397365",
+    "card": {
+      "id": "usage:temiru:verb:取る:とる",
+      "senseId": "verb:取る:とる",
+      "meaning": "拿取",
+      "form": "temiru",
+      "scene": "在店里想核对帽子内侧的尺码标，打算先拿起帽子看看。",
+      "before": [
+        {
+          "text": "内側のサイズ表示を確かめるため、その帽子を手に",
+          "reading": "うちがわのサイズひょうじをたしかめるため、そのぼうしをてに"
+        }
+      ],
+      "after": [
+        {
+          "text": "ね。",
+          "reading": "ね。"
+        }
+      ],
+      "translation": "为了确认内侧的尺码标，我先拿起那顶帽子看看。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiru:verb:持つ:もつ",
+    "pair": "verb:持つ:もつ/temiru",
+    "previousHash": "db4b1d27737ac7a7bb0d9fd11179d8d65fa16e8d8c3818887aadb86806b2f515",
+    "finalHash": "db4b1d27737ac7a7bb0d9fd11179d8d65fa16e8d8c3818887aadb86806b2f515",
+    "card": {
+      "id": "usage:temiru:verb:持つ:もつ",
+      "senseId": "verb:持つ:もつ",
+      "meaning": "持有",
+      "form": "temiru",
+      "scene": "想确认新球拍的手感，先握在手里试试。",
+      "before": [
+        {
+          "text": "握り心地を確かめるため、このラケットを",
+          "reading": "にぎりごこちをたしかめるため、このラケットを"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "为了确认握感，试着拿拿这支球拍。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruDesireNegative",
+    "pair": "verb:飲む:のむ/temiruDesireNegative",
+    "previousHash": "75fdb28db81cae3bf1a885ff2864c88ea964f5532ada9c4187acc08d2f6c0c58",
+    "finalHash": "e34b6b6c4a027f8bd44fece82290043112d97a614706b7bf4efc7aad2d9ab2be",
+    "card": {
+      "id": "usage:temiruDesireNegative",
+      "senseId": "verb:飲む:のむ",
+      "meaning": "喝",
+      "form": "temiruDesireNegative",
+      "scene": "觉得苦咖啡味道太重，今天不想试喝",
+      "before": [
+        {
+          "text": "今日は苦いコーヒーを",
+          "reading": "きょうはにがいコーヒーを"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "今天不想试喝苦咖啡。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruDesirePast:verb:買う:かう",
+    "pair": "verb:買う:かう/temiruDesirePast",
+    "previousHash": "3aedaffad76602c24f4cc2ecb3b2e9fbf26ddf07fb293c788a716e8001e319a8",
+    "finalHash": "3aedaffad76602c24f4cc2ecb3b2e9fbf26ddf07fb293c788a716e8001e319a8",
+    "card": {
+      "id": "usage:temiruDesirePast:verb:買う:かう",
+      "senseId": "verb:買う:かう",
+      "meaning": "购买",
+      "form": "temiruDesirePast",
+      "scene": "回想刚开始工作时想亲自挣钱买表。",
+      "before": [
+        {
+          "text": "初めて給料をもらった時、自分のお金で腕時計を",
+          "reading": "はじめてきゅうりょうをもらったとき、じぶんのおかねでうでどけいを"
+        }
+      ],
+      "after": [
+        {
+          "text": "。",
+          "reading": "。"
+        }
+      ],
+      "translation": "第一次领工资时，我曾想试着用自己的钱买一块手表。",
+      "review": "approved"
+    }
+  },
   {
     "id": "usage:temiruNegative",
     "pair": "verb:使う:つかう/temiruNegative",
@@ -809,18 +915,18 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
   {
     "id": "usage:temiruNegative:verb:変わる:かわる",
     "pair": "verb:変わる:かわる/temiruNegative",
-    "previousHash": "8030690ede37204109ad8a3395ed44f161607d649fd24341e5a1d657dbf75be8",
-    "finalHash": "5f16563d4dad7586d5cbfab741770d280eebd68b571c362c9288300443f1b959",
+    "previousHash": "5f16563d4dad7586d5cbfab741770d280eebd68b571c362c9288300443f1b959",
+    "finalHash": "98ef622ad618bfc08484592fae5cc6c509311ed9f0497b20615d8631b54f71fc",
     "card": {
       "id": "usage:temiruNegative:verb:変わる:かわる",
       "senseId": "verb:変わる:かわる",
       "meaning": "改变",
       "form": "temiruNegative",
-      "scene": "总是倾听的同事，邀他下次开会也说一条自己的意见。",
+      "scene": "会前鼓励总做听众的同事，这次也分享一条自己的想法。",
       "before": [
         {
-          "text": "いつも聞き役だけど、次の会議では自分の意見も一つ言うように少し",
-          "reading": "いつもききやくだけど、つぎのかいぎではじぶんのいけんもひとついうようにすこし"
+          "text": "いつも聞き役だけど、たまには少し",
+          "reading": "いつもききやくだけど、たまにはすこし"
         }
       ],
       "after": [
@@ -828,7 +934,7 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
           "text": "？"
         }
       ],
-      "translation": "你平时总是倾听，下次开会要不要试着也说一条自己的意见？",
+      "translation": "你平时总是听别人说话，不过偶尔也试着稍微改变一下，怎么样？",
       "review": "approved"
     }
   },
@@ -939,8 +1045,8 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
   {
     "id": "usage:temiruNegative:verb:届ける:とどける",
     "pair": "verb:届ける:とどける/temiruNegative",
-    "previousHash": "88bbfae85dbb8941fae62823d38e2c522ddebe9bd616d7f7f71e6c9fd5c374f7",
-    "finalHash": "23463f3076cdc9c6bf90999b724c342267a07a5dcb6d102d9fde67c0e13b873d",
+    "previousHash": "23463f3076cdc9c6bf90999b724c342267a07a5dcb6d102d9fde67c0e13b873d",
+    "finalHash": "e82a61510c66ec97ec93a5171e06414e520cef59544681d016cf399cc629a688",
     "card": {
       "id": "usage:temiruNegative:verb:届ける:とどける",
       "senseId": "verb:届ける:とどける",
@@ -950,7 +1056,7 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
       "before": [
         {
           "text": "畑のトマトがたくさん採れたね。お隣さんに少し",
-          "reading": "はたけのとまとがたくさんとれたね。おとなりさんにすこし"
+          "reading": "はたけのトマトがたくさんとれたね。おとなりさんにすこし"
         }
       ],
       "after": [
@@ -1251,7 +1357,7 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
   {
     "id": "usage:temiruNegative:verb:持つ:もつ",
     "pair": "verb:持つ:もつ/temiruNegative",
-    "previousHash": "f27f6c5734c415f3bee5ad749a317d9743bc3c95aadcd35a04f56374b38305d0",
+    "previousHash": "d2576e898931f5dec335d0f86a92c60211b6598a95abc954757953ed1c080c40",
     "finalHash": "d2576e898931f5dec335d0f86a92c60211b6598a95abc954757953ed1c080c40",
     "card": {
       "id": "usage:temiruNegative:verb:持つ:もつ",
@@ -2423,8 +2529,8 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
   {
     "id": "usage:temiruNegative:verb:見る:みる",
     "pair": "verb:見る:みる/temiruNegative",
-    "previousHash": "987a2a99f6dd4c0465ed2de65143d118b4d989ef75a677200c75ea2c80807505",
-    "finalHash": "b1b8a26e17e8eee7349451033b7c48bfd7349e753aa05d9e8038ed6b8c9e0078",
+    "previousHash": "b1b8a26e17e8eee7349451033b7c48bfd7349e753aa05d9e8038ed6b8c9e0078",
+    "finalHash": "6d4c350effcd557f4ba0856ddf3b97c88b464a50ddf9fb8bd02b3fa7bd2926f4",
     "card": {
       "id": "usage:temiruNegative:verb:見る:みる",
       "senseId": "verb:見る:みる",
@@ -2442,7 +2548,7 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
           "text": "？"
         }
       ],
-      "translation": "车站前的新摄影展已经开幕了。下班回去时要不要一起去看看？",
+      "translation": "车站前新开了摄影展，回去时要不要一起去看看？",
       "review": "approved"
     }
   },
@@ -3177,7 +3283,7 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
   {
     "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
     "pair": "verb:騒ぐ:さわぐ/temiruNegative",
-    "previousHash": "1a936c42e51e99b181519502b084e7960b2d701a4008b130fb59f72dbd3beb90",
+    "previousHash": "7c23b4dc7d6fa9d04b7ce03335f9690705f24cdebf4891a98d4d6971dae1db00",
     "finalHash": "7c23b4dc7d6fa9d04b7ce03335f9690705f24cdebf4891a98d4d6971dae1db00",
     "card": {
       "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
@@ -3197,6 +3303,113 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
         }
       ],
       "translation": "听说乐队最后一首歌全场都会嗨起来，要不要一起到前面热闹一下？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruPast:verb:助ける:たすける",
+    "pair": "verb:助ける:たすける/temiruPast",
+    "previousHash": "a30d8f4d79fe2db805f06941e7e5fd0653f1c8afb84459103df9840a445f8821",
+    "finalHash": "743677667fca15b42dabcf1d29fc3d889f78bfea6cad8f7bec1f70aa24ec7ce9",
+    "card": {
+      "id": "usage:temiruPast:verb:助ける:たすける",
+      "senseId": "verb:助ける:たすける",
+      "meaning": "帮助",
+      "form": "temiruPast",
+      "scene": "游戏里试着帮助受困角色，随后接到一项新任务。",
+      "before": [
+        {
+          "text": "ゲームで閉じ込められた人を",
+          "reading": "ゲームでとじこめられたひとを"
+        }
+      ],
+      "after": [
+        {
+          "text": "。新しい仕事を頼まれた。",
+          "reading": "。あたらしいしごとをたのまれた。"
+        }
+      ],
+      "translation": "在游戏里试着帮助被困住的人，随后接到了新任务。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruPast:verb:持つ:もつ",
+    "pair": "verb:持つ:もつ/temiruPast",
+    "previousHash": "2e9756133e9fd0338d5e096a64b96b9643afadb2aebfe948d384cd2918e99e5c",
+    "finalHash": "2e9756133e9fd0338d5e096a64b96b9643afadb2aebfe948d384cd2918e99e5c",
+    "card": {
+      "id": "usage:temiruPast:verb:持つ:もつ",
+      "senseId": "verb:持つ:もつ",
+      "meaning": "持有",
+      "form": "temiruPast",
+      "scene": "试拿过那只陶罐，发现比想象中沉。",
+      "before": [
+        {
+          "text": "その陶器のつぼを",
+          "reading": "そのとうきのつぼを"
+        }
+      ],
+      "after": [
+        {
+          "text": "。思ったより重かった。",
+          "reading": "。おもったよりおもかった。"
+        }
+      ],
+      "translation": "试着拿了那只陶罐，比想象中重。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruPast:verb:落とす:おとす",
+    "pair": "verb:落とす:おとす/temiruPast",
+    "previousHash": "8aea760443f1d53c1e916079df2232ab98c148cc804728c55bd28553e7897cbc",
+    "finalHash": "ba45b91bf1cd41ec0b010492619d05b4a5340a2b4a33bd919b8b4dc89303ab88",
+    "card": {
+      "id": "usage:temiruPast:verb:落とす:おとす",
+      "senseId": "verb:落とす:おとす",
+      "meaning": "弄掉；丢失",
+      "form": "temiruPast",
+      "scene": "试验球的弹性，把球从一米高处松手。",
+      "before": [
+        {
+          "text": "一メートルの高さからボールを",
+          "reading": "いちメートルのたかさからボールを"
+        }
+      ],
+      "after": [
+        {
+          "text": "。よく弾んだ。",
+          "reading": "。よくはずんだ。"
+        }
+      ],
+      "translation": "我试着从一米高处松手让球落下，球弹得不错。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:temiruRequest:verb:開ける:あける",
+    "pair": "verb:開ける:あける/temiruRequest",
+    "previousHash": "cc57656756e3111701f691540681cd439d49f73ef0b5983e59b1e13858d19109",
+    "finalHash": "d97d02d917b7bc4159c86466c6b339b3dfdd272b4ad29aec054e7df1f8e7fd90",
+    "card": {
+      "id": "usage:temiruRequest:verb:開ける:あける",
+      "senseId": "verb:開ける:あける",
+      "meaning": "打开",
+      "form": "temiruRequest",
+      "scene": "门没锁，请试着打开这扇门。",
+      "before": [
+        {
+          "text": "鍵はかかっていないので、このドアを",
+          "reading": "かぎはかかっていないので、このドアを"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "门没锁，请试着打开这扇门。",
       "review": "approved"
     }
   },

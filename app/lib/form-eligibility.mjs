@@ -3,6 +3,7 @@ import { FULL_NATURALNESS_DEFERRED_PAIRS } from './usage-cards/full-naturalness-
 import { USER_DIRECTED_DEFERRED_PAIRS } from './usage-cards/user-directed-deferrals.mjs';
 import { REVIEWED_USAGE_CARD_DEFERRALS } from './usage-cards/reviewed-revisions.mjs';
 import { USER_DIRECTED_FORM_DEFERRALS } from './teaching-form-deferrals.mjs';
+import { teachingPairDeferral } from './teaching-pair-deferrals.mjs';
 export { DEFERRED_ACTION_PAIRS } from './action-pair-deferrals.mjs';
 import { COMPOUND_FORM_SPECS } from './compound-forms.mjs';
 import { CHAIN_FORM_SPECS } from './multi-step-forms.mjs';
@@ -219,6 +220,11 @@ export function assessFormUsage(item, form) {
   if (deferredForm) return {
     ...contextual(sense, form, deferredForm.reason),
     reasonCode: 'user-directed-form-hold',
+  };
+  const teachingPair = teachingPairDeferral(sense.id, form);
+  if (teachingPair) return {
+    ...contextual(sense, form, teachingPair.reason),
+    reasonCode: 'user-directed-pair-hold',
   };
   const reviewedDeferral = reviewedDeferrals.get(`${sense.id}/${form}`);
   if (reviewedDeferral) return {

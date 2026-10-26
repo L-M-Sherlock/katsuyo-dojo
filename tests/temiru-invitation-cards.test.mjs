@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
-import { USAGE_CARDS, REVIEWED_USAGE_CARDS, usageCardItem, resolveUsageCard } from '../app/lib/usage-cards.mjs';
+import { USAGE_CARDS, PRE_REVIEWED_USAGE_CARDS, REVIEWED_USAGE_CARDS, usageCardItem, resolveUsageCard } from '../app/lib/usage-cards.mjs';
 import { REVIEWED_USAGE_CARD_REVISIONS, REVIEWED_USAGE_CARD_DEFERRALS } from '../app/lib/usage-cards/reviewed-revisions.mjs';
 import { EN_REVIEWED_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/reviewed-usage-card-revisions.mjs';
 import { EN_USAGE_CARD_OVERLAYS as BASELINE_ENGLISH } from '../app/lib/i18n/content/en/usage-cards.mjs';
@@ -10,20 +10,35 @@ import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import { recognizeForms } from '../app/lib/form-recognition.mjs';
 import { normalizeAnswer } from '../app/lib/answer-analysis.mjs';
 import { isTeachingFormDeferred, USER_DIRECTED_FORM_DEFERRALS } from '../app/lib/teaching-form-deferrals.mjs';
+import { TEACHING_PAIR_DEFERRALS } from '../app/lib/teaching-pair-deferrals.mjs';
+import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
 import { revisionHash, verifyCurrentReviewedUsageRevisions, verifyPortableRevisionDelivery } from '../scripts/verify-reviewed-usage-revisions.mjs';
 
 const FORM = 'temiruNegative';
 const ROUND = 'temiru-negative-invitation-20261017';
+const EXPECTED_FOLLOWUP_IDS = new Set([
+  'usage:temiru:verb:取る:とる', 'usage:temiru:verb:持つ:もつ',
+  'usage:temiruNegative:verb:変わる:かわる', 'usage:temiruNegative:verb:届ける:とどける',
+  'usage:temiruNegative:verb:見る:みる', 'usage:temiruNegative:verb:持つ:もつ', 'usage:temiruNegative:verb:騒ぐ:さわぐ',
+  'usage:temiruPast:verb:助ける:たすける', 'usage:temiruPast:verb:落とす:おとす', 'usage:temiruPast:verb:持つ:もつ',
+  'usage:temiruRequest:verb:開ける:あける', 'usage:temiruDesireNegative', 'usage:temiruDesirePast:verb:買う:かう',
+]);
 const ENGLISH_CHECKS = ['englishNatural', 'meaning', 'roles', 'timeAndPolarity', 'register', 'scene', 'noAnswerLeak'];
 const byId = rows => new Map(rows.map(row => [row.id, row]));
 const text = parts => parts.map(part => part.text).join('');
 const reading = parts => parts.map(part => part.reading ?? part.text).join('');
 
-function invitationRound() {
+function reviewedProof() {
   const proof = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-reviewed-revisions.v1.json', import.meta.url)));
-  const round = proof.rounds.find(row => row.id === ROUND);
-  assert.ok(round, 'the invitation rewrite needs its own complete portable review round');
-  assert.equal(proof.rounds.at(-1), round);
+  assert.equal(revisionHash(proof.rounds.slice(0, 3)), '5a3cfce61cd315cd4c20ca69dbaae3ce0bc591da535bc3eba2410b7b5aa5e224',
+    'the original three independent rounds remain unchanged');
+  return proof;
+}
+
+function invitationRound() {
+  const round = reviewedProof().rounds[2];
+  assert.equal(round.id, ROUND);
+  assert.equal(revisionHash(round), '03678576ffdfe12e63c4e95193ab751571783c7da9036397d1aef9d4f20a7276');
   return round;
 }
 
@@ -34,7 +49,35 @@ function frozenBatch(batch) {
     [key, JSON.parse((key === 'report' ? review : author).get(file))]));
 }
 
-test('the invitation round accounts for all 123 frozen sources with only independently approved cards active', () => {
+// Replay frozen delivery bytes rather than treating a later runtime revision
+// as the card that an earlier reviewer approved.
+function frozenState(rounds) {
+  const cards = byId(PRE_REVIEWED_USAGE_CARDS), english = byId(BASELINE_ENGLISH), revisions = new Map();
+  for (const round of rounds) {
+    for (const source of round.sourceCards) assert.deepEqual(cards.get(source.id), source, source.id);
+    for (const batch of round.batches) {
+      const {cards: drafts, notes, report} = frozenBatch(batch);
+      for (const [index, draft] of drafts.entries()) {
+        const previous = cards.get(draft.id), final = {...draft, review: 'approved'}, row = report.rows[index];
+        assert.ok(previous, draft.id);
+        assert.equal(row.status, 'approved', draft.id);
+        assert.equal(row.hash, revisionHash(draft), draft.id);
+        assert.equal(row.sourceHash, revisionHash(final), draft.id);
+        const overlay = {id: final.id, sourceHash: revisionHash(final), ...notes[index].english};
+        assert.equal(row.englishHash, revisionHash(overlay), draft.id);
+        cards.set(final.id, final); english.set(final.id, overlay);
+        revisions.set(final.id, {id: final.id, pair: `${final.senseId}/${final.form}`,
+          previousHash: revisionHash(previous), finalHash: revisionHash(final), card: final});
+      }
+    }
+    for (const row of round.deferrals ?? []) { cards.delete(row.id); english.delete(row.id); revisions.delete(row.id); }
+  }
+  return {cards: PRE_REVIEWED_USAGE_CARDS.filter(card => cards.has(card.id)).map(card => cards.get(card.id)),
+    english: BASELINE_ENGLISH.filter(row => english.has(row.id)).map(row => english.get(row.id)),
+    revisions};
+}
+
+test('the invitation round accounts for all 123 frozen sources before later exact teaching holds', () => {
   const round = invitationRound();
   assert.equal(round.form, FORM);
   assert.equal(round.sourceCount, 123);
@@ -64,20 +107,26 @@ test('the invitation round accounts for all 123 frozen sources with only indepen
   assert.equal(deferred.size, (round.deferrals ?? []).length);
   for (const id of deferred) assert.ok(sources.has(id) && !approved.has(id), id);
   assert.deepEqual(new Set([...approved, ...deferred]), sources);
-  assert.deepEqual(new Set(USAGE_CARDS.filter(card => card.form === FORM).map(card => card.id)), approved);
+  const heldIds = new Set(TEACHING_PAIR_DEFERRALS.map(row => row.id));
+  assert.deepEqual(heldIds, EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
+  assert.deepEqual(new Set(USAGE_CARDS.filter(card => card.form === FORM).map(card => card.id)),
+    new Set([...approved].filter(id => !heldIds.has(id))));
   assert.deepEqual(new Set(REVIEWED_USAGE_CARDS.filter(card => card.form === FORM).map(card => card.id)), approved);
   assert.deepEqual(new Set(REVIEWED_USAGE_CARD_DEFERRALS.filter(row => sources.has(row.id)).map(row => row.id)), deferred);
+  const historical = frozenState(reviewedProof().rounds.slice(0, 3));
+  assert.deepEqual(new Set(historical.cards.filter(card => card.form === FORM).map(card => card.id)), approved);
   const summary = verifyCurrentReviewedUsageRevisions();
-  assert.equal(summary.sourceCount, 125 + 123);
-  assert.equal(summary.reviewedCount, 124 + approved.size);
+  assert.equal(summary.sourceCount, 125 + 123 + 13);
+  assert.equal(summary.reviewedCount, 124 + approved.size + 13);
   assert.equal(summary.deferredCount, 1 + deferred.size);
 });
 
-test('every active invitation binds the complete target, bilingual rewrite and reading decisions to its frozen independent review', () => {
+test('every original invitation approval binds its target, bilingual rewrite and reading decisions to frozen independent review', () => {
   const round = invitationRound();
-  const sources = byId(round.sourceCards), active = byId(USAGE_CARDS);
-  const currentEnglish = byId(CURRENT_ENGLISH), oldEnglish = byId(BASELINE_ENGLISH);
-  const revisions = byId(REVIEWED_USAGE_CARD_REVISIONS), reviewedEnglish = byId(EN_REVIEWED_USAGE_CARD_OVERLAYS);
+  const original = frozenState(reviewedProof().rounds.slice(0, 3));
+  const sources = byId(round.sourceCards), active = byId(original.cards);
+  const currentEnglish = byId(original.english), oldEnglish = byId(BASELINE_ENGLISH);
+  const revisions = original.revisions, reviewedEnglish = byId(original.english);
   for (const batch of round.batches) {
     assert.notEqual(batch.author, batch.reviewer, batch.id);
     assert.equal(batch.authorModel, 'gpt-6-luna');
@@ -118,8 +167,11 @@ test('every active invitation binds the complete target, bilingual rewrite and r
       assert.deepEqual(final, { ...draft, review: 'approved' }, draft.id);
       assert.equal(revisions.get(draft.id).previousHash, revisionHash(source), draft.id);
       assert.equal(revisions.get(draft.id).finalHash, revisionHash(final), draft.id);
-      const target = resolveUsageCard(final).target;
       const item = usageCardItem(final.senseId);
+      const resolved = resolveUsageCard(final);
+      const target = resolved?.target ?? {text: deriveUnified(item, FORM).answer,
+        reading: deriveUnified({...item, surface: item.reading, lexicalSurface: item.surface}, FORM).answer};
+      assert.equal(resolved === null, EXPECTED_TEMIRU_TEACHING_HOLD_IDS.has(final.id), final.id);
       assert.equal(target.text, deriveUnified(item, FORM).answer, final.id);
       assert.equal(target.reading, deriveUnified({ ...item, surface: item.reading, lexicalSurface: item.surface }, FORM).answer, final.id);
       assert.equal(requirement.answer, target.text, final.id);
@@ -154,14 +206,51 @@ test('every active invitation binds the complete target, bilingual rewrite and r
   }
 });
 
-test('the invitation rewrite preserves every out-of-scope canonical and English card from the frozen task baseline', () => {
-  const cards = USAGE_CARDS.filter(card => card.form !== FORM);
-  const sourceIds = new Set(invitationRound().sourceCards.map(card => card.id));
-  const english = CURRENT_ENGLISH.filter(row => !sourceIds.has(row.id));
-  assert.equal(cards.length, 17015);
-  assert.equal(english.length, 17015);
-  assert.equal(revisionHash(cards), 'a18ab642dca021106d85d0072dcfe22f91b57039a235d647e8d32462b4b19208');
-  assert.equal(revisionHash(english), 'dfe9222ec82970512035009ef4f7c499bfb79e120c39ec1bd5b9de5bb3aed714');
+test('later exact subset reviews and teaching choices preserve the original invitation baseline', () => {
+  const proof = reviewedProof(), followups = proof.rounds.slice(3);
+  assert.equal(followups.length, 6);
+  assert.deepEqual(new Set(followups.flatMap(round => round.scopeIds)), EXPECTED_FOLLOWUP_IDS);
+  assert.equal(followups.reduce((sum, round) => sum + round.sourceCount, 0), 13);
+  for (const round of followups) {
+    assert.equal(round.scopeIds.length, round.sourceCount, round.id);
+    assert.equal(new Set(round.scopeIds).size, round.sourceCount, round.id);
+    assert.ok(round.sourceCards.every(card => card.form === round.form), round.id);
+    assert.deepEqual(round.sourceCards.map(card => card.id), round.scopeIds, round.id);
+    assert.deepEqual(round.deferrals ?? [], [], 'these user choices are teaching holds, not newly invented review deferrals');
+  }
+  const heldIds = new Set(TEACHING_PAIR_DEFERRALS.map(row => row.id));
+  assert.deepEqual(heldIds, EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
+  const historical = frozenState(proof.rounds.slice(0, 3)), latest = frozenState(proof.rounds);
+  const historicalCards = historical.cards.filter(card => card.form !== FORM && !isTeachingFormDeferred(card.form));
+  const historicalIds = new Set(historicalCards.map(card => card.id));
+  const historicalEnglish = historical.english.filter(row => historicalIds.has(row.id));
+  assert.equal(historicalCards.length, 17015);
+  assert.equal(historicalEnglish.length, 17015);
+  assert.equal(revisionHash(historicalCards), 'a18ab642dca021106d85d0072dcfe22f91b57039a235d647e8d32462b4b19208');
+  assert.equal(revisionHash(historicalEnglish), 'dfe9222ec82970512035009ef4f7c499bfb79e120c39ec1bd5b9de5bb3aed714');
+
+  // Verify the final projection against all frozen approvals, with only the
+  // eight explicit teaching choices removed after review verification.
+  assert.deepEqual(REVIEWED_USAGE_CARDS, latest.cards);
+  const expectedCards = latest.cards.filter(card => !isTeachingFormDeferred(card.form) && !heldIds.has(card.id));
+  const expectedIds = new Set(expectedCards.map(card => card.id));
+  const expectedEnglish = latest.english.filter(row => expectedIds.has(row.id));
+  assert.equal(expectedCards.length, 17130);
+  assert.deepEqual(USAGE_CARDS, expectedCards);
+  assert.deepEqual(CURRENT_ENGLISH, expectedEnglish);
+  const sortById = rows => [...rows].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+  assert.deepEqual(REVIEWED_USAGE_CARD_REVISIONS, sortById([...latest.revisions.values()]));
+  assert.deepEqual(EN_REVIEWED_USAGE_CARD_OVERLAYS, sortById(latest.english.filter(row => latest.revisions.has(row.id))));
+  const currentById = byId(USAGE_CARDS), currentEnglishById = byId(CURRENT_ENGLISH);
+  const historicalEnglishById = byId(historicalEnglish);
+  for (const card of historicalCards) {
+    if (heldIds.has(card.id)) {
+      assert.ok(!currentById.has(card.id) && !currentEnglishById.has(card.id), card.id);
+    } else if (!EXPECTED_FOLLOWUP_IDS.has(card.id)) {
+      assert.deepEqual(currentById.get(card.id), card, `${card.id}: only the exact reviewed subset may change`);
+      assert.deepEqual(currentEnglishById.get(card.id), historicalEnglishById.get(card.id), card.id);
+    }
+  }
 });
 
 test('the past-negative teaching hold keeps its original sources and morphology during the invitation rewrite', () => {

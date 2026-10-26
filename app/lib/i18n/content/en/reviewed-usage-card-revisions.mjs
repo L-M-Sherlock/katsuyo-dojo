@@ -1,5 +1,29 @@
-// Bilingual successor reviews; do not overwrite the historical English baseline.
-export const EN_REVIEWED_USAGE_CARD_OVERLAYS = Object.freeze([
+// Independently reviewed English successors; historical baseline remains unchanged.
+export const EN_REVIEWED_USAGE_CARD_OVERLAYS = [
+  {
+    "id": "usage:temiru:verb:取る:とる",
+    "sourceHash": "334029d9b26be80ac3c1001f377cf767d6019020dc8f6edd5bcf720590397365",
+    "scene": "At a shop, I want to check the size label inside a hat.",
+    "translation": "To check the size label inside, I'll try picking up that hat."
+  },
+  {
+    "id": "usage:temiru:verb:持つ:もつ",
+    "sourceHash": "db4b1d27737ac7a7bb0d9fd11179d8d65fa16e8d8c3818887aadb86806b2f515",
+    "scene": "You want to check the feel of a new racket, so you pick it up to test its grip.",
+    "translation": "To check its grip, I'll try holding this racket."
+  },
+  {
+    "id": "usage:temiruDesireNegative",
+    "sourceHash": "e34b6b6c4a027f8bd44fece82290043112d97a614706b7bf4efc7aad2d9ab2be",
+    "scene": "You find black coffee too strong and don't feel like trying it today.",
+    "translation": "I don't want to try the bitter coffee today."
+  },
+  {
+    "id": "usage:temiruDesirePast:verb:買う:かう",
+    "sourceHash": "3aedaffad76602c24f4cc2ecb3b2e9fbf26ddf07fb293c788a716e8001e319a8",
+    "scene": "The speaker has just received their first paycheck.",
+    "translation": "When I got my first paycheck, I wanted to try buying a wristwatch with my own money."
+  },
   {
     "id": "usage:temiruNegative",
     "sourceHash": "6b42449285336ef14fc002294196592fdcbf89bf9e092597a35cf0cdb92db643",
@@ -188,9 +212,9 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = Object.freeze([
   },
   {
     "id": "usage:temiruNegative:verb:変わる:かわる",
-    "sourceHash": "5f16563d4dad7586d5cbfab741770d280eebd68b571c362c9288300443f1b959",
-    "scene": "A colleague who usually listens quietly is invited to share one of their own opinions at the next meeting.",
-    "translation": "You usually just listen; at the next meeting, want to try changing that by sharing one of your own opinions?"
+    "sourceHash": "98ef622ad618bfc08484592fae5cc6c509311ed9f0497b20615d8631b54f71fc",
+    "scene": "Before a meeting, you gently encourage a colleague who usually listens to share one of their own ideas this time.",
+    "translation": "You’re usually the listener, but why not try changing things up a little once in a while?"
   },
   {
     "id": "usage:temiruNegative:verb:始める:はじめる",
@@ -218,7 +242,7 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = Object.freeze([
   },
   {
     "id": "usage:temiruNegative:verb:届ける:とどける",
-    "sourceHash": "23463f3076cdc9c6bf90999b724c342267a07a5dcb6d102d9fde67c0e13b873d",
+    "sourceHash": "e82a61510c66ec97ec93a5171e06414e520cef59544681d016cf399cc629a688",
     "scene": "The family garden has produced plenty of tomatoes, and a mother suggests taking some to the neighbors.",
     "translation": "The garden has produced plenty of tomatoes. Want to take some to the neighbors?"
   },
@@ -561,7 +585,7 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = Object.freeze([
   },
   {
     "id": "usage:temiruNegative:verb:見る:みる",
-    "sourceHash": "b1b8a26e17e8eee7349451033b7c48bfd7349e753aa05d9e8038ed6b8c9e0078",
+    "sourceHash": "6d4c350effcd557f4ba0856ddf3b97c88b464a50ddf9fb8bd02b3fa7bd2926f4",
     "scene": "A new photo exhibit has opened near the station, and a coworker suggests visiting after work.",
     "translation": "A new photo exhibit has opened near the station. Want to check it out together on our way home?"
   },
@@ -738,6 +762,30 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = Object.freeze([
     "sourceHash": "7c23b4dc7d6fa9d04b7ce03335f9690705f24cdebf4891a98d4d6971dae1db00",
     "scene": "Friends are at a live show as the band reaches its final song.",
     "translation": "I hear everyone gets really hyped for the band’s final song. Want to head up front and make some noise together?"
+  },
+  {
+    "id": "usage:temiruPast:verb:助ける:たすける",
+    "sourceHash": "743677667fca15b42dabcf1d29fc3d889f78bfea6cad8f7bec1f70aa24ec7ce9",
+    "scene": "In a game, I tried to help someone who was trapped and was then assigned a new task.",
+    "translation": "I tried to help someone trapped in the game. I was asked to take on a new task."
+  },
+  {
+    "id": "usage:temiruPast:verb:持つ:もつ",
+    "sourceHash": "2e9756133e9fd0338d5e096a64b96b9643afadb2aebfe948d384cd2918e99e5c",
+    "scene": "I tried picking up the ceramic jar and found it heavier than expected.",
+    "translation": "I tried picking up the ceramic jar. It was heavier than I expected."
+  },
+  {
+    "id": "usage:temiruPast:verb:落とす:おとす",
+    "sourceHash": "ba45b91bf1cd41ec0b010492619d05b4a5340a2b4a33bd919b8b4dc89303ab88",
+    "scene": "The rubber ball’s bounce is in question.",
+    "translation": "I tried dropping the ball from a height of one meter. It bounced well."
+  },
+  {
+    "id": "usage:temiruRequest:verb:開ける:あける",
+    "sourceHash": "d97d02d917b7bc4159c86466c6b339b3dfdd272b4ad29aec054e7df1f8e7fd90",
+    "scene": "The door isn't locked, so please try opening it.",
+    "translation": "The door isn't locked, so please try opening it."
   },
   {
     "id": "usage:temorauNegative",
@@ -1479,4 +1527,4 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = Object.freeze([
     "scene": "The school festival video was meant to include classroom commotion, but recording time has run out.",
     "translation": "I wanted to include the noise of a classroom in the school festival video, but we ran out of recording time, so I will not have my classmates make that noise."
   }
-]);
+];

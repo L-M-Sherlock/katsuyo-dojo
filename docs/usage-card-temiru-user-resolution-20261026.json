@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "id": "temiru-user-resolution-20261026",
+  "auditProofSha256": "66a93e9ac8720a29c43b255c030efc96e1aac212043ac8764fff07d42a14412e",
+  "revisionProofSha256": "1d1b836a0065a2f550358e5d0dd489cfb2e4293dd15ed7251fad0769ddd3bd7e",
+  "holdEvidenceSha256": "104971512d842217c3c2031d6b121fbb39c8c4f4e77f6219e5ad6d561a67934b",
+  "sourceCount": 21,
+  "summary": {
+    "userHeld": 8,
+    "revised": 8,
+    "retained": 5,
+    "openFindings": 0
+  },
+  "initialReviewRounds": 3,
+  "initialReviewRoundsHash": "5a3cfce61cd315cd4c20ca69dbaae3ce0bc591da535bc3eba2410b7b5aa5e224",
+  "newReviewRoundIds": [
+    "temiru-user-fix-20261026-temiru",
+    "temiru-user-fix-20261026-temiruNegative",
+    "temiru-user-fix-20261026-temiruPast",
+    "temiru-user-fix-20261026-temiruDesireNegative",
+    "temiru-user-fix-20261026-temiruRequest",
+    "temiru-user-fix-20261026-temiruDesirePast"
+  ],
+  "userChoice": "User explicitly chose to hold 終わる, 遅れる, 貸す exact pairs instead of changing verbs. Four severe pair holds and five retained natural examples follow the user grouping.",
+  "rows": [
+    {
+      "id": "usage:temiruPast:verb:いる:いる",
+      "form": "temiruPast",
+      "senseId": "verb:いる:いる",
+      "sourceHash": "a4ad13dba3ad52a35685af8b666295dd3016b7c6218c7cad9664e74f0cd59ec4",
+      "action": "hold",
+      "basis": "user-directed-teaching-hold",
+      "reason": "用户对当前「いる＋てみた」例句的日常教学自然度提出具体疑点并要求暂缓；明确地点、时段或主动停留的解释不足以单独作为恢复依据。保留构形、词形识别及历史复测，不断言该表达在所有语境下都不成立。"
+    },
+    {
+      "id": "usage:temiruDesireNegativePast:verb:帰る:かえる",
+      "form": "temiruDesireNegativePast",
+      "senseId": "verb:帰る:かえる",
+      "sourceHash": "117b56bb89bb06b0dda4246a139af7af52c09bd8be4b3fc3e98435c1d17da8f8",
+      "action": "hold",
+      "basis": "user-directed-teaching-hold",
+      "reason": "用户审阅原句后认为该处境将普通行为或自发反应勉强包装成尝试，明确要求暂缓这个精确配对；保留构形、词形识别和历史复测，不将这一教学选择扩成整个语法形式禁用。"
+    },
+    {
+      "id": "usage:temiruDesireNegativePast:verb:手伝う:てつだう",
+      "form": "temiruDesireNegativePast",
+      "senseId": "verb:手伝う:てつだう",
+      "sourceHash": "693fc07207a74034b097977c71a4e5a82a84c1be01ea48b1a8b36354e2998b19",
+      "action": "hold",
+      "basis": "user-directed-teaching-hold",
+      "reason": "用户审阅原句后认为该处境将普通行为或自发反应勉强包装成尝试，明确要求暂缓这个精确配对；保留构形、词形识别和历史复测，不将这一教学选择扩成整个语法形式禁用。"
+    },
+    {
+      "id": "usage:temiruPast:verb:笑う:わらう",
+      "form": "temiruPast",
+      "senseId": "verb:笑う:わらう",
+      "sourceHash": "3bd34fac869fbb2228f9a4b05b5f82f901db6bb69e35283e1921b7bbb609cb65",
+      "action": "hold",
+      "basis": "user-directed-teaching-hold",
+      "reason": "用户审阅原句后认为该处境将普通行为或自发反应勉强包装成尝试，明确要求暂缓这个精确配对；保留构形、词形识别和历史复测，不将这一教学选择扩成整个语法形式禁用。"
+    },
+    {
+      "id": "usage:temiruNegative:verb:運ぶ:はこぶ",
+      "form": "temiruNegative",
+      "senseId": "verb:運ぶ:はこぶ",
+      "sourceHash": "c0fefb8526fb9692b596f0c7ceb2eaad6e690913cce663149cbcc63285c26db4",
+      "action": "hold",
+      "basis": "user-directed-teaching-hold",
+      "reason": "用户审阅原句后认为该处境将普通行为或自发反应勉强包装成尝试，明确要求暂缓这个精确配对；保留构形、词形识别和历史复测，不将这一教学选择扩成整个语法形式禁用。"
+    },
+    {
+      "id": "usage:temiruNegative:verb:終わる:おわる",
+      "form": "temiruNegative",
+      "senseId": "verb:終わる:おわる",
+      "sourceHash": "52b461e326203f79d6a725ba0e4e5df5df7ff500da80d04fefb4f0262cfffc4f",
+      "action": "hold",
+      "basis": "user-directed-teaching-hold",
+      "reason": "用户在明确获知建议需要更换原动词后，选择暂缓这三个原配对以避免继续硬造句；此处仅记录精确教学选择，不宣称该形式在所有语境下都不存在自然表达。"
+    },
+    {
+      "id": "usage:temiruNegative:verb:遅れる:おくれる",
+      "form": "temiruNegative",
+      "senseId": "verb:遅れる:おくれる",
+      "sourceHash": "725435df5fc86fb55a4f12183a88ec9cf6e23b61812e4e890ed7ac00346080c0",
+      "action": "hold",
+      "basis": "user-directed-teaching-hold",
+      "reason": "用户在明确获知建议需要更换原动词后，选择暂缓这三个原配对以避免继续硬造句；此处仅记录精确教学选择，不宣称该形式在所有语境下都不存在自然表达。"
+    },
+    {
+      "id": "usage:temiruRequest:verb:貸す:かす",
+      "form": "temiruRequest",
+      "senseId": "verb:貸す:かす",
+      "sourceHash": "e8425f066a9589228f4b366e533fb5b465f9c479ba8af4241a5a457e27a85793",
+      "action": "hold",
+      "basis": "user-directed-teaching-hold",
+      "reason": "用户在明确获知建议需要更换原动词后，选择暂缓这三个原配对以避免继续硬造句；此处仅记录精确教学选择，不宣称该形式在所有语境下都不存在自然表达。"
+    },
+    {
+      "id": "usage:temiru:verb:取る:とる",
+      "form": "temiru",
+      "senseId": "verb:取る:とる",
+      "sourceHash": "61d94950e50dfc2ff1277f35928153810e4b19d8f8fbec2acc829445d138effc",
+      "action": "revise",
+      "finalHash": "334029d9b26be80ac3c1001f377cf767d6019020dc8f6edd5bcf720590397365",
+      "englishHash": "0da79571b82cbac110ba6863b5a03a8089e33e6ac574f890c466dfad4762e1aa",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiru:verb:持つ:もつ",
+      "form": "temiru",
+      "senseId": "verb:持つ:もつ",
+      "sourceHash": "db4b1d27737ac7a7bb0d9fd11179d8d65fa16e8d8c3818887aadb86806b2f515",
+      "action": "retain",
+      "finalHash": "db4b1d27737ac7a7bb0d9fd11179d8d65fa16e8d8c3818887aadb86806b2f515",
+      "englishHash": "b592549c548627b16ab4a5b5d3b5272dec9fcd957170737de49b48bad26f2363",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruNegative:verb:騒ぐ:さわぐ",
+      "form": "temiruNegative",
+      "senseId": "verb:騒ぐ:さわぐ",
+      "sourceHash": "7c23b4dc7d6fa9d04b7ce03335f9690705f24cdebf4891a98d4d6971dae1db00",
+      "action": "retain",
+      "finalHash": "7c23b4dc7d6fa9d04b7ce03335f9690705f24cdebf4891a98d4d6971dae1db00",
+      "englishHash": "ea66286142957aa698a4d822a3cd6e171893d613eb0e54c9f8ed1ffb46ee6041",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruNegative:verb:持つ:もつ",
+      "form": "temiruNegative",
+      "senseId": "verb:持つ:もつ",
+      "sourceHash": "d2576e898931f5dec335d0f86a92c60211b6598a95abc954757953ed1c080c40",
+      "action": "retain",
+      "finalHash": "d2576e898931f5dec335d0f86a92c60211b6598a95abc954757953ed1c080c40",
+      "englishHash": "c871a6b61488e01da3a18bbb0c9c36e944f13719927dfdae65b4e4aded8a4f94",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruNegative:verb:変わる:かわる",
+      "form": "temiruNegative",
+      "senseId": "verb:変わる:かわる",
+      "sourceHash": "5f16563d4dad7586d5cbfab741770d280eebd68b571c362c9288300443f1b959",
+      "action": "revise",
+      "finalHash": "98ef622ad618bfc08484592fae5cc6c509311ed9f0497b20615d8631b54f71fc",
+      "englishHash": "1da2a8e6d4c9850e31dacf27623c11388bcfd165791c2f0cd132802aafdc3d1e",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruNegative:verb:見る:みる",
+      "form": "temiruNegative",
+      "senseId": "verb:見る:みる",
+      "sourceHash": "b1b8a26e17e8eee7349451033b7c48bfd7349e753aa05d9e8038ed6b8c9e0078",
+      "action": "revise",
+      "finalHash": "6d4c350effcd557f4ba0856ddf3b97c88b464a50ddf9fb8bd02b3fa7bd2926f4",
+      "englishHash": "66a1a035c8a8f36d8419bc85df18430246cb6109952de35b4805ddee0e5ee320",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruNegative:verb:届ける:とどける",
+      "form": "temiruNegative",
+      "senseId": "verb:届ける:とどける",
+      "sourceHash": "23463f3076cdc9c6bf90999b724c342267a07a5dcb6d102d9fde67c0e13b873d",
+      "action": "revise",
+      "finalHash": "e82a61510c66ec97ec93a5171e06414e520cef59544681d016cf399cc629a688",
+      "englishHash": "1dfa327c3ce753cebfa503027ef021f4c93223492d9699282fa15af69877d73a",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruPast:verb:持つ:もつ",
+      "form": "temiruPast",
+      "senseId": "verb:持つ:もつ",
+      "sourceHash": "2e9756133e9fd0338d5e096a64b96b9643afadb2aebfe948d384cd2918e99e5c",
+      "action": "retain",
+      "finalHash": "2e9756133e9fd0338d5e096a64b96b9643afadb2aebfe948d384cd2918e99e5c",
+      "englishHash": "fca34e84ee97b193f3fee83cd8754f426f576b1a955e44ead9ff19b04e15659c",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruPast:verb:落とす:おとす",
+      "form": "temiruPast",
+      "senseId": "verb:落とす:おとす",
+      "sourceHash": "8aea760443f1d53c1e916079df2232ab98c148cc804728c55bd28553e7897cbc",
+      "action": "revise",
+      "finalHash": "ba45b91bf1cd41ec0b010492619d05b4a5340a2b4a33bd919b8b4dc89303ab88",
+      "englishHash": "e331657aa99ce72ace0b96d5bc0fe58942309a4572a92cbdc36495b96b48f014",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruPast:verb:助ける:たすける",
+      "form": "temiruPast",
+      "senseId": "verb:助ける:たすける",
+      "sourceHash": "a30d8f4d79fe2db805f06941e7e5fd0653f1c8afb84459103df9840a445f8821",
+      "action": "revise",
+      "finalHash": "743677667fca15b42dabcf1d29fc3d889f78bfea6cad8f7bec1f70aa24ec7ce9",
+      "englishHash": "dee4abe564b273e8cbded826b1204a6d3e17923b07fb01315f1a360334651351",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruDesireNegative",
+      "form": "temiruDesireNegative",
+      "senseId": "verb:飲む:のむ",
+      "sourceHash": "75fdb28db81cae3bf1a885ff2864c88ea964f5532ada9c4187acc08d2f6c0c58",
+      "action": "revise",
+      "finalHash": "e34b6b6c4a027f8bd44fece82290043112d97a614706b7bf4efc7aad2d9ab2be",
+      "englishHash": "c54d6dc13105022e08b8fc75ca5101805dfa171389c3b8303e06e839ace8eb40",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruRequest:verb:開ける:あける",
+      "form": "temiruRequest",
+      "senseId": "verb:開ける:あける",
+      "sourceHash": "cc57656756e3111701f691540681cd439d49f73ef0b5983e59b1e13858d19109",
+      "action": "revise",
+      "finalHash": "d97d02d917b7bc4159c86466c6b339b3dfdd272b4ad29aec054e7df1f8e7fd90",
+      "englishHash": "503928a2e569d279130fdbafe4ccfddc83723fa52c596d30ec29e61905e3afd0",
+      "reviewer": "/root/temiru_user_repair_review"
+    },
+    {
+      "id": "usage:temiruDesirePast:verb:買う:かう",
+      "form": "temiruDesirePast",
+      "senseId": "verb:買う:かう",
+      "sourceHash": "3aedaffad76602c24f4cc2ecb3b2e9fbf26ddf07fb293c788a716e8001e319a8",
+      "action": "retain",
+      "finalHash": "3aedaffad76602c24f4cc2ecb3b2e9fbf26ddf07fb293c788a716e8001e319a8",
+      "englishHash": "43d29305688c53176ee52aa61212b48b38db160c413bd0675a0fe6090e74b213",
+      "reviewer": "/root/temiru_user_repair_review"
+    }
+  ],
+  "appliedReviewRounds": 9,
+  "appliedReviewRoundsHash": "49eeb59cee4eaec0a23c76c12dc36a9d33b8491ac12e588d2c323fabbe12b42b"
+}

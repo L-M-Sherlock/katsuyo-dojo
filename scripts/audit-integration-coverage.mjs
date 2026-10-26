@@ -30,6 +30,7 @@ import {readReleaseProof, verifyReleaseProof} from './export-integration-batches
 
 const HEX = /^[a-f0-9]{64}$/u;
 const fail = message => { throw new Error(message); };
+const PAIR_LIST_NAMES = ['requirements', 'required', 'current', 'items', 'deferred', 'open', 'unresolved', 'pending'];
 
 export const pairKey = value => {
   if (typeof value === 'string') {
@@ -76,7 +77,7 @@ function listFrom(value, names = []) {
 }
 
 function normalizePairs(value, label) {
-  const rows = listFrom(value, ['requirements', 'required', 'current', 'items', 'deferred', 'open', 'unresolved', 'pending']);
+  const rows = listFrom(value, PAIR_LIST_NAMES);
   const result = [], duplicates = [], invalid = [];
   const seen = new Set();
   for (const row of rows) {
@@ -241,7 +242,35 @@ function naturalnessSuccessors(file, expected, changedIds, statusFile) {
     activeCount: proof.activeCount, successors};
 }
 
-function auditProof(file, cards, required, runtime, errors, naturalnessFile, naturalnessStatusFile) {
+// Later review rounds and user teaching choices are separate from the frozen
+// integration release. Verify their complete portable chain before projecting
+// that release into the current teaching inventory.
+async function currentTeachingProjection(root, runtime) {
+  const verifierFile = path.join(root, 'scripts/verify-reviewed-usage-revisions.mjs');
+  if (!fs.existsSync(verifierFile)) return null;
+  if (!Array.isArray(runtime?.PRE_REVIEWED_USAGE_CARDS) || !Array.isArray(runtime?.REVIEWED_USAGE_CARDS)
+      || !Array.isArray(runtime?.USAGE_CARDS)) fail('Reviewed projection lacks its historical and current card inventories');
+  const verifier = await import(pathToFileURL(verifierFile).href);
+  if (typeof verifier.verifyCurrentReviewedUsageRevisions !== 'function') fail('Reviewed projection verifier is unavailable');
+  const summary = verifier.verifyCurrentReviewedUsageRevisions({cards: runtime.USAGE_CARDS,
+    baselineCards: runtime.PRE_REVIEWED_USAGE_CARDS});
+  const revisionProof = path.join(root, 'docs/usage-card-reviewed-revisions.v1.json');
+  const holdModule = await import(pathToFileURL(path.join(root, 'app/lib/teaching-pair-deferrals.mjs')).href);
+  const reviewed = new Map(runtime.REVIEWED_USAGE_CARDS.map(card => [card.id, card]));
+  const current = new Map(runtime.USAGE_CARDS.map(card => [card.id, card]));
+  const teachingHolds = (holdModule.TEACHING_PAIR_DEFERRALS ?? []).map(hold => {
+    const source = reviewed.get(hold.id);
+    if (!source || cardHash(source) !== hold.sourceHash || current.has(hold.id)
+        || pairKey(source) !== hold.pair || hold.basis !== 'user-directed-teaching-hold') {
+      fail(`Reviewed projection has a stale teaching hold: ${hold.id}`);
+    }
+    return {...hold};
+  });
+  return {baselineCards: runtime.PRE_REVIEWED_USAGE_CARDS, current, teachingHolds,
+    report: {path: revisionProof, fileHash: digest(fs.readFileSync(revisionProof)), ...summary}};
+}
+
+function auditProof(file, cards, required, runtime, errors, naturalnessFile, naturalnessStatusFile, projection) {
   const report = {path: file, fileHash: null, chainValid: false, contentMatches: false, valid: false};
   const verifiedCards = new Map();
   try {
@@ -257,49 +286,82 @@ function auditProof(file, cards, required, runtime, errors, naturalnessFile, nat
       ? runtime.usageCardStageRequirements('integration') : [];
     const integrationPairs = new Set([...required.set, ...currentRequirements, ...expected.map(pairKey)]);
     const integrationForms = new Set([...integrationPairs].map(pair => pair.slice(pair.lastIndexOf('/') + 1)));
-    const actual = cards.filter(card => expectedById.has(card?.id) || integrationForms.has(card?.form));
+    const subset = source => source.filter(card => expectedById.has(card?.id) || integrationForms.has(card?.form));
+    const actual = subset(cards);
     const actualById = new Map(actual.map(card => [card?.id, card]));
-    const missing = expected.filter(card => !actualById.has(card.id)).map(card => card.id);
-    const extra = actual.filter(card => !expectedById.has(card?.id)).map(card => card?.id ?? '(missing id)');
-    const changed = expected.filter(card => actualById.has(card.id)
-      && JSON.stringify(card) !== JSON.stringify(actualById.get(card.id))).map(card => card.id);
+    // Naturalness successors are checked against the retained pre-revision
+    // objects. Newer reviews must not be mistaken for an old repair receipt.
+    const historical = projection ? subset(projection.baselineCards) : actual;
+    const historicalById = new Map(historical.map(card => [card?.id, card]));
+    const historicalMissing = expected.filter(card => !historicalById.has(card.id)).map(card => card.id);
+    const historicalExtra = historical.filter(card => !expectedById.has(card?.id)).map(card => card?.id ?? '(missing id)');
+    const historicalChanged = expected.filter(card => historicalById.has(card.id)
+      && JSON.stringify(card) !== JSON.stringify(historicalById.get(card.id))).map(card => card.id);
     const reviewedSuccessors = [];
-    const unreviewedChanged = [];
-    if (changed.length && naturalnessFile && fs.existsSync(naturalnessFile)) {
+    const unreviewedHistorical = [];
+    const verifiedHistorical = new Map();
+    if (historicalChanged.length && naturalnessFile && fs.existsSync(naturalnessFile)) {
       try {
-        const naturalness = naturalnessSuccessors(naturalnessFile, expected, new Set(changed), naturalnessStatusFile);
+        const naturalness = naturalnessSuccessors(naturalnessFile, expected, new Set(historicalChanged), naturalnessStatusFile);
         report.naturalness = {path: naturalnessFile, fileHash: naturalness.fileHash,
           sourceCommit: naturalness.sourceCommit, activeCount: naturalness.activeCount};
-        for (const id of changed) {
+        for (const id of historicalChanged) {
           const successor = naturalness.successors.get(id);
-          if (successor && JSON.stringify(actualById.get(id)) === JSON.stringify(successor.card)) {
+          if (successor && JSON.stringify(historicalById.get(id)) === JSON.stringify(successor.card)) {
             reviewedSuccessors.push(successor.provenance);
-            verifiedCards.set(id, successor.card);
-          } else unreviewedChanged.push(id);
+            verifiedHistorical.set(id, successor.card);
+          } else unreviewedHistorical.push(id);
         }
       } catch (error) {
         report.naturalness = {path: naturalnessFile, error: error.message};
-        unreviewedChanged.push(...changed);
+        unreviewedHistorical.push(...historicalChanged);
       }
-    } else unreviewedChanged.push(...changed);
+    } else unreviewedHistorical.push(...historicalChanged);
+    for (const card of expected) {
+      if (JSON.stringify(card) === JSON.stringify(historicalById.get(card.id))) verifiedHistorical.set(card.id, card);
+    }
+    const teachingHolds = projection?.teachingHolds.filter(row => expectedById.has(row.id)) ?? [];
+    const heldIds = new Set(teachingHolds.map(row => row.id));
+    const currentExpected = projection
+      ? expected.filter(card => !heldIds.has(card.id)).map(card => projection.current.get(card.id))
+      : expected.map(card => verifiedHistorical.get(card.id) ?? card);
+    if (currentExpected.some(card => !card)) fail('Reviewed projection removed an integration card without a verified exact teaching hold');
+    const currentById = new Map(currentExpected.map(card => [card.id, card]));
+    const missing = currentExpected.filter(card => !actualById.has(card.id)).map(card => card.id);
+    const extra = actual.filter(card => !currentById.has(card?.id)).map(card => card?.id ?? '(missing id)');
+    const changed = currentExpected.filter(card => actualById.has(card.id)
+      && JSON.stringify(card) !== JSON.stringify(actualById.get(card.id))).map(card => card.id);
+    const unreviewedChanged = [...new Set([...unreviewedHistorical, ...changed])];
+    if (projection) {
+      report.reviewedProjection = projection.report;
+      for (const card of currentExpected) {
+        const before = verifiedHistorical.get(card.id);
+        if (before && JSON.stringify(before) !== JSON.stringify(card)) reviewedSuccessors.push({id: card.id,
+          sourceHash: cardHash(before), finalHash: cardHash(card),
+          revisionProofHash: projection.report.fileHash});
+      }
+    }
     const outsideRequirements = expected.map(pairKey).filter(pair => !required.set.has(pair));
     const objectHash = list => digest(Buffer.from(JSON.stringify([...list].sort((a, b) => String(a?.id).localeCompare(String(b?.id))))));
-    report.contentMatches = !missing.length && !extra.length && !unreviewedChanged.length && actual.length === expected.length;
+    report.contentMatches = !missing.length && !extra.length && !historicalMissing.length
+      && !historicalExtra.length && !unreviewedChanged.length && actual.length === currentExpected.length;
     Object.assign(report, {batches: verified.batches, releaseFileHash: proof.release.fileHash, releaseCount: expected.length,
       historicalCount: proof.baseline.cards.length, protocol3Count: expected.length - proof.baseline.cards.length,
       sourceCount: actual.length, sourceContentHash: objectHash(actual), releaseContentHash: objectHash(expected),
-      missing, extra, changed: unreviewedChanged, reviewedSuccessors, outsideRequirements});
+      currentExpectedCount: currentExpected.length, currentExpectedContentHash: objectHash(currentExpected),
+      missing, extra, changed: unreviewedChanged, reviewedSuccessors, teachingHolds, outsideRequirements});
     if (missing.length) errors.push(`Proof cards missing from formal source: ${missing.join(', ')}`);
     if (extra.length) errors.push(`Formal integration cards absent from proof: ${extra.join(', ')}`);
+    if (historicalMissing.length && projection) errors.push(`Historical integration cards missing before reviewed projection: ${historicalMissing.join(', ')}`);
+    if (historicalExtra.length && projection) errors.push(`Historical integration cards absent from proof: ${historicalExtra.join(', ')}`);
     if (unreviewedChanged.length) errors.push(`Formal integration cards differ from proof: ${unreviewedChanged.join(', ')}`);
-    if (actual.length !== expected.length && !missing.length && !extra.length) errors.push('Formal integration card count differs from proof');
+    if (actual.length !== currentExpected.length && !missing.length && !extra.length) errors.push('Formal integration card count differs from proof');
     if (outsideRequirements.length) errors.push(`Proof release pairs outside frozen requirements: ${outsideRequirements.join(', ')}`);
     report.valid = report.contentMatches && !outsideRequirements.length;
-    // These exact objects are backed either by the historical baseline or
-    // by the independently reviewed protocol-3 chain. No synthetic receipt
-    // is assigned to historical cards.
-    for (const card of expected) {
-      if (JSON.stringify(card) === JSON.stringify(actualById.get(card.id))) verifiedCards.set(card.id, card);
+    // Every live object needs the old integration chain and, if changed,
+    // matching naturalness and newer portable bilingual approvals.
+    for (const card of currentExpected) {
+      if (verifiedHistorical.has(card.id) && JSON.stringify(card) === JSON.stringify(actualById.get(card.id))) verifiedCards.set(card.id, card);
     }
   } catch (error) {
     report.error = error.message;
@@ -352,6 +414,10 @@ export async function auditIntegrationCoverage(options = {}) {
   const structuralIssues = typeof runtime?.usageCardIssues === 'function'
     ? runtime.usageCardIssues(approvedCards).map(issue => String(issue)) : [];
   if (structuralIssues.length) errors.push(`Approved card structural issues: ${structuralIssues.join('; ')}`);
+  let projection = null;
+  try { projection = await currentTeachingProjection(root, runtime); }
+  catch (error) { errors.push(`Reviewed teaching projection failed: ${error.message}`); }
+  const teachingHolds = projection?.teachingHolds.filter(row => required.set.has(row.pair)) ?? [];
   const approved = new Set(approvedCards.map(pairKey).filter(pair => required.set.has(pair)));
   const nonApprovedRequired = new Set(cards.map(pairKey).filter(pair => required.set.has(pair) && !approved.has(pair)));
   if (nonApprovedRequired.size) errors.push(`Required pairs are present only as non-approved cards: ${setArray(nonApprovedRequired).join(', ')}`);
@@ -361,7 +427,7 @@ export async function auditIntegrationCoverage(options = {}) {
     ? readData(absolute(root, options.deferred)).value : requirementData?.deferred ?? [];
   const openData = options.open && fs.existsSync(absolute(root, options.open))
     ? readData(absolute(root, options.open)).value : requirementData?.open ?? [];
-  const deferred = normalizePairs(deferredData, 'deferred');
+  const deferred = normalizePairs([...listFrom(deferredData, PAIR_LIST_NAMES), ...teachingHolds], 'deferred');
   const open = normalizePairs(openData, 'open');
   for (const set of [deferred, open]) {
     if (set.invalid.length) errors.push(`Invalid ${set.label} pair rows: ${set.invalid.length}`);
@@ -398,7 +464,7 @@ export async function auditIntegrationCoverage(options = {}) {
   const proof = options.proofPath
     ? auditProof(absolute(root, options.proofPath), cards, required, runtime, errors,
       absolute(root, options.naturalnessProofPath, 'docs/usage-card-naturalness-full-progress.v1.json.gz'),
-      absolute(root, options.naturalnessStatusPath, 'docs/usage-card-naturalness-full-progress.v1.json')) : null;
+      absolute(root, options.naturalnessStatusPath, 'docs/usage-card-naturalness-full-progress.v1.json'), projection) : null;
 
   const receiptData = options.receipts && fs.existsSync(absolute(root, options.receipts))
     ? readData(absolute(root, options.receipts)).value : null;
@@ -445,6 +511,7 @@ export async function auditIntegrationCoverage(options = {}) {
     requirements: {path: requirementFile, fileHash: digest(fs.readFileSync(requirementFile)), count: required.set.size, pairs: setArray(required.set)},
     cards: {path: cardSource.path, fileHash, count: cards.length, approvedCount: approvedCards.length, approvedPairs: setArray(approved), unexpectedApprovedPairs: setArray(unexpectedCards)},
     deferred: {count: deferred.set.size, pairs: setArray(deferred.set)},
+    teachingHolds: {count: teachingHolds.length, pairs: teachingHolds.map(row => row.pair).sort(), rows: teachingHolds},
     open: {count: open.set.size, pairs: setArray(open.set)},
     sets: {union: setArray(union), missing: setArray(missing), extra: setArray(extra), overlap: Object.fromEntries(Object.entries(overlap).map(([name, set]) => [name, setArray(set)]))},
     baseline: baseline ? {path: absolute(root, options.baseline), count: baseline.cards.length, missing: baselineMissing, changed: baselineChanged} : null,

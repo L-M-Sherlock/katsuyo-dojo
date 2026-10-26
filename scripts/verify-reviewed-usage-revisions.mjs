@@ -9,7 +9,8 @@ import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import { EN_USAGE_CARD_OVERLAYS as BASELINE_ENGLISH } from '../app/lib/i18n/content/en/usage-cards.mjs';
 import { EN_REVIEWED_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/reviewed-usage-card-revisions.mjs';
 import { validateEnglishUsageAgentOverlay } from './generate-english-usage-overlay.mjs';
-import { isTeachingFormDeferred } from '../app/lib/teaching-form-deferrals.mjs';
+import { isUsageCardTeachingDeferred } from '../app/lib/teaching-pair-deferrals.mjs';
+import { verifyTeachingPairHolds } from './lib/teaching-pair-holds.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const REVIEWED_REVISIONS_PROOF = path.join(ROOT, 'docs/usage-card-reviewed-revisions.v1.json');
@@ -209,7 +210,7 @@ function reviewBatch(batch, expected, englishBefore, roundSeen, reasons) {
     const previous = expected.get(id), source = inputs.get(id), card = drafted.get(id), note = noted.get(id);
     ensure(previous && !roundSeen.has(id) && same(source.card, previous)
       && source.sourceHash === revisionHash(previous) && same(source.english, englishBefore.get(id)), `${id}: input baseline drift or duplicate review`);
-    const requirement = assigned.get(id), resolved = resolveUsageCard(previous), item = usageCardItem(previous.senseId);
+    const requirement = assigned.get(id), resolved = resolveUsageCard(previous, {allowTeachingHolds: true}), item = usageCardItem(previous.senseId);
     ensure(['senseId', 'form', 'meaning'].every(key => requirement[key] === previous[key])
       && requirement.class === item?.class && requirement.answer === resolved?.target.text
       && requirement.answerReading === resolved?.target.reading, `${id}: assignment target drift`);
@@ -219,11 +220,12 @@ function reviewBatch(batch, expected, englishBefore, roundSeen, reasons) {
     if (note.disposition === 'retain') ensure(same(card, previous), `${id}: retained card differs from input`);
     else ensure(card.review === 'draft' && !same({ ...card, review: 'approved' }, previous), `${id}: revision is not a changed draft`);
     const finalCard = { ...card, review: 'approved' };
-    ensure(usageCardIssues([card]).length === 0 && usageCardIssues([finalCard]).length === 0, `${id}: invalid revised card structure`);
+    ensure(usageCardIssues([card], {allowTeachingHolds: true}).length === 0
+      && usageCardIssues([finalCard], {allowTeachingHolds: true}).length === 0, `${id}: invalid revised card structure`);
     const english = validateEnglishUsageAgentOverlay(finalCard, {
       id, sourceHash: revisionHash(finalCard), ...note.english,
-    });
-    const target = resolveUsageCard(card).target;
+    }, {allowTeachingHolds: true});
+    const target = resolveUsageCard(card, {allowTeachingHolds: true}).target;
     const sentence = [...card.before, target, ...card.after].map(part => part.text).join('');
     const row = report.rows[index];
     const reason = typeof row.reason === 'string' ? row.reason.trim().replace(/\s+/gu, ' ') : '';
@@ -259,7 +261,8 @@ export function verifyReviewedUsageRevisions({ cards, baselineCards, baselineOve
   indexById(englishRevisions, 'Runtime English revision rows');
   indexById(deferrals, 'Runtime deferral rows');
   if (!proof) {
-    const teachingCards = baselineCards.filter(card => !isTeachingFormDeferred(card.form));
+    verifyTeachingPairHolds(baselineCards, baselineOverlays);
+    const teachingCards = baselineCards.filter(card => !isUsageCardTeachingDeferred(card));
     ensure(revisions.length === 0 && englishRevisions.length === 0 && deferrals.length === 0 && same(cards, teachingCards), 'Missing independent revision proof');
     return { rounds: 0, sourceCount: 0, reviewedCount: 0, approvedCount: 0, deferredCount: 0,
       changedCount: 0, baselineCount: baselineCards.length, cardCount: cards.length,
@@ -313,7 +316,8 @@ export function verifyReviewedUsageRevisions({ cards, baselineCards, baselineOve
   ensure(same(revisions, expectedRevisions) && same(englishRevisions, expectedEnglish)
     && same(deferrals, expectedDeferrals), 'Runtime revision data differs from independent approved deliveries or exact deferrals');
   const reviewedCards = [...expected.values()];
-  const teachingCards = reviewedCards.filter(card => !isTeachingFormDeferred(card.form));
+  verifyTeachingPairHolds(reviewedCards, [...beforeEnglish.values()]);
+  const teachingCards = reviewedCards.filter(card => !isUsageCardTeachingDeferred(card));
   ensure(same(cards, teachingCards), 'Current cards differ from reviewed revisions or an out-of-scope card changed');
   return { rounds: proof.rounds.length, sourceCount, reviewedCount, approvedCount: reviewedCount, deferredCount: latestDeferrals.size,
     changedCount: revisions.filter(row => row.previousHash !== row.finalHash).length,

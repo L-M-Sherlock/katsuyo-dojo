@@ -1,3 +1,4 @@
+import { EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS } from './helpers/temiru-teaching-hold-scope.mjs';
 import { currentEligibilityBaseline } from '../scripts/lib/eligibility-baseline.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -12,6 +13,8 @@ import { reviewedLexicalSense } from '../app/lib/lexical-usage.mjs';
 import { RETIRED_TEORU_NEGATIVE_FORMS } from '../app/lib/compound-forms.mjs';
 import { reviewedDeferralHistory } from './helpers/reviewed-deferral-history.mjs';
 import { isTeachingFormDeferred, USER_DIRECTED_DEFERRED_FORMS } from '../app/lib/teaching-form-deferrals.mjs';
+import { TEACHING_PAIR_DEFERRALS } from '../app/lib/teaching-pair-deferrals.mjs';
+import { REVIEWED_USAGE_CARDS, USAGE_CARDS } from '../app/lib/usage-cards.mjs';
 import { verbUsageFamily } from '../app/lib/form-eligibility.mjs';
 
 const before = JSON.parse(readFileSync(new URL('./fixtures/natural-word-supply-before.json', import.meta.url), 'utf8'));
@@ -25,6 +28,7 @@ const fullNaturalnessBefore = JSON.parse(readFileSync(new URL('./fixtures/natura
 const userDirectedBefore = JSON.parse(readFileSync(new URL('./fixtures/user-directed-deferrals-before.json', import.meta.url), 'utf8'));
 const retiredTeoruBefore = JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-negatives-before.json', import.meta.url), 'utf8'));
 const formHold = JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json', import.meta.url), 'utf8'));
+const pairHold = JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-teaching-hold-20261026.json', import.meta.url), 'utf8'));
 assert.equal(fullNaturalnessBefore.sourceCommit, fullNaturalnessProof.sourceCommit);
 assert.deepEqual(new Set(fullNaturalnessBefore.entries.map(row => row.pair)), new Set(fullNaturalnessProof.deferrals.map(row => row.pair)));
 const actionContexts = new Map((actionReview.contextChanges ?? []).map(row => [row.pair, row]));
@@ -81,6 +85,7 @@ const retiredTeoruExercises = retiredTeoruBefore.exercises;
 const reviewedRevisionDeferred = reviewedDeferralHistory(model);
 assert.deepEqual(USER_DIRECTED_DEFERRED_FORMS, new Set([formHold.form]));
 assert.equal(formHold.form, 'temiruNegativePast');
+assert.equal(formHold.sourceCount, 122);
 assert.equal(formHold.sourceRows.length, formHold.sourceCount);
 assert.equal(hash(formHold.sourceRows.map(row => row.card)), formHold.sourceCardsHash);
 const formHeldExercises = formHold.sourceRows.map(row => {
@@ -98,6 +103,21 @@ const formHeldExercises = formHold.sourceRows.map(row => {
   assert.ok(sibling, `${row.pair}: the base form remains taught`);
   assert.equal(verbUsageFamily(exercise.form), verbUsageFamily(sibling.form));
   return { ...exercise, context: sibling.context };
+});
+assert.deepEqual(new Set(pairHold.sourceRows.map(row => row.pair)), EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS);
+assert.deepEqual(pairHold.sourceRows.map(row => [row.id, row.pair, row.sourceHash]),
+  TEACHING_PAIR_DEFERRALS.map(row => [row.id, row.pair, row.sourceHash]));
+const pairHeldExercises = pairHold.sourceRows.map(row => {
+  const source = REVIEWED_USAGE_CARDS.find(card => card.id === row.id);
+  assert.deepEqual(source, row.card, `${row.pair}: the original approved source remains intact`);
+  assert.equal(row.pair, `${source.senseId}/${source.form}`);
+  assert.equal(hash(source), row.sourceHash, row.id);
+  assert.equal(USAGE_CARDS.some(card => card.id === row.id), false);
+  const exercise = model.registryExercises.find(candidate => `${reviewedLexicalSense(candidate.item)?.id}/${candidate.form}` === row.pair);
+  assert.ok(exercise, `${row.pair}: the held pair remains in the morphology registry`);
+  assert.equal(model.exercises.some(candidate => candidate.id === exercise.id), false);
+  assert.ok(row.previousUsage?.status === 'allowed' || (row.previousUsage?.status === 'context-required' && row.previousUsage.context), row.pair);
+  return { ...exercise, context: row.previousUsage.context };
 });
 const find = (surface, form) => {
   const exercise = model.exercises.find(candidate => candidate.item.surface === surface && candidate.form === form);
@@ -137,7 +157,7 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   // The only exceptions are the documented retirement/context delta and the
   // context IDs' review-version suffix; every unrelated text is still hashed.
   const originalExercises = [...model.exercises, ...retired, ...actionDeferred, ...fullNaturalnessDeferred,
-    ...userDirectedDeferred, ...retiredTeoruExercises, ...reviewedRevisionDeferred, ...formHeldExercises].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
+    ...userDirectedDeferred, ...retiredTeoruExercises, ...reviewedRevisionDeferred, ...formHeldExercises, ...pairHeldExercises].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
   assert.equal(originalExercises.length, before.counts.eligibleExercises);
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');

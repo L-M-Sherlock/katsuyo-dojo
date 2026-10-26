@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
@@ -12,6 +14,8 @@ import generated from '../app/lib/usage-cards/integration-generated.mjs';
 import {USER_DIRECTED_USAGE_DEFERRALS} from '../app/lib/usage-cards/user-directed-deferrals.mjs';
 import {USER_DIRECTED_USAGE_CORRECTIONS} from '../app/lib/usage-cards/user-directed-corrections.mjs';
 import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
+import {TEACHING_PAIR_DEFERRALS} from '../app/lib/teaching-pair-deferrals.mjs';
+import {REVIEWED_USAGE_CARDS} from '../app/lib/usage-cards.mjs';
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const actionReview = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url)));
@@ -125,13 +129,18 @@ test('integration proof stays immutable while documented later edits reconstruct
   for (const card of proof.release.cards) assert.deepEqual(byId.get(card.id), card);
 });
 
-test('the completed integration release covers every eligible pair with no open or deferred gap', async () => {
+test('the frozen integration release projects to reviewed current cards and exact user teaching holds', async () => {
   const original = JSON.parse(fs.readFileSync(new URL('../docs/integration-stage-requirements.v1.json', import.meta.url)));
   assert.deepEqual(frozen.required, original.required);
   const current = new Set(usageCardStageRequirements('integration'));
-  assert.deepEqual(new Set([...current, ...frozen.deferred]), new Set(original.required));
+  verifyCurrentReviewedUsageRevisions();
+  const teachingHolds = TEACHING_PAIR_DEFERRALS.filter(row => original.required.includes(row.pair));
+  assert.equal(teachingHolds.length, 3);
+  const held = new Set(teachingHolds.map(row => row.pair));
+  assert.deepEqual(new Set([...current, ...frozen.deferred, ...held]), new Set(original.required));
+  assert.deepEqual([...current].filter(pair => held.has(pair)), []);
   const covered = CURRENT_USAGE_CARDS.filter(card => current.has(`${card.senseId}/${card.form}`));
-  assert.deepEqual(new Set(covered.map(card => `${card.senseId}/${card.form}`)), new Set(frozen.approved));
+  assert.deepEqual(new Set(covered.map(card => `${card.senseId}/${card.form}`)), new Set(frozen.approved.filter(pair => !held.has(pair))));
   const partition = [...frozen.approved, ...frozen.deferred, ...frozen.open];
   assert.equal(new Set(partition).size, partition.length, 'release partitions must not overlap');
   assert.deepEqual(new Set(partition), new Set(original.required));
@@ -143,8 +152,40 @@ test('the completed integration release covers every eligible pair with no open 
   const report = await auditIntegrationCoverage({project: fileURLToPath(new URL('../', import.meta.url)),
     requirements: 'docs/integration-stage-requirements.v3.json', proofPath, strict: true});
   assert.equal(report.valid, true, report.errors.join('\n'));
-  assert.deepEqual(new Set(report.cards.approvedPairs), new Set(frozen.approved));
+  assert.deepEqual(new Set(report.cards.approvedPairs), new Set(frozen.approved.filter(pair => !held.has(pair))));
+  assert.deepEqual(new Set(report.deferred.pairs), held);
+  assert.deepEqual(new Set(report.teachingHolds.pairs), held);
+  assert.ok(report.teachingHolds.rows.every(row => row.basis === 'user-directed-teaching-hold'));
+  assert.equal(report.proof.releaseCount, frozen.approved.length);
+  assert.equal(report.proof.currentExpectedCount, frozen.approved.length - held.size);
+  assert.equal(report.proof.reviewedProjection.rounds, 9);
   assert.deepEqual(new Set(report.open.pairs), new Set(frozen.open));
+});
+
+test('current projection rejects old successors, unreviewed edits, omissions and restored user-held cards', async t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'katsuyo-current-integration-'));
+  t.after(() => fs.rmSync(directory, {recursive: true, force: true}));
+  const file = path.join(directory, 'cards.json');
+  const currentById = new Map(CURRENT_USAGE_CARDS.map(card => [card.id, card]));
+  const old = proof.release.cards.find(card => currentById.has(card.id) && digest(card) !== digest(currentById.get(card.id)));
+  assert.ok(old, 'the projection must exercise a changed integration source');
+  const current = currentById.get(old.id);
+  const held = TEACHING_PAIR_DEFERRALS.find(row => frozen.required.includes(row.pair));
+  const heldSource = REVIEWED_USAGE_CARDS.find(card => card.id === held.id);
+  assert.equal(digest(heldSource), held.sourceHash);
+  const options = {project: fileURLToPath(new URL('../', import.meta.url)), cards: file,
+    requirements: 'docs/integration-stage-requirements.v3.json', proofPath, strict: true};
+  for (const [label, cards, expectedField, id] of [
+    ['old successor', CURRENT_USAGE_CARDS.map(card => card.id === old.id ? old : card), 'changed', old.id],
+    ['unreviewed edit', CURRENT_USAGE_CARDS.map(card => card.id === current.id ? {...card, translation: 'unreviewed'} : card), 'changed', current.id],
+    ['omission', CURRENT_USAGE_CARDS.filter(card => card.id !== current.id), 'missing', current.id],
+    ['restored teaching hold', [...CURRENT_USAGE_CARDS, heldSource], 'extra', held.id],
+  ]) {
+    fs.writeFileSync(file, JSON.stringify(cards));
+    const report = await auditIntegrationCoverage(options);
+    assert.equal(report.valid, false, label);
+    assert.ok(report.proof[expectedField].includes(id), `${label}: ${report.errors.join('\n')}`);
+  }
 });
 
 test('completion retains the previous 245 additions and the frozen prior-release hash after documented edits', () => {

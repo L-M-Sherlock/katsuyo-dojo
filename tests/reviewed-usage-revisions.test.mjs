@@ -1,3 +1,4 @@
+import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS, EXPECTED_TEMIRU_FOLLOWUP_REVIEW_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -10,11 +11,13 @@ import { EN_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/usage-cards.m
 import { EN_REVIEWED_USAGE_CARD_OVERLAYS } from '../app/lib/i18n/content/en/reviewed-usage-card-revisions.mjs';
 import { REVIEWED_USAGE_CARD_REVISIONS, REVIEWED_USAGE_CARD_DEFERRALS } from '../app/lib/usage-cards/reviewed-revisions.mjs';
 import { isTeachingFormDeferred } from '../app/lib/teaching-form-deferrals.mjs';
+import { TEACHING_PAIR_DEFERRALS } from '../app/lib/teaching-pair-deferrals.mjs';
 import { deriveUnified } from '../app/lib/unified-knowledge.mjs';
 import { createDelivery } from '../.agents/skills/write-katsuyo-usage-cards/scripts/delivery-store.mjs';
 import { revisionHash, verifyPortableRevisionDelivery, verifyReviewedUsageRevisions, verifyCurrentReviewedUsageRevisions } from '../scripts/verify-reviewed-usage-revisions.mjs';
 import { verifyEnglishUsageReleaseProof } from '../scripts/verify-english-usage-release.mjs';
 
+const teachingPairHeldIds = new Set(TEACHING_PAIR_DEFERRALS.map(row => row.id));
 const clone = value => JSON.parse(JSON.stringify(value));
 const sha = value => crypto.createHash('sha256').update(value).digest('hex');
 const ordered = rows => [...rows].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
@@ -242,38 +245,41 @@ test('committed successor evidence preserves both old rounds while new reviews a
   assert.equal(revisionHash(historicalRevisions), 'f67d4f4db1cb3bebca392f2280c099b5d9f7c17a91961c07865f2755ef405ca1');
   assert.equal(revisionHash(historicalEnglish), 'a341212843d2f503564bf105b2a9e16649676ef29716f857bb9fe118c8674ebd');
   assert.equal(revisionHash(historicalDeferrals), '8bd58979b68a56b18079971bb56a9ccb99e12719728586e8c59d1b7b9b632942');
-  const previousById = new Map(historicalRevisions.map(row => [row.id, row.card]));
-  const historicalDeferredIds = new Set(historicalDeferrals.map(row => row.id));
-  const historicalCards = PRE_REVIEWED_USAGE_CARDS.filter(card => !historicalDeferredIds.has(card.id)
-    && !isTeachingFormDeferred(card.form)).map(card => previousById.get(card.id) ?? card);
-  const historicalSummary = verifyReviewedUsageRevisions({ cards: historicalCards,
-    baselineCards: PRE_REVIEWED_USAGE_CARDS, baselineOverlays: EN_USAGE_CARD_OVERLAYS,
-    revisions: historicalRevisions, englishRevisions: historicalEnglish,
-    deferrals: historicalDeferrals, proof: historicalProof });
-  assert.deepEqual(historicalSummary, { rounds: 2, sourceCount: 125, reviewedCount: 124, approvedCount: 124,
-    deferredCount: 1, changedCount: 76, baselineCount: 17261, cardCount: 17138, teachingHeldCount: 122 });
-
+  assert.equal(historicalRounds.reduce((sum,round)=>sum+round.sourceCount,0),125);
+  assert.equal(historicalRevisions.length,123);
+  assert.equal(historicalRevisions.filter(row=>row.previousHash!==row.finalHash).length,76);
+  for(const round of historicalRounds)for(const batch of round.batches){
+    verifyPortableRevisionDelivery(batch.authorDelivery,'author',batch.id);
+    verifyPortableRevisionDelivery(batch.reviewDelivery,'review',batch.id);
+  }
+  // Current exact holds bind a later source version. Verify the frozen prefix
+  // as history and let the complete live verifier replay every old round first.
+  assert.equal(revisionHash(proof.rounds.slice(0,3)),
+    '5a3cfce61cd315cd4c20ca69dbaae3ce0bc591da535bc3eba2410b7b5aa5e224');
   const invitation = proof.rounds[2];
-  assert.equal(proof.rounds.length, 3);
-  assert.equal(invitation.id, 'temiru-negative-invitation-20261017');
-  assert.equal(invitation.sourceCount, 123);
-  const newlyDeferred = invitation.deferrals?.length ?? 0;
-  const newlyApproved = 123 - newlyDeferred;
+  assert.equal(invitation.id,'temiru-negative-invitation-20261017');
+  assert.equal(revisionHash(invitation),'03678576ffdfe12e63c4e95193ab751571783c7da9036397d1aef9d4f20a7276');
+  assert.equal(invitation.sourceCount,123);
+  const followups=proof.rounds.slice(3);
+  assert.equal(followups.length,6);
+  assert.ok(followups.every(round=>Array.isArray(round.scopeIds)&&round.scopeIds.length===round.sourceCount));
+  assert.equal(followups.reduce((sum,round)=>sum+round.sourceCount,0),13);
+  const followupIds=followups.flatMap(round=>round.scopeIds);
+  assert.equal(new Set(followupIds).size,13);
+  assert.deepEqual(new Set(followupIds),EXPECTED_TEMIRU_FOLLOWUP_REVIEW_IDS);
+  assert.ok(followupIds.every(id=>!teachingPairHeldIds.has(id)));
   const summary = verifyCurrentReviewedUsageRevisions();
-  assert.equal(summary.rounds, historicalSummary.rounds + 1);
-  assert.equal(summary.sourceCount, historicalSummary.sourceCount + 123);
-  assert.equal(summary.reviewedCount, historicalSummary.reviewedCount + newlyApproved);
-  assert.equal(summary.approvedCount, historicalSummary.approvedCount + newlyApproved);
-  assert.equal(summary.changedCount, historicalSummary.changedCount + newlyApproved);
-  assert.equal(summary.baselineCount, 17261);
-  assert.equal(summary.deferredCount, historicalSummary.deferredCount + newlyDeferred);
-  assert.equal(summary.teachingHeldCount, 122);
-  assert.equal(summary.cardCount, historicalSummary.cardCount - newlyDeferred);
-  assert.equal(REVIEWED_USAGE_CARDS.length, summary.baselineCount - summary.deferredCount);
-  assert.equal(USAGE_CARDS.length, REVIEWED_USAGE_CARDS.length - summary.teachingHeldCount);
+  assert.deepEqual(summary,{rounds:9,sourceCount:261,reviewedCount:260,approvedCount:260,
+    deferredCount:1,changedCount:202,baselineCount:17261,cardCount:17130,teachingHeldCount:130});
+  assert.equal(REVIEWED_USAGE_CARDS.length,summary.baselineCount-summary.deferredCount);
+  assert.equal(USAGE_CARDS.length,REVIEWED_USAGE_CARDS.length-summary.teachingHeldCount);
   const reviewedIds = new Set(REVIEWED_USAGE_CARDS.map(card => card.id));
   const currentIds = new Set(USAGE_CARDS.map(card => card.id));
-  const heldIds = new Set(REVIEWED_USAGE_CARDS.filter(card => isTeachingFormDeferred(card.form)).map(card => card.id));
+  const formHeldIds = new Set(REVIEWED_USAGE_CARDS.filter(card => isTeachingFormDeferred(card.form)).map(card => card.id));
+  assert.equal(formHeldIds.size, 122);
+  assert.deepEqual(teachingPairHeldIds, EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
+  const heldIds = new Set([...formHeldIds, ...teachingPairHeldIds]);
+  assert.equal(heldIds.size, 130);
   assert.deepEqual(new Set([...reviewedIds].filter(id => !currentIds.has(id))), heldIds);
   for (const row of REVIEWED_USAGE_CARD_DEFERRALS) {
     assert.ok(!reviewedIds.has(row.id) && !currentIds.has(row.id) && !heldIds.has(row.id), row.id);

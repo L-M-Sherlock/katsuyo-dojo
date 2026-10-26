@@ -3,16 +3,24 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {usageCardStageRequirements} from '../app/lib/usage-cards.mjs';
+import {TEACHING_PAIR_DEFERRALS} from '../app/lib/teaching-pair-deferrals.mjs';
+import {verifyCurrentReviewedUsageRevisions} from '../scripts/verify-reviewed-usage-revisions.mjs';
 
 const file = 'docs/integration-stage-requirements.v1.json';
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 
-test('integration requirement snapshot is immutable and partitions the current scope', () => {
+test('integration requirement snapshot stays immutable while current exact teaching holds are separate', () => {
   const bytes = fs.readFileSync(file);
   const snapshot = JSON.parse(bytes);
   assert.equal(snapshot.schemaVersion, 1);
   assert.equal(snapshot.stage, 'integration');
-  assert.deepEqual(snapshot.required, usageCardStageRequirements('integration'));
+  verifyCurrentReviewedUsageRevisions();
+  const current = usageCardStageRequirements('integration');
+  const holds = TEACHING_PAIR_DEFERRALS.filter(row => snapshot.required.includes(row.pair));
+  assert.equal(holds.length, 3);
+  assert.deepEqual(new Set([...current, ...holds.map(row => row.pair)]), new Set(snapshot.required));
+  assert.deepEqual(current.filter(pair => holds.some(row => row.pair === pair)), []);
+  assert.ok(holds.every(row => row.basis === 'user-directed-teaching-hold'));
   for (const name of ['required', 'approved', 'deferred', 'open']) {
     assert.ok(Array.isArray(snapshot[name]));
     assert.equal(new Set(snapshot[name]).size, snapshot[name].length, `${name} has duplicates`);
