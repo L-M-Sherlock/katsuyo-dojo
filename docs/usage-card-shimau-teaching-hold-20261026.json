@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "kind": "user-directed-exact-pair-hold",
+  "sourceCommit": "4ee88943fad9645430515f66b9b3e8543d7b701b",
+  "request": "对「この古い箱、引っ越しには意外と役立っちゃうんだよ。」暂缓出题，并排查类似题型。",
+  "sourceRows": [
+    {
+      "id": "usage:chau:verb:役立つ:やくだつ",
+      "pair": "verb:役立つ:やくだつ/chau",
+      "senseId": "verb:役立つ:やくだつ",
+      "form": "chau",
+      "sourceHash": "df59da35fe936db693a78943e41686a946ceae7b239d7f9bf8a31b42da782a01",
+      "englishHash": "6f7c5b2996c28e59c8d79f9381d9f0d812b7a965fd4bc0d9ff5fc276a21ebebb",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户认为当前「意外と役立っちゃう」例句的日常自然度与语体不适合常规教材，明确要求暂缓这个精确配对；保留构形、词形识别及历史复测，不把该教学选择扩大为积极结果都不能使用てしまう／ちゃう。",
+      "restoreCondition": "用户同意恢复，且固定词义和目标形式的新例句通过独立自然度、中英内容及注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-teaching-hold-20261026.json",
+      "card": {
+        "id": "usage:chau:verb:役立つ:やくだつ",
+        "senseId": "verb:役立つ:やくだつ",
+        "meaning": "有用；起作用",
+        "form": "chau",
+        "scene": "本来想丢掉纸箱，朋友说搬家时还意外有用。",
+        "before": [
+          {
+            "text": "この古い箱、引っ越しには意外と",
+            "reading": "このふるいはこ、ひっこしにはいがいと"
+          }
+        ],
+        "after": [
+          {
+            "text": "んだよ。"
+          }
+        ],
+        "translation": "这个旧箱子搬家时意外地还挺管用呢。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:役立つ:やくだつ",
+        "sourceHash": "df59da35fe936db693a78943e41686a946ceae7b239d7f9bf8a31b42da782a01",
+        "scene": "You were going to throw out an old box, but your friend points out it may help with the move.",
+        "translation": "This old box is surprisingly useful for moving."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      },
+      "fullSentence": "この古い箱、引っ越しには意外と役立っちゃうんだよ。",
+      "reading": "このふるいはこ、ひっこしにはいがいとやくだっちゃうんだよ。"
+    }
+  ],
+  "note": "用户指定的教学暂缓覆盖当前展示状态，不改写旧语言批准结论，也不虚构返修失败。"
+}

@@ -17,7 +17,14 @@ test('integration requirement snapshot stays immutable while current exact teach
   verifyCurrentReviewedUsageRevisions();
   const current = usageCardStageRequirements('integration');
   const holds = TEACHING_PAIR_DEFERRALS.filter(row => snapshot.required.includes(row.pair));
-  assert.equal(holds.length, 3);
+  assert.equal(holds.length, 4);
+  assert.deepEqual(new Set(holds.map(row => row.pair)), new Set([
+    'verb:帰る:かえる/temiruDesireNegativePast',
+    'verb:手伝う:てつだう/temiruDesireNegativePast',
+    'verb:貸す:かす/temiruRequest',
+    'verb:変える:かえる/passiveCompletionPast',
+  ]));
+  assert.equal(current.length, 1297);
   assert.deepEqual(new Set([...current, ...holds.map(row => row.pair)]), new Set(snapshot.required));
   assert.deepEqual(current.filter(pair => holds.some(row => row.pair === pair)), []);
   assert.ok(holds.every(row => row.basis === 'user-directed-teaching-hold'));

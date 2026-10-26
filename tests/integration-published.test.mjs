@@ -135,8 +135,15 @@ test('the frozen integration release projects to reviewed current cards and exac
   const current = new Set(usageCardStageRequirements('integration'));
   verifyCurrentReviewedUsageRevisions();
   const teachingHolds = TEACHING_PAIR_DEFERRALS.filter(row => original.required.includes(row.pair));
-  assert.equal(teachingHolds.length, 3);
+  assert.equal(teachingHolds.length, 4);
   const held = new Set(teachingHolds.map(row => row.pair));
+  assert.deepEqual(held, new Set([
+    'verb:帰る:かえる/temiruDesireNegativePast',
+    'verb:手伝う:てつだう/temiruDesireNegativePast',
+    'verb:貸す:かす/temiruRequest',
+    'verb:変える:かえる/passiveCompletionPast',
+  ]));
+  assert.equal(current.size, 1297);
   assert.deepEqual(new Set([...current, ...frozen.deferred, ...held]), new Set(original.required));
   assert.deepEqual([...current].filter(pair => held.has(pair)), []);
   const covered = CURRENT_USAGE_CARDS.filter(card => current.has(`${card.senseId}/${card.form}`));
@@ -152,13 +159,14 @@ test('the frozen integration release projects to reviewed current cards and exac
   const report = await auditIntegrationCoverage({project: fileURLToPath(new URL('../', import.meta.url)),
     requirements: 'docs/integration-stage-requirements.v3.json', proofPath, strict: true});
   assert.equal(report.valid, true, report.errors.join('\n'));
+  assert.equal(report.cards.approvedPairs.length, 1297);
   assert.deepEqual(new Set(report.cards.approvedPairs), new Set(frozen.approved.filter(pair => !held.has(pair))));
   assert.deepEqual(new Set(report.deferred.pairs), held);
   assert.deepEqual(new Set(report.teachingHolds.pairs), held);
   assert.ok(report.teachingHolds.rows.every(row => row.basis === 'user-directed-teaching-hold'));
   assert.equal(report.proof.releaseCount, frozen.approved.length);
   assert.equal(report.proof.currentExpectedCount, frozen.approved.length - held.size);
-  assert.equal(report.proof.reviewedProjection.rounds, 9);
+  assert.equal(report.proof.reviewedProjection.rounds, 15);
   assert.deepEqual(new Set(report.open.pairs), new Set(frozen.open));
 });
 

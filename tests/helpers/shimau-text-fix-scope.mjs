@@ -1,0 +1,41 @@
+// Fixed 17-card text and reading repair scope, copied from the frozen task plan.
+// Expected values never come from the live production projection.
+export const EXPECTED_SHIMAU_TEXT_FIX_IDS = new Set([
+  'usage:chau:verb:伝える:つたえる',
+  'usage:teshimauNegativePast:verb:似る:にる',
+  'usage:teshimau:verb:出かける:でかける',
+  'usage:teshimauNegative:verb:動く:うごく',
+  'usage:teshimauPast:verb:動く:うごく',
+  'usage:teshimauNegative:verb:喋る:しゃべる',
+  'usage:teshimau:verb:座る:すわる',
+  'usage:teshimauNegativePast:verb:座る:すわる',
+  'usage:teshimauNegative:verb:待つ:まつ',
+  'usage:teshimauNegativePast:verb:持つ:もつ',
+  'usage:teshimauNegativePast:verb:指す:さす',
+  'usage:teshimau:verb:残る:のこる',
+  'usage:teshimauPast:verb:焼く:やく',
+  'usage:passiveCompletionPast',
+  'usage:teshimauNegativePast:verb:起きる:おきる',
+  'usage:teshimauNegativePast:verb:違う:ちがう',
+  'usage:chau:verb:食べる:たべる',
+]);
+
+export const EXPECTED_SHIMAU_TEXT_FIX_PAIRS = new Set([
+  'verb:伝える:つたえる/chau',
+  'verb:食べる:たべる/chau',
+  'verb:出かける:でかける/teshimau',
+  'verb:座る:すわる/teshimau',
+  'verb:残る:のこる/teshimau',
+  'verb:動く:うごく/teshimauPast',
+  'verb:焼く:やく/teshimauPast',
+  'verb:動く:うごく/teshimauNegative',
+  'verb:喋る:しゃべる/teshimauNegative',
+  'verb:待つ:まつ/teshimauNegative',
+  'verb:似る:にる/teshimauNegativePast',
+  'verb:座る:すわる/teshimauNegativePast',
+  'verb:持つ:もつ/teshimauNegativePast',
+  'verb:指す:さす/teshimauNegativePast',
+  'verb:起きる:おきる/teshimauNegativePast',
+  'verb:違う:ちがう/teshimauNegativePast',
+  'verb:読む:よむ/passiveCompletionPast',
+]);

@@ -12,6 +12,8 @@ import { normalizeAnswer } from '../app/lib/answer-analysis.mjs';
 import { isTeachingFormDeferred, USER_DIRECTED_FORM_DEFERRALS } from '../app/lib/teaching-form-deferrals.mjs';
 import { TEACHING_PAIR_DEFERRALS } from '../app/lib/teaching-pair-deferrals.mjs';
 import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
+import { EXPECTED_SHIMAU_TEXT_FIX_IDS, EXPECTED_SHIMAU_TEXT_FIX_PAIRS } from './helpers/shimau-text-fix-scope.mjs';
 import { revisionHash, verifyCurrentReviewedUsageRevisions, verifyPortableRevisionDelivery } from '../scripts/verify-reviewed-usage-revisions.mjs';
 
 const FORM = 'temiruNegative';
@@ -32,6 +34,8 @@ function reviewedProof() {
   const proof = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-reviewed-revisions.v1.json', import.meta.url)));
   assert.equal(revisionHash(proof.rounds.slice(0, 3)), '5a3cfce61cd315cd4c20ca69dbaae3ce0bc591da535bc3eba2410b7b5aa5e224',
     'the original three independent rounds remain unchanged');
+  assert.equal(revisionHash(proof.rounds.slice(0, 9)), '49eeb59cee4eaec0a23c76c12dc36a9d33b8491ac12e588d2c323fabbe12b42b',
+    'all nine pre-repair review rounds remain unchanged');
   return proof;
 }
 
@@ -107,7 +111,7 @@ test('the invitation round accounts for all 123 frozen sources before later exac
   assert.equal(deferred.size, (round.deferrals ?? []).length);
   for (const id of deferred) assert.ok(sources.has(id) && !approved.has(id), id);
   assert.deepEqual(new Set([...approved, ...deferred]), sources);
-  const heldIds = new Set(TEACHING_PAIR_DEFERRALS.map(row => row.id));
+  const heldIds = new Set(TEACHING_PAIR_DEFERRALS.filter(row => row.form.startsWith('temiru')).map(row => row.id));
   assert.deepEqual(heldIds, EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
   assert.deepEqual(new Set(USAGE_CARDS.filter(card => card.form === FORM).map(card => card.id)),
     new Set([...approved].filter(id => !heldIds.has(id))));
@@ -116,8 +120,8 @@ test('the invitation round accounts for all 123 frozen sources before later exac
   const historical = frozenState(reviewedProof().rounds.slice(0, 3));
   assert.deepEqual(new Set(historical.cards.filter(card => card.form === FORM).map(card => card.id)), approved);
   const summary = verifyCurrentReviewedUsageRevisions();
-  assert.equal(summary.sourceCount, 125 + 123 + 13);
-  assert.equal(summary.reviewedCount, 124 + approved.size + 13);
+  assert.equal(summary.sourceCount, 125 + 123 + 13 + 17);
+  assert.equal(summary.reviewedCount, 124 + approved.size + 13 + 17);
   assert.equal(summary.deferredCount, 1 + deferred.size);
 });
 
@@ -207,10 +211,13 @@ test('every original invitation approval binds its target, bilingual rewrite and
 });
 
 test('later exact subset reviews and teaching choices preserve the original invitation baseline', () => {
-  const proof = reviewedProof(), followups = proof.rounds.slice(3);
+  const proof = reviewedProof(), followups = proof.rounds.slice(3, 9), textFixes = proof.rounds.slice(9);
   assert.equal(followups.length, 6);
   assert.deepEqual(new Set(followups.flatMap(round => round.scopeIds)), EXPECTED_FOLLOWUP_IDS);
   assert.equal(followups.reduce((sum, round) => sum + round.sourceCount, 0), 13);
+  const priorDecisions = followups.flatMap(round => round.batches.flatMap(batch => frozenBatch(batch).notes));
+  assert.equal(priorDecisions.filter(note => note.disposition === 'revise').length, 8);
+  assert.equal(priorDecisions.filter(note => note.disposition === 'retain').length, 5);
   for (const round of followups) {
     assert.equal(round.scopeIds.length, round.sourceCount, round.id);
     assert.equal(new Set(round.scopeIds).size, round.sourceCount, round.id);
@@ -218,8 +225,22 @@ test('later exact subset reviews and teaching choices preserve the original invi
     assert.deepEqual(round.sourceCards.map(card => card.id), round.scopeIds, round.id);
     assert.deepEqual(round.deferrals ?? [], [], 'these user choices are teaching holds, not newly invented review deferrals');
   }
+  assert.equal(textFixes.length, 6);
+  assert.deepEqual(new Set(textFixes.map(round => round.form)),
+    new Set(['chau','teshimau','teshimauPast','teshimauNegative','teshimauNegativePast','passiveCompletionPast']));
+  assert.deepEqual(new Set(textFixes.flatMap(round => round.scopeIds)), EXPECTED_SHIMAU_TEXT_FIX_IDS);
+  assert.deepEqual(new Set(textFixes.flatMap(round => round.sourceCards.map(card => `${card.senseId}/${card.form}`))), EXPECTED_SHIMAU_TEXT_FIX_PAIRS);
+  assert.equal(textFixes.reduce((sum, round) => sum + round.sourceCount, 0), 17);
+  for (const round of textFixes) {
+    assert.equal(round.id, `shimau-text-fix-20261026-${round.form}`);
+    assert.equal(round.scopeIds.length, round.sourceCount, round.id);
+    assert.equal(new Set(round.scopeIds).size, round.sourceCount, round.id);
+    assert.ok(round.sourceCards.every(card => card.form === round.form), round.id);
+    assert.deepEqual(round.sourceCards.map(card => card.id), round.scopeIds, round.id);
+    assert.deepEqual(round.deferrals ?? [], [], round.id);
+  }
   const heldIds = new Set(TEACHING_PAIR_DEFERRALS.map(row => row.id));
-  assert.deepEqual(heldIds, EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
+  assert.deepEqual(heldIds, EXPECTED_CURRENT_TEACHING_HOLD_IDS);
   const historical = frozenState(proof.rounds.slice(0, 3)), latest = frozenState(proof.rounds);
   const historicalCards = historical.cards.filter(card => card.form !== FORM && !isTeachingFormDeferred(card.form));
   const historicalIds = new Set(historicalCards.map(card => card.id));
@@ -230,12 +251,12 @@ test('later exact subset reviews and teaching choices preserve the original invi
   assert.equal(revisionHash(historicalEnglish), 'dfe9222ec82970512035009ef4f7c499bfb79e120c39ec1bd5b9de5bb3aed714');
 
   // Verify the final projection against all frozen approvals, with only the
-  // eight explicit teaching choices removed after review verification.
+  // 103 explicit teaching choices removed after review verification.
   assert.deepEqual(REVIEWED_USAGE_CARDS, latest.cards);
   const expectedCards = latest.cards.filter(card => !isTeachingFormDeferred(card.form) && !heldIds.has(card.id));
   const expectedIds = new Set(expectedCards.map(card => card.id));
   const expectedEnglish = latest.english.filter(row => expectedIds.has(row.id));
-  assert.equal(expectedCards.length, 17130);
+  assert.equal(expectedCards.length, 17035);
   assert.deepEqual(USAGE_CARDS, expectedCards);
   assert.deepEqual(CURRENT_ENGLISH, expectedEnglish);
   const sortById = rows => [...rows].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
@@ -243,10 +264,12 @@ test('later exact subset reviews and teaching choices preserve the original invi
   assert.deepEqual(EN_REVIEWED_USAGE_CARD_OVERLAYS, sortById(latest.english.filter(row => latest.revisions.has(row.id))));
   const currentById = byId(USAGE_CARDS), currentEnglishById = byId(CURRENT_ENGLISH);
   const historicalEnglishById = byId(historicalEnglish);
+  const permittedReviewIds = new Set([...EXPECTED_FOLLOWUP_IDS, ...EXPECTED_SHIMAU_TEXT_FIX_IDS]);
+  for (const id of EXPECTED_SHIMAU_TEXT_FIX_IDS) assert.ok(!heldIds.has(id), `${id}: the text repair retains this active card`);
   for (const card of historicalCards) {
     if (heldIds.has(card.id)) {
       assert.ok(!currentById.has(card.id) && !currentEnglishById.has(card.id), card.id);
-    } else if (!EXPECTED_FOLLOWUP_IDS.has(card.id)) {
+    } else if (!permittedReviewIds.has(card.id)) {
       assert.deepEqual(currentById.get(card.id), card, `${card.id}: only the exact reviewed subset may change`);
       assert.deepEqual(currentEnglishById.get(card.id), historicalEnglishById.get(card.id), card.id);
     }

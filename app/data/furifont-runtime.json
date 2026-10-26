@@ -4,7 +4,7 @@
     "sans": {
       "family": "Katsuyo Furifont Sans",
       "fontUrl": "fonts/furifont/katsuyo-furifont-sans.woff2",
-      "sha256": "1cfcb0fb431a00cd03c5ff3047b4339cc135f5aa1d787a098474b58a6d75bafd",
+      "sha256": "eb99ac99cfb6353c5f5e62abce4ab460fa9609fa68941569d3f5cbf6b740a944",
       "weights": [
         250,
         900
@@ -13,7 +13,7 @@
     "serif": {
       "family": "Katsuyo Furifont Serif",
       "fontUrl": "fonts/furifont/katsuyo-furifont-serif.woff2",
-      "sha256": "6072c1bc7c545e4812c21b8b5682af9f664657cd758282bfdd54be3c6da0fadf",
+      "sha256": "e577ce070560db1997efa89586a419c3317d997b61003c52cd4634a7cb79484e",
       "weights": [
         200,
         900
@@ -1379,26 +1379,14 @@
       }
     },
     {
-      "text": "一隊",
-      "reading": "いったい",
-      "families": {
-        "sans": {
-          "salt": 113
-        },
-        "serif": {
-          "salt": 113
-        }
-      }
-    },
-    {
       "text": "一階",
       "reading": "いっかい",
       "families": {
         "sans": {
-          "salt": 114
+          "salt": 113
         },
         "serif": {
-          "salt": 114
+          "salt": 113
         }
       }
     },
@@ -2243,26 +2231,14 @@
       }
     },
     {
-      "text": "下着",
-      "reading": "したぎ",
-      "families": {
-        "sans": {
-          "salt": 11
-        },
-        "serif": {
-          "salt": 11
-        }
-      }
-    },
-    {
       "text": "下絵",
       "reading": "したえ",
       "families": {
         "sans": {
-          "salt": 12
+          "salt": 11
         },
         "serif": {
-          "salt": 12
+          "salt": 11
         }
       }
     },
@@ -2271,10 +2247,10 @@
       "reading": "したみ",
       "families": {
         "sans": {
-          "salt": 13
+          "salt": 12
         },
         "serif": {
-          "salt": 13
+          "salt": 12
         }
       }
     },
@@ -2793,30 +2769,18 @@
       }
     },
     {
-      "text": "中盤",
-      "reading": "ちゅうばん",
-      "families": {
-        "sans": {
-          "salt": 10
-        },
-        "serif": {
-          "salt": 10
-        }
-      }
-    },
-    {
       "text": "中級",
       "reading": "ちゅうきゅう",
       "families": {
         "sans": {
-          "salt": 11,
+          "salt": 10,
           "inkOverhangEm": {
             "left": 0.160398,
             "right": 0.135
           }
         },
         "serif": {
-          "salt": 11
+          "salt": 10
         }
       }
     },
@@ -2825,10 +2789,10 @@
       "reading": "なかみ",
       "families": {
         "sans": {
-          "salt": 12
+          "salt": 11
         },
         "serif": {
-          "salt": 12
+          "salt": 11
         }
       }
     },
@@ -3903,26 +3867,14 @@
       }
     },
     {
-      "text": "二台",
-      "reading": "にだい",
-      "families": {
-        "sans": {
-          "salt": 15
-        },
-        "serif": {
-          "salt": 15
-        }
-      }
-    },
-    {
       "text": "二周",
       "reading": "にしゅう",
       "families": {
         "sans": {
-          "salt": 16
+          "salt": 15
         },
         "serif": {
-          "salt": 16
+          "salt": 15
         }
       }
     },
@@ -3931,10 +3883,10 @@
       "reading": "にひん",
       "families": {
         "sans": {
-          "salt": 17
+          "salt": 16
         },
         "serif": {
-          "salt": 17
+          "salt": 16
         }
       }
     },
@@ -3943,10 +3895,10 @@
       "reading": "にかい",
       "families": {
         "sans": {
-          "salt": 18
+          "salt": 17
         },
         "serif": {
-          "salt": 18
+          "salt": 17
         }
       }
     },
@@ -3955,10 +3907,10 @@
       "reading": "にがっき",
       "families": {
         "sans": {
-          "salt": 19
+          "salt": 18
         },
         "serif": {
-          "salt": 19
+          "salt": 18
         }
       }
     },
@@ -3967,10 +3919,10 @@
       "reading": "にねん",
       "families": {
         "sans": {
-          "salt": 20
+          "salt": 19
         },
         "serif": {
-          "salt": 20
+          "salt": 19
         }
       }
     },
@@ -3979,10 +3931,10 @@
       "reading": "にねんめいこう",
       "families": {
         "sans": {
-          "salt": 21
+          "salt": 20
         },
         "serif": {
-          "salt": 21
+          "salt": 20
         }
       }
     },
@@ -3991,10 +3943,10 @@
       "reading": "にど",
       "families": {
         "sans": {
-          "salt": 22
+          "salt": 21
         },
         "serif": {
-          "salt": 22
+          "salt": 21
         }
       }
     },
@@ -4003,10 +3955,10 @@
       "reading": "におうふく",
       "families": {
         "sans": {
-          "salt": 23
+          "salt": 22
         },
         "serif": {
-          "salt": 23
+          "salt": 22
         }
       }
     },
@@ -4015,10 +3967,10 @@
       "reading": "ふたて",
       "families": {
         "sans": {
-          "salt": 24
+          "salt": 23
         },
         "serif": {
-          "salt": 24
+          "salt": 23
         }
       }
     },
@@ -4027,10 +3979,10 @@
       "reading": "ふつかるす",
       "families": {
         "sans": {
-          "salt": 25
+          "salt": 24
         },
         "serif": {
-          "salt": 25
+          "salt": 24
         }
       }
     },
@@ -4039,10 +3991,10 @@
       "reading": "ふつかめ",
       "families": {
         "sans": {
-          "salt": 26
+          "salt": 25
         },
         "serif": {
-          "salt": 26
+          "salt": 25
         }
       }
     },
@@ -4051,10 +4003,10 @@
       "reading": "にじかん",
       "families": {
         "sans": {
-          "salt": 27
+          "salt": 26
         },
         "serif": {
-          "salt": 27
+          "salt": 26
         }
       }
     },
@@ -4063,10 +4015,10 @@
       "reading": "にじかんまえ",
       "families": {
         "sans": {
-          "salt": 28
+          "salt": 27
         },
         "serif": {
-          "salt": 28
+          "salt": 27
         }
       }
     },
@@ -4075,10 +4027,10 @@
       "reading": "にじかんある",
       "families": {
         "sans": {
-          "salt": 29
+          "salt": 28
         },
         "serif": {
-          "salt": 29
+          "salt": 28
         }
       }
     },
@@ -4087,22 +4039,10 @@
       "reading": "にほん",
       "families": {
         "sans": {
-          "salt": 30
+          "salt": 29
         },
         "serif": {
-          "salt": 30
-        }
-      }
-    },
-    {
-      "text": "二本残",
-      "reading": "にほんのこ",
-      "families": {
-        "sans": {
-          "salt": 31
-        },
-        "serif": {
-          "salt": 31
+          "salt": 29
         }
       }
     },
@@ -4111,10 +4051,10 @@
       "reading": "にはい",
       "families": {
         "sans": {
-          "salt": 32
+          "salt": 30
         },
         "serif": {
-          "salt": 32
+          "salt": 30
         }
       }
     },
@@ -4123,10 +4063,10 @@
       "reading": "にはいめ",
       "families": {
         "sans": {
-          "salt": 33
+          "salt": 31
         },
         "serif": {
-          "salt": 33
+          "salt": 31
         }
       }
     },
@@ -4135,10 +4075,10 @@
       "reading": "にまい",
       "families": {
         "sans": {
-          "salt": 34
+          "salt": 32
         },
         "serif": {
-          "salt": 34
+          "salt": 32
         }
       }
     },
@@ -4147,10 +4087,10 @@
       "reading": "にさいじ",
       "families": {
         "sans": {
-          "salt": 35
+          "salt": 33
         },
         "serif": {
-          "salt": 35
+          "salt": 33
         }
       }
     },
@@ -4159,22 +4099,10 @@
       "reading": "にはく",
       "families": {
         "sans": {
-          "salt": 36
+          "salt": 34
         },
         "serif": {
-          "salt": 36
-        }
-      }
-    },
-    {
-      "text": "二章",
-      "reading": "にしょう",
-      "families": {
-        "sans": {
-          "salt": 37
-        },
-        "serif": {
-          "salt": 37
+          "salt": 34
         }
       }
     },
@@ -4183,22 +4111,10 @@
       "reading": "ふたくみ",
       "families": {
         "sans": {
-          "salt": 38
+          "salt": 35
         },
         "serif": {
-          "salt": 38
-        }
-      }
-    },
-    {
-      "text": "二羽",
-      "reading": "にわ",
-      "families": {
-        "sans": {
-          "salt": 39
-        },
-        "serif": {
-          "salt": 39
+          "salt": 35
         }
       }
     },
@@ -4207,10 +4123,10 @@
       "reading": "にしあい",
       "families": {
         "sans": {
-          "salt": 40
+          "salt": 36
         },
         "serif": {
-          "salt": 40
+          "salt": 36
         }
       }
     },
@@ -4219,10 +4135,10 @@
       "reading": "にわ",
       "families": {
         "sans": {
-          "salt": 41
+          "salt": 37
         },
         "serif": {
-          "salt": 41
+          "salt": 37
         }
       }
     },
@@ -4231,10 +4147,10 @@
       "reading": "にしゅうかん",
       "families": {
         "sans": {
-          "salt": 42
+          "salt": 38
         },
         "serif": {
-          "salt": 42
+          "salt": 38
         }
       }
     },
@@ -4243,10 +4159,10 @@
       "reading": "にしゅうかんいない",
       "families": {
         "sans": {
-          "salt": 43
+          "salt": 39
         },
         "serif": {
-          "salt": 43
+          "salt": 39
         }
       }
     },
@@ -4255,10 +4171,10 @@
       "reading": "にじゅう",
       "families": {
         "sans": {
-          "salt": 44
+          "salt": 40
         },
         "serif": {
-          "salt": 44
+          "salt": 40
         }
       }
     },
@@ -4267,10 +4183,10 @@
       "reading": "にじゅうせいきゅう",
       "families": {
         "sans": {
-          "salt": 45
+          "salt": 41
         },
         "serif": {
-          "salt": 45
+          "salt": 41
         }
       }
     },
@@ -4279,10 +4195,10 @@
       "reading": "にかい",
       "families": {
         "sans": {
-          "salt": 46
+          "salt": 42
         },
         "serif": {
-          "salt": 46
+          "salt": 42
         }
       }
     },
@@ -5235,62 +5151,14 @@
       }
     },
     {
-      "text": "今日回",
-      "reading": "きょうまわ",
-      "families": {
-        "sans": {
-          "salt": 25
-        },
-        "serif": {
-          "salt": 25
-        }
-      }
-    },
-    {
       "text": "今日学",
       "reading": "きょうまな",
       "families": {
         "sans": {
-          "salt": 26
+          "salt": 25
         },
         "serif": {
-          "salt": 26
-        }
-      }
-    },
-    {
-      "text": "今日届",
-      "reading": "きょうとど",
-      "families": {
-        "sans": {
-          "salt": 27
-        },
-        "serif": {
-          "salt": 27
-        }
-      }
-    },
-    {
-      "text": "今日探",
-      "reading": "きょうさが",
-      "families": {
-        "sans": {
-          "salt": 28
-        },
-        "serif": {
-          "salt": 28
-        }
-      }
-    },
-    {
-      "text": "今日歩",
-      "reading": "きょうある",
-      "families": {
-        "sans": {
-          "salt": 29
-        },
-        "serif": {
-          "salt": 29
+          "salt": 25
         }
       }
     },
@@ -5299,58 +5167,10 @@
       "reading": "きょうき",
       "families": {
         "sans": {
-          "salt": 30
+          "salt": 26
         },
         "serif": {
-          "salt": 30
-        }
-      }
-    },
-    {
-      "text": "今日洗",
-      "reading": "きょうあら",
-      "families": {
-        "sans": {
-          "salt": 31
-        },
-        "serif": {
-          "salt": 31
-        }
-      }
-    },
-    {
-      "text": "今日直",
-      "reading": "きょうなお",
-      "families": {
-        "sans": {
-          "salt": 32
-        },
-        "serif": {
-          "salt": 32
-        }
-      }
-    },
-    {
-      "text": "今日考",
-      "reading": "きょうかんが",
-      "families": {
-        "sans": {
-          "salt": 33
-        },
-        "serif": {
-          "salt": 33
-        }
-      }
-    },
-    {
-      "text": "今日話",
-      "reading": "きょうはな",
-      "families": {
-        "sans": {
-          "salt": 34
-        },
-        "serif": {
-          "salt": 34
+          "salt": 26
         }
       }
     },
@@ -5359,10 +5179,10 @@
       "reading": "きょうむか",
       "families": {
         "sans": {
-          "salt": 35
+          "salt": 27
         },
         "serif": {
-          "salt": 35
+          "salt": 27
         }
       }
     },
@@ -5371,10 +5191,10 @@
       "reading": "きょうえき",
       "families": {
         "sans": {
-          "salt": 36
+          "salt": 28
         },
         "serif": {
-          "salt": 36
+          "salt": 28
         }
       }
     },
@@ -5383,10 +5203,10 @@
       "reading": "こんげつ",
       "families": {
         "sans": {
-          "salt": 37
+          "salt": 29
         },
         "serif": {
-          "salt": 37
+          "salt": 29
         }
       }
     },
@@ -5395,10 +5215,10 @@
       "reading": "こんげつちゅう",
       "families": {
         "sans": {
-          "salt": 38
+          "salt": 30
         },
         "serif": {
-          "salt": 38
+          "salt": 30
         }
       }
     },
@@ -5407,10 +5227,10 @@
       "reading": "けさ",
       "families": {
         "sans": {
-          "salt": 39
+          "salt": 31
         },
         "serif": {
-          "salt": 39
+          "salt": 31
         }
       }
     },
@@ -5419,10 +5239,10 @@
       "reading": "けさしちじ",
       "families": {
         "sans": {
-          "salt": 40
+          "salt": 32
         },
         "serif": {
-          "salt": 40
+          "salt": 32
         }
       }
     },
@@ -5431,10 +5251,10 @@
       "reading": "けさい",
       "families": {
         "sans": {
-          "salt": 41
+          "salt": 33
         },
         "serif": {
-          "salt": 41
+          "salt": 33
         }
       }
     },
@@ -5443,10 +5263,10 @@
       "reading": "いまちゅうもん",
       "families": {
         "sans": {
-          "salt": 42
+          "salt": 34
         },
         "serif": {
-          "salt": 42
+          "salt": 34
         }
       }
     },
@@ -5455,10 +5275,10 @@
       "reading": "いまあ",
       "families": {
         "sans": {
-          "salt": 43
+          "salt": 35
         },
         "serif": {
-          "salt": 43
+          "salt": 35
         }
       }
     },
@@ -5467,10 +5287,10 @@
       "reading": "いまれんらく",
       "families": {
         "sans": {
-          "salt": 44
+          "salt": 36
         },
         "serif": {
-          "salt": 44
+          "salt": 36
         }
       }
     },
@@ -5479,10 +5299,10 @@
       "reading": "こんしゅう",
       "families": {
         "sans": {
-          "salt": 45
+          "salt": 37
         },
         "serif": {
-          "salt": 45
+          "salt": 37
         }
       }
     },
@@ -5491,14 +5311,14 @@
       "reading": "こんしゅうじゅう",
       "families": {
         "sans": {
-          "salt": 46,
+          "salt": 38,
           "inkOverhangEm": {
             "left": 0.045,
             "right": 0.035
           }
         },
         "serif": {
-          "salt": 46
+          "salt": 38
         }
       }
     },
@@ -5507,14 +5327,14 @@
       "reading": "こんしゅうちゅう",
       "families": {
         "sans": {
-          "salt": 47,
+          "salt": 39,
           "inkOverhangEm": {
             "left": 0.045,
             "right": 0.035
           }
         },
         "serif": {
-          "salt": 47
+          "salt": 39
         }
       }
     },
@@ -5523,22 +5343,10 @@
       "reading": "こんしゅうまつ",
       "families": {
         "sans": {
-          "salt": 48
+          "salt": 40
         },
         "serif": {
-          "salt": 48
-        }
-      }
-    },
-    {
-      "text": "今週稼",
-      "reading": "こんしゅうかせ",
-      "families": {
-        "sans": {
-          "salt": 49
-        },
-        "serif": {
-          "salt": 49
+          "salt": 40
         }
       }
     },
@@ -5547,10 +5355,10 @@
       "reading": "いまごろ",
       "families": {
         "sans": {
-          "salt": 50
+          "salt": 41
         },
         "serif": {
-          "salt": 50
+          "salt": 41
         }
       }
     },
@@ -9676,29 +9484,17 @@
     },
     {
       "text": "全",
-      "reading": "ぜん",
-      "families": {
-        "sans": {
-          "salt": 2
-        },
-        "serif": {
-          "salt": 2
-        }
-      }
-    },
-    {
-      "text": "全",
       "reading": "まった",
       "families": {
         "sans": {
-          "salt": 3,
+          "salt": 2,
           "inkOverhangEm": {
             "left": 0.039,
             "right": 0.069223
           }
         },
         "serif": {
-          "salt": 3
+          "salt": 2
         }
       }
     },
@@ -9707,10 +9503,10 @@
       "reading": "ぜんたい",
       "families": {
         "sans": {
-          "salt": 4
+          "salt": 3
         },
         "serif": {
-          "salt": 4
+          "salt": 3
         }
       }
     },
@@ -9719,10 +9515,10 @@
       "reading": "ぜんりょく",
       "families": {
         "sans": {
-          "salt": 5
+          "salt": 4
         },
         "serif": {
-          "salt": 5
+          "salt": 4
         }
       }
     },
@@ -9731,10 +9527,10 @@
       "reading": "ぜんくかん",
       "families": {
         "sans": {
-          "salt": 6
+          "salt": 5
         },
         "serif": {
-          "salt": 6
+          "salt": 5
         }
       }
     },
@@ -9743,10 +9539,10 @@
       "reading": "ぜんいん",
       "families": {
         "sans": {
-          "salt": 7
+          "salt": 6
         },
         "serif": {
-          "salt": 7
+          "salt": 6
         }
       }
     },
@@ -9755,10 +9551,10 @@
       "reading": "ぜんいんそと",
       "families": {
         "sans": {
-          "salt": 8
+          "salt": 7
         },
         "serif": {
-          "salt": 8
+          "salt": 7
         }
       }
     },
@@ -9767,10 +9563,10 @@
       "reading": "ぜんいんすわ",
       "families": {
         "sans": {
-          "salt": 9
+          "salt": 8
         },
         "serif": {
-          "salt": 9
+          "salt": 8
         }
       }
     },
@@ -9779,10 +9575,10 @@
       "reading": "ぜんいんこうか",
       "families": {
         "sans": {
-          "salt": 10
+          "salt": 9
         },
         "serif": {
-          "salt": 10
+          "salt": 9
         }
       }
     },
@@ -9791,10 +9587,10 @@
       "reading": "ぜんいんし",
       "families": {
         "sans": {
-          "salt": 11
+          "salt": 10
         },
         "serif": {
-          "salt": 11
+          "salt": 10
         }
       }
     },
@@ -9803,10 +9599,10 @@
       "reading": "ぜんいんじたい",
       "families": {
         "sans": {
-          "salt": 12
+          "salt": 11
         },
         "serif": {
-          "salt": 12
+          "salt": 11
         }
       }
     },
@@ -9815,10 +9611,10 @@
       "reading": "ぜんもん",
       "families": {
         "sans": {
-          "salt": 13
+          "salt": 12
         },
         "serif": {
-          "salt": 13
+          "salt": 12
         }
       }
     },
@@ -9827,10 +9623,10 @@
       "reading": "ぜんかん",
       "families": {
         "sans": {
-          "salt": 14
+          "salt": 13
         },
         "serif": {
-          "salt": 14
+          "salt": 13
         }
       }
     },
@@ -9839,10 +9635,10 @@
       "reading": "ぜんぶん",
       "families": {
         "sans": {
-          "salt": 15
+          "salt": 14
         },
         "serif": {
-          "salt": 15
+          "salt": 14
         }
       }
     },
@@ -9851,10 +9647,10 @@
       "reading": "ぜんぜん",
       "families": {
         "sans": {
-          "salt": 16
+          "salt": 15
         },
         "serif": {
-          "salt": 16
+          "salt": 15
         }
       }
     },
@@ -9863,10 +9659,10 @@
       "reading": "ぜんしゃいん",
       "families": {
         "sans": {
-          "salt": 17
+          "salt": 16
         },
         "serif": {
-          "salt": 17
+          "salt": 16
         }
       }
     },
@@ -9875,10 +9671,10 @@
       "reading": "ぜんこうてい",
       "families": {
         "sans": {
-          "salt": 18
+          "salt": 17
         },
         "serif": {
-          "salt": 18
+          "salt": 17
         }
       }
     },
@@ -9887,10 +9683,10 @@
       "reading": "ぜんしあい",
       "families": {
         "sans": {
-          "salt": 19
+          "salt": 18
         },
         "serif": {
-          "salt": 19
+          "salt": 18
         }
       }
     },
@@ -9899,10 +9695,10 @@
       "reading": "ぜんしん",
       "families": {
         "sans": {
-          "salt": 20
+          "salt": 19
         },
         "serif": {
-          "salt": 20
+          "salt": 19
         }
       }
     },
@@ -9911,10 +9707,10 @@
       "reading": "ぜんぶ",
       "families": {
         "sans": {
-          "salt": 21
+          "salt": 20
         },
         "serif": {
-          "salt": 21
+          "salt": 20
         }
       }
     },
@@ -9923,10 +9719,10 @@
       "reading": "ぜんぶなか",
       "families": {
         "sans": {
-          "salt": 22
+          "salt": 21
         },
         "serif": {
-          "salt": 22
+          "salt": 21
         }
       }
     },
@@ -9935,10 +9731,10 @@
       "reading": "ぜんぶまか",
       "families": {
         "sans": {
-          "salt": 23
+          "salt": 22
         },
         "serif": {
-          "salt": 23
+          "salt": 22
         }
       }
     },
@@ -9947,10 +9743,10 @@
       "reading": "ぜんぶせんせい",
       "families": {
         "sans": {
-          "salt": 24
+          "salt": 23
         },
         "serif": {
-          "salt": 24
+          "salt": 23
         }
       }
     },
@@ -9959,10 +9755,10 @@
       "reading": "ぜんぶだ",
       "families": {
         "sans": {
-          "salt": 25
+          "salt": 24
         },
         "serif": {
-          "salt": 25
+          "salt": 24
         }
       }
     },
@@ -9971,10 +9767,10 @@
       "reading": "ぜんぶともだち",
       "families": {
         "sans": {
-          "salt": 26
+          "salt": 25
         },
         "serif": {
-          "salt": 26
+          "salt": 25
         }
       }
     },
@@ -9983,22 +9779,10 @@
       "reading": "ぜんぶうけつけ",
       "families": {
         "sans": {
-          "salt": 27
+          "salt": 26
         },
         "serif": {
-          "salt": 27
-        }
-      }
-    },
-    {
-      "text": "全部同僚",
-      "reading": "ぜんぶどうりょう",
-      "families": {
-        "sans": {
-          "salt": 28
-        },
-        "serif": {
-          "salt": 28
+          "salt": 26
         }
       }
     },
@@ -10007,10 +9791,10 @@
       "reading": "ぜんぶとだな",
       "families": {
         "sans": {
-          "salt": 29
+          "salt": 27
         },
         "serif": {
-          "salt": 29
+          "salt": 27
         }
       }
     },
@@ -10019,10 +9803,10 @@
       "reading": "ぜんぶか",
       "families": {
         "sans": {
-          "salt": 30
+          "salt": 28
         },
         "serif": {
-          "salt": 30
+          "salt": 28
         }
       }
     },
@@ -10031,10 +9815,10 @@
       "reading": "ぜんぶはこ",
       "families": {
         "sans": {
-          "salt": 31
+          "salt": 29
         },
         "serif": {
-          "salt": 31
+          "salt": 29
         }
       }
     },
@@ -10043,10 +9827,10 @@
       "reading": "ぜんぶた",
       "families": {
         "sans": {
-          "salt": 32
+          "salt": 30
         },
         "serif": {
-          "salt": 32
+          "salt": 30
         }
       }
     },
@@ -10055,10 +9839,10 @@
       "reading": "ぜんしゅう",
       "families": {
         "sans": {
-          "salt": 33
+          "salt": 31
         },
         "serif": {
-          "salt": 33
+          "salt": 31
         }
       }
     },
@@ -10067,10 +9851,10 @@
       "reading": "ぜんがく",
       "families": {
         "sans": {
-          "salt": 34
+          "salt": 32
         },
         "serif": {
-          "salt": 34
+          "salt": 32
         }
       }
     },
@@ -20770,26 +20554,14 @@
       }
     },
     {
-      "text": "守備隊",
-      "reading": "しゅびたい",
-      "families": {
-        "sans": {
-          "salt": 4
-        },
-        "serif": {
-          "salt": 4
-        }
-      }
-    },
-    {
       "text": "守秘義務",
       "reading": "しゅひぎむ",
       "families": {
         "sans": {
-          "salt": 5
+          "salt": 4
         },
         "serif": {
-          "salt": 5
+          "salt": 4
         }
       }
     },
@@ -33040,26 +32812,14 @@
       }
     },
     {
-      "text": "明日迎",
-      "reading": "あしたむか",
-      "families": {
-        "sans": {
-          "salt": 17
-        },
-        "serif": {
-          "salt": 17
-        }
-      }
-    },
-    {
       "text": "明日返",
       "reading": "あしたかえ",
       "families": {
         "sans": {
-          "salt": 18
+          "salt": 17
         },
         "serif": {
-          "salt": 18
+          "salt": 17
         }
       }
     },
@@ -33068,14 +32828,14 @@
       "reading": "みょうちょう",
       "families": {
         "sans": {
-          "salt": 19,
+          "salt": 18,
           "inkOverhangEm": {
             "left": 0.185,
             "right": 0.135
           }
         },
         "serif": {
-          "salt": 19
+          "salt": 18
         }
       }
     },
@@ -33084,10 +32844,10 @@
       "reading": "めいかく",
       "families": {
         "sans": {
-          "salt": 20
+          "salt": 19
         },
         "serif": {
-          "salt": 20
+          "salt": 19
         }
       }
     },
@@ -35476,30 +35236,14 @@
       }
     },
     {
-      "text": "最終章",
-      "reading": "さいしゅうしょう",
-      "families": {
-        "sans": {
-          "salt": 15,
-          "inkOverhangEm": {
-            "left": 0.046397,
-            "right": 0.035
-          }
-        },
-        "serif": {
-          "salt": 15
-        }
-      }
-    },
-    {
       "text": "最終電車",
       "reading": "さいしゅうでんしゃ",
       "families": {
         "sans": {
-          "salt": 16
+          "salt": 15
         },
         "serif": {
-          "salt": 16
+          "salt": 15
         }
       }
     },
@@ -35508,10 +35252,10 @@
       "reading": "さいしゅうめんせつ",
       "families": {
         "sans": {
-          "salt": 17
+          "salt": 16
         },
         "serif": {
-          "salt": 17
+          "salt": 16
         }
       }
     },
@@ -35520,10 +35264,10 @@
       "reading": "さいきん",
       "families": {
         "sans": {
-          "salt": 18
+          "salt": 17
         },
         "serif": {
-          "salt": 18
+          "salt": 17
         }
       }
     },
@@ -35532,10 +35276,10 @@
       "reading": "さいきんさんしあい",
       "families": {
         "sans": {
-          "salt": 19
+          "salt": 18
         },
         "serif": {
-          "salt": 19
+          "salt": 18
         }
       }
     },
@@ -42162,18 +41906,6 @@
         },
         "serif": {
           "salt": 2
-        }
-      }
-    },
-    {
-      "text": "添付資料",
-      "reading": "てんぷしりょう",
-      "families": {
-        "sans": {
-          "salt": 3
-        },
-        "serif": {
-          "salt": 3
         }
       }
     },
@@ -50080,26 +49812,14 @@
       }
     },
     {
-      "text": "終了予定時刻",
-      "reading": "しゅうりょうよていじこく",
-      "families": {
-        "sans": {
-          "salt": 4
-        },
-        "serif": {
-          "salt": 4
-        }
-      }
-    },
-    {
       "text": "終了後",
       "reading": "しゅうりょうご",
       "families": {
         "sans": {
-          "salt": 5
+          "salt": 4
         },
         "serif": {
-          "salt": 5
+          "salt": 4
         }
       }
     },
@@ -50108,10 +49828,10 @@
       "reading": "しゅうりょうじ",
       "families": {
         "sans": {
-          "salt": 6
+          "salt": 5
         },
         "serif": {
-          "salt": 6
+          "salt": 5
         }
       }
     },
@@ -50120,10 +49840,10 @@
       "reading": "しゅうりょうじこく",
       "families": {
         "sans": {
-          "salt": 7
+          "salt": 6
         },
         "serif": {
-          "salt": 7
+          "salt": 6
         }
       }
     },
@@ -50132,10 +49852,10 @@
       "reading": "しゅうし",
       "families": {
         "sans": {
-          "salt": 8
+          "salt": 7
         },
         "serif": {
-          "salt": 8
+          "salt": 7
         }
       }
     },
@@ -50144,10 +49864,10 @@
       "reading": "しゅうじつかんさたいおう",
       "families": {
         "sans": {
-          "salt": 9
+          "salt": 8
         },
         "serif": {
-          "salt": 9
+          "salt": 8
         }
       }
     },
@@ -50156,10 +49876,10 @@
       "reading": "しゅうてん",
       "families": {
         "sans": {
-          "salt": 10
+          "salt": 9
         },
         "serif": {
-          "salt": 10
+          "salt": 9
         }
       }
     },
@@ -50168,10 +49888,10 @@
       "reading": "しゅうばん",
       "families": {
         "sans": {
-          "salt": 11
+          "salt": 10
         },
         "serif": {
-          "salt": 11
+          "salt": 10
         }
       }
     },
@@ -50180,10 +49900,10 @@
       "reading": "しゅうでん",
       "families": {
         "sans": {
-          "salt": 12
+          "salt": 11
         },
         "serif": {
-          "salt": 12
+          "salt": 11
         }
       }
     },
@@ -53373,26 +53093,14 @@
       }
     },
     {
-      "text": "落下実験",
-      "reading": "らっかじっけん",
-      "families": {
-        "sans": {
-          "salt": 3
-        },
-        "serif": {
-          "salt": 3
-        }
-      }
-    },
-    {
       "text": "落下時間",
       "reading": "らっかじかん",
       "families": {
         "sans": {
-          "salt": 4
+          "salt": 3
         },
         "serif": {
-          "salt": 4
+          "salt": 3
         }
       }
     },
@@ -53401,10 +53109,10 @@
       "reading": "らっかしけん",
       "families": {
         "sans": {
-          "salt": 5
+          "salt": 4
         },
         "serif": {
-          "salt": 5
+          "salt": 4
         }
       }
     },
@@ -53413,10 +53121,10 @@
       "reading": "らくせき",
       "families": {
         "sans": {
-          "salt": 6
+          "salt": 5
         },
         "serif": {
-          "salt": 6
+          "salt": 5
         }
       }
     },
@@ -53425,10 +53133,10 @@
       "reading": "らっかせい",
       "families": {
         "sans": {
-          "salt": 7
+          "salt": 6
         },
         "serif": {
-          "salt": 7
+          "salt": 6
         }
       }
     },
@@ -54528,30 +54236,14 @@
       }
     },
     {
-      "text": "裸",
-      "reading": "はだか",
-      "families": {
-        "sans": {
-          "salt": 1,
-          "inkOverhangEm": {
-            "left": 0.067198,
-            "right": 0.097
-          }
-        },
-        "serif": {
-          "salt": 1
-        }
-      }
-    },
-    {
       "text": "裸足",
       "reading": "はだし",
       "families": {
         "sans": {
-          "salt": 2
+          "salt": 1
         },
         "serif": {
-          "salt": 2
+          "salt": 1
         }
       }
     },
@@ -55363,26 +55055,14 @@
       }
     },
     {
-      "text": "観察用",
-      "reading": "かんさつよう",
-      "families": {
-        "sans": {
-          "salt": 7
-        },
-        "serif": {
-          "salt": 7
-        }
-      }
-    },
-    {
       "text": "観測会",
       "reading": "かんそくかい",
       "families": {
         "sans": {
-          "salt": 8
+          "salt": 7
         },
         "serif": {
-          "salt": 8
+          "salt": 7
         }
       }
     },
@@ -55391,10 +55071,10 @@
       "reading": "かんようしょくぶつ",
       "families": {
         "sans": {
-          "salt": 9
+          "salt": 8
         },
         "serif": {
-          "salt": 9
+          "salt": 8
         }
       }
     },
@@ -55403,10 +55083,10 @@
       "reading": "かんらんしゃ",
       "families": {
         "sans": {
-          "salt": 10
+          "salt": 9
         },
         "serif": {
-          "salt": 10
+          "salt": 9
         }
       }
     },
@@ -58300,22 +57980,6 @@
       }
     },
     {
-      "text": "賄",
-      "reading": "まかな",
-      "families": {
-        "sans": {
-          "salt": 1,
-          "inkOverhangEm": {
-            "left": 0.039,
-            "right": 0.084
-          }
-        },
-        "serif": {
-          "salt": 1
-        }
-      }
-    },
-    {
       "text": "資料",
       "reading": "しりょう",
       "families": {
@@ -60830,18 +60494,6 @@
       }
     },
     {
-      "text": "遅咲",
-      "reading": "おそざ",
-      "families": {
-        "sans": {
-          "salt": 5
-        },
-        "serif": {
-          "salt": 5
-        }
-      }
-    },
-    {
       "text": "遊",
       "reading": "あそ",
       "families": {
@@ -60857,26 +60509,14 @@
       }
     },
     {
-      "text": "遊具",
-      "reading": "ゆうぐ",
-      "families": {
-        "sans": {
-          "salt": 2
-        },
-        "serif": {
-          "salt": 2
-        }
-      }
-    },
-    {
       "text": "遊園地",
       "reading": "ゆうえんち",
       "families": {
         "sans": {
-          "salt": 3
+          "salt": 2
         },
         "serif": {
-          "salt": 3
+          "salt": 2
         }
       }
     },
@@ -60885,10 +60525,10 @@
       "reading": "ゆうぎしつ",
       "families": {
         "sans": {
-          "salt": 4
+          "salt": 3
         },
         "serif": {
-          "salt": 4
+          "salt": 3
         }
       }
     },
@@ -60897,10 +60537,10 @@
       "reading": "ゆうらんせん",
       "families": {
         "sans": {
-          "salt": 5
+          "salt": 4
         },
         "serif": {
-          "salt": 5
+          "salt": 4
         }
       }
     },
@@ -60980,26 +60620,14 @@
       }
     },
     {
-      "text": "運動服",
-      "reading": "うんどうふく",
-      "families": {
-        "sans": {
-          "salt": 7
-        },
-        "serif": {
-          "salt": 7
-        }
-      }
-    },
-    {
       "text": "運動靴",
       "reading": "うんどうぐつ",
       "families": {
         "sans": {
-          "salt": 8
+          "salt": 7
         },
         "serif": {
-          "salt": 8
+          "salt": 7
         }
       }
     },
@@ -61008,10 +60636,10 @@
       "reading": "うんえい",
       "families": {
         "sans": {
-          "salt": 9
+          "salt": 8
         },
         "serif": {
-          "salt": 9
+          "salt": 8
         }
       }
     },
@@ -61020,10 +60648,10 @@
       "reading": "うんえいたんとうしゃ",
       "families": {
         "sans": {
-          "salt": 10
+          "salt": 9
         },
         "serif": {
-          "salt": 10
+          "salt": 9
         }
       }
     },
@@ -61032,10 +60660,10 @@
       "reading": "うんえいせきにんしゃ",
       "families": {
         "sans": {
-          "salt": 11
+          "salt": 10
         },
         "serif": {
-          "salt": 11
+          "salt": 10
         }
       }
     },
@@ -61044,10 +60672,10 @@
       "reading": "うんえいひ",
       "families": {
         "sans": {
-          "salt": 12
+          "salt": 11
         },
         "serif": {
-          "salt": 12
+          "salt": 11
         }
       }
     },
@@ -61056,10 +60684,10 @@
       "reading": "うんぱん",
       "families": {
         "sans": {
-          "salt": 13
+          "salt": 12
         },
         "serif": {
-          "salt": 13
+          "salt": 12
         }
       }
     },
@@ -61068,10 +60696,10 @@
       "reading": "うんぱんちゅう",
       "families": {
         "sans": {
-          "salt": 14
+          "salt": 13
         },
         "serif": {
-          "salt": 14
+          "salt": 13
         }
       }
     },
@@ -61080,10 +60708,10 @@
       "reading": "うんようかいし",
       "families": {
         "sans": {
-          "salt": 15
+          "salt": 14
         },
         "serif": {
-          "salt": 15
+          "salt": 14
         }
       }
     },
@@ -61092,10 +60720,10 @@
       "reading": "うんちん",
       "families": {
         "sans": {
-          "salt": 16
+          "salt": 15
         },
         "serif": {
-          "salt": 16
+          "salt": 15
         }
       }
     },
@@ -61104,10 +60732,10 @@
       "reading": "うんてん",
       "families": {
         "sans": {
-          "salt": 17
+          "salt": 16
         },
         "serif": {
-          "salt": 17
+          "salt": 16
         }
       }
     },
@@ -61116,10 +60744,10 @@
       "reading": "うんてんちゅう",
       "families": {
         "sans": {
-          "salt": 18
+          "salt": 17
         },
         "serif": {
-          "salt": 18
+          "salt": 17
         }
       }
     },
@@ -61128,10 +60756,10 @@
       "reading": "うんてんめんきょ",
       "families": {
         "sans": {
-          "salt": 19
+          "salt": 18
         },
         "serif": {
-          "salt": 19
+          "salt": 18
         }
       }
     },
@@ -61140,10 +60768,10 @@
       "reading": "うんてんしゅ",
       "families": {
         "sans": {
-          "salt": 20
+          "salt": 19
         },
         "serif": {
-          "salt": 20
+          "salt": 19
         }
       }
     },
@@ -61152,10 +60780,10 @@
       "reading": "うんそうぎょうむ",
       "families": {
         "sans": {
-          "salt": 21
+          "salt": 20
         },
         "serif": {
-          "salt": 21
+          "salt": 20
         }
       }
     },
@@ -61164,10 +60792,10 @@
       "reading": "うんそうぎょうしゃ",
       "families": {
         "sans": {
-          "salt": 22
+          "salt": 21
         },
         "serif": {
-          "salt": 22
+          "salt": 21
         }
       }
     },

@@ -1,3 +1,5 @@
+import { EXPECTED_SHIMAU_USER_HELD_IDS } from './helpers/shimau-user-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS } from './helpers/current-teaching-hold-scope.mjs';
 import { EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS } from './helpers/temiru-teaching-hold-scope.mjs';
 import { currentEligibilityBaseline } from '../scripts/lib/eligibility-baseline.mjs';
 import assert from 'node:assert/strict';
@@ -105,9 +107,17 @@ const formHeldExercises = formHold.sourceRows.map(row => {
   return { ...exercise, context: sibling.context };
 });
 assert.deepEqual(new Set(pairHold.sourceRows.map(row => row.pair)), EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS);
-assert.deepEqual(pairHold.sourceRows.map(row => [row.id, row.pair, row.sourceHash]),
+const shimauHold = JSON.parse(readFileSync(new URL('../docs/usage-card-shimau-teaching-hold-20261026.json', import.meta.url), 'utf8'));
+assert.deepEqual(shimauHold.sourceRows.map(row=>row.pair), ['verb:役立つ:やくだつ/chau']);
+const userHolds = JSON.parse(readFileSync(new URL('../docs/usage-card-shimau-user-holds-20261026.json', import.meta.url), 'utf8'));
+assert.equal(userHolds.sourceRows.length,94);
+assert.deepEqual(new Set(userHolds.sourceRows.map(row=>row.id)),EXPECTED_SHIMAU_USER_HELD_IDS);
+const pairHeldRows = [...pairHold.sourceRows, ...shimauHold.sourceRows, ...userHolds.sourceRows];
+assert.deepEqual(new Set(pairHeldRows.map(row=>row.id)), EXPECTED_CURRENT_TEACHING_HOLD_IDS);
+assert.deepEqual(new Set(pairHeldRows.map(row=>row.pair)), EXPECTED_CURRENT_TEACHING_HOLD_PAIRS);
+assert.deepEqual(pairHeldRows.map(row => [row.id, row.pair, row.sourceHash]),
   TEACHING_PAIR_DEFERRALS.map(row => [row.id, row.pair, row.sourceHash]));
-const pairHeldExercises = pairHold.sourceRows.map(row => {
+const pairHeldExercises = pairHeldRows.map(row => {
   const source = REVIEWED_USAGE_CARDS.find(card => card.id === row.id);
   assert.deepEqual(source, row.card, `${row.pair}: the original approved source remains intact`);
   assert.equal(row.pair, `${source.senseId}/${source.form}`);

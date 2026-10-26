@@ -1,4 +1,6 @@
-import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS, EXPECTED_TEMIRU_FOLLOWUP_REVIEW_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
+import { EXPECTED_TEMIRU_FOLLOWUP_REVIEW_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
+import { EXPECTED_SHIMAU_TEXT_FIX_IDS } from './helpers/shimau-text-fix-scope.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -260,7 +262,7 @@ test('committed successor evidence preserves both old rounds while new reviews a
   assert.equal(invitation.id,'temiru-negative-invitation-20261017');
   assert.equal(revisionHash(invitation),'03678576ffdfe12e63c4e95193ab751571783c7da9036397d1aef9d4f20a7276');
   assert.equal(invitation.sourceCount,123);
-  const followups=proof.rounds.slice(3);
+  const followups=proof.rounds.slice(3,9);
   assert.equal(followups.length,6);
   assert.ok(followups.every(round=>Array.isArray(round.scopeIds)&&round.scopeIds.length===round.sourceCount));
   assert.equal(followups.reduce((sum,round)=>sum+round.sourceCount,0),13);
@@ -268,18 +270,68 @@ test('committed successor evidence preserves both old rounds while new reviews a
   assert.equal(new Set(followupIds).size,13);
   assert.deepEqual(new Set(followupIds),EXPECTED_TEMIRU_FOLLOWUP_REVIEW_IDS);
   assert.ok(followupIds.every(id=>!teachingPairHeldIds.has(id)));
+  const previousRounds=proof.rounds.slice(0,9);
+  assert.equal(revisionHash(previousRounds),
+    '49eeb59cee4eaec0a23c76c12dc36a9d33b8491ac12e588d2c323fabbe12b42b',
+    'the nine rounds before shimau text repairs remain immutable');
+  assert.equal(previousRounds.reduce((sum,round)=>sum+round.sourceCount,0),261);
+  const previousRows=new Map();
+  let previousReviewedCount=0;
+  for(const round of previousRounds){
+    const sources=new Map(round.sourceCards.map(card=>[card.id,card]));
+    for(const batch of round.batches){
+      const authorFiles=verifyPortableRevisionDelivery(batch.authorDelivery,'author',batch.id);
+      const reviewFiles=verifyPortableRevisionDelivery(batch.reviewDelivery,'review',batch.id);
+      const cards=JSON.parse(authorFiles.get(batch.paths.cards));
+      const report=JSON.parse(reviewFiles.get(batch.paths.report));
+      assert.deepEqual(report.rows.map(row=>row.id),cards.map(card=>card.id));
+      for(const [index,card] of cards.entries()){
+        const final={...card,review:'approved'},row=report.rows[index];
+        assert.equal(row.status,'approved',card.id);
+        assert.equal(row.sourceHash,revisionHash(final),card.id);
+        previousRows.set(card.id,{previousHash:revisionHash(sources.get(card.id)),finalHash:revisionHash(final)});
+        previousReviewedCount++;
+      }
+    }
+    for(const row of round.deferrals??[])previousRows.delete(row.id);
+  }
+  assert.equal(previousReviewedCount,260);
+  assert.equal([...previousRows.values()].filter(row=>row.previousHash!==row.finalHash).length,202);
+  const textFixes=proof.rounds.slice(9);
+  assert.equal(textFixes.length,6);
+  assert.deepEqual(textFixes.map(round=>round.id),[
+    'shimau-text-fix-20261026-chau', 'shimau-text-fix-20261026-teshimau',
+    'shimau-text-fix-20261026-teshimauPast', 'shimau-text-fix-20261026-teshimauNegative',
+    'shimau-text-fix-20261026-teshimauNegativePast', 'shimau-text-fix-20261026-passiveCompletionPast',
+  ]);
+  assert.equal(textFixes.reduce((sum,round)=>sum+round.sourceCount,0),17);
+  const textFixIds=textFixes.flatMap(round=>round.scopeIds);
+  assert.equal(new Set(textFixIds).size,17);
+  assert.deepEqual(new Set(textFixIds),EXPECTED_SHIMAU_TEXT_FIX_IDS);
+  for(const round of textFixes){
+    assert.equal(round.scopeIds.length,round.sourceCount,round.id);
+    assert.deepEqual(round.sourceCards.map(card=>card.id),round.scopeIds,round.id);
+    assert.ok(round.sourceCards.every(card=>card.form===round.form),round.id);
+    assert.deepEqual(round.deferrals??[],[],round.id);
+  }
+  assert.ok(textFixIds.every(id=>!teachingPairHeldIds.has(id)));
   const summary = verifyCurrentReviewedUsageRevisions();
-  assert.deepEqual(summary,{rounds:9,sourceCount:261,reviewedCount:260,approvedCount:260,
-    deferredCount:1,changedCount:202,baselineCount:17261,cardCount:17130,teachingHeldCount:130});
+  const {changedCount,...currentScopeSummary}=summary;
+  assert.deepEqual(currentScopeSummary,{rounds:15,sourceCount:278,reviewedCount:277,approvedCount:277,
+    deferredCount:1,baselineCount:17261,cardCount:17035,teachingHeldCount:225});
+  // The original nine-round count remains 202. The approved successor adds
+  // ten changed canonical cards while retaining seven canonical objects.
+  assert.equal(changedCount,212);
+  assert.equal(changedCount,REVIEWED_USAGE_CARD_REVISIONS.filter(row=>row.previousHash!==row.finalHash).length);
   assert.equal(REVIEWED_USAGE_CARDS.length,summary.baselineCount-summary.deferredCount);
   assert.equal(USAGE_CARDS.length,REVIEWED_USAGE_CARDS.length-summary.teachingHeldCount);
   const reviewedIds = new Set(REVIEWED_USAGE_CARDS.map(card => card.id));
   const currentIds = new Set(USAGE_CARDS.map(card => card.id));
   const formHeldIds = new Set(REVIEWED_USAGE_CARDS.filter(card => isTeachingFormDeferred(card.form)).map(card => card.id));
   assert.equal(formHeldIds.size, 122);
-  assert.deepEqual(teachingPairHeldIds, EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
+  assert.deepEqual(teachingPairHeldIds, EXPECTED_CURRENT_TEACHING_HOLD_IDS);
   const heldIds = new Set([...formHeldIds, ...teachingPairHeldIds]);
-  assert.equal(heldIds.size, 130);
+  assert.equal(heldIds.size, 225);
   assert.deepEqual(new Set([...reviewedIds].filter(id => !currentIds.has(id))), heldIds);
   for (const row of REVIEWED_USAGE_CARD_DEFERRALS) {
     assert.ok(!reviewedIds.has(row.id) && !currentIds.has(row.id) && !heldIds.has(row.id), row.id);

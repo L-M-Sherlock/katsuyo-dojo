@@ -1,3 +1,5 @@
+import { EXPECTED_SHIMAU_USER_HELD_IDS } from './helpers/shimau-user-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS } from './helpers/current-teaching-hold-scope.mjs';
 import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS, EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS } from './helpers/temiru-teaching-hold-scope.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -97,7 +99,15 @@ const teachingFormHeld=formHold.sourceRows.map(row=>{
 });
 const pairHold=JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-teaching-hold-20261026.json',import.meta.url),'utf8'));
 assert.deepEqual(new Set(pairHold.sourceRows.map(row=>row.id)),EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
-const teachingPairHeld=pairHold.sourceRows.map(row=>{
+assert.deepEqual(new Set(pairHold.sourceRows.map(row=>row.pair)),EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS);
+const shimauHold=JSON.parse(readFileSync(new URL('../docs/usage-card-shimau-teaching-hold-20261026.json',import.meta.url),'utf8'));
+assert.deepEqual(shimauHold.sourceRows.map(row=>row.pair),['verb:役立つ:やくだつ/chau']);
+const userHolds=JSON.parse(readFileSync(new URL('../docs/usage-card-shimau-user-holds-20261026.json',import.meta.url),'utf8'));
+assert.equal(userHolds.sourceRows.length,94);
+assert.deepEqual(new Set(userHolds.sourceRows.map(row=>row.id)),EXPECTED_SHIMAU_USER_HELD_IDS);
+const pairHeldRows=[...pairHold.sourceRows,...shimauHold.sourceRows,...userHolds.sourceRows];
+assert.deepEqual(new Set(pairHeldRows.map(row=>row.id)),EXPECTED_CURRENT_TEACHING_HOLD_IDS);
+const teachingPairHeld=pairHeldRows.map(row=>{
   const source=REVIEWED_USAGE_CARDS.find(card=>card.id===row.id);
   assert.ok(source,row.id);
   assert.equal(hash(source),row.sourceHash,row.id);
@@ -118,8 +128,8 @@ test('approved intention and action-pair deferrals change only the documented ex
   const precedingRetiredIds=new Set(precedingRetired.map(e=>e.id));
   assert.equal(teachingFormHeld.length,122);
   assert.ok(teachingFormHeld.every(e=>!precedingRetiredIds.has(e.id)),'the form hold counts only newly removed exercises');
-  assert.equal(teachingPairHeld.length,8);
-  assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.pair)),EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS);
+  assert.equal(teachingPairHeld.length,103);
+  assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.pair)),EXPECTED_CURRENT_TEACHING_HOLD_PAIRS);
   const priorTeachingHeldIds=new Set([...precedingRetiredIds,...teachingFormHeld.map(e=>e.id)]);
   assert.ok(teachingPairHeld.every(e=>!priorTeachingHeldIds.has(e.id)),'the exact-pair hold is additional and disjoint');
   for(const e of [...precedingRetired,...teachingFormHeld,...teachingPairHeld])assert.ok(!currentIds.has(e.id),e.id);

@@ -1,0 +1,4430 @@
+{
+  "schemaVersion": 1,
+  "kind": "user-directed-exact-pair-hold",
+  "sourceCommit": "4ee88943fad9645430515f66b9b3e8543d7b701b",
+  "request": "只保留附件中明确自然且无明确现句批评的原句，剩下的全部暂缓出题。",
+  "resolutionFile": "docs/usage-card-shimau-user-resolution-20261026.json.gz",
+  "sourceAttachmentSha256": "b8df72ae4e5ddd1f5eaeebf036ff225f56c73c6c4e53dc38c771e3cfe80d09c8",
+  "sourceRows": [
+    {
+      "id": "usage:teshimauNegative:verb:する:する",
+      "pair": "verb:する:する/teshimauNegative",
+      "senseId": "verb:する:する",
+      "form": "teshimauNegative",
+      "sourceHash": "e12aebd6fe80bd15716e2fc6e4617cd9c0679b38c76090799d9d1079892bddb6",
+      "englishHash": "9c4b711c939653cbf9eeefe62da52d215af279597193819f0656643826201a73",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:する:する",
+        "senseId": "verb:する:する",
+        "meaning": "做",
+        "form": "teshimauNegative",
+        "scene": "还没确认内容，决定暂时不做发布",
+        "before": [
+          {
+            "text": "内容を確認するまで、公開を",
+            "reading": "ないようをかくにんするまで、こうかいを"
+          }
+        ],
+        "after": [
+          {
+            "text": "ようにする。",
+            "reading": "ようにする。"
+          }
+        ],
+        "translation": "确认内容前，我会注意暂不发布。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:する:する",
+        "sourceHash": "e12aebd6fe80bd15716e2fc6e4617cd9c0679b38c76090799d9d1079892bddb6",
+        "scene": "I haven't checked the content yet, so I'm going to hold off on publishing it.",
+        "translation": "I'll make sure not to publish it until I've checked the content."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:住む:すむ",
+      "pair": "verb:住む:すむ/teshimauNegativePast",
+      "senseId": "verb:住む:すむ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "f68ab0a8a9c464b558ee9758b334e413c2c02fadb9857b0ab79eaf66985ee297",
+      "englishHash": "8f81d34e5432ea1ae90d8ad9dd2c0417e791dce03f1b6de939e64c2a09ac15fa",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户要求只保留自然原句；附件虽列在自然分组，但该条仍有明确的用词、逻辑或勉强可接受批评，按严格保留口径暂缓这个精确配对。保留构形及历史记录，不把附件的一般语言断言当作全局语法禁令。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:住む:すむ",
+        "senseId": "verb:住む:すむ",
+        "meaning": "居住",
+        "form": "teshimauNegativePast",
+        "scene": "朋友曾只看照片租房，担心他住进发霉的房间。",
+        "before": [
+          {
+            "text": "写真だけで部屋を選んで、カビだらけの部屋に",
+            "reading": "しゃしんだけでへやをえらんで、カビだらけのへやに"
+          }
+        ],
+        "after": [
+          {
+            "text": "？",
+            "reading": "？"
+          }
+        ],
+        "translation": "只看照片选了房间，你是不是结果住进了满是霉菌的房间？",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:住む:すむ",
+        "sourceHash": "f68ab0a8a9c464b558ee9758b334e413c2c02fadb9857b0ab79eaf66985ee297",
+        "scene": "Your friend chose a room based only on photos, so you ask whether it was moldy.",
+        "translation": "You chose a room based only on photos—you didn't end up in one covered in mold, did you?"
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:借りる:かりる",
+      "pair": "verb:借りる:かりる/teshimauNegativePast",
+      "senseId": "verb:借りる:かりる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "2d48f27f3e50b682b9c519847209a8d391366183975b2fd6be40f4d165a5b7ab",
+      "englishHash": "5c2dd7f2e9028be42d46deaff1b368e12fb949d81e825ce534d03b49c2efc7d0",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:借りる:かりる",
+        "senseId": "verb:借りる:かりる",
+        "meaning": "借入",
+        "form": "teshimauNegativePast",
+        "scene": "昨天借了部分参考书，还有两本留在馆内。",
+        "before": [
+          {
+            "text": "昨日は参考書を全部は",
+            "reading": "きのうはさんこうしょをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。二冊は図書館に残した。",
+            "reading": "。にさつはとしょかんにのこした。"
+          }
+        ],
+        "translation": "昨天没有把参考书全部借走，留了两本在图书馆。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:借りる:かりる",
+        "sourceHash": "2d48f27f3e50b682b9c519847209a8d391366183975b2fd6be40f4d165a5b7ab",
+        "scene": "The library had several reference books on my list, and two were still on the shelf when I left.",
+        "translation": "I didn't borrow all the reference books yesterday; I left two at the library."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:chau:verb:出す:だす",
+      "pair": "verb:出す:だす/chau",
+      "senseId": "verb:出す:だす",
+      "form": "chau",
+      "sourceHash": "958e7f5f2530d33e20bb6dbf36961ae631f81ac9e30bbcc2246400fc1de0d42f",
+      "englishHash": "2dd21d62235afd128162efc746f3bbae5a3b4d7e5b6d19ee462307a60ff19702",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:chau:verb:出す:だす",
+        "senseId": "verb:出す:だす",
+        "meaning": "拿出；提交",
+        "form": "chau",
+        "scene": "朋友还在犹豫，自己准备先拿出证件。",
+        "before": [
+          {
+            "text": "必要なら、身分証を",
+            "reading": "ひつようなら、みぶんしょうを"
+          }
+        ],
+        "after": [
+          {
+            "text": "よ。"
+          }
+        ],
+        "translation": "需要的话，我就拿出身份证啦。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:出す:だす",
+        "sourceHash": "958e7f5f2530d33e20bb6dbf36961ae631f81ac9e30bbcc2246400fc1de0d42f",
+        "scene": "Your friend is still hesitating, and you offer to show your ID if needed.",
+        "translation": "If needed, I'll show my ID."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:出る:でる",
+      "pair": "verb:出る:でる/teshimauNegativePast",
+      "senseId": "verb:出る:でる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "cbd8072314a48d55ec567f5475c387160bca1e6a2298fd3d260fb7d3b0d261a9",
+      "englishHash": "ce5a89fd16ffaefb2da5d877ea683ee90667acbbc2b663c6c906be4e8e24bf67",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:出る:でる",
+        "senseId": "verb:出る:でる",
+        "meaning": "出去",
+        "form": "teshimauNegativePast",
+        "scene": "昨天有一人在办公室留守，其余人才外出。",
+        "before": [
+          {
+            "text": "昨日は全員が事務所を",
+            "reading": "きのうはぜんいんがじむしょを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。一人は中に残った。",
+            "reading": "。ひとりはなかにのこった。"
+          }
+        ],
+        "translation": "昨天并非所有人都出了办公室，有一人留在里面。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:出る:でる",
+        "sourceHash": "cbd8072314a48d55ec567f5475c387160bca1e6a2298fd3d260fb7d3b0d261a9",
+        "scene": "Most of the office team had errands outside yesterday, but the phones still needed coverage.",
+        "translation": "Not everyone left the office yesterday; one person stayed inside."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:分かる:わかる",
+      "pair": "verb:分かる:わかる/teshimauNegativePast",
+      "senseId": "verb:分かる:わかる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "8614fcdf078c9d9d7e4e6663f9071bd1eb943c569cbe19f6f623c02b41d28342",
+      "englishHash": "d8402ad0169515cf2cecede6bfe7d401c7a0218b3c534f97a6ec4246f97ae61c",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:分かる:わかる",
+        "senseId": "verb:分かる:わかる",
+        "meaning": "明白",
+        "form": "teshimauNegativePast",
+        "scene": "只看了少量提示，没有把谜团全弄明白。",
+        "before": [
+          {
+            "text": "ヒントは少ししか見なかったので、謎は全部は",
+            "reading": "ヒントはすこししかみなかったので、なぞはぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "只看了一点提示，没有把谜团全弄明白。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:分かる:わかる",
+        "sourceHash": "8614fcdf078c9d9d7e4e6663f9071bd1eb943c569cbe19f6f623c02b41d28342",
+        "scene": "You look at only a few hints and never fully figure out the mystery.",
+        "translation": "I only looked at a few hints, so I didn't figure out the whole mystery."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:助ける:たすける",
+      "pair": "verb:助ける:たすける/teshimauNegative",
+      "senseId": "verb:助ける:たすける",
+      "form": "teshimauNegative",
+      "sourceHash": "6ea09e1edc26b68956241d4405b185548c3bb094ee4eeb0955d988a1e6442f42",
+      "englishHash": "3da87663a8afc00bd8404b3190a1f23517be5829306adff632031e1d9083cab4",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:助ける:たすける",
+        "senseId": "verb:助ける:たすける",
+        "meaning": "帮助",
+        "form": "teshimauNegative",
+        "scene": "救援演练中，在救完所有人员前完成记录。",
+        "before": [
+          {
+            "text": "全員を",
+            "reading": "ぜんいんを"
+          }
+        ],
+        "after": [
+          {
+            "text": "うちに、救助の様子を記録しておく。",
+            "reading": "うちに、きゅうじょのようすをきろくしておく。"
+          }
+        ],
+        "translation": "趁还没有把所有人都救出来，先把救助的情况记录下来。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:助ける:たすける",
+        "sourceHash": "6ea09e1edc26b68956241d4405b185548c3bb094ee4eeb0955d988a1e6442f42",
+        "scene": "A rescue is still underway, and the team is recording what happens.",
+        "translation": "We record the rescue as it unfolds before everyone has been brought to safety."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:動く:うごく",
+      "pair": "verb:動く:うごく/teshimau",
+      "senseId": "verb:動く:うごく",
+      "form": "teshimau",
+      "sourceHash": "21eb32dbaeb92e2a8b3163d734c4350468bfd77019eaaae441668ec270caab8d",
+      "englishHash": "a0b335789b0688f78cf6ae1fe5f2bf135e1bc343e25570ba9615144db37a4048",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimau:verb:動く:うごく",
+        "senseId": "verb:動く:うごく",
+        "meaning": "移动；运转",
+        "form": "teshimau",
+        "scene": "风一吹，院门的插销松了，门自己动了起来。",
+        "before": [
+          {
+            "text": "風で留め具が外れ、門が",
+            "reading": "かぜでとめぐがはずれ、もんが"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "风吹松了插销，院门动了起来。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:動く:うごく",
+        "sourceHash": "21eb32dbaeb92e2a8b3163d734c4350468bfd77019eaaae441668ec270caab8d",
+        "scene": "A gust of wind loosens the gate latch, and the gate starts moving on its own.",
+        "translation": "The wind loosened the latch, and the gate started moving."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:動く:うごく",
+      "pair": "verb:動く:うごく/teshimauNegativePast",
+      "senseId": "verb:動く:うごく",
+      "form": "teshimauNegativePast",
+      "sourceHash": "4f43448ca67ec40669faa16831684eea3b6cb99469098e2ec026212722bddec9",
+      "englishHash": "36b04204aec7c3c334c34c44693228005c81ef54863dc857ed8f36e43b53ce40",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:動く:うごく",
+        "senseId": "verb:動く:うごく",
+        "meaning": "移动；运转",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只有一台模型移动，其他模型都固定着。",
+        "before": [
+          {
+            "text": "昨日は模型が全部",
+            "reading": "きのうはもけいがぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。一台だけ動いた。",
+            "reading": "。いちだいだけうごいた。"
+          }
+        ],
+        "translation": "昨天模型没有全部移动，只有一台动了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:動く:うごく",
+        "sourceHash": "4f43448ca67ec40669faa16831684eea3b6cb99469098e2ec026212722bddec9",
+        "scene": "Yesterday only one model moved; all the others stayed in place.",
+        "translation": "Yesterday, the models did not all move; only one did."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:包む:つつむ",
+      "pair": "verb:包む:つつむ/teshimauNegativePast",
+      "senseId": "verb:包む:つつむ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "54d2b607fa1bb3e7fafa0ce415c4cd1aae66211f74d316b97ba6ae686ebbb5a0",
+      "englishHash": "ce019740451eb762dda882ae72b570b0d07c60585678babf2746f5d98eedc702",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:包む:つつむ",
+        "senseId": "verb:包む:つつむ",
+        "meaning": "包裹",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只包好了小礼盒，大盒子还没包。",
+        "before": [
+          {
+            "text": "昨日は贈り物を全部は",
+            "reading": "きのうはおくりものをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。大きい箱はまだ裸のままだ。",
+            "reading": "。おおきいはこはまだはだかのままだ。"
+          }
+        ],
+        "translation": "昨天没有把礼物全部包完，大盒子还没包起来。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:包む:つつむ",
+        "sourceHash": "54d2b607fa1bb3e7fafa0ce415c4cd1aae66211f74d316b97ba6ae686ebbb5a0",
+        "scene": "Yesterday I wrapped the small gift boxes, but the large box is still unwrapped.",
+        "translation": "I didn’t get all the gifts wrapped yesterday; the large box is still bare."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:向かう:むかう",
+      "pair": "verb:向かう:むかう/teshimau",
+      "senseId": "verb:向かう:むかう",
+      "form": "teshimau",
+      "sourceHash": "e4914671798fc31e476876a3b641683d6b93e595c4b1652050852f54b379beec",
+      "englishHash": "763b7d6fde60697222871be0d4e111fb81a6c9c0b43286605987fd5757fd31d4",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimau:verb:向かう:むかう",
+        "senseId": "verb:向かう:むかう",
+        "meaning": "前往；面向",
+        "form": "teshimau",
+        "scene": "会议快开始了，准备直接前往会场。",
+        "before": [
+          {
+            "text": "開始時刻に間に合うよう、会場へ",
+            "reading": "かいしじこくにまにあうよう、かいじょうへ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "为了赶上开始时间，直接前往会场。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:向かう:むかう",
+        "sourceHash": "e4914671798fc31e476876a3b641683d6b93e595c4b1652050852f54b379beec",
+        "scene": "The meeting is about to start, so I head straight for the venue.",
+        "translation": "I’ll head straight to the venue so I can make it by the start time."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:向かう:むかう",
+      "pair": "verb:向かう:むかう/teshimauNegativePast",
+      "senseId": "verb:向かう:むかう",
+      "form": "teshimauNegativePast",
+      "sourceHash": "eb8c75476d2c9c7441f3a04df233d959a16f527bda62c6ebf98c05715ff7229b",
+      "englishHash": "dd6ebd5958cdb5b828f853d6f89ea7da3293d340586f3eb0e1700db56a80dd15",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:向かう:むかう",
+        "senseId": "verb:向かう:むかう",
+        "meaning": "前往；面向",
+        "form": "teshimauNegativePast",
+        "scene": "昨天有人去东门，有人去西门，没有全都走同一方向。",
+        "before": [
+          {
+            "text": "昨日は全員が同じ入口へ",
+            "reading": "きのうはぜんいんがおなじいりぐちへ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。二手に分かれた。",
+            "reading": "。ふたてにわかれた。"
+          }
+        ],
+        "translation": "昨天没有所有人都朝同一个入口走，而是分成两队。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:向かう:むかう",
+        "sourceHash": "eb8c75476d2c9c7441f3a04df233d959a16f527bda62c6ebf98c05715ff7229b",
+        "scene": "Yesterday some people went to the east gate and others to the west, so they did not all go the same way.",
+        "translation": "Yesterday, not everyone headed for the same entrance; they split into two groups."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauPast:verb:向かう:むかう",
+      "pair": "verb:向かう:むかう/teshimauPast",
+      "senseId": "verb:向かう:むかう",
+      "form": "teshimauPast",
+      "sourceHash": "48176b844d9cb42a751d0625f42983472c99c3bbf194edc7b0f2387ddfa84797",
+      "englishHash": "0e97eb086f92d5bdcf84e3819ea653e9f8ec3fed08b712af337f7d819388102f",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauPast:verb:向かう:むかう",
+        "senseId": "verb:向かう:むかう",
+        "meaning": "前往；面向",
+        "form": "teshimauPast",
+        "scene": "看到乌云压过来，大家赶紧朝避难所走去。",
+        "before": [
+          {
+            "text": "雨が降る前に、全員が避難所へ",
+            "reading": "あめがふるまえに、ぜんいんがひなんじょへ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "下雨前，大家都赶往避难所。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauPast:verb:向かう:むかう",
+        "sourceHash": "48176b844d9cb42a751d0625f42983472c99c3bbf194edc7b0f2387ddfa84797",
+        "scene": "Dark clouds are rolling in, so everyone hurries toward the evacuation shelter.",
+        "translation": "Everyone headed for the evacuation shelter before the rain started."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:呼ぶ:よぶ",
+      "pair": "verb:呼ぶ:よぶ/teshimauNegative",
+      "senseId": "verb:呼ぶ:よぶ",
+      "form": "teshimauNegative",
+      "sourceHash": "a0f5215df24c1546b2b2f5f2cc366b7fa3948ac63fb90cd3a72a90d51e39efeb",
+      "englishHash": "d504017e7af38096e4aaf4a472730d8a651bb8c4f1ddb96b2cffa93930cbafab",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户要求只保留自然原句；附件虽列在自然分组，但该条仍有明确的用词、逻辑或勉强可接受批评，按严格保留口径暂缓这个精确配对。保留构形及历史记录，不把附件的一般语言断言当作全局语法禁令。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:呼ぶ:よぶ",
+        "senseId": "verb:呼ぶ:よぶ",
+        "meaning": "呼叫",
+        "form": "teshimauNegative",
+        "scene": "诊室只能容纳两人，不能把候诊者都叫进来。",
+        "before": [
+          {
+            "text": "患者を一度に全員",
+            "reading": "かんじゃをいちどにぜんいん"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、二人ずつ案内する。",
+            "reading": "ように、ふたりずつあんないする。"
+          }
+        ],
+        "translation": "为了不把患者一次全叫进来，每次引导两个人。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:呼ぶ:よぶ",
+        "sourceHash": "a0f5215df24c1546b2b2f5f2cc366b7fa3948ac63fb90cd3a72a90d51e39efeb",
+        "scene": "The exam room fits only two patients, so she brings them in two at a time.",
+        "translation": "To avoid calling in all the patients at once, I'll bring them in two at a time."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:呼ぶ:よぶ",
+      "pair": "verb:呼ぶ:よぶ/teshimauNegativePast",
+      "senseId": "verb:呼ぶ:よぶ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "de62a9a044180654be0150562d23c3cc7ae2dbad81868d4c1a02cb7fce167d09",
+      "englishHash": "fab2d42158f576628a93b8a42a12948a5879b7fec8b6dd2436205c768f895fd4",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:呼ぶ:よぶ",
+        "senseId": "verb:呼ぶ:よぶ",
+        "meaning": "呼叫",
+        "form": "teshimauNegativePast",
+        "scene": "点名只进行了一半，余下的人还没被叫到。",
+        "before": [
+          {
+            "text": "名簿の名前を全部",
+            "reading": "めいぼのなまえをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。半分のところで点呼を中断した。",
+            "reading": "。はんぶんのところでてんこをちゅうだんした。"
+          }
+        ],
+        "translation": "没有把名册上的名字全部叫完，点名进行到一半就中断了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:呼ぶ:よぶ",
+        "sourceHash": "de62a9a044180654be0150562d23c3cc7ae2dbad81868d4c1a02cb7fce167d09",
+        "scene": "Roll call was interrupted halfway through, before everyone on the roster was called.",
+        "translation": "I didn't call every name on the roster; we stopped halfway through roll call."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:咲く:さく",
+      "pair": "verb:咲く:さく/teshimau",
+      "senseId": "verb:咲く:さく",
+      "form": "teshimau",
+      "sourceHash": "3491fb05b900df82632f0b77840e59732ffd59c60ee2699074c73b0da991a318",
+      "englishHash": "5d07e16629519acff6a01f36eee4a0e9ba541e0091cdd3041a6e030e471dc1b7",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimau:verb:咲く:さく",
+        "senseId": "verb:咲く:さく",
+        "meaning": "开花",
+        "form": "teshimau",
+        "scene": "天气转暖，院里的樱花一夜之间全开了。",
+        "before": [
+          {
+            "text": "暖かくなって、庭の桜が一晩で",
+            "reading": "あたたかくなって、にわのさくらがひとばんで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "天气变暖，院里的樱花一夜之间全开了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:咲く:さく",
+        "sourceHash": "3491fb05b900df82632f0b77840e59732ffd59c60ee2699074c73b0da991a318",
+        "scene": "The weather has warmed up, and the cherry blossoms in the garden open all at once overnight.",
+        "translation": "As the weather warms up, the cherry blossoms in the garden all come out overnight."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:咲く:さく",
+      "pair": "verb:咲く:さく/teshimauNegativePast",
+      "senseId": "verb:咲く:さく",
+      "form": "teshimauNegativePast",
+      "sourceHash": "c8dc2608e914180939a811d51177950f2b2bc2f80ebf9e8fd8080100709ad609",
+      "englishHash": "bcd4643f4acbb67a453e8c862c0fb0bac09587ead36eedea7fe985b6593c54b7",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:咲く:さく",
+        "senseId": "verb:咲く:さく",
+        "meaning": "开花",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只有早开的品种开花，花坛没有全部开放。",
+        "before": [
+          {
+            "text": "昨日は花壇の花が全部",
+            "reading": "きのうはかだんのはながぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。遅咲きはまだつぼみだった。",
+            "reading": "。おそざきはまだつぼみだった。"
+          }
+        ],
+        "translation": "昨天花坛的花没有全部开放，晚开的还只是花苞。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:咲く:さく",
+        "sourceHash": "c8dc2608e914180939a811d51177950f2b2bc2f80ebf9e8fd8080100709ad609",
+        "scene": "Only the early-blooming varieties flowered yesterday; the flower bed was not yet in full bloom.",
+        "translation": "The flowers in the bed did not all bloom yesterday; the late-blooming ones were still buds."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:喋る:しゃべる",
+      "pair": "verb:喋る:しゃべる/teshimauNegativePast",
+      "senseId": "verb:喋る:しゃべる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "1b3a1c75a980dc6ca17bb08d451ba6442047b03c486e345f7577a14d7a5a0f05",
+      "englishHash": "dd4356bf5049c505aa217d94fa4085e2bb16abddb187fb22040c987648a72bba",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:喋る:しゃべる",
+        "senseId": "verb:喋る:しゃべる",
+        "meaning": "说话；聊天",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只说了前半经过，重要的后半部分还没说。",
+        "before": [
+          {
+            "text": "昨日は出来事を全部は",
+            "reading": "きのうはできごとをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。大事な続きは",
+            "reading": "。だいじなつづきは"
+          },
+          {
+            "text": "今日",
+            "reading": "きょう"
+          },
+          {
+            "text": "話す。",
+            "reading": "はなす。"
+          }
+        ],
+        "translation": "昨天没有把事情全部说完，重要的后续今天说。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:喋る:しゃべる",
+        "sourceHash": "1b3a1c75a980dc6ca17bb08d451ba6442047b03c486e345f7577a14d7a5a0f05",
+        "scene": "After yesterday's conversation about the incident, the other person is still waiting for key details.",
+        "translation": "I didn't tell the whole story yesterday; I'll tell you the important part today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:passiveCompletionPast:verb:変える:かえる",
+      "pair": "verb:変える:かえる/passiveCompletionPast",
+      "senseId": "verb:変える:かえる",
+      "form": "passiveCompletionPast",
+      "sourceHash": "10aa633f70686c0a632795544ce165abb4b7e7a194c24e68f8e2c06af04cefaf",
+      "englishHash": "cdd936b4b1022264d0921487d69d236dfb3c5cca34b43c175d0f078813403d48",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:passiveCompletionPast:verb:変える:かえる",
+        "senseId": "verb:変える:かえる",
+        "meaning": "改变",
+        "form": "passiveCompletionPast",
+        "scene": "抱怨自己的座位昨天被别人换掉了。",
+        "before": [
+          {
+            "text": "私の席は昨日、知らない人に",
+            "reading": "わたしのせきはきのう、しらないひとに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "我的座位昨天被陌生人换掉了，真让人困扰。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:passiveCompletionPast:verb:変える:かえる",
+        "sourceHash": "10aa633f70686c0a632795544ce165abb4b7e7a194c24e68f8e2c06af04cefaf",
+        "scene": "Someone changed my seat yesterday, and I'm upset about it.",
+        "translation": "Someone I didn't know changed my seat yesterday, and it ended up being a real nuisance."
+      },
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "这条组合采用已审核的日常对象与参与者关系。",
+        "context": {
+          "id": "verb:変える:かえる:passiveCompletionPast:v7",
+          "text": "当事人谈论别人对自己或自己的物品做了不希望发生的事。"
+        },
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:始める:はじめる",
+      "pair": "verb:始める:はじめる/teshimauNegativePast",
+      "senseId": "verb:始める:はじめる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "3e0fd604bb8eeaf4075ad9116e5b2ded11cdb59698334b8f786728034e766a60",
+      "englishHash": "221f3faabcc918120dea53ebcb7865725d723290c0a787a200ecf88344ae0d67",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:始める:はじめる",
+        "senseId": "verb:始める:はじめる",
+        "meaning": "开始",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只启动一项工程，剩余两项仍在准备。",
+        "before": [
+          {
+            "text": "昨日は三つの事業を全部は",
+            "reading": "きのうはみっつのじぎょうをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。二つはまだ準備中だ。",
+            "reading": "。ふたつはまだじゅんびちゅうだ。"
+          }
+        ],
+        "translation": "昨天没有把三个项目全部启动，有两个还在准备。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:始める:はじめる",
+        "sourceHash": "3e0fd604bb8eeaf4075ad9116e5b2ded11cdb59698334b8f786728034e766a60",
+        "scene": "Two of the three project plans were still in the preparation stage this morning.",
+        "translation": "We didn't launch all three projects yesterday; two are still being prepared."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:chau:verb:学ぶ:まなぶ",
+      "pair": "verb:学ぶ:まなぶ/chau",
+      "senseId": "verb:学ぶ:まなぶ",
+      "form": "chau",
+      "sourceHash": "b596d0e81ebf94855f0ac89b6ab3c151bb16be8e0047a89981f4645f43c04f6a",
+      "englishHash": "c2ff146efc9fa6119e3ffa56ed2a3ebee4f5db1fa99e41365081432263908f54",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:chau:verb:学ぶ:まなぶ",
+        "senseId": "verb:学ぶ:まなぶ",
+        "meaning": "学习",
+        "form": "chau",
+        "scene": "朋友说教程只有两章，自己打算今晚都学完。",
+        "before": [
+          {
+            "text": "この二章は今夜",
+            "reading": "このにしょうはこんや"
+          }
+        ],
+        "after": [
+          {
+            "text": "ね。"
+          }
+        ],
+        "translation": "这两章我今晚就学完啦。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:学ぶ:まなぶ",
+        "sourceHash": "b596d0e81ebf94855f0ac89b6ab3c151bb16be8e0047a89981f4645f43c04f6a",
+        "scene": "My friend says the tutorial is only two chapters, so I plan to finish both tonight.",
+        "translation": "I’ll finish these two chapters tonight."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:chau:verb:届く:とどく",
+      "pair": "verb:届く:とどく/chau",
+      "senseId": "verb:届く:とどく",
+      "form": "chau",
+      "sourceHash": "98026dc971fd77bcf452ea34732d52901485ac7f07113b29333834e4d4fa872e",
+      "englishHash": "33cf4929c30ee7f1359d8befb17cc28689c708bd11ba6dfde18aa556b3a217ae",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:chau:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "chau",
+        "scene": "朋友问信寄出没，自己说明天应该就能送到。",
+        "before": [
+          {
+            "text": "この手紙なら、明日には",
+            "reading": "このてがみなら、あしたには"
+          }
+        ],
+        "after": [
+          {
+            "text": "よ。"
+          }
+        ],
+        "translation": "这封信的话，明天应该就能送到啦。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:届く:とどく",
+        "sourceHash": "98026dc971fd77bcf452ea34732d52901485ac7f07113b29333834e4d4fa872e",
+        "scene": "A friend asks if the letter has been sent, and I say it should arrive tomorrow.",
+        "translation": "This letter should arrive by tomorrow."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:届ける:とどける",
+      "pair": "verb:届ける:とどける/teshimauNegativePast",
+      "senseId": "verb:届ける:とどける",
+      "form": "teshimauNegativePast",
+      "sourceHash": "34d02ebd665e71dfd57364d108b8ada52af150fc4fe85130cf1a0ad5b422bafa",
+      "englishHash": "ef18732e63713620d799159b1ec801223bc77377383d1ff603f80b9698ffa658",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:届ける:とどける",
+        "senseId": "verb:届ける:とどける",
+        "meaning": "送到；申报",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只送去了合同正文，附表仍然留在办公室。",
+        "before": [
+          {
+            "text": "昨日は書類を全部は",
+            "reading": "きのうはしょるいをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。添付資料は今日届ける。",
+            "reading": "。てんぷしりょうはきょうとどける。"
+          }
+        ],
+        "translation": "昨天没有把文件全部送完，附件资料今天送。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:届ける:とどける",
+        "sourceHash": "34d02ebd665e71dfd57364d108b8ada52af150fc4fe85130cf1a0ad5b422bafa",
+        "scene": "The contract is with the client, but its appendices are still at my desk.",
+        "translation": "I didn't deliver all the documents yesterday; I'll bring the attachments today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:chau:verb:思う:おもう",
+      "pair": "verb:思う:おもう/chau",
+      "senseId": "verb:思う:おもう",
+      "form": "chau",
+      "sourceHash": "ba5ae478bf96de0a52e843080c91517e221cc4174d4bfeea727bea8e051df4c2",
+      "englishHash": "8838df8829f383fd80be3f75072706d69adac64b6e6e1cbd05198b6277b9c962",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:chau:verb:思う:おもう",
+        "senseId": "verb:思う:おもう",
+        "meaning": "想；认为",
+        "form": "chau",
+        "scene": "朋友问要不要报名，自己觉得试试看也不错。",
+        "before": [
+          {
+            "text": "挑戦してみるのもいいと",
+            "reading": "ちょうせんしてみるのもいいと"
+          }
+        ],
+        "after": [
+          {
+            "text": "よ。"
+          }
+        ],
+        "translation": "我觉得试试看也不错哦。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:思う:おもう",
+        "sourceHash": "ba5ae478bf96de0a52e843080c91517e221cc4174d4bfeea727bea8e051df4c2",
+        "scene": "A friend asks whether to sign up, and the speaker thinks giving it a try sounds good.",
+        "translation": "I can't help thinking it might be nice to give it a try."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:思う:おもう",
+      "pair": "verb:思う:おもう/teshimau",
+      "senseId": "verb:思う:おもう",
+      "form": "teshimau",
+      "sourceHash": "2e99d7706b08e58199bdbef12133de96f56b802d4337318dfdce05f6ffe3ed29",
+      "englishHash": "7b41554b922335c37993b80b1576e109ed182191cf24cf52675ac2e45e377e02",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimau:verb:思う:おもう",
+        "senseId": "verb:思う:おもう",
+        "meaning": "想；认为",
+        "form": "teshimau",
+        "scene": "看到最终成绩单，忍不住觉得这次真的进步了。",
+        "before": [
+          {
+            "text": "結果を見て、今回は成長したと",
+            "reading": "けっかをみて、こんかいはせいちょうしたと"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "看到结果，忍不住觉得这次进步了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:思う:おもう",
+        "sourceHash": "2e99d7706b08e58199bdbef12133de96f56b802d4337318dfdce05f6ffe3ed29",
+        "scene": "The speaker sees the final results and feels they have improved this time.",
+        "translation": "I cannot help thinking it might be worth giving it a try."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:手伝う:てつだう",
+      "pair": "verb:手伝う:てつだう/teshimau",
+      "senseId": "verb:手伝う:てつだう",
+      "form": "teshimau",
+      "sourceHash": "1a76bfd275e4388bb0e1a0b96ffbb4478e3cede2309bb597d11e2efcbb5b5ea3",
+      "englishHash": "a80ca60117a238b46a0e787e3fe5125d0540559abb0507ec7631a3a405d352fc",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimau:verb:手伝う:てつだう",
+        "senseId": "verb:手伝う:てつだう",
+        "meaning": "帮忙",
+        "form": "teshimau",
+        "scene": "弟弟打包只剩几箱，准备午饭前帮他做完。",
+        "before": [
+          {
+            "text": "昼食の前に、弟の荷造りを最後まで",
+            "reading": "ちゅうしょくのまえに、おとうとのにづくりをさいごまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "午饭前帮弟弟把行李全部打包好。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:手伝う:てつだう",
+        "sourceHash": "1a76bfd275e4388bb0e1a0b96ffbb4478e3cede2309bb597d11e2efcbb5b5ea3",
+        "scene": "Your younger brother has only a few boxes left to pack, and you plan to finish helping before lunch.",
+        "translation": "I'll help my younger brother finish packing before lunch."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:打つ:うつ",
+      "pair": "verb:打つ:うつ/teshimauNegativePast",
+      "senseId": "verb:打つ:うつ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "7faf918376175e080368c9506b92b0bd14e1c31a38332940d22ca5a1b508dd99",
+      "englishHash": "5145877422936ed6f4cf018c10bd96e387faa6637ca0943657eea75ef1c449f6",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:打つ:うつ",
+        "senseId": "verb:打つ:うつ",
+        "meaning": "敲打",
+        "form": "teshimauNegativePast",
+        "scene": "昨天钉架子只做了一半，剩下的钉子还在桌上。",
+        "before": [
+          {
+            "text": "昨日は釘を全部は",
+            "reading": "きのうはくぎをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。残りは机の上にある。",
+            "reading": "。のこりはつくえのうえにある。"
+          }
+        ],
+        "translation": "昨天没有把钉子全部钉完，剩下的还在桌上。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:打つ:うつ",
+        "sourceHash": "7faf918376175e080368c9506b92b0bd14e1c31a38332940d22ca5a1b508dd99",
+        "scene": "Half the nails are still on the table after yesterday's work.",
+        "translation": "I didn't hammer in all the nails yesterday. The rest are still on the table."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:払う:はらう",
+      "pair": "verb:払う:はらう/teshimauNegativePast",
+      "senseId": "verb:払う:はらう",
+      "form": "teshimauNegativePast",
+      "sourceHash": "878801e42f4932b1f35087e2dff467c0328527cc6baa5ac9394e197e471fba50",
+      "englishHash": "5b148e760caee42c1eb51a2fa63c665833149bdc9aabf0dc30338d35dcbf8145",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:払う:はらう",
+        "senseId": "verb:払う:はらう",
+        "meaning": "支付",
+        "form": "teshimauNegativePast",
+        "scene": "昨天交了订金，尾款等取货时再付。",
+        "before": [
+          {
+            "text": "昨日は代金を全部は",
+            "reading": "きのうはだいきんをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。残りは受け取るときに払う。",
+            "reading": "。のこりはうけとるときにはらう。"
+          }
+        ],
+        "translation": "昨天没有把货款全付清，剩余部分取货时再付。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:払う:はらう",
+        "sourceHash": "878801e42f4932b1f35087e2dff467c0328527cc6baa5ac9394e197e471fba50",
+        "scene": "You paid a deposit yesterday and plan to pay the balance when you pick up the item.",
+        "translation": "I didn't pay the entire price yesterday; I'll pay the rest when I pick it up."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:探す:さがす",
+      "pair": "verb:探す:さがす/teshimauNegativePast",
+      "senseId": "verb:探す:さがす",
+      "form": "teshimauNegativePast",
+      "sourceHash": "1910137aa2e6a51d3506cc7190d7ba338012d805cd5d1e6f9aea2e6d29887985",
+      "englishHash": "6c4dbe238d2fb634b1f60a94306010dd801cb492ecdac6bda445c1ddea24e3fc",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:探す:さがす",
+        "senseId": "verb:探す:さがす",
+        "meaning": "寻找",
+        "form": "teshimauNegativePast",
+        "scene": "昨天找钥匙时还没搜储物间，今天继续找。",
+        "before": [
+          {
+            "text": "昨日は家中を全部は",
+            "reading": "きのうはいえじゅうをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。物置は今日探す。",
+            "reading": "。ものおきはきょうさがす。"
+          }
+        ],
+        "translation": "昨天没有把家里全部找遍，储物间今天再找。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:探す:さがす",
+        "sourceHash": "1910137aa2e6a51d3506cc7190d7ba338012d805cd5d1e6f9aea2e6d29887985",
+        "scene": "I am still looking for the key, and I will search the storage shed today after leaving it unchecked yesterday.",
+        "translation": "I didn’t search the whole house yesterday; I’ll look in the storeroom today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:描く:えがく",
+      "pair": "verb:描く:えがく/teshimauNegativePast",
+      "senseId": "verb:描く:えがく",
+      "form": "teshimauNegativePast",
+      "sourceHash": "34b213bb592c96649eb29f564596436928fb31ca8e6b080e9fdc006a3d17d5f4",
+      "englishHash": "23ee7dfe1c23a7c5fd820dbf80817d607cec5a315675a4e48299350e0626f694",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:描く:えがく",
+        "senseId": "verb:描く:えがく",
+        "meaning": "描绘",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只画好人物，画面的背景仍是空白。",
+        "before": [
+          {
+            "text": "昨日は絵を全部は",
+            "reading": "きのうはえをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。背景はまだ白いままだ。",
+            "reading": "。はいけいはまだしろいままだ。"
+          }
+        ],
+        "translation": "昨天没有把画全部画完，背景还空白着。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:描く:えがく",
+        "sourceHash": "34b213bb592c96649eb29f564596436928fb31ca8e6b080e9fdc006a3d17d5f4",
+        "scene": "You finished only the figures yesterday, leaving the background blank.",
+        "translation": "I didn't finish the whole picture yesterday; the background is still blank."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:書く:かく",
+      "pair": "verb:書く:かく/teshimauNegativePast",
+      "senseId": "verb:書く:かく",
+      "form": "teshimauNegativePast",
+      "sourceHash": "edcbf54e65bc50aa2c2b9b2f622239ddf3ac1c0c02a1a302599a8fdc1d949d24",
+      "englishHash": "23fdfcafecf3b57889fce10e21d6ec1701e1c705529d2b00c8007fe27ef26147",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:書く:かく",
+        "senseId": "verb:書く:かく",
+        "meaning": "写；书写",
+        "form": "teshimauNegativePast",
+        "scene": "故事留了一部分，让妹妹接着创作。",
+        "before": [
+          {
+            "text": "物語を最後まで",
+            "reading": "ものがたりをさいごまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "のは、妹にも続きを考えてほしかったからだ。",
+            "reading": "のは、いもうとにもつづきをかんがえてほしかったからだ。"
+          }
+        ],
+        "translation": "之所以没有把故事写到最后，是因为也想让妹妹构思后续。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:書く:かく",
+        "sourceHash": "edcbf54e65bc50aa2c2b9b2f622239ddf3ac1c0c02a1a302599a8fdc1d949d24",
+        "scene": "She left part of the story unwritten so her younger sister could continue it.",
+        "translation": "I didn't write the story all the way to the end because I wanted my younger sister to think up what happens next, too."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:楽しむ:たのしむ",
+      "pair": "verb:楽しむ:たのしむ/teshimau",
+      "senseId": "verb:楽しむ:たのしむ",
+      "form": "teshimau",
+      "sourceHash": "3af3c71a072c0459d94c49eb29711906f6888a771a0211d8dfe82b0f568a5a8a",
+      "englishHash": "9bad21026539ae1c447dbd24ef8d9797051b7f09f12de755f705725296278ebd",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimau:verb:楽しむ:たのしむ",
+        "senseId": "verb:楽しむ:たのしむ",
+        "meaning": "享受；期待",
+        "form": "teshimau",
+        "scene": "工作做完，打算把剩余假期尽情享受完。",
+        "before": [
+          {
+            "text": "仕事が済んだら、残りの休暇を",
+            "reading": "しごとがすんだら、のこりのきゅうかを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "工作做完后，就尽情享受剩下的假期。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:楽しむ:たのしむ",
+        "sourceHash": "3af3c71a072c0459d94c49eb29711906f6888a771a0211d8dfe82b0f568a5a8a",
+        "scene": "Once work is finished, you plan to make the most of the rest of your vacation.",
+        "translation": "Once work is done, I'll make the most of the rest of my vacation."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:楽しむ:たのしむ",
+      "pair": "verb:楽しむ:たのしむ/teshimauNegative",
+      "senseId": "verb:楽しむ:たのしむ",
+      "form": "teshimauNegative",
+      "sourceHash": "1378411a8c663279860650418bcb088e5e7a4293b026509280bd3178174f60b8",
+      "englishHash": "7b6961806a10c018f638a704104766a8b73e623cc0df5d9efdc347e5d94b1a49",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:楽しむ:たのしむ",
+        "senseId": "verb:楽しむ:たのしむ",
+        "meaning": "享受；期待",
+        "form": "teshimauNegative",
+        "scene": "想留下几个项目下次再玩，不全部玩完。",
+        "before": [
+          {
+            "text": "今日だけで園内の遊びを全部",
+            "reading": "きょうだけでえんないのあそびをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、一部は次回に残す。",
+            "reading": "ように、いちぶはじかいにのこす。"
+          }
+        ],
+        "translation": "为了不在今天把园内的项目全玩完，留一部分下次再玩。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:楽しむ:たのしむ",
+        "sourceHash": "1378411a8c663279860650418bcb088e5e7a4293b026509280bd3178174f60b8",
+        "scene": "You want to save some of the park's attractions for another visit.",
+        "translation": "I leave some attractions for next time so I don't end up doing everything in the park today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:楽しむ:たのしむ",
+      "pair": "verb:楽しむ:たのしむ/teshimauNegativePast",
+      "senseId": "verb:楽しむ:たのしむ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "4f7b57a94bf1d902cb4cc7f3d83d5ede1ab9fd63c4d62ee12c3e604bd32be627",
+      "englishHash": "5de92deabc2299346cbf827da610b41b60736cba1c5bc69a02519656eb1a2d1d",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:楽しむ:たのしむ",
+        "senseId": "verb:楽しむ:たのしむ",
+        "meaning": "享受；期待",
+        "form": "teshimauNegativePast",
+        "scene": "还想再来，所以那天没有把项目全玩完。",
+        "before": [
+          {
+            "text": "次回にも来るつもりだったので、あの日は園内の遊びを全部は",
+            "reading": "じかいにもくるつもりだったので、あのひはえんないのあそびをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "因为当时打算下次再来，那天没有把园内的项目全玩完。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:楽しむ:たのしむ",
+        "sourceHash": "4f7b57a94bf1d902cb4cc7f3d83d5ede1ab9fd63c4d62ee12c3e604bd32be627",
+        "scene": "You planned to return, so you left some of the park's attractions for another day.",
+        "translation": "We planned to come back, so we didn't do all the attractions in the park that day."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:歌う:うたう",
+      "pair": "verb:歌う:うたう/teshimauNegativePast",
+      "senseId": "verb:歌う:うたう",
+      "form": "teshimauNegativePast",
+      "sourceHash": "2ab0a3a51fe406340b907b2e10ff57a469a1aa6e711eb3949d55cabad1357032",
+      "englishHash": "a01bb1a1a7e439f1d1d69523248acaad162aa6978d663248a869b4950e86dfe9",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:歌う:うたう",
+        "senseId": "verb:歌う:うたう",
+        "meaning": "唱歌",
+        "form": "teshimauNegativePast",
+        "scene": "练歌中途老师停下伴奏，结尾还没唱。",
+        "before": [
+          {
+            "text": "練習では一曲全部",
+            "reading": "れんしゅうではいっきょくぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。途中で先生が伴奏を止めたからだ。",
+            "reading": "。とちゅうでせんせいがばんそうをとめたからだ。"
+          }
+        ],
+        "translation": "练习时没有把整首歌唱完，因为老师在中途停下了伴奏。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:歌う:うたう",
+        "sourceHash": "2ab0a3a51fe406340b907b2e10ff57a469a1aa6e711eb3949d55cabad1357032",
+        "scene": "The teacher stops the accompaniment halfway through, so they don't finish the song during practice.",
+        "translation": "We didn't sing the whole song during practice because the teacher stopped playing halfway through."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:止める:とめる",
+      "pair": "verb:止める:とめる/teshimauNegative",
+      "senseId": "verb:止める:とめる",
+      "form": "teshimauNegative",
+      "sourceHash": "d173d2368daa78ea6a7e37609f4d0b284d3f536054e55b307c28a45538d37a7d",
+      "englishHash": "ed5f35fac33b36b6ade3fa4cbfc2b64348c7847c0f62facc5fbdff6756692bba",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:止める:とめる",
+        "senseId": "verb:止める:とめる",
+        "meaning": "停止；阻止",
+        "form": "teshimauNegative",
+        "scene": "还需保持供暖，留一台锅炉运行。",
+        "before": [
+          {
+            "text": "暖房が必要なので、ボイラーを全部は",
+            "reading": "だんぼうがひつようなので、ボイラーをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "因为还需要供暖，不把锅炉全部停掉。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:止める:とめる",
+        "sourceHash": "d173d2368daa78ea6a7e37609f4d0b284d3f536054e55b307c28a45538d37a7d",
+        "scene": "The heating is still needed, so at least one boiler must keep running.",
+        "translation": "We don't shut down all the boilers because we still need heat."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:止める:とめる",
+      "pair": "verb:止める:とめる/teshimauNegativePast",
+      "senseId": "verb:止める:とめる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "0dacaa500954597caeb1580b5c828891fb614189d62599cbccc7f9414329d839",
+      "englishHash": "fecf43dae0cfaf6322f30b36b67e37e4d1e66ac1bd63a9f6456c5f1ed8aaaba4",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:止める:とめる",
+        "senseId": "verb:止める:とめる",
+        "meaning": "停止；阻止",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚要给温室供暖，保留一台锅炉。",
+        "before": [
+          {
+            "text": "昨夜は一台を残して、ボイラーを全部は",
+            "reading": "さくやはいちだいをのこして、ボイラーをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "昨晚留了一台，没有把锅炉全部停掉。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:止める:とめる",
+        "sourceHash": "0dacaa500954597caeb1580b5c828891fb614189d62599cbccc7f9414329d839",
+        "scene": "A boiler is left running to heat the greenhouse overnight.",
+        "translation": "We left one boiler running last night and didn't shut off all of them."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:歩く:あるく",
+      "pair": "verb:歩く:あるく/teshimauNegativePast",
+      "senseId": "verb:歩く:あるく",
+      "form": "teshimauNegativePast",
+      "sourceHash": "1e19164d759f0fb13e44403709a5ceb4c7bc8a7a6a3e6ae6c0f409939401c6e5",
+      "englishHash": "0c26dc4c349a65e8150388096fa37d667c7fb73bd541e4e4998375bf29e5ccdc",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:歩く:あるく",
+        "senseId": "verb:歩く:あるく",
+        "meaning": "走路",
+        "form": "teshimauNegativePast",
+        "scene": "昨天到山间小屋就停下，后半程留到今天。",
+        "before": [
+          {
+            "text": "昨日は全行程を",
+            "reading": "きのうはぜんこうていを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。後半は今日歩く予定だ。",
+            "reading": "。こうはんはきょうあるくよていだ。"
+          }
+        ],
+        "translation": "昨天没有走完全程，后半程计划今天走。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:歩く:あるく",
+        "sourceHash": "1e19164d759f0fb13e44403709a5ceb4c7bc8a7a6a3e6ae6c0f409939401c6e5",
+        "scene": "Yesterday I stopped at the mountain hut, leaving the second half of the route for today.",
+        "translation": "I did not walk the whole route yesterday. I plan to walk the second half today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:泳ぐ:およぐ",
+      "pair": "verb:泳ぐ:およぐ/teshimauNegativePast",
+      "senseId": "verb:泳ぐ:およぐ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "45752f3cd6d398b43918324a50b8a0a5d15ac07e1e68e963ceb4faa051e7201d",
+      "englishHash": "17cd0a663582f79aa13d1bf09509235e69ef7a4afb113ece707f994f80858385",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:泳ぐ:およぐ",
+        "senseId": "verb:泳ぐ:およぐ",
+        "meaning": "游泳",
+        "form": "teshimauNegativePast",
+        "scene": "昨天的训练只游了前半段，后半段没有继续。",
+        "before": [
+          {
+            "text": "昨日は全区間を",
+            "reading": "きのうはぜんくかんを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          },
+          {
+            "text": "後半は",
+            "reading": "こうはんは"
+          },
+          {
+            "text": "見学した。",
+            "reading": "けんがくした。"
+          }
+        ],
+        "translation": "昨天没有游完全程，后半段在旁边观摩了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:泳ぐ:およぐ",
+        "sourceHash": "45752f3cd6d398b43918324a50b8a0a5d15ac07e1e68e963ceb4faa051e7201d",
+        "scene": "The speaker only swam the first half of the course yesterday and watched the rest.",
+        "translation": "I didn't swim the whole course yesterday. I watched the second half from the side."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:洗う:あらう",
+      "pair": "verb:洗う:あらう/teshimauNegative",
+      "senseId": "verb:洗う:あらう",
+      "form": "teshimauNegative",
+      "sourceHash": "b1dbc1c0153b8efb9941085886eb2191f670ec21f0b5d7a6e3cec98b73350961",
+      "englishHash": "86298019ea468516c2f92740726cb2e7a6c29ecfc19d7e613f7002f8cfe82dd8",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:洗う:あらう",
+        "senseId": "verb:洗う:あらう",
+        "meaning": "清洗",
+        "form": "teshimauNegative",
+        "scene": "赶时间只洗运动服，避免把所有衣服一次洗完。",
+        "before": [
+          {
+            "text": "洗濯物を全部",
+            "reading": "せんたくものをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、今日は運動服だけ洗う。",
+            "reading": "ように、きょうはうんどうふくだけあらう。"
+          }
+        ],
+        "translation": "为了不把衣服全部一次洗完，今天只洗运动服。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:洗う:あらう",
+        "sourceHash": "b1dbc1c0153b8efb9941085886eb2191f670ec21f0b5d7a6e3cec98b73350961",
+        "scene": "I am in a hurry, so I will wash only the sports clothes and leave the rest for later.",
+        "translation": "To avoid washing all the laundry at once, I’ll wash only the sports clothes today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:洗う:あらう",
+      "pair": "verb:洗う:あらう/teshimauNegativePast",
+      "senseId": "verb:洗う:あらう",
+      "form": "teshimauNegativePast",
+      "sourceHash": "bc664654648aad0f9ac2c3651330c0428f64092eb935e5113f8c8ff26b86d720",
+      "englishHash": "264e98830c8d0c3808580fc8d24d18cc82e953b82645bc59c694b3ceead7dc7c",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:洗う:あらう",
+        "senseId": "verb:洗う:あらう",
+        "meaning": "清洗",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚只洗了毛巾，衣服留到今天。",
+        "before": [
+          {
+            "text": "昨日は洗濯物を全部",
+            "reading": "きのうはせんたくものをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。服は今日洗う。",
+            "reading": "。ふくはきょうあらう。"
+          }
+        ],
+        "translation": "昨天没有把衣服全部洗完，衣服今天再洗。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:洗う:あらう",
+        "sourceHash": "bc664654648aad0f9ac2c3651330c0428f64092eb935e5113f8c8ff26b86d720",
+        "scene": "I washed only the towels last night and left the clothes for today.",
+        "translation": "I didn’t wash all the laundry yesterday; I’ll wash the clothes today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:消す:けす",
+      "pair": "verb:消す:けす/teshimauNegativePast",
+      "senseId": "verb:消す:けす",
+      "form": "teshimauNegativePast",
+      "sourceHash": "bff7ca5ec6d8fa6c1a0d36f901b09e8653b91b04940ccf4c9d1d1d64d39e89b7",
+      "englishHash": "8d515523777c6e0bdcec06ed36bf9ab292f803c3a91caf842c11c6e4d3b62c10",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:消す:けす",
+        "senseId": "verb:消す:けす",
+        "meaning": "关闭；消除",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚还留一盏走廊灯，没有把灯全部关掉。",
+        "before": [
+          {
+            "text": "昨夜は電気を全部は",
+            "reading": "さくやはでんきをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。廊下の明かりは残した。",
+            "reading": "。ろうかのあかりはのこした。"
+          }
+        ],
+        "translation": "昨晚没有把灯全部关掉，留下了走廊的照明。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:消す:けす",
+        "sourceHash": "bff7ca5ec6d8fa6c1a0d36f901b09e8653b91b04940ccf4c9d1d1d64d39e89b7",
+        "scene": "The speaker left a hallway light on last night.",
+        "translation": "I didn't turn off all the lights last night. I left the hallway light on."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:渡す:わたす",
+      "pair": "verb:渡す:わたす/teshimauNegativePast",
+      "senseId": "verb:渡す:わたす",
+      "form": "teshimauNegativePast",
+      "sourceHash": "54803c5305824d683871dbe74f8016e94a03b5f5bf5f7e6efc6faaa52a1fc039",
+      "englishHash": "c7eb826c8cf2834a7d7b827670b031f4decb89172a03c10a55b7e97feaff68c3",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:渡す:わたす",
+        "senseId": "verb:渡す:わたす",
+        "meaning": "交给",
+        "form": "teshimauNegativePast",
+        "scene": "昨天已给到场者发奖，缺席者的份还保留着。",
+        "before": [
+          {
+            "text": "昨日は賞品を全部",
+            "reading": "きのうはしょうひんをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。欠席者の分は残した。",
+            "reading": "。けっせきしゃのぶんはのこした。"
+          }
+        ],
+        "translation": "昨天没有把奖品全部发掉，缺席者的份留着。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:渡す:わたす",
+        "sourceHash": "54803c5305824d683871dbe74f8016e94a03b5f5bf5f7e6efc6faaa52a1fc039",
+        "scene": "Yesterday, you gave prizes to everyone who came and kept one for the absent guest.",
+        "translation": "I didn't hand out all the prizes yesterday; I saved the absent guest's share."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauPast:verb:渡る:わたる",
+      "pair": "verb:渡る:わたる/teshimauPast",
+      "senseId": "verb:渡る:わたる",
+      "form": "teshimauPast",
+      "sourceHash": "5d7096c239003c1a1b01283c7c963b0d74d2df346665a53685b70bfba8c6ab42",
+      "englishHash": "ef3371c3c98fa39a0ea81d1072fbc95baa51c0aa741fae0d750d7a5d2f33bc6f",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauPast:verb:渡る:わたる",
+        "senseId": "verb:渡る:わたる",
+        "meaning": "渡过",
+        "form": "teshimauPast",
+        "scene": "昨天赶在暴风雨来临前走过长桥。",
+        "before": [
+          {
+            "text": "昨日は嵐が来る前に、長い橋を",
+            "reading": "きのうはあらしがくるまえに、ながいはしを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "昨天赶在暴风雨来临前，走完了那座长桥。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauPast:verb:渡る:わたる",
+        "sourceHash": "5d7096c239003c1a1b01283c7c963b0d74d2df346665a53685b70bfba8c6ab42",
+        "scene": "A storm is forecast, and you are on foot near an exposed bridge.",
+        "translation": "Yesterday, I ended up crossing the long bridge before the storm came."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:片付ける:かたづける",
+      "pair": "verb:片付ける:かたづける/teshimauNegativePast",
+      "senseId": "verb:片付ける:かたづける",
+      "form": "teshimauNegativePast",
+      "sourceHash": "854b6ad44a439e900b18675c54c8a6f054a34e34f23fd0de47569fdb5968a856",
+      "englishHash": "6a519d4897bf0eab6441efe2a926ab9995b7b004dd219267a9adf7aa04e773b5",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:片付ける:かたづける",
+        "senseId": "verb:片付ける:かたづける",
+        "meaning": "收拾；整理",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚收拾餐桌时留着仍在吃的菜。",
+        "before": [
+          {
+            "text": "まだ食べている人がいたので、料理は全部は",
+            "reading": "まだたべているひとがいたので、りょうりはぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "因为还有人在吃，所以没有把菜全部收走。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:片付ける:かたづける",
+        "sourceHash": "854b6ad44a439e900b18675c54c8a6f054a34e34f23fd0de47569fdb5968a856",
+        "scene": "Someone is still eating at the table while the speaker clears away the dishes.",
+        "translation": "Some people were still eating, so I didn't clear all the dishes away."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:申し込む:もうしこむ",
+      "pair": "verb:申し込む:もうしこむ/teshimauNegative",
+      "senseId": "verb:申し込む:もうしこむ",
+      "form": "teshimauNegative",
+      "sourceHash": "3f11793cb2f3f76c4e75e88ccb31ea8249225c472c52131c0ce473a402ea466a",
+      "englishHash": "3c855a12cd10cda6404c55e0599b20ca5e9cb0d7d56da94520f3a3e130c2d111",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:申し込む:もうしこむ",
+        "senseId": "verb:申し込む:もうしこむ",
+        "meaning": "申请；报名",
+        "form": "teshimauNegative",
+        "scene": "需要留休息日，不会把候选课程全报上。",
+        "before": [
+          {
+            "text": "休む日も必要なので、候補の講座に全部は",
+            "reading": "やすむひもひつようなので、こうほのこうざにぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "也需要休息日，所以不会把候选课程全报上。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:申し込む:もうしこむ",
+        "sourceHash": "3f11793cb2f3f76c4e75e88ccb31ea8249225c472c52131c0ce473a402ea466a",
+        "scene": "You need a day off too, so you won't register for every course on the list.",
+        "translation": "I need a day to rest too, so I won't sign up for every course on the list."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:申し込む:もうしこむ",
+      "pair": "verb:申し込む:もうしこむ/teshimauNegativePast",
+      "senseId": "verb:申し込む:もうしこむ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "8f033b5e61419d4293d4d3e722c2978b6e5feda539964276035325a51349c5dd",
+      "englishHash": "667e2a18bdf54a34ce739fcc33fcd7569762aa2a91ff155d5e06f7e1ff6d60a0",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:申し込む:もうしこむ",
+        "senseId": "verb:申し込む:もうしこむ",
+        "meaning": "申请；报名",
+        "form": "teshimauNegativePast",
+        "scene": "预算不足，当时没有把想上的课全报上。",
+        "before": [
+          {
+            "text": "予算が足りず、希望する講座に全部は",
+            "reading": "よさんがたりず、きぼうするこうざにぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "预算不足，所以没有把想上的课程全报上。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:申し込む:もうしこむ",
+        "sourceHash": "8f033b5e61419d4293d4d3e722c2978b6e5feda539964276035325a51349c5dd",
+        "scene": "Your budget is too tight to register for every course you wanted.",
+        "translation": "My budget was too tight, so I didn't sign up for all the courses I wanted."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:直す:なおす",
+      "pair": "verb:直す:なおす/teshimauNegativePast",
+      "senseId": "verb:直す:なおす",
+      "form": "teshimauNegativePast",
+      "sourceHash": "1ce239d3d9532f73915ae69a8fd4293e33847fa2d7971b28b721b63fcf0439ea",
+      "englishHash": "7445502d05c73c70d5219e72ef2f6951e83d9fc958ceca0f0a7f4deb1c33fd9b",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:直す:なおす",
+        "senseId": "verb:直す:なおす",
+        "meaning": "修理；改正",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只改了开头，正文没有全部改完。",
+        "before": [
+          {
+            "text": "昨日は原稿を最後まで",
+            "reading": "きのうはげんこうをさいごまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。本文は今日直す。",
+            "reading": "。ほんぶんはきょうなおす。"
+          }
+        ],
+        "translation": "昨天没有把原稿改到最后，正文今天再改。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:直す:なおす",
+        "sourceHash": "1ce239d3d9532f73915ae69a8fd4293e33847fa2d7971b28b721b63fcf0439ea",
+        "scene": "I revised only the opening yesterday and did not get through the whole manuscript.",
+        "translation": "I didn’t revise the manuscript all the way to the end yesterday; I’ll revise the main text today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:着く:つく",
+      "pair": "verb:着く:つく/teshimauNegativePast",
+      "senseId": "verb:着く:つく",
+      "form": "teshimauNegativePast",
+      "sourceHash": "dbac502cacd09e7bae832fe19369a091df841100eb3c10c40771abf717764c18",
+      "englishHash": "359c20652a6147088b6aa890d6dca90d823727548684b8a7896c2fcf8e5a6a38",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:着く:つく",
+        "senseId": "verb:着く:つく",
+        "meaning": "到达",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚仅有前几辆到达，后面两辆还在路上。",
+        "before": [
+          {
+            "text": "昨夜のうちには車が全部",
+            "reading": "さくやのうちにはくるまがぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。二台はまだ途中だった。",
+            "reading": "。にだいはまだとちゅうだった。"
+          }
+        ],
+        "translation": "昨晚车没有全部到齐，两辆还在途中。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:着く:つく",
+        "sourceHash": "dbac502cacd09e7bae832fe19369a091df841100eb3c10c40771abf717764c18",
+        "scene": "Only the first cars arrived last night; two are still on the way.",
+        "translation": "Not all the cars arrived last night; two were still on the way."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:chau:verb:知る:しる",
+      "pair": "verb:知る:しる/chau",
+      "senseId": "verb:知る:しる",
+      "form": "chau",
+      "sourceHash": "f90fad5a314c0808a0b46a1945de2b3fb10b2149f55b92394a460d43bd3ece83",
+      "englishHash": "e978d5ce450fe433bc03d2fecced50085d6c6cf687eb73d7b8d35e3a13e9040d",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:chau:verb:知る:しる",
+        "senseId": "verb:知る:しる",
+        "meaning": "知道",
+        "form": "chau",
+        "scene": "朋友想翻最后一页，提醒他会知道犯人是谁。",
+        "before": [
+          {
+            "text": "最後のページを見たら、犯人を",
+            "reading": "さいごのページをみたら、はんにんを"
+          }
+        ],
+        "after": [
+          {
+            "text": "よ。"
+          }
+        ],
+        "translation": "看最后一页的话，就会知道凶手是谁啦。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:知る:しる",
+        "sourceHash": "f90fad5a314c0808a0b46a1945de2b3fb10b2149f55b92394a460d43bd3ece83",
+        "scene": "A friend is about to look at the last page, where the culprit is revealed.",
+        "translation": "If you look at the last page, you'll find out who the culprit is."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:磨く:みがく",
+      "pair": "verb:磨く:みがく/teshimauNegativePast",
+      "senseId": "verb:磨く:みがく",
+      "form": "teshimauNegativePast",
+      "sourceHash": "a516a22c675802183abeced16d007b01766da0933339623934007555ef40c368",
+      "englishHash": "af2c62688098c9a63e793a8758f38cc0bc3b05af5c3d43840c7b8f01923af693",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:磨く:みがく",
+        "senseId": "verb:磨く:みがく",
+        "meaning": "刷；磨",
+        "form": "teshimauNegativePast",
+        "scene": "昨天示范只磨了银盘正面，背面仍未处理。",
+        "before": [
+          {
+            "text": "昨日は銀の皿を全部は",
+            "reading": "きのうはぎんのさらをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。裏側は手を付けなかった。",
+            "reading": "。うらがわはてをつけなかった。"
+          }
+        ],
+        "translation": "昨天没有把银盘全部打磨完，背面还没动过。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:磨く:みがく",
+        "sourceHash": "a516a22c675802183abeced16d007b01766da0933339623934007555ef40c368",
+        "scene": "Yesterday, you polished only the front of a silver dish and left the back untouched.",
+        "translation": "I didn't polish the whole silver dish yesterday; I didn't touch the underside."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:稼ぐ:かせぐ",
+      "pair": "verb:稼ぐ:かせぐ/teshimau",
+      "senseId": "verb:稼ぐ:かせぐ",
+      "form": "teshimau",
+      "sourceHash": "b0757cbd93a14ce749e1e08e7e77cfa1c068d5f1a755e0b455cb5e07c0ffdba1",
+      "englishHash": "0a457f4be970d172304ac31f5fb79398d4ff04f256816881c91f287d462cc0ac",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimau:verb:稼ぐ:かせぐ",
+        "senseId": "verb:稼ぐ:かせぐ",
+        "meaning": "挣钱",
+        "form": "teshimau",
+        "scene": "本月收入只差一点，准备周末赚够目标金额。",
+        "before": [
+          {
+            "text": "週末には、今月の目標額を",
+            "reading": "しゅうまつには、こんげつのもくひょうがくを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "周末把本月的目标金额赚够。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:稼ぐ:かせぐ",
+        "sourceHash": "b0757cbd93a14ce749e1e08e7e77cfa1c068d5f1a755e0b455cb5e07c0ffdba1",
+        "scene": "I am just short of this month’s income goal and plan to earn the rest over the weekend.",
+        "translation": "I’ll earn enough to reach this month’s target by the weekend."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:稼ぐ:かせぐ",
+      "pair": "verb:稼ぐ:かせぐ/teshimauNegative",
+      "senseId": "verb:稼ぐ:かせぐ",
+      "form": "teshimauNegative",
+      "sourceHash": "0d288f1c38c359ee8016866cc461bbc8b48cea4bf0d4ff0bbc9f4ae7f8094c3e",
+      "englishHash": "8f15937911041967158663fdcb32e2ab3cde102aecf9a8b48ff4904485fa9fc8",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:稼ぐ:かせぐ",
+        "senseId": "verb:稼ぐ:かせぐ",
+        "meaning": "挣钱",
+        "form": "teshimauNegative",
+        "scene": "旅行费用分两月赚取，这个月只赚一半。",
+        "before": [
+          {
+            "text": "旅行の費用を今月だけで全部は",
+            "reading": "りょこうのひようをこんげつだけでぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。半分は来月の仕事で賄う。",
+            "reading": "。はんぶんはらいげつのしごとでまかなう。"
+          }
+        ],
+        "translation": "这个月不把旅行费用全部赚齐，一半用下个月的工作收入支付。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:稼ぐ:かせぐ",
+        "sourceHash": "0d288f1c38c359ee8016866cc461bbc8b48cea4bf0d4ff0bbc9f4ae7f8094c3e",
+        "scene": "I am earning the travel money over two months, so I make only half this month.",
+        "translation": "I won’t earn all the travel money this month alone; I’ll cover half of it with next month’s work."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:稼ぐ:かせぐ",
+      "pair": "verb:稼ぐ:かせぐ/teshimauNegativePast",
+      "senseId": "verb:稼ぐ:かせぐ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "ed85a4178c80352e9a2705c5c7623c5f266c3ba56b78d19da2e29972012bd655",
+      "englishHash": "f06b510278a95f73a37716237c4bf74ae35e9057964b6e304f58fda7ba1cca6b",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:稼ぐ:かせぐ",
+        "senseId": "verb:稼ぐ:かせぐ",
+        "meaning": "挣钱",
+        "form": "teshimauNegativePast",
+        "scene": "目标金额分两周赚，上周先赚了一部分。",
+        "before": [
+          {
+            "text": "先週は目標額を全部は",
+            "reading": "せんしゅうはもくひょうがくをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。残りは今週稼ぐ。",
+            "reading": "。のこりはこんしゅうかせぐ。"
+          }
+        ],
+        "translation": "上周没有赚够目标金额，剩下的这周赚。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:稼ぐ:かせぐ",
+        "sourceHash": "ed85a4178c80352e9a2705c5c7623c5f266c3ba56b78d19da2e29972012bd655",
+        "scene": "The target amount is split over two weeks; I earned part of it last week.",
+        "translation": "I didn’t earn the full target amount last week; I’ll earn the rest this week."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:立つ:たつ",
+      "pair": "verb:立つ:たつ/teshimauNegativePast",
+      "senseId": "verb:立つ:たつ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "a33dc36fd7f471f97e0d0e289cd73b7ef27a9c873e3c0a80cd744ccd3e7f0eb6",
+      "englishHash": "5e29a89d36a1b4dbc7f3ace6917d3f65b6691c629cd3026fcebd282405641f96",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:立つ:たつ",
+        "senseId": "verb:立つ:たつ",
+        "meaning": "站立",
+        "form": "teshimauNegativePast",
+        "scene": "拍合照时前排仍坐着，没有全体起立。",
+        "before": [
+          {
+            "text": "集合写真では全員が",
+            "reading": "しゅうごうしゃしんではぜんいんが"
+          }
+        ],
+        "after": [
+          {
+            "text": "。前列は座ったままだった。",
+            "reading": "。ぜんれつはすわったままだった。"
+          }
+        ],
+        "translation": "拍合照时并非所有人都站了起来，前排仍坐着。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:立つ:たつ",
+        "sourceHash": "a33dc36fd7f471f97e0d0e289cd73b7ef27a9c873e3c0a80cd744ccd3e7f0eb6",
+        "scene": "For the group photo, the people in front remain seated while others stand.",
+        "translation": "Not everyone stood up for the group photo; the people in the front row stayed seated."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:終わる:おわる",
+      "pair": "verb:終わる:おわる/teshimauNegativePast",
+      "senseId": "verb:終わる:おわる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "d680cd5bf5705884a43ffa03be6ddeb2d4361f479e71adb5e2d0bb40915e814d",
+      "englishHash": "2005edaacc68a441cb1a398fba53b9252183abf24fc819c08a8fa1a425a92d23",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:終わる:おわる",
+        "senseId": "verb:終わる:おわる",
+        "meaning": "结束",
+        "form": "teshimauNegativePast",
+        "scene": "昨天会议没讨论完，最后一个议题留到今天。",
+        "before": [
+          {
+            "text": "昨日は会議が全部",
+            "reading": "きのうはかいぎがぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。最後の議題は今日話す。",
+            "reading": "。さいごのぎだいはきょうはなす。"
+          }
+        ],
+        "translation": "昨天会议没有全部开完，最后一个议题今天讨论。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:終わる:おわる",
+        "sourceHash": "d680cd5bf5705884a43ffa03be6ddeb2d4361f479e71adb5e2d0bb40915e814d",
+        "scene": "We did not finish the meeting yesterday, so we will discuss the final agenda item today.",
+        "translation": "The meeting didn’t finish yesterday. We’ll discuss the final agenda item today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:習う:ならう",
+      "pair": "verb:習う:ならう/teshimauNegative",
+      "senseId": "verb:習う:ならう",
+      "form": "teshimauNegative",
+      "sourceHash": "2da0ac60f8184a6005d0c0b51ded7d6eab65e58623b643319cc63817fda6a5af",
+      "englishHash": "e1f193e58c45ecce23a79d6a8f7e3d8d075c44892f3a6ac3a2546d88eb27d546",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:習う:ならう",
+        "senseId": "verb:習う:ならう",
+        "meaning": "学习；练习",
+        "form": "teshimauNegative",
+        "scene": "今天只跟老师学新内容的前半段。",
+        "before": [
+          {
+            "text": "先生から新しい内容を全部",
+            "reading": "せんせいからあたらしいないようをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、今日の授業は前半だけにする。",
+            "reading": "ように、きょうのじゅぎょうはぜんはんだけにする。"
+          }
+        ],
+        "translation": "今天的课只上前半段，避免跟老师一次学完所有新内容。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:習う:ならう",
+        "sourceHash": "2da0ac60f8184a6005d0c0b51ded7d6eab65e58623b643319cc63817fda6a5af",
+        "scene": "The speaker will cover only the first half of the new material in today's lesson.",
+        "translation": "To avoid learning all the new material from the teacher at once, I'll cover only the first half in today's lesson."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:習う:ならう",
+      "pair": "verb:習う:ならう/teshimauNegativePast",
+      "senseId": "verb:習う:ならう",
+      "form": "teshimauNegativePast",
+      "sourceHash": "95dd332b9bddfcccc3b08ff7a71a675b6e50dc67ab62b9ef6ce27178649cad30",
+      "englishHash": "e3953a543b1e1d27e1bb0db2c44c65fbba815634727f0fac36211f68fd85ffde",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:習う:ならう",
+        "senseId": "verb:習う:ならう",
+        "meaning": "学习；练习",
+        "form": "teshimauNegativePast",
+        "scene": "昨天跟老师学琴只学到中间，后面的指法还没学。",
+        "before": [
+          {
+            "text": "昨日は曲の弾き方を最後までは",
+            "reading": "きのうはきょくのひきかたをさいごまでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。後半は次の授業で習う。",
+            "reading": "。こうはんはつぎのじゅぎょうでならう。"
+          }
+        ],
+        "translation": "昨天没有把这首曲子的弹法全部学完，后半部分下一节课学。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:習う:ならう",
+        "sourceHash": "95dd332b9bddfcccc3b08ff7a71a675b6e50dc67ab62b9ef6ce27178649cad30",
+        "scene": "The speaker learned only the first half of how to play the piece yesterday and will learn the rest next lesson.",
+        "translation": "I did not learn how to play the whole piece yesterday. I will learn the second half in the next lesson."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:考える:かんがえる",
+      "pair": "verb:考える:かんがえる/teshimauNegativePast",
+      "senseId": "verb:考える:かんがえる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "f7f56f640ef6dcdc4071c3e83e2b63db9b2e5e092362269526e42885bb5671df",
+      "englishHash": "5a9d5637ab995420503bcd016ea69330cfbc2415cf142f8a4912a26d9ba3ad97",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:考える:かんがえる",
+        "senseId": "verb:考える:かんがえる",
+        "meaning": "思考；考虑",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只拟好故事开头，还没想好全部发展。",
+        "before": [
+          {
+            "text": "昨日は筋書きを最後までは",
+            "reading": "きのうはすじがきをさいごまでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。結末は今日考える。",
+            "reading": "。けつまつはきょうかんがえる。"
+          }
+        ],
+        "translation": "昨天没有把情节全部想好，结尾今天再想。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:考える:かんがえる",
+        "sourceHash": "f7f56f640ef6dcdc4071c3e83e2b63db9b2e5e092362269526e42885bb5671df",
+        "scene": "After yesterday's writing session, the story still has no ending.",
+        "translation": "I didn't plan out the whole story yesterday; I'll work on the ending today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:聞く:きく",
+      "pair": "verb:聞く:きく/teshimauNegativePast",
+      "senseId": "verb:聞く:きく",
+      "form": "teshimauNegativePast",
+      "sourceHash": "cdad5d697995567f0f94dc423ce69cf12a4ab21c8c1ec38681d991ff68a271fe",
+      "englishHash": "36b2674bc64b7cfdfcaa369f8b0959787ef10a673e4addd328ef4c506663e58c",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:聞く:きく",
+        "senseId": "verb:聞く:きく",
+        "meaning": "听；询问",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚的广播听到一半，后半留到今天听。",
+        "before": [
+          {
+            "text": "昨夜は番組を最後までは",
+            "reading": "さくやはばんぐみをさいごまでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。続きは",
+            "reading": "。つづきは"
+          },
+          {
+            "text": "今日",
+            "reading": "きょう"
+          },
+          {
+            "text": "聞く。",
+            "reading": "きく。"
+          }
+        ],
+        "translation": "昨晚没有把节目听到最后，后续今天再听。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:聞く:きく",
+        "sourceHash": "cdad5d697995567f0f94dc423ce69cf12a4ab21c8c1ec38681d991ff68a271fe",
+        "scene": "The speaker stopped listening to the radio program before it ended and will hear the rest today.",
+        "translation": "I didn't listen all the way to the end of the program last night. I'll hear the rest today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:脱ぐ:ぬぐ",
+      "pair": "verb:脱ぐ:ぬぐ/teshimauNegative",
+      "senseId": "verb:脱ぐ:ぬぐ",
+      "form": "teshimauNegative",
+      "sourceHash": "c2289e9d6d2c8a5b14dc94e507f73629542785adabc218808a9773510e834b84",
+      "englishHash": "be2109e8db18f287c5df279255e0a851382bfd94a09c356cde8b5de40ce4317a",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:脱ぐ:ぬぐ",
+        "senseId": "verb:脱ぐ:ぬぐ",
+        "meaning": "脱下",
+        "form": "teshimauNegative",
+        "scene": "检查只需脱外层衣物，提醒自己保留内衣。",
+        "before": [
+          {
+            "text": "服を全部",
+            "reading": "ふくをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、下着は残す。",
+            "reading": "ように、したぎはのこす。"
+          }
+        ],
+        "translation": "为了不把衣服全部脱光，保留内衣。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:脱ぐ:ぬぐ",
+        "sourceHash": "c2289e9d6d2c8a5b14dc94e507f73629542785adabc218808a9773510e834b84",
+        "scene": "Only outer clothing needs to be removed for the examination, so she keeps her underwear on.",
+        "translation": "To avoid taking off all my clothes, I'll keep my underwear on."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:脱ぐ:ぬぐ",
+      "pair": "verb:脱ぐ:ぬぐ/teshimauNegativePast",
+      "senseId": "verb:脱ぐ:ぬぐ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "4572c9b3a351817c88a3b129520ed82aae55e90849d3c529a937e19b9d9bad73",
+      "englishHash": "f37e2e390de0cf18ecf0bae1a41144c4b1b3175fb87fccbd4aca358c3d459ac8",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:脱ぐ:ぬぐ",
+        "senseId": "verb:脱ぐ:ぬぐ",
+        "meaning": "脱下",
+        "form": "teshimauNegativePast",
+        "scene": "检查时只脱下外层，内衣仍然穿着。",
+        "before": [
+          {
+            "text": "検査のときは服を全部",
+            "reading": "けんさのときはふくをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。下着は着たままだった。",
+            "reading": "。したぎはきたままだった。"
+          }
+        ],
+        "translation": "检查时没有把衣服全脱光，内衣仍然穿着。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:脱ぐ:ぬぐ",
+        "sourceHash": "4572c9b3a351817c88a3b129520ed82aae55e90849d3c529a937e19b9d9bad73",
+        "scene": "During the examination, I removed only my outer clothes and kept my underwear on.",
+        "translation": "I did not take all my clothes off during the examination; I kept my underwear on."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:落ちる:おちる",
+      "pair": "verb:落ちる:おちる/teshimauNegative",
+      "senseId": "verb:落ちる:おちる",
+      "form": "teshimauNegative",
+      "sourceHash": "9351660e611ea7d0398d75aec8aa84ce4f46ca0d78d30065732ee03d6950f526",
+      "englishHash": "b08cbde5f2ba4c2b35fdcc272178b8260b54aecae50def4e0aea71aa62cb4729",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:落ちる:おちる",
+        "senseId": "verb:落ちる:おちる",
+        "meaning": "掉落",
+        "form": "teshimauNegative",
+        "scene": "观察冬天仍留有叶子的常绿树。",
+        "before": [
+          {
+            "text": "この木は冬でも葉が全部は",
+            "reading": "このきはふゆでもはがぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "这棵树即使到了冬天，叶子也不会全部掉光。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:落ちる:おちる",
+        "sourceHash": "9351660e611ea7d0398d75aec8aa84ce4f46ca0d78d30065732ee03d6950f526",
+        "scene": "The speaker is looking at an evergreen tree that still has leaves in winter.",
+        "translation": "Even in winter, not all the leaves fall off this tree."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:落とす:おとす",
+      "pair": "verb:落とす:おとす/teshimauNegative",
+      "senseId": "verb:落とす:おとす",
+      "form": "teshimauNegative",
+      "sourceHash": "33147dd2096f6d0c74a5fae9354372e08d86dc74f2226e86570cf946e92303ca",
+      "englishHash": "79ad1a07036990509240af740e4ffec50c9ec66a6d3dc1af3da55016edf2645e",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:落とす:おとす",
+        "senseId": "verb:落とす:おとす",
+        "meaning": "弄掉；丢失",
+        "form": "teshimauNegative",
+        "scene": "落体实验只让半数球落下，其余留待下次使用。",
+        "before": [
+          {
+            "text": "箱の底へ球を全部",
+            "reading": "はこのそこへたまをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、半分は手元に残す。",
+            "reading": "ように、はんぶんはてもとにのこす。"
+          }
+        ],
+        "translation": "为了不让球全部掉到箱底，手边留一半。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:落とす:おとす",
+        "sourceHash": "33147dd2096f6d0c74a5fae9354372e08d86dc74f2226e86570cf946e92303ca",
+        "scene": "In a drop experiment, you keep half the balls within reach instead of dropping them all into the box.",
+        "translation": "I leave half within reach so I don't drop all the balls to the bottom of the box."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:落とす:おとす",
+      "pair": "verb:落とす:おとす/teshimauNegativePast",
+      "senseId": "verb:落とす:おとす",
+      "form": "teshimauNegativePast",
+      "sourceHash": "44384f3a12e99f2f4ea1146fa278c47efc30363e2fb88d80401ae77af012b76e",
+      "englishHash": "c71b68129dae4b4e4ae78e011318932342f6cb50fe7300a65e7a82514ab56596",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:落とす:おとす",
+        "senseId": "verb:落とす:おとす",
+        "meaning": "弄掉；丢失",
+        "form": "teshimauNegativePast",
+        "scene": "昨天落体实验只放下一半球，其余保留给下次。",
+        "before": [
+          {
+            "text": "昨日の落下実験では、",
+            "reading": "きのうのらっかじっけんでは、"
+          },
+          {
+            "text": "箱の底へ球を全部は",
+            "reading": "はこのそこへたまをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。半分は手元に残した。",
+            "reading": "。はんぶんはてもとにのこした。"
+          }
+        ],
+        "translation": "昨天的落体实验中，没有让球全部掉到箱底，手边留了一半。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:落とす:おとす",
+        "sourceHash": "44384f3a12e99f2f4ea1146fa278c47efc30363e2fb88d80401ae77af012b76e",
+        "scene": "Yesterday's drop experiment used only half the balls, with the rest saved for next time.",
+        "translation": "In yesterday's drop experiment, I didn't drop all the balls to the bottom of the box; I kept half within reach."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:行く:いく",
+      "pair": "verb:行く:いく/teshimauNegativePast",
+      "senseId": "verb:行く:いく",
+      "form": "teshimauNegativePast",
+      "sourceHash": "48a5e74f18f7802ac91123791a401cec5448a4879b6a744777750227ad9a60e3",
+      "englishHash": "cc343e3f1e13cde252fb3eadee53dbfa0ccec61662cc71476c476c1428e6c5a0",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:行く:いく",
+        "senseId": "verb:行く:いく",
+        "meaning": "去；前往",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只逛了部分候选店，今天继续逛。",
+        "before": [
+          {
+            "text": "昨日は候補の店に全部",
+            "reading": "きのうはこうほのみせにぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、残りは今日回る。",
+            "reading": "ので、のこりはきょうまわる。"
+          }
+        ],
+        "translation": "昨天没有把候选店全部去完，剩下的今天再逛。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:行く:いく",
+        "sourceHash": "48a5e74f18f7802ac91123791a401cec5448a4879b6a744777750227ad9a60e3",
+        "scene": "Yesterday I visited only some of the shops on my list and planned to continue today.",
+        "translation": "I did not visit all the shops on the list yesterday, so I will go to the rest today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:見せる:みせる",
+      "pair": "verb:見せる:みせる/teshimauNegativePast",
+      "senseId": "verb:見せる:みせる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "13659a2f204a205b1acc9515836ce19fce1d93bd545011504f274913d3c8ff21",
+      "englishHash": "d6f5fff8e283a7018f7ab2cce372212f63144c3b4ee48ee2f7e737cb8e6ab088",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:見せる:みせる",
+        "senseId": "verb:見せる:みせる",
+        "meaning": "给……看",
+        "form": "teshimauNegativePast",
+        "scene": "昨天展示了部分数据，没有把全部资料给客户看。",
+        "before": [
+          {
+            "text": "昨日は資料を全部",
+            "reading": "きのうはしりょうをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。要点だけ見せた。",
+            "reading": "。ようてんだけみせた。"
+          }
+        ],
+        "translation": "昨天没有把资料全部展示出来，只展示了要点。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:見せる:みせる",
+        "sourceHash": "13659a2f204a205b1acc9515836ce19fce1d93bd545011504f274913d3c8ff21",
+        "scene": "The client has a meeting tomorrow, and I prepared a short summary yesterday.",
+        "translation": "I did not show all the materials yesterday; I showed only the key points."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:見る:みる",
+      "pair": "verb:見る:みる/teshimauNegativePast",
+      "senseId": "verb:見る:みる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "6d31b590e2243ed598325d2ab9405e4620e9064c9247eab39aad74048de342a1",
+      "englishHash": "525c9a7233f965f79d36d090cac635d606cee998e44db34077d2ba53049fefc7",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:見る:みる",
+        "senseId": "verb:見る:みる",
+        "meaning": "看",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚只看了开头，电影后半留到今天继续。",
+        "before": [
+          {
+            "text": "昨夜は映画を最後までは",
+            "reading": "さくやはえいがをさいごまでは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。続きは",
+            "reading": "。つづきは"
+          },
+          {
+            "text": "今夜",
+            "reading": "こんや"
+          },
+          {
+            "text": "見る。",
+            "reading": "みる。"
+          }
+        ],
+        "translation": "昨晚没有把电影看完，后续今晚再看。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:見る:みる",
+        "sourceHash": "6d31b590e2243ed598325d2ab9405e4620e9064c9247eab39aad74048de342a1",
+        "scene": "I had little time for a movie last night and have more free time this evening.",
+        "translation": "I didn't finish the movie last night; I'll watch the rest tonight."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:覚える:おぼえる",
+      "pair": "verb:覚える:おぼえる/teshimauNegative",
+      "senseId": "verb:覚える:おぼえる",
+      "form": "teshimauNegative",
+      "sourceHash": "231af6a7a77c85fd0e0e9486b8aca8e1ba84c297a7452f1e8d368fe3054fc251",
+      "englishHash": "2ca1272e73789322c39bbe293598c21acd9d3ec07b0f78815010012671ac7971",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:覚える:おぼえる",
+        "senseId": "verb:覚える:おぼえる",
+        "meaning": "记住",
+        "form": "teshimauNegative",
+        "scene": "测试前留下一部分题目，避免先把答案全背会。",
+        "before": [
+          {
+            "text": "本番前に答えを全部",
+            "reading": "ほんばんまえにこたえをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、問題を少し残しておく。",
+            "reading": "ように、もんだいをすこしのこしておく。"
+          }
+        ],
+        "translation": "为了不在正式测试前把答案全记住，先留下一些题目。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:覚える:おぼえる",
+        "sourceHash": "231af6a7a77c85fd0e0e9486b8aca8e1ba84c297a7452f1e8d368fe3054fc251",
+        "scene": "A few practice questions are set aside so not every answer is memorized before test day.",
+        "translation": "I leave a few questions for later so I don't memorize all the answers before the test."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:話す:はなす",
+      "pair": "verb:話す:はなす/teshimauNegativePast",
+      "senseId": "verb:話す:はなす",
+      "form": "teshimauNegativePast",
+      "sourceHash": "fb264969dfaa9a442c8a71d13af71976d273a77d861f8ab1cf67b4b6f60a9c25",
+      "englishHash": "71f0ddfa1d3076e14c16fcb7b21b55ba2c15b0ea080eabf81d0b83ad2f38e052",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:話す:はなす",
+        "senseId": "verb:話す:はなす",
+        "meaning": "说；交谈",
+        "form": "teshimauNegativePast",
+        "scene": "怕给朋友压力，保留了一部分烦恼。",
+        "before": [
+          {
+            "text": "悩みを全部",
+            "reading": "なやみをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "のは、友達に負担をかけたくなかったからだ。",
+            "reading": "のは、ともだちにふたんをかけたくなかったからだ。"
+          }
+        ],
+        "translation": "没有把烦恼全说出来，是因为不想给朋友增加负担。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:話す:はなす",
+        "sourceHash": "fb264969dfaa9a442c8a71d13af71976d273a77d861f8ab1cf67b4b6f60a9c25",
+        "scene": "I held back some of my worries because I did not want to burden my friend.",
+        "translation": "I did not tell my friend everything that was bothering me because I did not want to burden them."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:読む:よむ",
+      "pair": "verb:読む:よむ/teshimauNegativePast",
+      "senseId": "verb:読む:よむ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "01c689d0478a2770943418bbdb8a5e1c4100c9aebb29f91678b09fd3b1a9aeea",
+      "englishHash": "0f29afae4242a9772a4d9c3787785513e4bee9bc6ce23a88ea5527c64acdb365",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:読む:よむ",
+        "senseId": "verb:読む:よむ",
+        "meaning": "阅读",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚特意留着最后一章今天再读。",
+        "before": [
+          {
+            "text": "昨夜、本を最後まで",
+            "reading": "さくや、ほんをさいごまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、今夜も続きを楽しめる。",
+            "reading": "ので、こんやもつづきをたのしめる。"
+          }
+        ],
+        "translation": "昨晚没有把书读到最后，所以今晚还能享受后续内容。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:読む:よむ",
+        "sourceHash": "01c689d0478a2770943418bbdb8a5e1c4100c9aebb29f91678b09fd3b1a9aeea",
+        "scene": "I deliberately saved the last chapter last night so I could read it today.",
+        "translation": "I did not finish the book last night, so I can enjoy the rest of it tonight too."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:買う:かう",
+      "pair": "verb:買う:かう/teshimauNegativePast",
+      "senseId": "verb:買う:かう",
+      "form": "teshimauNegativePast",
+      "sourceHash": "3e4420cebebc3e70aab0a4a44f07eb76dfaca7e148424b0f8c2c5f3e9a0f0a16",
+      "englishHash": "099c03ee3b6b2b794e35b192c7f891b47056a8147003185a62fc047002241107",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:買う:かう",
+        "senseId": "verb:買う:かう",
+        "meaning": "购买",
+        "form": "teshimauNegativePast",
+        "scene": "昨天没买齐参考书，打算下周买余下两本。",
+        "before": [
+          {
+            "text": "参考書",
+            "reading": "さんこうしょ"
+          },
+          {
+            "text": "を"
+          },
+          {
+            "text": "昨日",
+            "reading": "きのう"
+          },
+          {
+            "text": "全部",
+            "reading": "ぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、"
+          },
+          {
+            "text": "残",
+            "reading": "のこ"
+          },
+          {
+            "text": "りの"
+          },
+          {
+            "text": "二冊",
+            "reading": "にさつ"
+          },
+          {
+            "text": "は"
+          },
+          {
+            "text": "来週",
+            "reading": "らいしゅう"
+          },
+          {
+            "text": "買",
+            "reading": "か"
+          },
+          {
+            "text": "う。"
+          }
+        ],
+        "translation": "昨天没有把参考书全买齐，余下两本下周再买。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:買う:かう",
+        "sourceHash": "3e4420cebebc3e70aab0a4a44f07eb76dfaca7e148424b0f8c2c5f3e9a0f0a16",
+        "scene": "Two reference books are still on the shopping list for next week.",
+        "translation": "I didn't buy all the reference books yesterday, so I'll get the remaining two next week."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:貸す:かす",
+      "pair": "verb:貸す:かす/teshimauNegativePast",
+      "senseId": "verb:貸す:かす",
+      "form": "teshimauNegativePast",
+      "sourceHash": "9aecf24858945af6925695c89b23bef63dd1831d43007581fc489b6b1df381ab",
+      "englishHash": "84f1525f3acc17a9c458ec8f920b14d0e79ccf5174ab539e735e4bc8f83f2465",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:貸す:かす",
+        "senseId": "verb:貸す:かす",
+        "meaning": "借出",
+        "form": "teshimauNegativePast",
+        "scene": "昨天借出了部分雨伞，柜里还留着备用伞。",
+        "before": [
+          {
+            "text": "昨日は傘を全部は",
+            "reading": "きのうはかさをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。予備を二本残した。",
+            "reading": "。よびをにほんのこした。"
+          }
+        ],
+        "translation": "昨天没有把伞全部借出去，留了两把备用。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:貸す:かす",
+        "sourceHash": "9aecf24858945af6925695c89b23bef63dd1831d43007581fc489b6b1df381ab",
+        "scene": "Yesterday, I lent out some umbrellas but kept a couple in the cupboard as spares.",
+        "translation": "I did not lend out all the umbrellas yesterday; I kept two as spares."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:走る:はしる",
+      "pair": "verb:走る:はしる/teshimauNegative",
+      "senseId": "verb:走る:はしる",
+      "form": "teshimauNegative",
+      "sourceHash": "94fb772ae39029c07dffa29be2281e44b9cedeca1cea319e35ac060aa584f708",
+      "englishHash": "8a53ba400b2097c23f715ed153b20cbdebfe08d067ec83e41e40d8e352ab095d",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:走る:はしる",
+        "senseId": "verb:走る:はしる",
+        "meaning": "奔跑",
+        "form": "teshimauNegative",
+        "scene": "训练分上下半场，上午只跑一半路程。",
+        "before": [
+          {
+            "text": "午前中に全コースを",
+            "reading": "ごぜんちゅうにぜんコースを"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、折り返し地点で休憩する。",
+            "reading": "ように、おりかえしちてんできゅうけいする。"
+          }
+        ],
+        "translation": "为了不在上午就跑完全程，在折返点休息。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:走る:はしる",
+        "sourceHash": "94fb772ae39029c07dffa29be2281e44b9cedeca1cea319e35ac060aa584f708",
+        "scene": "A split morning-and-afternoon training session calls for stopping halfway in the morning.",
+        "translation": "We take a break at the turnaround point so we don't run the entire course in the morning."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:走る:はしる",
+      "pair": "verb:走る:はしる/teshimauNegativePast",
+      "senseId": "verb:走る:はしる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "dc4657cf345df4f8fc40ad15a3796bcbdfa8878254d3474b53a1ab50cfd88ed5",
+      "englishHash": "959351d65c15f88e2f4816268671f19af59d060f024aca6789f8e0e710e94722",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:走る:はしる",
+        "senseId": "verb:走る:はしる",
+        "meaning": "奔跑",
+        "form": "teshimauNegativePast",
+        "scene": "昨天跑到半程就下雨，没跑完预定路线。",
+        "before": [
+          {
+            "text": "昨日は予定のコースを全部は",
+            "reading": "きのうはよていのコースをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。雨で途中から歩いた。",
+            "reading": "。あめでとちゅうからあるいた。"
+          }
+        ],
+        "translation": "昨天没有把预定路线全部跑完，因为下雨，从中途起改成了步行。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:走る:はしる",
+        "sourceHash": "dc4657cf345df4f8fc40ad15a3796bcbdfa8878254d3474b53a1ab50cfd88ed5",
+        "scene": "Rain interrupts yesterday's run halfway through the planned route.",
+        "translation": "I didn't run the entire planned route yesterday; I switched to walking halfway because of the rain."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:起こす:おこす",
+      "pair": "verb:起こす:おこす/teshimauNegativePast",
+      "senseId": "verb:起こす:おこす",
+      "form": "teshimauNegativePast",
+      "sourceHash": "452d52d6d5feb426147775a2bc4ea82606d25a5633496299e6676416ef931d4f",
+      "englishHash": "3e779c9aba4b3924793527ad281f2d42d2c727df8b39c008222c87d352aa39e3",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:起こす:おこす",
+        "senseId": "verb:起こす:おこす",
+        "meaning": "叫醒；引起",
+        "form": "teshimauNegativePast",
+        "scene": "昨天分班叫起床，只叫醒早班，其他人继续睡。",
+        "before": [
+          {
+            "text": "昨日は全員を一度には",
+            "reading": "きのうはぜんいんをいちどには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。早番の人だけ起こした。",
+            "reading": "。はやばんのひとだけおこした。"
+          }
+        ],
+        "translation": "昨天没有一次把全员都叫醒，只叫醒了上早班的人。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:起こす:おこす",
+        "sourceHash": "452d52d6d5feb426147775a2bc4ea82606d25a5633496299e6676416ef931d4f",
+        "scene": "Yesterday, you woke the early-shift workers and let everyone else keep sleeping.",
+        "translation": "Yesterday, I didn't wake everyone at once; I woke only those on the early shift."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:chau:verb:足りる:たりる",
+      "pair": "verb:足りる:たりる/chau",
+      "senseId": "verb:足りる:たりる",
+      "form": "chau",
+      "sourceHash": "f81aadbae26bb0d42e34dfebc375a6197f60787484205e16741350942bae3def",
+      "englishHash": "5c5e8cbf3ee97ef6a0946835ee3010bb374f0431209ff62e0ac526413450e18b",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:chau:verb:足りる:たりる",
+        "senseId": "verb:足りる:たりる",
+        "meaning": "足够",
+        "form": "chau",
+        "scene": "朋友问饮料够不够，自己说这些肯定够。",
+        "before": [
+          {
+            "text": "この量なら十分",
+            "reading": "このりょうならじゅうぶん"
+          }
+        ],
+        "after": [
+          {
+            "text": "よ。"
+          }
+        ],
+        "translation": "这个量肯定够啦。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:足りる:たりる",
+        "sourceHash": "f81aadbae26bb0d42e34dfebc375a6197f60787484205e16741350942bae3def",
+        "scene": "A friend is preparing drinks for a group and looks at the glasses on the counter.",
+        "translation": "This amount will be plenty."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauPast:verb:足りる:たりる",
+      "pair": "verb:足りる:たりる/teshimauPast",
+      "senseId": "verb:足りる:たりる",
+      "form": "teshimauPast",
+      "sourceHash": "25181309c24a11cf0e9562c748f5230454d7c5617eadefb42e7352fcf77a0e55",
+      "englishHash": "44b48cd6570c417efee03b496e3c4824af37186f5e1d07099a1c3c19af8a4c37",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauPast:verb:足りる:たりる",
+        "senseId": "verb:足りる:たりる",
+        "meaning": "足够",
+        "form": "teshimauPast",
+        "scene": "人数比预想少，准备的食物竟然够了。",
+        "before": [
+          {
+            "text": "人数が少なくて、料理が",
+            "reading": "にんずうがすくなくて、りょうりが"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "人数少，准备的饭菜竟然够了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauPast:verb:足りる:たりる",
+        "sourceHash": "25181309c24a11cf0e9562c748f5230454d7c5617eadefb42e7352fcf77a0e55",
+        "scene": "Only a few guests arrived for dinner, even though we'd prepared a lot.",
+        "translation": "There were fewer people than expected, so we even had enough food."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:迎える:むかえる",
+      "pair": "verb:迎える:むかえる/teshimauNegative",
+      "senseId": "verb:迎える:むかえる",
+      "form": "teshimauNegative",
+      "sourceHash": "80679764be387616b50e82215e7b983b0acf05fcd20e62d3647f2b5b7de5bb83",
+      "englishHash": "451bb86ec3bcebcc7365b1f06e9773683d29f68384b04a75884f330bcfb8bb9c",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户要求只保留自然原句；附件虽列在自然分组，但该条仍有明确的用词、逻辑或勉强可接受批评，按严格保留口径暂缓这个精确配对。保留构形及历史记录，不把附件的一般语言断言当作全局语法禁令。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:迎える:むかえる",
+        "senseId": "verb:迎える:むかえる",
+        "meaning": "迎接",
+        "form": "teshimauNegative",
+        "scene": "客人分两天到达，今天只迎接其中一半。",
+        "before": [
+          {
+            "text": "客を一度に全員",
+            "reading": "きゃくをいちどにぜんいん"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、半分は明日迎える。",
+            "reading": "ように、はんぶんはあしたむかえる。"
+          }
+        ],
+        "translation": "为了不一次迎接完所有客人，一半留到明天迎接。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:迎える:むかえる",
+        "sourceHash": "80679764be387616b50e82215e7b983b0acf05fcd20e62d3647f2b5b7de5bb83",
+        "scene": "The guests are arriving over the course of two days.",
+        "translation": "To avoid meeting all the guests at once, I'll pick up half at the station tomorrow."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:逃げる:にげる",
+      "pair": "verb:逃げる:にげる/teshimauNegative",
+      "senseId": "verb:逃げる:にげる",
+      "form": "teshimauNegative",
+      "sourceHash": "3be4b7fc46163b949a820f0822e659f3737b227bb441992fbbf7ec64897991bd",
+      "englishHash": "b075729eb997c76b0d8ec0d1331eb8bb753db2463c9084e5877a2d405301f934",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户要求只保留自然原句；附件虽列在自然分组，但该条仍有明确的用词、逻辑或勉强可接受批评，按严格保留口径暂缓这个精确配对。保留构形及历史记录，不把附件的一般语言断言当作全局语法禁令。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:逃げる:にげる",
+        "senseId": "verb:逃げる:にげる",
+        "meaning": "逃跑",
+        "form": "teshimauNegative",
+        "scene": "演习中要留部分守卫，不能全员都逃跑。",
+        "before": [
+          {
+            "text": "守備隊が全員",
+            "reading": "しゅびたいがぜんいん"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、城門には一隊を残す。",
+            "reading": "ように、じょうもんにはいったいをのこす。"
+          }
+        ],
+        "translation": "为了不让守备队全员逃走，留一队在城门。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:逃げる:にげる",
+        "sourceHash": "3be4b7fc46163b949a820f0822e659f3737b227bb441992fbbf7ec64897991bd",
+        "scene": "The castle's guards are planning their positions at the gate.",
+        "translation": "To keep the whole garrison from running away, we'll leave one unit at the castle gate."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:逃げる:にげる",
+      "pair": "verb:逃げる:にげる/teshimauNegativePast",
+      "senseId": "verb:逃げる:にげる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "c0d7f5365dc70684b61918c0dd1f0f24ae60424c63a45c6d2cbff3965c38ff52",
+      "englishHash": "c143087d6ce865268cd5520ce0972f866daa6b346b09b08d81fb6fcfe50e3bea",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:逃げる:にげる",
+        "senseId": "verb:逃げる:にげる",
+        "meaning": "逃跑",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚只有部分人逃走，还有两人留下守城。",
+        "before": [
+          {
+            "text": "昨夜は兵士が全員",
+            "reading": "さくやはへいしがぜんいん"
+          }
+        ],
+        "after": [
+          {
+            "text": "。二人は城を守った。",
+            "reading": "。ふたりはしろをまもった。"
+          }
+        ],
+        "translation": "昨晚并非所有士兵都逃走了，有两人留下守城。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:逃げる:にげる",
+        "sourceHash": "c0d7f5365dc70684b61918c0dd1f0f24ae60424c63a45c6d2cbff3965c38ff52",
+        "scene": "Two soldiers were still on watch at the castle after last night's attack.",
+        "translation": "Not all the soldiers ran away last night; two stayed to defend the castle."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:進む:すすむ",
+      "pair": "verb:進む:すすむ/teshimauNegativePast",
+      "senseId": "verb:進む:すすむ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "e3e217bd45f78f00243ab0cabf243be0f8ab91f408a60555fdf778f0c1108478",
+      "englishHash": "92a52c99a01e26ac489229dc931dd19975146f08699664f7f090889703ec5e1b",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:進む:すすむ",
+        "senseId": "verb:進む:すすむ",
+        "meaning": "前进；进展",
+        "form": "teshimauNegativePast",
+        "scene": "昨天课程只讲到中段，还没进行到最后一章。",
+        "before": [
+          {
+            "text": "昨日は授業が最終章まで",
+            "reading": "きのうはじゅぎょうがさいしゅうしょうまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。中盤で時間になった。",
+            "reading": "。ちゅうばんでじかんになった。"
+          }
+        ],
+        "translation": "昨天课程没有进行到最后一章，讲到中段就到时间了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:進む:すすむ",
+        "sourceHash": "e3e217bd45f78f00243ab0cabf243be0f8ab91f408a60555fdf778f0c1108478",
+        "scene": "Yesterday the class got only halfway through the material before time ran out.",
+        "translation": "The class did not reach the final chapter yesterday; we ran out of time halfway through."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:遊ぶ:あそぶ",
+      "pair": "verb:遊ぶ:あそぶ/teshimauNegativePast",
+      "senseId": "verb:遊ぶ:あそぶ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "1a917975fccc3d4d2f082e6f1d5919de6514ea261852f6cf9adaa43ed6ace14a",
+      "englishHash": "c1c58df757ff6e17f23f9b9df1381c2412444f4d95ca44e58b300361ff8cb8fd",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:遊ぶ:あそぶ",
+        "senseId": "verb:遊ぶ:あそぶ",
+        "meaning": "玩耍",
+        "form": "teshimauNegativePast",
+        "scene": "昨天没玩遍所有设施，今天还有新项目。",
+        "before": [
+          {
+            "text": "昨日",
+            "reading": "きのう"
+          },
+          {
+            "text": "はすべての"
+          },
+          {
+            "text": "遊具",
+            "reading": "ゆうぐ"
+          },
+          {
+            "text": "で"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、"
+          },
+          {
+            "text": "今日",
+            "reading": "きょう"
+          },
+          {
+            "text": "も"
+          },
+          {
+            "text": "初",
+            "reading": "はじ"
+          },
+          {
+            "text": "めての"
+          },
+          {
+            "text": "遊",
+            "reading": "あそ"
+          },
+          {
+            "text": "びが"
+          },
+          {
+            "text": "楽",
+            "reading": "たの"
+          },
+          {
+            "text": "しめる。"
+          }
+        ],
+        "translation": "昨天没把所有游乐设施都玩一遍，所以今天还能体验新的玩法。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:遊ぶ:あそぶ",
+        "sourceHash": "1a917975fccc3d4d2f082e6f1d5919de6514ea261852f6cf9adaa43ed6ace14a",
+        "scene": "The group still has playground equipment they have not tried yet.",
+        "translation": "We didn't try all the playground equipment yesterday, so there's still something new for us to try today."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:運ぶ:はこぶ",
+      "pair": "verb:運ぶ:はこぶ/teshimauNegativePast",
+      "senseId": "verb:運ぶ:はこぶ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "c6d6267ece743815abcb544460ef8036ed41b6d5a452068a0dfb14ba0a790ae5",
+      "englishHash": "c2f84797c7f2bf151c331a4d35a8e082777323b4a7be5a54e3f9e5645f44b3ca",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:運ぶ:はこぶ",
+        "senseId": "verb:運ぶ:はこぶ",
+        "meaning": "搬运",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只搬走了小箱子，大箱子还在仓库。",
+        "before": [
+          {
+            "text": "昨日は箱を全部は",
+            "reading": "きのうははこをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。大きい箱は倉庫に残した。",
+            "reading": "。おおきいはこはそうこにのこした。"
+          }
+        ],
+        "translation": "昨天没有把箱子全部搬完，大箱子留在了仓库。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:運ぶ:はこぶ",
+        "sourceHash": "c6d6267ece743815abcb544460ef8036ed41b6d5a452068a0dfb14ba0a790ae5",
+        "scene": "I moved only the small boxes yesterday; the large ones are still in the storeroom.",
+        "translation": "I didn’t move all the boxes yesterday; I left the large ones in the storeroom."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:過ぎる:すぎる",
+      "pair": "verb:過ぎる:すぎる/teshimauNegativePast",
+      "senseId": "verb:過ぎる:すぎる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "0fb495b8eecabe3d4a9409ccee51aed6334b5f54e9838852401366f9863f49ab",
+      "englishHash": "897862dea66ab966d0d1991c50b7ef4c229603b911eeac7f8216eef40f8a9e3a",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:過ぎる:すぎる",
+        "senseId": "verb:過ぎる:すぎる",
+        "meaning": "经过；超过",
+        "form": "teshimauNegativePast",
+        "scene": "议题难谈，大家担心会议会超过预定结束时间。",
+        "before": [
+          {
+            "text": "議論が長引いたが、会議は終了予定時刻を",
+            "reading": "ぎろんがながびいたが、かいぎはしゅうりょうよていじこくを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "讨论虽然拖长了，会议却没有超过预定结束时间。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:過ぎる:すぎる",
+        "sourceHash": "0fb495b8eecabe3d4a9409ccee51aed6334b5f54e9838852401366f9863f49ab",
+        "scene": "Yesterday's discussion ran long, and the chair had set a strict end time for the meeting.",
+        "translation": "The discussion ran long, but the meeting didn't go past its scheduled end time."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:間に合う:まにあう",
+      "pair": "verb:間に合う:まにあう/teshimauNegative",
+      "senseId": "verb:間に合う:まにあう",
+      "form": "teshimauNegative",
+      "sourceHash": "cef335f053d32aec235621e01c5be0b73f944d92c4339bfde4f3a987fc864cd0",
+      "englishHash": "93aa7d774440000c899b263200af087e71e5c80b234ea66817e01f24ae229e3c",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:間に合う:まにあう",
+        "senseId": "verb:間に合う:まにあう",
+        "meaning": "赶得上",
+        "form": "teshimauNegative",
+        "scene": "检查路线安排，不能让所有人都赶上同一趟车。",
+        "before": [
+          {
+            "text": "全員が同じ電車に",
+            "reading": "ぜんいんがおなじでんしゃに"
+          }
+        ],
+        "after": [
+          {
+            "text": "ように、集合時間をずらす。",
+            "reading": "ように、しゅうごうじかんをずらす。"
+          }
+        ],
+        "translation": "为了不让所有人都赶上同一班车，错开集合时间。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:間に合う:まにあう",
+        "sourceHash": "cef335f053d32aec235621e01c5be0b73f944d92c4339bfde4f3a987fc864cd0",
+        "scene": "We stagger the meeting times so everyone does not catch the same train.",
+        "translation": "We stagger the meeting times to avoid everyone catching the same train."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:防ぐ:ふせぐ",
+      "pair": "verb:防ぐ:ふせぐ/teshimauNegativePast",
+      "senseId": "verb:防ぐ:ふせぐ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "209c7d59da4f80517ed9944f21e26f23e27921caef4cb8c633dd73705ae88230",
+      "englishHash": "65261b79ef90ad272cf7a5dd2e22706ec59a6310f443adcf8eb10bc55152508b",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:防ぐ:ふせぐ",
+        "senseId": "verb:防ぐ:ふせぐ",
+        "meaning": "防止",
+        "form": "teshimauNegativePast",
+        "scene": "昨天的挡风板只拦下一部分风，缝里仍有风吹入。",
+        "before": [
+          {
+            "text": "昨日の板は風を完全には",
+            "reading": "きのうのいたはかぜをかんぜんには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。隙間からまだ風が入った。",
+            "reading": "。すきまからまだかぜがはいった。"
+          }
+        ],
+        "translation": "昨天的板子没有完全挡住风，缝隙里仍有风吹进来。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:防ぐ:ふせぐ",
+        "sourceHash": "209c7d59da4f80517ed9944f21e26f23e27921caef4cb8c633dd73705ae88230",
+        "scene": "Yesterday, a windbreak board blocked only some of the wind, leaving drafts through the gaps.",
+        "translation": "Yesterday, the board didn't block all the wind; some still came through the gaps."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:降りる:おりる",
+      "pair": "verb:降りる:おりる/teshimauNegativePast",
+      "senseId": "verb:降りる:おりる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "ecaee1bff9f888222b706e20172b1d238b9cb7c14d6dca89ef441f880b488d24",
+      "englishHash": "979c97af2ecd96ddada534ef001886aba7773e32b26d37c9bc7874bc99b1f68f",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:降りる:おりる",
+        "senseId": "verb:降りる:おりる",
+        "meaning": "下车；下来",
+        "form": "teshimauNegativePast",
+        "scene": "仍有乘客留在车里，清扫暂未开始。",
+        "before": [
+          {
+            "text": "乗客が全員は",
+            "reading": "じょうきゃくがぜんいんは"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、清掃を始めずに待った。",
+            "reading": "ので、せいそうをはじめずにまった。"
+          }
+        ],
+        "translation": "因为乘客没有全部下完，所以没开始清扫，等了一会。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:降りる:おりる",
+        "sourceHash": "ecaee1bff9f888222b706e20172b1d238b9cb7c14d6dca89ef441f880b488d24",
+        "scene": "The cleaning crew is ready to start, but several passengers are still on board.",
+        "translation": "Since some passengers were still on board, we waited instead of starting the cleaning."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegative:verb:集める:あつめる",
+      "pair": "verb:集める:あつめる/teshimauNegative",
+      "senseId": "verb:集める:あつめる",
+      "form": "teshimauNegative",
+      "sourceHash": "4ad272d26b7c0b9c840448b52c64dd455ccc0620c5268c914a53b498242cbe7e",
+      "englishHash": "d2d972396f5298dc06ae3b0b7f3063794f0760d559607a4ea1335e8ac4c00a63",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegative:verb:集める:あつめる",
+        "senseId": "verb:集める:あつめる",
+        "meaning": "收集",
+        "form": "teshimauNegative",
+        "scene": "老师让孩子们各留一张卡片作纪念。",
+        "before": [
+          {
+            "text": "記念に一枚ずつ残すので、カードを全部は",
+            "reading": "きねんにいちまいずつのこすので、カードをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "要各留一张作纪念，所以不把卡片全部收走。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegative:verb:集める:あつめる",
+        "sourceHash": "4ad272d26b7c0b9c840448b52c64dd455ccc0620c5268c914a53b498242cbe7e",
+        "scene": "Some cards are kept as mementos rather than taking the whole set.",
+        "translation": "We leave one card apiece as a keepsake, so we don't collect every card."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:集める:あつめる",
+      "pair": "verb:集める:あつめる/teshimauNegativePast",
+      "senseId": "verb:集める:あつめる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "33a8c0859205b557186dd8286bd8833bb6c803f58f9015b612f1c4fd200e10e0",
+      "englishHash": "052b38c0048b75f3d70b97f596fbbf8de6270ffea124e7a77097dda323cef7e9",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:集める:あつめる",
+        "senseId": "verb:集める:あつめる",
+        "meaning": "收集",
+        "form": "teshimauNegativePast",
+        "scene": "昨天留了一部分叶子，供孩子观察。",
+        "before": [
+          {
+            "text": "観察用に少し残して、落ち葉を全部は",
+            "reading": "かんさつようにすこしのこして、おちばをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "留了一些供观察，没有把落叶全部收走。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:集める:あつめる",
+        "sourceHash": "33a8c0859205b557186dd8286bd8833bb6c803f58f9015b612f1c4fd200e10e0",
+        "scene": "Some of yesterday’s fallen leaves are being kept for the children’s nature study.",
+        "translation": "I left some leaves for observation and didn’t end up collecting all the fallen leaves."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:頼む:たのむ",
+      "pair": "verb:頼む:たのむ/teshimauNegativePast",
+      "senseId": "verb:頼む:たのむ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "9eabc79321b2452d427627838587f2153750ee097efcdef02c98fc864aec782e",
+      "englishHash": "b7cd3209c208f7793a1d5a9a5b2c711885d713e8450a58911ee3d4ef0788cca2",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:頼む:たのむ",
+        "senseId": "verb:頼む:たのむ",
+        "meaning": "拜托；点单",
+        "form": "teshimauNegativePast",
+        "scene": "昨天只拜托同事做前半，剩余工作自己承担。",
+        "before": [
+          {
+            "text": "昨日は仕事を全部同僚には",
+            "reading": "きのうはしごとをぜんぶどうりょうには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。後半は自分でやった。",
+            "reading": "。こうはんはじぶんでやった。"
+          }
+        ],
+        "translation": "昨天没有把工作全部托给同事，后半部分自己做了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:頼む:たのむ",
+        "sourceHash": "9eabc79321b2452d427627838587f2153750ee097efcdef02c98fc864aec782e",
+        "scene": "Yesterday I asked a coworker to handle only the first half of the work and did the rest myself.",
+        "translation": "Yesterday I didn’t ask my coworker to handle all the work; I did the second half myself."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:飛ぶ:とぶ",
+      "pair": "verb:飛ぶ:とぶ/teshimauNegativePast",
+      "senseId": "verb:飛ぶ:とぶ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "9c7bdbf81ec6708d9142e6be061cbf946ff4fcd872c45787ce494f850a58ff34",
+      "englishHash": "849b5da855adff2b545059771339ccd5253887714943bfa2488a8e84298bb9e5",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:飛ぶ:とぶ",
+        "senseId": "verb:飛ぶ:とぶ",
+        "meaning": "飞",
+        "form": "teshimauNegativePast",
+        "scene": "昨天放飞时还有两只留在笼中，没有全部飞走。",
+        "before": [
+          {
+            "text": "昨日は鳥が全部",
+            "reading": "きのうはとりがぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。二羽はかごに残った。",
+            "reading": "。にわはかごにのこった。"
+          }
+        ],
+        "translation": "昨天鸟没有全部飞走，两只留在了笼子里。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:飛ぶ:とぶ",
+        "sourceHash": "9c7bdbf81ec6708d9142e6be061cbf946ff4fcd872c45787ce494f850a58ff34",
+        "scene": "Two birds remained in the cage after the release yesterday.",
+        "translation": "Not all the birds flew away yesterday. Two stayed in the cage."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast",
+      "pair": "verb:食べる:たべる/teshimauNegativePast",
+      "senseId": "verb:食べる:たべる",
+      "form": "teshimauNegativePast",
+      "sourceHash": "0a6a385e96ffc8883c0f2a54d7ed9c63a160a2324f1dabc1fc1b69dcb8bc6893",
+      "englishHash": "f2db4ca62932d32ab1371b59d80fb68ab9cc20986a938a62c0e6dc2d0b9bcef7",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast",
+        "senseId": "verb:食べる:たべる",
+        "meaning": "吃",
+        "form": "teshimauNegativePast",
+        "scene": "昨天给弟弟留了些零食，没有全吃完。",
+        "before": [
+          {
+            "text": "昨日は弟の分を残して、お菓子を全部は",
+            "reading": "きのうはおとうとのぶんをのこして、おかしをぜんぶは"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "昨天留出了弟弟的份，没有把零食全部吃完。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast",
+        "sourceHash": "0a6a385e96ffc8883c0f2a54d7ed9c63a160a2324f1dabc1fc1b69dcb8bc6893",
+        "scene": "Yesterday, I saved some snacks for my younger brother and did not eat them all.",
+        "translation": "Yesterday, I saved some for my younger brother and did not end up eating all the snacks."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimauNegativePast:verb:飲む:のむ",
+      "pair": "verb:飲む:のむ/teshimauNegativePast",
+      "senseId": "verb:飲む:のむ",
+      "form": "teshimauNegativePast",
+      "sourceHash": "c0f69038e3acf17996cc4c315789b3a9e7bd1f0f505983f3bcbb6f34caa33b9e",
+      "englishHash": "00264676f8b4f3c5dd1c6ac69eea711947cdaec56a8e0dc6d1731e3d0824973e",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-26",
+      "reason": "用户在逐项评估118条开放原句后，明确要求只保留自然的、其余全部暂缓；本句未被明确归为自然，按用户选择暂停这个精确配对。保留原稿、构形识别和历史复测，不虚构三次返修失败。",
+      "restoreCondition": "用户同意恢复，且固定词义／目标形式的新例句通过独立自然度、中英内容与注音审核后，按精确配对恢复。",
+      "evidenceFile": "docs/usage-card-shimau-user-holds-20261026.json",
+      "card": {
+        "id": "usage:teshimauNegativePast:verb:飲む:のむ",
+        "senseId": "verb:飲む:のむ",
+        "meaning": "喝",
+        "form": "teshimauNegativePast",
+        "scene": "昨晚给孩子留饮料，没有喝光",
+        "before": [
+          {
+            "text": "子どもの分を残して、昨夜は飲み物を全部",
+            "reading": "こどものぶんをのこして、さくやはのみものをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "昨晚留了孩子的份，没有把饮料喝光。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimauNegativePast:verb:飲む:のむ",
+        "sourceHash": "c0f69038e3acf17996cc4c315789b3a9e7bd1f0f505983f3bcbb6f34caa33b9e",
+        "scene": "A glass was set aside for your child last night.",
+        "translation": "I saved some for my child and didn’t finish all the drinks last night."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+import {EXPECTED_SHIMAU_USER_SOURCE_IDS, EXPECTED_SHIMAU_USER_RETAINED_IDS, EXPECTED_SHIMAU_USER_HELD_IDS} from './helpers/shimau-user-teaching-hold-scope.mjs';
+import {EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS, EXPECTED_PRIOR_TEACHING_HOLD_IDS} from './helpers/current-teaching-hold-scope.mjs';
 import {EXPECTED_TEMIRU_TEACHING_HOLD_IDS, EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS} from './helpers/temiru-teaching-hold-scope.mjs';
 import assert from 'node:assert/strict';
 import {test, before, after} from 'node:test';
@@ -21,6 +23,9 @@ const id='usage:temiruPast:verb:いる:いる',form='temiruPast',senseId='verb:�
 const source=REVIEWED_USAGE_CARDS.find(card=>card.id===id),item=usageCardItem(senseId);
 const evidence=JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-teaching-hold-20261026.json',import.meta.url)));
 const hash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
+const shimauEvidence=JSON.parse(readFileSync(new URL('../docs/usage-card-shimau-teaching-hold-20261026.json',import.meta.url)));
+const userEvidence=JSON.parse(readFileSync(new URL('../docs/usage-card-shimau-user-holds-20261026.json',import.meta.url)));
+const sourceById=new Map([...evidence.sourceRows,...shimauEvidence.sourceRows,...userEvidence.sourceRows].map(row=>[row.id,row]));
 let server,model;
 before(async()=>{
   server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
@@ -29,16 +34,25 @@ before(async()=>{
 after(async()=>{await server?.close();});
 
 test('exact user teaching holds retain their bilingual sources and remove only the documented pairs',()=>{
-  assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.pair)),EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS);
-  assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.id)),EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
+  assert.deepEqual(new Set(evidence.sourceRows.map(row=>row.pair)),EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS);
+  assert.deepEqual(new Set(evidence.sourceRows.map(row=>row.id)),EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
+  assert.deepEqual(shimauEvidence.sourceRows.map(row=>row.pair),['verb:役立つ:やくだつ/chau']);
+  assert.equal(EXPECTED_SHIMAU_USER_SOURCE_IDS.size,118);
+  assert.equal(EXPECTED_SHIMAU_USER_RETAINED_IDS.size,24);
+  assert.equal(EXPECTED_SHIMAU_USER_HELD_IDS.size,94);
+  assert.deepEqual(new Set(userEvidence.sourceRows.map(row=>row.id)),EXPECTED_SHIMAU_USER_HELD_IDS);
+  assert.equal(sourceById.size,103);
+  for(const retained of EXPECTED_SHIMAU_USER_RETAINED_IDS)assert.ok(USAGE_CARDS.some(card=>card.id===retained),retained);
+  assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.pair)),EXPECTED_CURRENT_TEACHING_HOLD_PAIRS);
+  assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.id)),EXPECTED_CURRENT_TEACHING_HOLD_IDS);
   for(const hold of TEACHING_PAIR_DEFERRALS){
-    const original=REVIEWED_USAGE_CARDS.find(card=>card.id===hold.id),record=evidence.sourceRows.find(row=>row.id===hold.id);
+    const original=REVIEWED_USAGE_CARDS.find(card=>card.id===hold.id),record=sourceById.get(hold.id);
     assert.equal(hash(original),hold.sourceHash,hold.id);
     assert.deepEqual(original,record.card,hold.id);
     assert.equal(USAGE_CARDS.some(card=>card.id===hold.id),false,hold.id);
     assert.equal(EN_USAGE_CARD_OVERLAYS.some(row=>row.id===hold.id),false,hold.id);
   }
-  assert.equal(verifyTeachingPairHolds(REVIEWED_USAGE_CARDS),8);
+  assert.equal(verifyTeachingPairHolds(REVIEWED_USAGE_CARDS),103);
   assert.deepEqual(USAGE_CARDS,REVIEWED_USAGE_CARDS.filter(card=>!isUsageCardTeachingDeferred(card)));
   assert.equal(USAGE_CARDS.some(card=>card.id===id),false);
   assert.equal(EN_USAGE_CARD_OVERLAYS.some(row=>row.id===id),false);
@@ -84,7 +98,15 @@ test('practice and challenge cannot select the held pair and historical retest e
     const failed=recordIndependentAttempt(emptyAssessment(),{exercise:held,questionId:`historical:${hold.id}`,correct:false,at:'2026-10-26T00:00:00Z'});
     const before=structuredClone(failed),key=assessmentTarget(held).key;
     const reconciled=reconcileAssessmentCatalog(failed,model.exercises,USAGE_REVIEW_VERSION);
-    assert.deepEqual(reconciled.pending[key],failed.pending[key],`${hold.id}: compatible other-word retests still satisfy the same target`);
+    const compatible=model.exercises.some(candidate=>{const target=assessmentTarget(candidate);return target.key===key&&target.ruleSignature===failed.pending[key].target.ruleSignature;});
+    if(EXPECTED_PRIOR_TEACHING_HOLD_IDS.has(hold.id))assert.ok(compatible,`${hold.id}: prior nine holds retain their alternate-word guarantee`);
+    if(compatible){
+      assert.deepEqual(reconciled.pending[key],failed.pending[key],`${hold.id}: compatible other-word retests keep the original anchors`);
+      assert.equal(reconciled.suspendedPending[key],undefined,hold.id);
+    }else{
+      assert.equal(reconciled.pending[key],undefined,hold.id);
+      assert.deepEqual(reconciled.suspendedPending[key],{...failed.pending[key],suspension:{reason:'no-eligible-exercise',catalogVersion:USAGE_REVIEW_VERSION}},`${hold.id}: preserve the complete failed obligation while no compatible word remains`);
+    }
     for(const field of ['byTarget','independentByKc','assistedByKc','originalCount'])assert.deepEqual(reconciled[field],failed[field],`${hold.id}/${field}`);
     assert.deepEqual(failed,before);
   }

@@ -1,15 +1,15 @@
 {
   "version": 1,
   "method": "unique-kana-anchor-alignment-constrained-by-existing-authored-Han-pairs",
-  "sourceHash": "bb7c4bf03586d7e730aec265db3b67c691ddebd1a5f7eb56f37af8eae2c81e50",
+  "sourceHash": "6343335122853deac1a2099cf9cb414f7edfe61cbb280a512420e1292705dd69",
   "coverage": {
-    "cards": 17130,
-    "sourcePairs": 59774,
-    "direct": 59233,
-    "constrained": 539,
+    "cards": 17035,
+    "sourcePairs": 59617,
+    "direct": 59085,
+    "constrained": 530,
     "audited": 2,
     "fallbacks": 0,
-    "fontPairs": 5516,
+    "fontPairs": 5486,
     "lexicalFontPairs": 231,
     "extractionErrors": 0,
     "unsupportedPairs": 526
@@ -494,126 +494,6 @@
         },
         {
           "text": "する。"
-        }
-      ]
-    },
-    {
-      "text": "。後半は今日歩く予定だ。",
-      "reading": "。こうはんはきょうあるくよていだ。",
-      "parts": [
-        {
-          "text": "。"
-        },
-        {
-          "text": "後半",
-          "reading": "こうはん"
-        },
-        {
-          "text": "は"
-        },
-        {
-          "text": "今日歩",
-          "reading": "きょうある"
-        },
-        {
-          "text": "く"
-        },
-        {
-          "text": "予定",
-          "reading": "よてい"
-        },
-        {
-          "text": "だ。"
-        }
-      ]
-    },
-    {
-      "text": "。後半は次の授業で習う。",
-      "reading": "。こうはんはつぎのじゅぎょうでならう。",
-      "parts": [
-        {
-          "text": "。"
-        },
-        {
-          "text": "後半",
-          "reading": "こうはん"
-        },
-        {
-          "text": "は"
-        },
-        {
-          "text": "次",
-          "reading": "つぎ"
-        },
-        {
-          "text": "の"
-        },
-        {
-          "text": "授業",
-          "reading": "じゅぎょう"
-        },
-        {
-          "text": "で"
-        },
-        {
-          "text": "習",
-          "reading": "なら"
-        },
-        {
-          "text": "う。"
-        }
-      ]
-    },
-    {
-      "text": "。後半は自分でやった。",
-      "reading": "。こうはんはじぶんでやった。",
-      "parts": [
-        {
-          "text": "。"
-        },
-        {
-          "text": "後半",
-          "reading": "こうはん"
-        },
-        {
-          "text": "は"
-        },
-        {
-          "text": "自分",
-          "reading": "じぶん"
-        },
-        {
-          "text": "でやった。"
-        }
-      ]
-    },
-    {
-      "text": "。最後の議題は今日話す。",
-      "reading": "。さいごのぎだいはきょうはなす。",
-      "parts": [
-        {
-          "text": "。"
-        },
-        {
-          "text": "最後",
-          "reading": "さいご"
-        },
-        {
-          "text": "の"
-        },
-        {
-          "text": "議題",
-          "reading": "ぎだい"
-        },
-        {
-          "text": "は"
-        },
-        {
-          "text": "今日話",
-          "reading": "きょうはな"
-        },
-        {
-          "text": "す。"
         }
       ]
     },
@@ -1654,36 +1534,6 @@
         },
         {
           "text": "のドアを"
-        }
-      ]
-    },
-    {
-      "text": "ように、今日の授業は前半だけにする。",
-      "reading": "ように、きょうのじゅぎょうはぜんはんだけにする。",
-      "parts": [
-        {
-          "text": "ように、"
-        },
-        {
-          "text": "今日",
-          "reading": "きょう"
-        },
-        {
-          "text": "の"
-        },
-        {
-          "text": "授業",
-          "reading": "じゅぎょう"
-        },
-        {
-          "text": "は"
-        },
-        {
-          "text": "前半",
-          "reading": "ぜんはん"
-        },
-        {
-          "text": "だけにする。"
         }
       ]
     },
@@ -10832,40 +10682,6 @@
       ]
     },
     {
-      "text": "昨日の板は風を完全には",
-      "reading": "きのうのいたはかぜをかんぜんには",
-      "parts": [
-        {
-          "text": "昨日",
-          "reading": "きのう"
-        },
-        {
-          "text": "の"
-        },
-        {
-          "text": "板",
-          "reading": "いた"
-        },
-        {
-          "text": "は"
-        },
-        {
-          "text": "風",
-          "reading": "かぜ"
-        },
-        {
-          "text": "を"
-        },
-        {
-          "text": "完全",
-          "reading": "かんぜん"
-        },
-        {
-          "text": "には"
-        }
-      ]
-    },
-    {
       "text": "昨日の検査では、作業員は安全規則を",
       "reading": "きのうのけんさでは、さぎょういんはあんぜんきそくを",
       "parts": [
@@ -11332,26 +11148,6 @@
         },
         {
           "text": "は"
-        }
-      ]
-    },
-    {
-      "text": "昨日の落下実験では、",
-      "reading": "きのうのらっかじっけんでは、",
-      "parts": [
-        {
-          "text": "昨日",
-          "reading": "きのう"
-        },
-        {
-          "text": "の"
-        },
-        {
-          "text": "落下実験",
-          "reading": "らっかじっけん"
-        },
-        {
-          "text": "では、"
         }
       ]
     },
@@ -12967,33 +12763,6 @@
         },
         {
           "text": "を"
-        }
-      ]
-    },
-    {
-      "text": "昨日は箱を全部は",
-      "reading": "きのうははこをぜんぶは",
-      "parts": [
-        {
-          "text": "昨日",
-          "reading": "きのう"
-        },
-        {
-          "text": "は"
-        },
-        {
-          "text": "箱",
-          "reading": "はこ"
-        },
-        {
-          "text": "を"
-        },
-        {
-          "text": "全部",
-          "reading": "ぜんぶ"
-        },
-        {
-          "text": "は"
         }
       ]
     },
@@ -17661,40 +17430,6 @@
         {
           "text": "証言",
           "reading": "しょうげん"
-        },
-        {
-          "text": "を"
-        }
-      ]
-    },
-    {
-      "text": "議論が長引いたが、会議は終了予定時刻を",
-      "reading": "ぎろんがながびいたが、かいぎはしゅうりょうよていじこくを",
-      "parts": [
-        {
-          "text": "議論",
-          "reading": "ぎろん"
-        },
-        {
-          "text": "が"
-        },
-        {
-          "text": "長引",
-          "reading": "ながび"
-        },
-        {
-          "text": "いたが、"
-        },
-        {
-          "text": "会議",
-          "reading": "かいぎ"
-        },
-        {
-          "text": "は"
-        },
-        {
-          "text": "終了予定時刻",
-          "reading": "しゅうりょうよていじこく"
         },
         {
           "text": "を"

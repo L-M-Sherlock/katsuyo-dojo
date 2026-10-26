@@ -1,4 +1,5 @@
-import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
+import { EXPECTED_SHIMAU_USER_HELD_IDS } from './helpers/shimau-user-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_PRIOR_TEACHING_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
@@ -19,9 +20,9 @@ test('committed English release proof and successor evidence match current canon
   assert.equal(proof.expansion.count, 7469);
   assert.equal(proof.unresolvedCount, 0);
   assert.equal(proof.baselineCount, 17261);
-  assert.equal(proof.currentCount, 17130);
+  assert.equal(proof.currentCount, 17035);
   assert.equal(proof.currentCount, USAGE_CARDS.length);
-  assert.equal(proof.subsequentReviews.teachingHeldCount, 130);
+  assert.equal(proof.subsequentReviews.teachingHeldCount, 225);
   assert.equal(proof.subsequentReviews.baselineCount - proof.subsequentReviews.deferredCount
     - proof.subsequentReviews.teachingHeldCount, proof.currentCount);
   assert.equal(createHash('sha256').update(readFileSync(new URL('../docs/english-usage-release-proof.v1.json.gz', import.meta.url))).digest('hex'),
@@ -39,9 +40,9 @@ test('the English display projection holds the same IDs while preserving approve
   assert.equal(BASELINE_ENGLISH.length, 17261);
   assert.equal(reviewedEnglish.length, 17260);
   assert.equal(formHeldIds.size, 122);
-  assert.deepEqual(pairHeldIds, EXPECTED_TEMIRU_TEACHING_HOLD_IDS);
-  assert.equal(heldIds.size, 130);
-  assert.equal(EN_USAGE_CARD_OVERLAYS.length, 17130);
+  assert.deepEqual(pairHeldIds, EXPECTED_CURRENT_TEACHING_HOLD_IDS);
+  assert.equal(heldIds.size, 225);
+  assert.equal(EN_USAGE_CARD_OVERLAYS.length, 17035);
   assert.deepEqual(new Set(EN_USAGE_CARD_OVERLAYS.map(row => row.id)), new Set(USAGE_CARDS.map(card => card.id)));
   assert.deepEqual(EN_USAGE_CARD_OVERLAYS, reviewedEnglish.filter(row => !heldIds.has(row.id)));
   for (const row of reviewedEnglish) {
@@ -55,9 +56,12 @@ test('the English display projection holds the same IDs while preserving approve
 
 test('a teaching hold cannot conceal drift in historical Chinese or English source content', () => {
   const formHeld = PRE_REVIEWED_USAGE_CARDS.find(card => isTeachingFormDeferred(card.form));
-  const pairHeld = PRE_REVIEWED_USAGE_CARDS.filter(card => EXPECTED_TEMIRU_TEACHING_HOLD_IDS.has(card.id));
-  assert.equal(pairHeld.length,8);
-  for (const held of [formHeld, ...pairHeld]) {
+  const pairHeld = PRE_REVIEWED_USAGE_CARDS.filter(card => EXPECTED_CURRENT_TEACHING_HOLD_IDS.has(card.id));
+  assert.equal(pairHeld.length,103);
+  const newlyHeld=[...EXPECTED_SHIMAU_USER_HELD_IDS];
+  const driftSample=new Set([...EXPECTED_PRIOR_TEACHING_HOLD_IDS,newlyHeld[0],newlyHeld.at(-1)]);
+  assert.equal(driftSample.size,11,'keep all original nine drift checks and add two boundaries from the new evidence group');
+  for (const held of [formHeld, ...pairHeld.filter(card=>driftSample.has(card.id))]) {
     assert.ok(held);
     assert.throws(() => verifyEnglishUsageReleaseProof({
       baselineCards: PRE_REVIEWED_USAGE_CARDS.map(card => card.id === held.id ? { ...card, scene: `${card.scene}修改` } : card),

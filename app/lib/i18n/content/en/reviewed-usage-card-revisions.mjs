@@ -1,6 +1,25 @@
 // Independently reviewed English successors; historical baseline remains unchanged.
 export const EN_REVIEWED_USAGE_CARD_OVERLAYS = [
   {
+    "id": "usage:chau:verb:伝える:つたえる",
+    "sourceHash": "566f5c5f5758af364e1e95986f5565fa5f84b6c9994c089c9fe3e34d3b953873",
+    "scene": "A friend and I are discussing changes while the teacher is still here.",
+    "translation": "I'll relay all the changes while the teacher is still here."
+  },
+  {
+    "id": "usage:chau:verb:食べる:たべる",
+    "sourceHash": "fd0e8d249354c95b73818496fbfba27c0bcd2fc54f6c035427a31b16df1c8e5f",
+    "scene": "A child has a hard time resisting cake.",
+    "translation": "Whenever the child sees cake, they eat all of it right away.",
+    "note": "ちゃう is a colloquial contraction of てしまう."
+  },
+  {
+    "id": "usage:passiveCompletionPast",
+    "sourceHash": "352da8911cd7e463bacdd9fad8656065043d046fc69b7437ed5dd4cc644b7aec",
+    "scene": "I complain that a coworker read my diary yesterday.",
+    "translation": "A coworker read my diary yesterday, much to my dismay."
+  },
+  {
     "id": "usage:temiru:verb:取る:とる",
     "sourceHash": "334029d9b26be80ac3c1001f377cf767d6019020dc8f6edd5bcf720590397365",
     "scene": "At a shop, I want to check the size label inside a hat.",
@@ -1526,5 +1545,89 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = [
     "sourceHash": "ccde4e46dfa804ec242d1c8ea2ab89b1e32be1cf0259fca733878bc965b02d73",
     "scene": "The school festival video was meant to include classroom commotion, but recording time has run out.",
     "translation": "I wanted to include the noise of a classroom in the school festival video, but we ran out of recording time, so I will not have my classmates make that noise."
+  },
+  {
+    "id": "usage:teshimau:verb:出かける:でかける",
+    "sourceHash": "45763e06ceebd47657e396fe592b71b66aeccf52f6b7222aab65056af37879b7",
+    "scene": "I want to talk with my coworker in person, but I worry he may head out before I contact him.",
+    "translation": "If I don't contact him now, he'll head out first."
+  },
+  {
+    "id": "usage:teshimau:verb:座る:すわる",
+    "sourceHash": "7b1bc8f64ec80a5995ce571082e5ac4c60f173fd264bafdd6f98486c7978dcba",
+    "scene": "I am exhausted after a long walk, and whenever I see a chair I cannot help sitting down.",
+    "translation": "After a long walk, whenever I see a chair, I end up sitting down right away."
+  },
+  {
+    "id": "usage:teshimau:verb:残る:のこる",
+    "sourceHash": "9d290f948a06050b957609c65b142f3bc6c4c38ac2c19a7d23cb30a525d86fcf",
+    "scene": "I'm deciding how much food to prepare and worry that this amount will leave a lot uneaten.",
+    "translation": "If I make this much, a lot of food will be left over."
+  },
+  {
+    "id": "usage:teshimauNegative:verb:動く:うごく",
+    "sourceHash": "90ee6049862f7c34b973126e82bb711a4ca57662c00e88e3da67d9d7aacd0d01",
+    "scene": "I add a brace to the display case so that the models don’t all end up moving.",
+    "translation": "I attach a brace so the models don’t all end up moving."
+  },
+  {
+    "id": "usage:teshimauNegative:verb:喋る:しゃべる",
+    "sourceHash": "e54f692203bffae380cd09afef23c4d5aa55d39061e31dd531edf2382433ed72",
+    "scene": "I want the whole group to arrive before I tell the story all the way to its ending.",
+    "translation": "To avoid telling the whole story all the way to its ending, I’ll only cover the introduction today."
+  },
+  {
+    "id": "usage:teshimauNegative:verb:待つ:まつ",
+    "sourceHash": "c3c49220f8310cae18f7167dc200bfacfce435a15fd844a9042e116a29587d9f",
+    "scene": "Before leaving, I check the meeting place to avoid a long wait at the wrong spot.",
+    "translation": "I check the meeting place so I won’t end up waiting a long time in the wrong place."
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:似る:にる",
+    "sourceHash": "40b0749e64a89320220c1276ac758d1fd36c30df841ed45c62ca597f1c213f1a",
+    "scene": "The speaker sees the completed logo and asks whether it resembles another company’s.",
+    "translation": "Didn’t the finished logo end up looking a bit like another company’s?"
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:座る:すわる",
+    "sourceHash": "7ed2ae85cf40922eb4eec703a7c9365c98929706a932487c045142302eb33d37",
+    "scene": "My companion has white paint on their trousers, and I point to a freshly painted bench.",
+    "translation": "You have white paint on your trousers. Did you end up sitting on that freshly painted bench?"
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:持つ:もつ",
+    "sourceHash": "4963ccbbff20421c13ffeb63cc178bce053ac28f84359d7a85beda6052e000f7",
+    "scene": "A friend has just taken over the shop, and I ask whether they ended up with excess stock.",
+    "translation": "When you took over the shop, did you end up with excess inventory?"
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:指す:さす",
+    "sourceHash": "915830c0feb77166b9569db7152ce2d6023bd7d1341eb5f1f323ceb6d076878e",
+    "scene": "I worry my companion may have pointed to a different station on the map, so I check with them.",
+    "translation": "You didn’t happen to point to a different station on the map just now, did you?"
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:起きる:おきる",
+    "sourceHash": "ccc040ffc661c0e518d10a3bbc1615c1fd582b695fa736ed3cc4ea6cbf6b65fd",
+    "scene": "I ask a friend who had yesterday off but forgot to change their alarm whether they still got up at the usual time.",
+    "translation": "Did you end up getting up at your usual time yesterday after all, even though you had the day off?"
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:違う:ちがう",
+    "sourceHash": "468eb100ffbf6db3b2cbcb11cdc8062253dbe1ab66ab3a118280866946c78071",
+    "scene": "A coworker shortened an article, and I ask whether its meaning changed.",
+    "translation": "After you shortened the article, did its meaning end up being different from the original?"
+  },
+  {
+    "id": "usage:teshimauPast:verb:動く:うごく",
+    "sourceHash": "a27de18852850b0a02a3103758db0d98e55cd339a470ebad4c2ddaad349201ec",
+    "scene": "A shelf was not secured when the earthquake struck.",
+    "translation": "The earthquake caused the shelf to shift."
+  },
+  {
+    "id": "usage:teshimauPast:verb:焼く:やく",
+    "sourceHash": "e43cf043398c09cb3dbba5166645f2797793c05ffb66da1891867f6b41f88fa2",
+    "scene": "The family planned to serve the fish as sashimi, but it was grilled instead.",
+    "translation": "The fish the family planned to serve as sashimi ended up being grilled."
   }
 ];

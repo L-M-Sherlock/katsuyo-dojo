@@ -1,4 +1,4 @@
-import { EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS } from './helpers/temiru-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_PAIRS } from './helpers/current-teaching-hold-scope.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -116,11 +116,11 @@ test('form and exact-pair teaching holds remove only their approved cards and pr
   assert.equal(PRE_REVIEWED_USAGE_CARDS.length,17261);
   assert.equal(REVIEWED_USAGE_CARDS.length,17260);
   assert.equal(formHeld.length,122);
-  assert.equal(pairHeld.length,8);
-  assert.deepEqual(new Set(pairHeld.map(card=>`${card.senseId}/${card.form}`)),EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS);
-  assert.equal(held.length,130);
-  assert.equal(heldIds.size,130,'form-wide and exact-pair holds do not overlap');
-  assert.equal(USAGE_CARDS.length,17130);
+  assert.equal(pairHeld.length,103);
+  assert.deepEqual(new Set(pairHeld.map(card=>`${card.senseId}/${card.form}`)),EXPECTED_CURRENT_TEACHING_HOLD_PAIRS);
+  assert.equal(held.length,225);
+  assert.equal(heldIds.size,225,'form-wide and exact-pair holds do not overlap');
+  assert.equal(USAGE_CARDS.length,17035);
   assert.deepEqual(new Set(formHeld.map(card=>card.form)),new Set(['temiruNegativePast']));
   assert.deepEqual(new Set([...previousIds].filter(id=>!currentIds.has(id))),heldIds);
   assert.deepEqual(new Set([...currentIds].filter(id=>!previousIds.has(id))),new Set());
@@ -180,10 +180,10 @@ test('published action cards match the approved review ledger and leave the hist
   const pairTeachingHeldActions = new Set(fullNaturalnessSource.filter(card=>actionForms.has(card.form)&&isTeachingPairDeferred(card.senseId,card.form))
     .map(card=>`${card.senseId}/${card.form}`).filter(pair=>!precedingDeferrals.has(pair)));
   assert.equal(formTeachingHeldActions.size,122,'preserve the original form-wide hold scope');
-  assert.deepEqual(pairTeachingHeldActions,new Set([...EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS].filter(pair=>actionForms.has(pair.split('/')[1]))));
-  assert.equal(pairTeachingHeldActions.size,5);
+  assert.deepEqual(pairTeachingHeldActions,new Set([...EXPECTED_CURRENT_TEACHING_HOLD_PAIRS].filter(pair=>actionForms.has(pair.split('/')[1]))));
+  assert.equal(pairTeachingHeldActions.size,99);
   const teachingHeldActions = new Set([...formTeachingHeldActions,...pairTeachingHeldActions]);
-  assert.equal(teachingHeldActions.size,127,'count only newly held pairs, excluding every earlier deferral');
+  assert.equal(teachingHeldActions.size,221,'count only newly held pairs, excluding every earlier deferral');
   const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
   assert.equal(required.size, actionReview.effectiveRequiredPairs - naturalnessDeferred.size - fullDeferredActions.size
     - userDeferredActions.size - retiredActions.size - reviewedDeferredActions.size - teachingHeldActions.size);

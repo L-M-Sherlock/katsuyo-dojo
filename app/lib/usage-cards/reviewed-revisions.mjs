@@ -1,6 +1,87 @@
 // Reviewed successor cards; portable receipts are in docs/usage-card-reviewed-revisions.v1.json.
 export const REVIEWED_USAGE_CARD_REVISIONS = [
   {
+    "id": "usage:chau:verb:伝える:つたえる",
+    "pair": "verb:伝える:つたえる/chau",
+    "previousHash": "566f5c5f5758af364e1e95986f5565fa5f84b6c9994c089c9fe3e34d3b953873",
+    "finalHash": "566f5c5f5758af364e1e95986f5565fa5f84b6c9994c089c9fe3e34d3b953873",
+    "card": {
+      "id": "usage:chau:verb:伝える:つたえる",
+      "senseId": "verb:伝える:つたえる",
+      "meaning": "传达",
+      "form": "chau",
+      "scene": "跟朋友商量，趁老师还在先把消息说完。",
+      "before": [
+        {
+          "text": "先生がいるうちに、変更点を全部",
+          "reading": "せんせいがいるうちに、へんこうてんをぜんぶ"
+        }
+      ],
+      "after": [
+        {
+          "text": "ね。",
+          "reading": "ね。"
+        }
+      ],
+      "translation": "趁老师还在，我把变更事项全部传达完哦。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:chau:verb:食べる:たべる",
+    "pair": "verb:食べる:たべる/chau",
+    "previousHash": "d6204e7d90eb60c48c90dcbc27568e439cf7943c07bf1cb63ec2fda46716f8e4",
+    "finalHash": "fd0e8d249354c95b73818496fbfba27c0bcd2fc54f6c035427a31b16df1c8e5f",
+    "card": {
+      "id": "usage:chau:verb:食べる:たべる",
+      "senseId": "verb:食べる:たべる",
+      "meaning": "吃",
+      "form": "chau",
+      "scene": "孩子看到蛋糕，总会忍不住吃光",
+      "before": [
+        {
+          "text": "ケーキを見ると、子どもはすぐ全部",
+          "reading": "ケーキをみると、こどもはすぐぜんぶ"
+        }
+      ],
+      "after": [
+        {
+          "text": "。",
+          "reading": "。"
+        }
+      ],
+      "translation": "孩子一看到蛋糕就会马上吃光。",
+      "note": "ちゃう是てしまう的口语缩约。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:passiveCompletionPast",
+    "pair": "verb:読む:よむ/passiveCompletionPast",
+    "previousHash": "20ee586d4ce7b9faeadebbba5f833e02cb906699f983e8b9b494ce17723583a6",
+    "finalHash": "352da8911cd7e463bacdd9fad8656065043d046fc69b7437ed5dd4cc644b7aec",
+    "card": {
+      "id": "usage:passiveCompletionPast",
+      "senseId": "verb:読む:よむ",
+      "meaning": "阅读",
+      "form": "passiveCompletionPast",
+      "scene": "抱怨昨天自己的日记被同事读了。",
+      "before": [
+        {
+          "text": "私は昨日、日記を同僚に",
+          "reading": "わたしはきのう、にっきをどうりょうに"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "昨天我的日记被同事读了，真让我不舒服。",
+      "review": "approved"
+    }
+  },
+  {
     "id": "usage:temiru:verb:取る:とる",
     "pair": "verb:取る:とる/temiru",
     "previousHash": "61d94950e50dfc2ff1277f35928153810e4b19d8f8fbec2acc829445d138effc",
@@ -7121,6 +7202,379 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
         }
       ],
       "translation": "我本想把教室里的喧闹声录进文化祭宣传片，但录音时间已不够，所以不再安排同学为宣传片制造喧闹声。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimau:verb:出かける:でかける",
+    "pair": "verb:出かける:でかける/teshimau",
+    "previousHash": "45763e06ceebd47657e396fe592b71b66aeccf52f6b7222aab65056af37879b7",
+    "finalHash": "45763e06ceebd47657e396fe592b71b66aeccf52f6b7222aab65056af37879b7",
+    "card": {
+      "id": "usage:teshimau:verb:出かける:でかける",
+      "senseId": "verb:出かける:でかける",
+      "meaning": "出门",
+      "form": "teshimau",
+      "scene": "想和同事当面商量，担心没联系他就先出门。",
+      "before": [
+        {
+          "text": "今連絡しないと、彼は先に",
+          "reading": "いまれんらくしないと、かれはさきに"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "现在不联系的话，他就先出门了。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimau:verb:座る:すわる",
+    "pair": "verb:座る:すわる/teshimau",
+    "previousHash": "7b1bc8f64ec80a5995ce571082e5ac4c60f173fd264bafdd6f98486c7978dcba",
+    "finalHash": "7b1bc8f64ec80a5995ce571082e5ac4c60f173fd264bafdd6f98486c7978dcba",
+    "card": {
+      "id": "usage:teshimau:verb:座る:すわる",
+      "senseId": "verb:座る:すわる",
+      "meaning": "坐",
+      "form": "teshimau",
+      "scene": "走了半天很疲倦，看到椅子就忍不住坐下。",
+      "before": [
+        {
+          "text": "長く歩いた後は、椅子を見るとすぐ",
+          "reading": "ながくあるいたあとは、いすをみるとすぐ"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "走了很久之后，一看到椅子就会坐下。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimau:verb:残る:のこる",
+    "pair": "verb:残る:のこる/teshimau",
+    "previousHash": "9d290f948a06050b957609c65b142f3bc6c4c38ac2c19a7d23cb30a525d86fcf",
+    "finalHash": "9d290f948a06050b957609c65b142f3bc6c4c38ac2c19a7d23cb30a525d86fcf",
+    "card": {
+      "id": "usage:teshimau:verb:残る:のこる",
+      "senseId": "verb:残る:のこる",
+      "meaning": "留下；剩余",
+      "form": "teshimau",
+      "scene": "菜做得太多，担心吃完饭后还会剩下一大盘。",
+      "before": [
+        {
+          "text": "こんなに作ると、料理がたくさん",
+          "reading": "こんなにつくると、りょうりがたくさん"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "做这么多，会剩下很多菜。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauNegative:verb:動く:うごく",
+    "pair": "verb:動く:うごく/teshimauNegative",
+    "previousHash": "90ee6049862f7c34b973126e82bb711a4ca57662c00e88e3da67d9d7aacd0d01",
+    "finalHash": "90ee6049862f7c34b973126e82bb711a4ca57662c00e88e3da67d9d7aacd0d01",
+    "card": {
+      "id": "usage:teshimauNegative:verb:動く:うごく",
+      "senseId": "verb:動く:うごく",
+      "meaning": "移动；运转",
+      "form": "teshimauNegative",
+      "scene": "展示柜要保持一件不动，避免所有模型一起移动。",
+      "before": [
+        {
+          "text": "模型が全部",
+          "reading": "もけいがぜんぶ"
+        }
+      ],
+      "after": [
+        {
+          "text": "ように、固定具を付ける。",
+          "reading": "ように、こていぐをつける。"
+        }
+      ],
+      "translation": "为了不让模型全部移动，装上固定器。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauNegative:verb:喋る:しゃべる",
+    "pair": "verb:喋る:しゃべる/teshimauNegative",
+    "previousHash": "f1d5e4adea5a054fc2fb2f35fef7b634b0e8634f2c6156cdd18e945b09380d26",
+    "finalHash": "e54f692203bffae380cd09afef23c4d5aa55d39061e31dd531edf2382433ed72",
+    "card": {
+      "id": "usage:teshimauNegative:verb:喋る:しゃべる",
+      "senseId": "verb:喋る:しゃべる",
+      "meaning": "说话；聊天",
+      "form": "teshimauNegative",
+      "scene": "故事结尾想等大家都到齐再讲，暂时只讲开头。",
+      "before": [
+        {
+          "text": "結末まで全部",
+          "reading": "けつまつまでぜんぶ"
+        }
+      ],
+      "after": [
+        {
+          "text": "ように、今日は導入だけ話す。",
+          "reading": "ように、きょうはどうにゅうだけはなす。"
+        }
+      ],
+      "translation": "为了不把整个故事从头到尾都讲完，今天只讲开头。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauNegative:verb:待つ:まつ",
+    "pair": "verb:待つ:まつ/teshimauNegative",
+    "previousHash": "c3c49220f8310cae18f7167dc200bfacfce435a15fd844a9042e116a29587d9f",
+    "finalHash": "c3c49220f8310cae18f7167dc200bfacfce435a15fd844a9042e116a29587d9f",
+    "card": {
+      "id": "usage:teshimauNegative:verb:待つ:まつ",
+      "senseId": "verb:待つ:まつ",
+      "meaning": "等待",
+      "form": "teshimauNegative",
+      "scene": "怕到错地点白等，出门前确认集合地点。",
+      "before": [
+        {
+          "text": "間違った場所で長時間",
+          "reading": "まちがったばしょでちょうじかん"
+        }
+      ],
+      "after": [
+        {
+          "text": "ように、集合場所を確認する。",
+          "reading": "ように、しゅうごうばしょをかくにんする。"
+        }
+      ],
+      "translation": "为了不在错误的地方等上很久，确认集合地点。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:似る:にる",
+    "pair": "verb:似る:にる/teshimauNegativePast",
+    "previousHash": "0d966d335ffbc6a62de3dd8ae335ce77620b1ae2f466ee0da75ccca5a83edd0e",
+    "finalHash": "40b0749e64a89320220c1276ac758d1fd36c30df841ed45c62ca597f1c213f1a",
+    "card": {
+      "id": "usage:teshimauNegativePast:verb:似る:にる",
+      "senseId": "verb:似る:にる",
+      "meaning": "相似",
+      "form": "teshimauNegativePast",
+      "scene": "看见完成的标志有些眼熟，问是否像别家的。",
+      "before": [
+        {
+          "text": "完成したロゴ、他社のものに",
+          "reading": "かんせいしたロゴ、たしゃのものに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？",
+          "reading": "？"
+        }
+      ],
+      "translation": "做好的标志是不是有点像别家的？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:座る:すわる",
+    "pair": "verb:座る:すわる/teshimauNegativePast",
+    "previousHash": "aa0b019616102ec6e560959d03c0b1112f2232647d249a1ccb92267b549e6118",
+    "finalHash": "7ed2ae85cf40922eb4eec703a7c9365c98929706a932487c045142302eb33d37",
+    "card": {
+      "id": "usage:teshimauNegativePast:verb:座る:すわる",
+      "senseId": "verb:座る:すわる",
+      "meaning": "坐",
+      "form": "teshimauNegativePast",
+      "scene": "同伴裤子沾了白漆，你指着刚刷过的长椅。",
+      "before": [
+        {
+          "text": "ズボンに白いペンキが付いてるね。あの塗りたてのベンチに",
+          "reading": "ズボンにしろいペンキがついてるね。あのぬりたてのベンチに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？"
+        }
+      ],
+      "translation": "你裤子上有白漆，刚才该不会是坐到那张刚刷过的长椅上了吧？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:持つ:もつ",
+    "pair": "verb:持つ:もつ/teshimauNegativePast",
+    "previousHash": "e5ee771eb651393248d44c0b5298a702d19f2f3f3412776f5d71b389f952d266",
+    "finalHash": "4963ccbbff20421c13ffeb63cc178bce053ac28f84359d7a85beda6052e000f7",
+    "card": {
+      "id": "usage:teshimauNegativePast:verb:持つ:もつ",
+      "senseId": "verb:持つ:もつ",
+      "meaning": "持有",
+      "form": "teshimauNegativePast",
+      "scene": "朋友刚接管店铺，问他是否留下了过多库存。",
+      "before": [
+        {
+          "text": "店を引き継いだ時、余分な在庫を",
+          "reading": "みせをひきついだとき、よぶんなざいこを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？",
+          "reading": "？"
+        }
+      ],
+      "translation": "接管店铺时，你是不是最后还留有多余库存？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:指す:さす",
+    "pair": "verb:指す:さす/teshimauNegativePast",
+    "previousHash": "a628658d0b8141b062b46a429f2e9751884743fdaf799a59c24333d900888e3a",
+    "finalHash": "915830c0feb77166b9569db7152ce2d6023bd7d1341eb5f1f323ceb6d076878e",
+    "card": {
+      "id": "usage:teshimauNegativePast:verb:指す:さす",
+      "senseId": "verb:指す:さす",
+      "meaning": "指；指向",
+      "form": "teshimauNegativePast",
+      "scene": "担心同伴刚才指错地图上的车站，便向对方确认。",
+      "before": [
+        {
+          "text": "さっき、地図で別の駅を",
+          "reading": "さっき、ちずでべつのえきを"
+        }
+      ],
+      "after": [
+        {
+          "text": "？",
+          "reading": "？"
+        }
+      ],
+      "translation": "刚才在地图上，你该不会指了另一个车站吧？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:起きる:おきる",
+    "pair": "verb:起きる:おきる/teshimauNegativePast",
+    "previousHash": "6eb4a4b72fa74c2eeaf61bc7bb2c88e7203c0b1750d69b62603870e02be71bcd",
+    "finalHash": "ccc040ffc661c0e518d10a3bbc1615c1fd582b695fa736ed3cc4ea6cbf6b65fd",
+    "card": {
+      "id": "usage:teshimauNegativePast:verb:起きる:おきる",
+      "senseId": "verb:起きる:おきる",
+      "meaning": "起床",
+      "form": "teshimauNegativePast",
+      "scene": "朋友休假却忘改闹钟，问是否仍早起了。",
+      "before": [
+        {
+          "text": "昨日は休みだったのに、いつもの時間に",
+          "reading": "きのうはやすみだったのに、いつものじかんに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？",
+          "reading": "？"
+        }
+      ],
+      "translation": "昨天明明休假，你该不会还是按平时的时间起床了吧？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauNegativePast:verb:違う:ちがう",
+    "pair": "verb:違う:ちがう/teshimauNegativePast",
+    "previousHash": "468eb100ffbf6db3b2cbcb11cdc8062253dbe1ab66ab3a118280866946c78071",
+    "finalHash": "468eb100ffbf6db3b2cbcb11cdc8062253dbe1ab66ab3a118280866946c78071",
+    "card": {
+      "id": "usage:teshimauNegativePast:verb:違う:ちがう",
+      "senseId": "verb:違う:ちがう",
+      "meaning": "不同；不对",
+      "form": "teshimauNegativePast",
+      "scene": "同事缩短了文章，问他改后意思是否走样。",
+      "before": [
+        {
+          "text": "文章を短くしたら、元の文と意味が",
+          "reading": "ぶんしょうをみじかくしたら、もとのぶんといみが"
+        }
+      ],
+      "after": [
+        {
+          "text": "？",
+          "reading": "？"
+        }
+      ],
+      "translation": "把文章缩短以后，意思是不是和原文变得不一样了？",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauPast:verb:動く:うごく",
+    "pair": "verb:動く:うごく/teshimauPast",
+    "previousHash": "8a1e47508836992d56e5b46493efd686fb62955286275f3eaa920b818732ac43",
+    "finalHash": "a27de18852850b0a02a3103758db0d98e55cd339a470ebad4c2ddaad349201ec",
+    "card": {
+      "id": "usage:teshimauPast:verb:動く:うごく",
+      "senseId": "verb:動く:うごく",
+      "meaning": "移动；运转",
+      "form": "teshimauPast",
+      "scene": "地震时，未固定的货架被震得移了位。",
+      "before": [
+        {
+          "text": "地震で棚が",
+          "reading": "じしんでたなが"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "地震使货架移了位。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimauPast:verb:焼く:やく",
+    "pair": "verb:焼く:やく/teshimauPast",
+    "previousHash": "307b830d7de4cf60e145a888889864af63c9d46d2c189b59499e0f7fb9be61f5",
+    "finalHash": "e43cf043398c09cb3dbba5166645f2797793c05ffb66da1891867f6b41f88fa2",
+    "card": {
+      "id": "usage:teshimauPast:verb:焼く:やく",
+      "senseId": "verb:焼く:やく",
+      "meaning": "烤；烧",
+      "form": "teshimauPast",
+      "scene": "家人原计划把这条鱼做成刺身，结果鱼却被烤了。",
+      "before": [
+        {
+          "text": "家族が刺身にする予定の魚を",
+          "reading": "かぞくがさしみにするよていのさかなを"
+        }
+      ],
+      "after": [
+        {
+          "text": "。",
+          "reading": "。"
+        }
+      ],
+      "translation": "家人原本计划把这条鱼做成刺身，结果却被烤了。",
       "review": "approved"
     }
   }
