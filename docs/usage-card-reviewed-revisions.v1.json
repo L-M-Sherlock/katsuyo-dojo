@@ -11354,6 +11354,254 @@
           }
         }
       ]
+    },
+    {
+      "id": "hirou-chau-fix-20261027-chau",
+      "form": "chau",
+      "reviewPurpose": "user-directed-tone-polish",
+      "scopeIds": [
+        "usage:chau:verb:拾う:ひろう"
+      ],
+      "sourceCount": 1,
+      "sourceCards": [
+        {
+          "id": "usage:chau:verb:拾う:ひろう",
+          "senseId": "verb:拾う:ひろう",
+          "meaning": "捡；拾",
+          "form": "chau",
+          "scene": "朋友把豆子撒了一地，自己准备马上捡完。",
+          "before": [
+            {
+              "text": "落ちた豆は僕が全部",
+              "reading": "おちたまめはぼくがぜんぶ"
+            }
+          ],
+          "after": [
+            {
+              "text": "よ。"
+            }
+          ],
+          "translation": "掉下的豆子我来全部捡起来吧。",
+          "review": "approved"
+        }
+      ],
+      "batches": [
+        {
+          "id": "hiroufix/00",
+          "author": "/root/hirou_bilingual_author",
+          "authorModel": "gpt-6-luna",
+          "authorEffort": "max",
+          "reviewer": "/root/hirou_bilingual_review",
+          "reviewerModel": "gpt-6-sol",
+          "reviewerEffort": "medium",
+          "authorDelivery": {
+            "version": 1,
+            "batch": "hiroufix/00",
+            "phase": "author",
+            "revision": 1,
+            "root": "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405",
+            "files": {
+              "repair/00/input.json": "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/input.json",
+              "repair/00/assignment.json": "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/assignment.json",
+              "repair/00/cards.json": "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/cards.json",
+              "repair/00/notes.json": "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/notes.json",
+              "repair/00/readings.json": "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/readings.json",
+              "repair/00/checks.json": "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/checks.json"
+            },
+            "hashes": {
+              "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/input.json": "609465d4d68a889eeaf97d9fa3b3f18cc42438aeedac4312019051fae7fb7390",
+              "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/assignment.json": "d9eba7791cbde0ca07cc9cf9e524f0b448d86de49d4f1c250fb19aa1ff68f300",
+              "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/cards.json": "bee2b4cea798be74f22db43378f8dd45e75ee603f8b4f1054bab9477fbe2f643",
+              "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/notes.json": "1743e36a0ff22614e1ce99a73ff04d68e09f29be98c0c6351c4281ea24144b8b",
+              "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/readings.json": "fa5eece65fa1e434fa4a34bc3927bb993e7186f8b27144a25b8e1b93439cfb16",
+              "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/checks.json": "57b98f96b2b70230dd047e072c13a31cc0cd7d4645ab52cb1741f68a701e6b30"
+            },
+            "sourceHashes": {
+              "repair/00/input.json": "609465d4d68a889eeaf97d9fa3b3f18cc42438aeedac4312019051fae7fb7390",
+              "repair/00/assignment.json": "d9eba7791cbde0ca07cc9cf9e524f0b448d86de49d4f1c250fb19aa1ff68f300",
+              "repair/00/cards.json": "bee2b4cea798be74f22db43378f8dd45e75ee603f8b4f1054bab9477fbe2f643",
+              "repair/00/notes.json": "1743e36a0ff22614e1ce99a73ff04d68e09f29be98c0c6351c4281ea24144b8b",
+              "repair/00/readings.json": "fa5eece65fa1e434fa4a34bc3927bb993e7186f8b27144a25b8e1b93439cfb16",
+              "repair/00/checks.json": "57b98f96b2b70230dd047e072c13a31cc0cd7d4645ab52cb1741f68a701e6b30"
+            },
+            "manifest": "deliveries/hiroufix/00/rev-1-author-1c789908-b926-4674-892b-077fb83fc405/snapshot.json",
+            "receipt": "1db408cc02d6fc9397b39cc3efc6c5d726dae4ca38b16b7c0e5426d4ff723c41",
+            "artifacts": {
+              "repair/00/input.json": "ewogICJzY2hlbWFWZXJzaW9uIjogMSwKICAiYmF0Y2giOiAiaGlyb3VmaXgvMDAiLAogICJjb3VudCI6IDEsCiAgInJvd3MiOiBbCiAgICB7CiAgICAgICJpZCI6ICJ1c2FnZTpjaGF1OnZlcmI65ou+44GGOuOBsuOCjeOBhiIsCiAgICAgICJzb3VyY2VIYXNoIjogImE4MWFmYTA0YTYwNDM2ODdmMzhkZDA0ZWYwN2Y0ZDZjZTUzYjQ2MGYyNTM3MGE0MDgxNTY1OGUwNGU5ZDkxOTgiLAogICAgICAiY2FyZCI6IHsKICAgICAgICAiaWQiOiAidXNhZ2U6Y2hhdTp2ZXJiOuaLvuOBhjrjgbLjgo3jgYYiLAogICAgICAgICJzZW5zZUlkIjogInZlcmI65ou+44GGOuOBsuOCjeOBhiIsCiAgICAgICAgIm1lYW5pbmciOiAi5o2h77yb5ou+IiwKICAgICAgICAiZm9ybSI6ICJjaGF1IiwKICAgICAgICAic2NlbmUiOiAi5pyL5Y+L5oqK6LGG5a2Q5pKS5LqG5LiA5Zyw77yM6Ieq5bex5YeG5aSH6ams5LiK5o2h5a6M44CCIiwKICAgICAgICAiYmVmb3JlIjogWwogICAgICAgICAgewogICAgICAgICAgICAidGV4dCI6ICLokL3jgaHjgZ/osYbjga/lg5XjgYzlhajpg6giLAogICAgICAgICAgICAicmVhZGluZyI6ICLjgYrjgaHjgZ/jgb7jgoHjga/jgbzjgY/jgYzjgZzjgpPjgbYiCiAgICAgICAgICB9CiAgICAgICAgXSwKICAgICAgICAiYWZ0ZXIiOiBbCiAgICAgICAgICB7CiAgICAgICAgICAgICJ0ZXh0IjogIuOCiOOAgiIKICAgICAgICAgIH0KICAgICAgICBdLAogICAgICAgICJ0cmFuc2xhdGlvbiI6ICLmjonkuIvnmoTosYblrZDmiJHmnaXlhajpg6jmjaHotbfmnaXlkKfjgIIiLAogICAgICAgICJyZXZpZXciOiAiYXBwcm92ZWQiCiAgICAgIH0sCiAgICAgICJlbmdsaXNoIjogewogICAgICAgICJpZCI6ICJ1c2FnZTpjaGF1OnZlcmI65ou+44GGOuOBsuOCjeOBhiIsCiAgICAgICAgInNvdXJjZUhhc2giOiAiYTgxYWZhMDRhNjA0MzY4N2YzOGRkMDRlZjA3ZjRkNmNlNTNiNDYwZjI1MzcwYTQwODE1NjU4ZTA0ZTlkOTE5OCIsCiAgICAgICAgInNjZW5lIjogIkEgZnJpZW5kIHNwaWxscyBiZWFucyBvbiB0aGUgZmxvb3IsIGFuZCB5b3Ugb2ZmZXIgdG8gZ2F0aGVyIHRoZW0gYWxsLiIsCiAgICAgICAgInRyYW5zbGF0aW9uIjogIkknbGwgcGljayB1cCBhbGwgdGhlIGJlYW5zIHRoYXQgZmVsbC4iCiAgICAgIH0sCiAgICAgICJmdWxsU2VudGVuY2UiOiAi6JC944Gh44Gf6LGG44Gv5YOV44GM5YWo6YOo5ou+44Gj44Gh44KD44GG44KI44CCIgogICAgfQogIF0KfQo=",
+              "repair/00/assignment.json": "WwogIHsKICAgICJpZCI6ICJ1c2FnZTpjaGF1OnZlcmI65ou+44GGOuOBsuOCjeOBhiIsCiAgICAic2Vuc2VJZCI6ICJ2ZXJiOuaLvuOBhjrjgbLjgo3jgYYiLAogICAgImZvcm0iOiAiY2hhdSIsCiAgICAibWVhbmluZyI6ICLmjaHvvJvmi74iLAogICAgImNsYXNzIjogImdvZGFuIiwKICAgICJhbnN3ZXIiOiAi5ou+44Gj44Gh44KD44GGIiwKICAgICJhbnN3ZXJSZWFkaW5nIjogIuOBsuOCjeOBo+OBoeOCg+OBhiIKICB9Cl0K",
+              "repair/00/cards.json": "WwogIHsKICAgICJpZCI6ICJ1c2FnZTpjaGF1OnZlcmI65ou+44GGOuOBsuOCjeOBhiIsCiAgICAic2Vuc2VJZCI6ICJ2ZXJiOuaLvuOBhjrjgbLjgo3jgYYiLAogICAgIm1lYW5pbmciOiAi5o2h77yb5ou+IiwKICAgICJmb3JtIjogImNoYXUiLAogICAgInNjZW5lIjogIuaci+WPi+aKiuixhuWtkOaSkuS6huS4gOWcsO+8jOaIkeS4u+WKqOW4ruW/meaUtuaLvuOAgiIsCiAgICAiYmVmb3JlIjogWwogICAgICB7CiAgICAgICAgInRleHQiOiAi6JC944Gh44Gf6LGG44Gv5YOV44GM5YWo6YOoIiwKICAgICAgICAicmVhZGluZyI6ICLjgYrjgaHjgZ/jgb7jgoHjga/jgbzjgY/jgYzjgZzjgpPjgbYiCiAgICAgIH0KICAgIF0sCiAgICAiYWZ0ZXIiOiBbCiAgICAgIHsKICAgICAgICAidGV4dCI6ICLjga3jgIIiCiAgICAgIH0KICAgIF0sCiAgICAidHJhbnNsYXRpb24iOiAi5o6J5LiL5p2l55qE6LGG5a2Q77yM5oiR5p2l5YWo6YOo5o2h5aW95ZOm44CCIiwKICAgICJyZXZpZXciOiAiZHJhZnQiCiAgfQpdCg==",
+              "repair/00/notes.json": "WwogIHsKICAgICJpZCI6ICJ1c2FnZTpjaGF1OnZlcmI65ou+44GGOuOBsuOCjeOBhiIsCiAgICAiZGlzcG9zaXRpb24iOiAicmV2aXNlIiwKICAgICJyZWFzb24iOiAi5a6M5pW05pel6K+t5Y+l5Y+K5Lit5paH5Zy65pmv44CB6K+R5paH5oyJ55So5oi35oyH5a6a5pa55qGI6YeH55So77yM5LuF5bCGIGFmdGVyIOS7juOAjOOCiOOAguOAjeaUueS4uuOAjOOBreOAguOAje+8m+aXpeivreWSjOS4reaWh+aWh+ahiOadpea6kOS6jueUqOaIt+aMh+Wumu+8jOacrOasoeS4jeWGkuensOS7o+eQhuWOn+WIm++8jOWPquWQjOatpeaguOWvueW5tuS/ruiuouiLseaWh+OAgiIsCiAgICAicm9sZXMiOiAi44CM5YOV44CN5piv5o2h6LGG5a2Q55qE6K+06K+d6ICF77yb5pyL5Y+L5piv6LGG5a2Q5pKS6JC955qE5b2T5LqL5Lq677yM6K+06K+d6ICF5Li75Yqo5biu5b+Z5pS25ou+44CCIiwKICAgICJ0aW1lIjogIuivtOivneiAheihqOekuueOsOWcqOS8muaKiuaOieS4i+eahOixhuWtkOmDveaNoeWlve+8m+WPpeWwvuOAjOOBreOAjeaflOWSjOWcsOW+geaxguWvueaWueiupOWQjOOAgiIsCiAgICAibmVnYXRpb24iOiAi6IKv5a6a5Y+l77yM5peg5ZCm5a6a77yb44CM5YWo6YOo44CN5ra155uW5omA5pyJ5o6J5LiL5p2l55qE6LGG5a2Q77yM44CM44Gh44KD44GG44CN5Zyo5q2k5by66LCD5Yqo5L2c5a6M5oiQ44CCIiwKICAgICJlbmdsaXNoIjogewogICAgICAic2NlbmUiOiAiQSBmcmllbmQgc3BpbGxzIGJlYW5zIGFsbCBvdmVyIHRoZSBmbG9vciwgYW5kIEkgb2ZmZXIgdG8gaGVscCBwaWNrIHRoZW0gdXAuIiwKICAgICAgInRyYW5zbGF0aW9uIjogIkknbGwgcGljayB1cCBhbGwgdGhlIGJlYW5zIHRoYXQgZmVsbCwgb2theT8iCiAgICB9CiAgfQpdCg==",
+              "repair/00/readings.json": "ewogICJjYXJkc0NoZWNrZWQiOiAxLAogICJkaWN0aW9uYXJ5IjogInVuaWRpYy1saXRlIiwKICAiZGljdGlvbmFyeVZlcnNpb24iOiAiMS4wLjgiLAogICJmdWdhc2hpVmVyc2lvbiI6ICIxLjUuMiIsCiAgInJldmlld0NhbmRpZGF0ZUNvdW50IjogMCwKICAicG9saWN5IjogIkNhbmRpZGF0ZXMgYXJlIG5vdCBlcnJvcnMuIENoZWNrIHNlbnNlLCBhY2NlcHRlZCByZWFkaW5ncywgY291bnRlcnMgYW5kIHRoZSBnaXZlbiB0YXJnZXQuIE5ldmVyIGF1dG8tcmVwbGFjZSBmcm9tIHRoaXMgcmVwb3J0LiIsCiAgInN0cnVjdHVyYWxJc3N1ZXMiOiBbXSwKICAiY2FuZGlkYXRlcyI6IFtdCn0K",
+              "repair/00/checks.json": "ewogICJzY2hlbWFWZXJzaW9uIjogMSwKICAiYmF0Y2hJZCI6ICJoaXJvdWZpeC8wMCIsCiAgImNvdW50IjogMSwKICAidXNlcldvcmRpbmdDaGVja2VkIjogdHJ1ZSwKICAiaWRlbnRpdHlDaGVja2VkIjogdHJ1ZSwKICAic3RydWN0dXJlSXNzdWVzIjogW10sCiAgImVuZ2xpc2hGaWVsZHNDaGVja2VkIjogdHJ1ZSwKICAiY2FyZE9iamVjdEhhc2hlcyI6IFsKICAgICI2N2E3MTU5NTk2MzEyYjI3OTZhMmM3ZmNmY2M0MjcyNTIxZDFiMzQ3ZWU2NWVhODc2NTlkZjQ4MDg5Nzc3OTdkIgogIF0KfQo="
+            }
+          },
+          "reviewDelivery": {
+            "version": 1,
+            "batch": "hiroufix/00",
+            "phase": "review",
+            "revision": 1,
+            "root": "deliveries/hiroufix/00/rev-1-review-695c8c48-5a79-479b-9822-9af3b7ab3227",
+            "files": {
+              "repair/00/review.json": "deliveries/hiroufix/00/rev-1-review-695c8c48-5a79-479b-9822-9af3b7ab3227/review.json"
+            },
+            "hashes": {
+              "deliveries/hiroufix/00/rev-1-review-695c8c48-5a79-479b-9822-9af3b7ab3227/review.json": "fabe367f0d0b63a3534117c046ef844b1cffd4eb4ca2b0573f8f815719daa7f9"
+            },
+            "sourceHashes": {
+              "repair/00/review.json": "fabe367f0d0b63a3534117c046ef844b1cffd4eb4ca2b0573f8f815719daa7f9"
+            },
+            "manifest": "deliveries/hiroufix/00/rev-1-review-695c8c48-5a79-479b-9822-9af3b7ab3227/snapshot.json",
+            "receipt": "94cca68c2153cb4ce27629432036ee7887ce032f030eca76ef11f65306c3d643",
+            "artifacts": {
+              "repair/00/review.json": "ewogICJzY2hlbWFWZXJzaW9uIjogMSwKICAiYmF0Y2hJZCI6ICJoaXJvdWZpeC8wMCIsCiAgInJldmlld2VyIjogIi9yb290L2hpcm91X2JpbGluZ3VhbF9yZXZpZXciLAogICJzZWxmUmV2aWV3IjogZmFsc2UsCiAgInNvdXJjZVJlY2VpcHQiOiAiMWRiNDA4Y2MwMmQ2ZmM5Mzk3YjM5Y2MzZWZjNmM1ZDcyNmRhZTRjYTM4YjE2YjdjMGU1NDI2ZDRmZjcyM2M0MSIsCiAgImNvdW50IjogMSwKICAicm93cyI6IFsKICAgIHsKICAgICAgImlkIjogInVzYWdlOmNoYXU6dmVyYjrmi77jgYY644Gy44KN44GGIiwKICAgICAgInN0YXR1cyI6ICJhcHByb3ZlZCIsCiAgICAgICJoYXNoIjogIjY3YTcxNTk1OTYzMTJiMjc5NmEyYzdmY2ZjYzQyNzI1MjFkMWIzNDdlZTY1ZWE4NzY1OWRmNDgwODk3Nzc5N2QiLAogICAgICAic291cmNlSGFzaCI6ICI1ODE3ZWIzYmQzZWIwMDU4ZGQ4OTZlMjgyMDg4ODRkOWZiZjk0ZDc4NzU5YWEzMGM4ODliZTU0MDA4ZWMzNGI2IiwKICAgICAgImVuZ2xpc2hIYXNoIjogImIxM2EwMGRiY2U0NTBiNzUzYTAwMTExZTlhYTRkZWM5MDJmYjM5NTk1YmRmNWRjOGNkOGQ2MTEzOThiODdlYmQiLAogICAgICAic2VudGVuY2UiOiAi6JC944Gh44Gf6LGG44Gv5YOV44GM5YWo6YOo5ou+44Gj44Gh44KD44GG44Gt44CCIiwKICAgICAgInJlYXNvbiI6ICLmnIvlj4vmkpLkuobosYblrZDlkI7vvIzor7Tor53ogIXnlKjoh6rnhLbnmoTlj6Por63nvKnnuqbjgIzmi77jgaPjgaHjgoPjgYbjgI3kuLvliqjmib/mi4XmiorokL3kuIvnmoTosYblrZDlhajmjaHlrozvvJvlj6XlsL7jgIzjga3jgI3orqnlr7nmnIvlj4vnmoTmj5Dorq7mmL7lvpfmn5TlkozvvIzlkozlnLrmma/lj4rkuK3mlofor5HmlofkuIDoh7TjgIIiLAogICAgICAicm9sZXMiOiAi44CM5YOV44CN5piv6LSf6LSj5o2h5ou+55qE6K+06K+d6ICF77yM5pyL5Y+L5piv5pKS6JC96LGG5a2Q5bm25o6l5Y+X5biu5Yqp55qE5Lq677yb44CM6JC944Gh44Gf6LGG44Gv44CN5qCH5Ye65o2h5ou+5a+56LGh44CCIiwKICAgICAgInRpbWUiOiAi546w5Zyo5ZCR5pyL5Y+L6KGo56S65o6l5LiL5p2l55Sx6Ieq5bex5oqK6LGG5a2Q5YWo6YOo5o2h5aW977yb44CM44Gh44KD44GG44CN56qB5Ye65pyJ55WM5Yqo5L2c5a6M5oiQ77yM5LiN5aOw56ew5bey57uP5o2h5a6M44CCIiwKICAgICAgIm5lZ2F0aW9uIjogIuWFqOWPpeiCr+Wumu+8jOayoeacieWQpuWumu+8m+OAjOWFqOmDqOOAjeS/rumlsOiQveS4i+ixhuWtkOeahOaLvuWPluiMg+WbtO+8jOayoeacieaUueWPmOaLvuOBhueahOivjeS5ieOAgiIsCiAgICAgICJ0cmFuc2xhdGlvbiI6ICLkuK3mlofjgIzmjonkuIvmnaXnmoTosYblrZDvvIzmiJHmnaXlhajpg6jmjaHlpb3lk6bjgI3kv53nlZnkuobokL3kuIvnmoTlr7nosaHjgIHor7Tor53ogIXmib/mi4XnmoTliqjkvZzjgIHlhajpg6jlrozmiJDnmoTmhI/lkJHlkozmn5Tlkozor63msJTjgIIiLAogICAgICAicmVhZGluZyI6ICLjgIzokL3jgaHjgZ/osYbjga/lg5XjgYzlhajpg6jjgI3or7vkvZzjgIzjgYrjgaHjgZ/jgb7jgoHjga/jgbzjgY/jgYzjgZzjgpPjgbbjgI3vvJvlm7rlrprnm67moIfjgIzmi77jgaPjgaHjgoPjgYbjgI3or7vkvZzjgIzjgbLjgo3jgaPjgaHjgoPjgYbjgI3vvIzlj6XlsL7jgIzjga3jgI3kv53mjIHlgYflkI3kuablhpnjgIIiLAogICAgICAiZW5nbGlzaCI6IHsKICAgICAgICAicmVhc29uIjogIlRoZSBFbmdsaXNoIHNjZW5lIGlkZW50aWZpZXMgdGhlIGZyaWVuZCBhbmQgdGhlIG9mZmVyOyB0aGUgdHJhbnNsYXRpb24ga2VlcHMgdGhlIHNwZWFrZXIsIGFsbCBmYWxsZW4gYmVhbnMsIGZ1dHVyZSBpbnRlbnQsIGFuZCBhIGdlbnRsZSBjaGVjayBmb3IgYWdyZWVtZW50IHdpdGgg4oCYb2theT/igJkuIiwKICAgICAgICAiY2hlY2tzIjogewogICAgICAgICAgImVuZ2xpc2hOYXR1cmFsIjogdHJ1ZSwKICAgICAgICAgICJtZWFuaW5nIjogdHJ1ZSwKICAgICAgICAgICJyb2xlcyI6IHRydWUsCiAgICAgICAgICAidGltZUFuZFBvbGFyaXR5IjogdHJ1ZSwKICAgICAgICAgICJyZWdpc3RlciI6IHRydWUsCiAgICAgICAgICAic2NlbmUiOiB0cnVlLAogICAgICAgICAgIm5vQW5zd2VyTGVhayI6IHRydWUKICAgICAgICB9CiAgICAgIH0KICAgIH0KICBdLAogICJjYW5kaWRhdGVzIjogW10KfQo="
+            }
+          },
+          "paths": {
+            "input": "repair/00/input.json",
+            "assignment": "repair/00/assignment.json",
+            "cards": "repair/00/cards.json",
+            "notes": "repair/00/notes.json",
+            "readings": "repair/00/readings.json",
+            "checks": "repair/00/checks.json",
+            "report": "repair/00/review.json"
+          }
+        }
+      ]
+    },
+    {
+      "id": "completion-tone-fix-20261027-teshimau",
+      "form": "teshimau",
+      "reviewPurpose": "english-speech-act-alignment",
+      "scopeIds": [
+        "usage:teshimau:verb:呼ぶ:よぶ",
+        "usage:teshimau:verb:分かる:わかる"
+      ],
+      "sourceCount": 2,
+      "sourceCards": [
+        {
+          "id": "usage:teshimau:verb:呼ぶ:よぶ",
+          "senseId": "verb:呼ぶ:よぶ",
+          "meaning": "呼叫",
+          "form": "teshimau",
+          "scene": "门口队伍已经排好，打算一次叫齐大家。",
+          "before": [
+            {
+              "text": "入口で待っている人を全員",
+              "reading": "いりぐちでまっているひとをぜんいん"
+            }
+          ],
+          "after": [
+            {
+              "text": "。"
+            }
+          ],
+          "translation": "把在入口等着的人全部叫过来。",
+          "review": "approved"
+        },
+        {
+          "id": "usage:teshimau:verb:分かる:わかる",
+          "senseId": "verb:分かる:わかる",
+          "meaning": "明白",
+          "form": "teshimau",
+          "scene": "提醒朋友别读书评，否则会提前知道结局。",
+          "before": [
+            {
+              "text": "その書評を読むと、結末まで",
+              "reading": "そのしょひょうをよむと、けつまつまで"
+            }
+          ],
+          "after": [
+            {
+              "text": "。",
+              "reading": "。"
+            }
+          ],
+          "translation": "读了那篇书评，连结局都会提前知道。",
+          "review": "approved"
+        }
+      ],
+      "batches": [
+        {
+          "id": "tonefix/00",
+          "author": "/root/hirou_bilingual_author",
+          "authorModel": "gpt-6-luna",
+          "authorEffort": "max",
+          "reviewer": "/root/hirou_bilingual_review",
+          "reviewerModel": "gpt-6-sol",
+          "reviewerEffort": "medium",
+          "authorDelivery": {
+            "version": 1,
+            "batch": "tonefix/00",
+            "phase": "author",
+            "revision": 1,
+            "root": "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c",
+            "files": {
+              "repair/00/input.json": "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/input.json",
+              "repair/00/assignment.json": "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/assignment.json",
+              "repair/00/cards.json": "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/cards.json",
+              "repair/00/notes.json": "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/notes.json",
+              "repair/00/readings.json": "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/readings.json",
+              "repair/00/checks.json": "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/checks.json"
+            },
+            "hashes": {
+              "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/input.json": "c0f5c41a9a8b64825d1949b94fb90d78c7199f16c2158efa38870fa5bd3e1f87",
+              "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/assignment.json": "51a5e414d50fd1e9026a41f80582a57aebc5978a22c4eb52df57706e5273e1b7",
+              "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/cards.json": "9845494f82cd167f301e10e8b01116e51a67edbb7a95809ca9f2e21a065b4cc8",
+              "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/notes.json": "d7d80c360b003f81e8b82a4498d699bc0521218293b1f4c45115524593301546",
+              "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/readings.json": "5098156d5fef172d8e08f0614bae4a3bce45dcdc480f28b1ba0c0c9e5e91d8c3",
+              "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/checks.json": "813c75b07f3f768a3f7a803edd098875cd30d1e60dfcf65d86315aa45405b7a6"
+            },
+            "sourceHashes": {
+              "repair/00/input.json": "c0f5c41a9a8b64825d1949b94fb90d78c7199f16c2158efa38870fa5bd3e1f87",
+              "repair/00/assignment.json": "51a5e414d50fd1e9026a41f80582a57aebc5978a22c4eb52df57706e5273e1b7",
+              "repair/00/cards.json": "9845494f82cd167f301e10e8b01116e51a67edbb7a95809ca9f2e21a065b4cc8",
+              "repair/00/notes.json": "d7d80c360b003f81e8b82a4498d699bc0521218293b1f4c45115524593301546",
+              "repair/00/readings.json": "5098156d5fef172d8e08f0614bae4a3bce45dcdc480f28b1ba0c0c9e5e91d8c3",
+              "repair/00/checks.json": "813c75b07f3f768a3f7a803edd098875cd30d1e60dfcf65d86315aa45405b7a6"
+            },
+            "manifest": "deliveries/tonefix/00/rev-1-author-4fd17f73-1b99-410a-978d-c2cbf909ad2c/snapshot.json",
+            "receipt": "f94a8129a4cf06bd5e9631302ffc5c2badcb5f674dab274e640e4d573079471f",
+            "artifacts": {
+              "repair/00/input.json": "ewogICJzY2hlbWFWZXJzaW9uIjogMSwKICAiYmF0Y2giOiAidG9uZWZpeC8wMCIsCiAgImNvdW50IjogMiwKICAicm93cyI6IFsKICAgIHsKICAgICAgImlkIjogInVzYWdlOnRlc2hpbWF1OnZlcmI65ZG844G2OuOCiOOBtiIsCiAgICAgICJjYXJkIjogewogICAgICAgICJpZCI6ICJ1c2FnZTp0ZXNoaW1hdTp2ZXJiOuWRvOOBtjrjgojjgbYiLAogICAgICAgICJzZW5zZUlkIjogInZlcmI65ZG844G2OuOCiOOBtiIsCiAgICAgICAgIm1lYW5pbmciOiAi5ZG85Y+rIiwKICAgICAgICAiZm9ybSI6ICJ0ZXNoaW1hdSIsCiAgICAgICAgInNjZW5lIjogIumXqOWPo+mYn+S8jeW3sue7j+aOkuWlve+8jOaJk+eul+S4gOasoeWPq+m9kOWkp+WutuOAgiIsCiAgICAgICAgImJlZm9yZSI6IFsKICAgICAgICAgIHsKICAgICAgICAgICAgInRleHQiOiAi5YWl5Y+j44Gn5b6F44Gj44Gm44GE44KL5Lq644KS5YWo5ZOhIiwKICAgICAgICAgICAgInJlYWRpbmciOiAi44GE44KK44GQ44Gh44Gn44G+44Gj44Gm44GE44KL44Gy44Go44KS44Gc44KT44GE44KTIgogICAgICAgICAgfQogICAgICAgIF0sCiAgICAgICAgImFmdGVyIjogWwogICAgICAgICAgewogICAgICAgICAgICAidGV4dCI6ICLjgIIiCiAgICAgICAgICB9CiAgICAgICAgXSwKICAgICAgICAidHJhbnNsYXRpb24iOiAi5oqK5Zyo5YWl5Y+j562J552A55qE5Lq65YWo6YOo5Y+r6L+H5p2l44CCIiwKICAgICAgICAicmV2aWV3IjogImFwcHJvdmVkIgogICAgICB9LAogICAgICAiZW5nbGlzaCI6IHsKICAgICAgICAiaWQiOiAidXNhZ2U6dGVzaGltYXU6dmVyYjrlkbzjgbY644KI44G2IiwKICAgICAgICAic291cmNlSGFzaCI6ICI2ZDVhMzc1ZWQzNmQyZjJmN2E4YTYzNjA1NWNhMGVjNzgwNDJjNmIwN2E5N2E4NzZkY2Y1NGM0MjgyZWU3MThiIiwKICAgICAgICAic2NlbmUiOiAiQSBsaW5lIGhhcyBmb3JtZWQgYXQgdGhlIGVudHJhbmNlLCBhbmQgc2hlIHBsYW5zIHRvIGNhbGwgZXZlcnlvbmUgb3ZlciBhdCBvbmNlLiIsCiAgICAgICAgInRyYW5zbGF0aW9uIjogIkNhbGwgZXZlcnlvbmUgd2FpdGluZyBhdCB0aGUgZW50cmFuY2UgaW4uIgogICAgICB9LAogICAgICAic291cmNlSGFzaCI6ICI2ZDVhMzc1ZWQzNmQyZjJmN2E4YTYzNjA1NWNhMGVjNzgwNDJjNmIwN2E5N2E4NzZkY2Y1NGM0MjgyZWU3MThiIiwKICAgICAgImZ1bGxTZW50ZW5jZSI6ICLlhaXlj6PjgaflvoXjgaPjgabjgYTjgovkurrjgpLlhajlk6HlkbzjgpPjgafjgZfjgb7jgYbjgIIiLAogICAgICAiaXNzdWUiOiAi5Zy65pmv5piv5Y+R6K+d5Lq66K6h5YiS5Y+r6b2Q5YWl5Y+j562J5b6F6ICF77yM6Iux6K+t6K+R5paH5LiN5bqU5piv5ZG95Luk5Yir5Lq644CCIgogICAgfSwKICAgIHsKICAgICAgImlkIjogInVzYWdlOnRlc2hpbWF1OnZlcmI65YiG44GL44KLOuOCj+OBi+OCiyIsCiAgICAgICJjYXJkIjogewogICAgICAgICJpZCI6ICJ1c2FnZTp0ZXNoaW1hdTp2ZXJiOuWIhuOBi+OCizrjgo/jgYvjgosiLAogICAgICAgICJzZW5zZUlkIjogInZlcmI65YiG44GL44KLOuOCj+OBi+OCiyIsCiAgICAgICAgIm1lYW5pbmciOiAi5piO55m9IiwKICAgICAgICAiZm9ybSI6ICJ0ZXNoaW1hdSIsCiAgICAgICAgInNjZW5lIjogIuaPkOmGkuaci+WPi+WIq+ivu+S5puivhO+8jOWQpuWImeS8muaPkOWJjeefpemBk+e7k+WxgOOAgiIsCiAgICAgICAgImJlZm9yZSI6IFsKICAgICAgICAgIHsKICAgICAgICAgICAgInRleHQiOiAi44Gd44Gu5pu46KmV44KS6Kqt44KA44Go44CB57WQ5pyr44G+44GnIiwKICAgICAgICAgICAgInJlYWRpbmciOiAi44Gd44Gu44GX44KH44Gy44KH44GG44KS44KI44KA44Go44CB44GR44Gk44G+44Gk44G+44GnIgogICAgICAgICAgfQogICAgICAgIF0sCiAgICAgICAgImFmdGVyIjogWwogICAgICAgICAgewogICAgICAgICAgICAidGV4dCI6ICLjgIIiLAogICAgICAgICAgICAicmVhZGluZyI6ICLjgIIiCiAgICAgICAgICB9CiAgICAgICAgXSwKICAgICAgICAidHJhbnNsYXRpb24iOiAi6K+75LqG6YKj56+H5Lmm6K+E77yM6L+e57uT5bGA6YO95Lya5o+Q5YmN55+l6YGT44CCIiwKICAgICAgICAicmV2aWV3IjogImFwcHJvdmVkIgogICAgICB9LAogICAgICAiZW5nbGlzaCI6IHsKICAgICAgICAiaWQiOiAidXNhZ2U6dGVzaGltYXU6dmVyYjrliIbjgYvjgos644KP44GL44KLIiwKICAgICAgICAic291cmNlSGFzaCI6ICIyNWMzZDJiNDMwM2RmNWM1YTI3ZWM3ZWExY2Y1ZGYzODhiMzZiMzc5ZjI2MDA5OGUzMDkyZTEwNTI0ZjQ0M2UwIiwKICAgICAgICAic2NlbmUiOiAiWW91IHdhcm4gYSBmcmllbmQgdGhhdCBhIGJvb2sgcmV2aWV3IHdpbGwgcmV2ZWFsIHRoZSBlbmRpbmcuIiwKICAgICAgICAidHJhbnNsYXRpb24iOiAiSWYgSSByZWFkIHRoYXQgcmV2aWV3LCBJJ2xsIGVuZCB1cCBmaW5kaW5nIG91dCBldmVuIHRoZSBlbmRpbmcuIgogICAgICB9LAogICAgICAic291cmNlSGFzaCI6ICIyNWMzZDJiNDMwM2RmNWM1YTI3ZWM3ZWExY2Y1ZGYzODhiMzZiMzc5ZjI2MDA5OGUzMDkyZTEwNTI0ZjQ0M2UwIiwKICAgICAgImZ1bGxTZW50ZW5jZSI6ICLjgZ3jga7mm7joqZXjgpLoqq3jgoDjgajjgIHntZDmnKvjgb7jgafliIbjgYvjgaPjgabjgZfjgb7jgYbjgIIiLAogICAgICAiaXNzdWUiOiAi5Zy65pmv5piv5o+Q6YaS5pyL5Y+L5Yir6K+75Lmm6K+E77yM6Iux6K+t6K+R5paH5LiN5bqU5oqK6KKr5Ymn6YCP6ICF5o2i5oiQSeOAgiIKICAgIH0KICBdCn0K",
+              "repair/00/assignment.json": "WwogIHsKICAgICJpZCI6ICJ1c2FnZTp0ZXNoaW1hdTp2ZXJiOuWRvOOBtjrjgojjgbYiLAogICAgInNlbnNlSWQiOiAidmVyYjrlkbzjgbY644KI44G2IiwKICAgICJmb3JtIjogInRlc2hpbWF1IiwKICAgICJtZWFuaW5nIjogIuWRvOWPqyIsCiAgICAiY2xhc3MiOiAiZ29kYW4iLAogICAgImFuc3dlciI6ICLlkbzjgpPjgafjgZfjgb7jgYYiLAogICAgImFuc3dlclJlYWRpbmciOiAi44KI44KT44Gn44GX44G+44GGIgogIH0sCiAgewogICAgImlkIjogInVzYWdlOnRlc2hpbWF1OnZlcmI65YiG44GL44KLOuOCj+OBi+OCiyIsCiAgICAic2Vuc2VJZCI6ICJ2ZXJiOuWIhuOBi+OCizrjgo/jgYvjgosiLAogICAgImZvcm0iOiAidGVzaGltYXUiLAogICAgIm1lYW5pbmciOiAi5piO55m9IiwKICAgICJjbGFzcyI6ICJnb2RhbiIsCiAgICAiYW5zd2VyIjogIuWIhuOBi+OBo+OBpuOBl+OBvuOBhiIsCiAgICAiYW5zd2VyUmVhZGluZyI6ICLjgo/jgYvjgaPjgabjgZfjgb7jgYYiCiAgfQpdCg==",
+              "repair/00/cards.json": "WwogIHsKICAgICJpZCI6ICJ1c2FnZTp0ZXNoaW1hdTp2ZXJiOuWRvOOBtjrjgojjgbYiLAogICAgInNlbnNlSWQiOiAidmVyYjrlkbzjgbY644KI44G2IiwKICAgICJtZWFuaW5nIjogIuWRvOWPqyIsCiAgICAiZm9ybSI6ICJ0ZXNoaW1hdSIsCiAgICAic2NlbmUiOiAi6Zeo5Y+j6Zif5LyN5bey57uP5o6S5aW977yM5omT566X5LiA5qyh5Y+r6b2Q5aSn5a6244CCIiwKICAgICJiZWZvcmUiOiBbCiAgICAgIHsKICAgICAgICAidGV4dCI6ICLlhaXlj6PjgaflvoXjgaPjgabjgYTjgovkurrjgpLlhajlk6EiLAogICAgICAgICJyZWFkaW5nIjogIuOBhOOCiuOBkOOBoeOBp+OBvuOBo+OBpuOBhOOCi+OBsuOBqOOCkuOBnOOCk+OBhOOCkyIKICAgICAgfQogICAgXSwKICAgICJhZnRlciI6IFsKICAgICAgewogICAgICAgICJ0ZXh0IjogIuOAgiIKICAgICAgfQogICAgXSwKICAgICJ0cmFuc2xhdGlvbiI6ICLmiorlnKjlhaXlj6PnrYnnnYDnmoTkurrlhajpg6jlj6vov4fmnaXjgIIiLAogICAgInJldmlldyI6ICJhcHByb3ZlZCIKICB9LAogIHsKICAgICJpZCI6ICJ1c2FnZTp0ZXNoaW1hdTp2ZXJiOuWIhuOBi+OCizrjgo/jgYvjgosiLAogICAgInNlbnNlSWQiOiAidmVyYjrliIbjgYvjgos644KP44GL44KLIiwKICAgICJtZWFuaW5nIjogIuaYjueZvSIsCiAgICAiZm9ybSI6ICJ0ZXNoaW1hdSIsCiAgICAic2NlbmUiOiAi5o+Q6YaS5pyL5Y+L5Yir6K+75Lmm6K+E77yM5ZCm5YiZ5Lya5o+Q5YmN55+l6YGT57uT5bGA44CCIiwKICAgICJiZWZvcmUiOiBbCiAgICAgIHsKICAgICAgICAidGV4dCI6ICLjgZ3jga7mm7joqZXjgpLoqq3jgoDjgajjgIHntZDmnKvjgb7jgaciLAogICAgICAgICJyZWFkaW5nIjogIuOBneOBruOBl+OCh+OBsuOCh+OBhuOCkuOCiOOCgOOBqOOAgeOBkeOBpOOBvuOBpOOBvuOBpyIKICAgICAgfQogICAgXSwKICAgICJhZnRlciI6IFsKICAgICAgewogICAgICAgICJ0ZXh0IjogIuOAgiIsCiAgICAgICAgInJlYWRpbmciOiAi44CCIgogICAgICB9CiAgICBdLAogICAgInRyYW5zbGF0aW9uIjogIuivu+S6humCo+evh+S5puivhO+8jOi/nue7k+WxgOmDveS8muaPkOWJjeefpemBk+OAgiIsCiAgICAicmV2aWV3IjogImFwcHJvdmVkIgogIH0KXQo=",
+              "repair/00/notes.json": "WwogIHsKICAgICJpZCI6ICJ1c2FnZTp0ZXNoaW1hdTp2ZXJiOuWRvOOBtjrjgojjgbYiLAogICAgImRpc3Bvc2l0aW9uIjogInJldGFpbiIsCiAgICAicmVhc29uIjogIuS7heS/ruiuouiLseivreimhuebluWxgu+8m2FwcHJvdmVkIOWNoeeJh+WPiuS4reaWh+OAgeaXpeivreOAgXJlYWRpbmcg5a6M5YWo5L+d55WZ44CCRW5nbGlzaCBzY2VuZSDljrvmjonljp/mlofmnKrmjIflrprnmoQgc2hlIOW5tuS4juivtOivneiAheiuoeWIkuS4gOiHtO+8jHRyYW5zbGF0aW9uIOS7juWRveS7pOaUueS4uuivtOivneiAheiHquW3seeahOiuoeWIkuOAgiIsCiAgICAicm9sZXMiOiAi6K+06K+d6ICF5piv6K6h5YiS5Y+r5Lq655qE5Li75L2T77yb5YWl5Y+j5aSE562J5b6F55qE5Lq65piv5ZG85Y+r5a+56LGh77yM55uu5qCH5piv5YWo6YOo55qE5Lq644CCIiwKICAgICJ0aW1lIjogIumdnui/h+WOu+WPpeaMieatpOWcuuaZr+ihqOi+vuivtOivneiAheW9k+WJjeeahOWGs+WumuaIluiuoeWIku+8m+WRvOadpeWFqOmDqOetieW+heiAheaYr+WwhuimgeWBmueahOS6i+OAgiIsCiAgICAibmVnYXRpb24iOiAi6IKv5a6a5Y+l77yM5peg5ZCm5a6a77yb44CM5YWo5ZOh44CN5ra155uW5omA5pyJ5Zyo5YWl5Y+j562J5b6F55qE5Lq644CCIiwKICAgICJlbmdsaXNoIjogewogICAgICAic2NlbmUiOiAiQSBsaW5lIGhhcyBmb3JtZWQgYXQgdGhlIGVudHJhbmNlLCBhbmQgSSBwbGFuIHRvIGNhbGwgaW4gZXZlcnlvbmUgd2FpdGluZyB0aGVyZS4iLAogICAgICAidHJhbnNsYXRpb24iOiAiSSdsbCBjYWxsIGluIGV2ZXJ5b25lIHdhaXRpbmcgYXQgdGhlIGVudHJhbmNlLiIKICAgIH0KICB9LAogIHsKICAgICJpZCI6ICJ1c2FnZTp0ZXNoaW1hdTp2ZXJiOuWIhuOBi+OCizrjgo/jgYvjgosiLAogICAgImRpc3Bvc2l0aW9uIjogInJldGFpbiIsCiAgICAicmVhc29uIjogIuS7heS/ruiuouiLseivreivkeaWh+W5tuS/neeVmeWOnyBFbmdsaXNoIHNjZW5l77ybYXBwcm92ZWQg5Y2h54mH5Y+K5Lit5paH44CB5pel6K+t44CBcmVhZGluZyDlrozlhajkuI3lj5jjgILlsIbor6/lhpnnmoQgSSDmlLnkuLrlnLrmma/kuK3ooqvmj5DphpLnmoTmnIvlj4sgeW9177yM5ZCM5pe25L+d55WZ5p2h5Lu257uT5p6c5Y+K6Z2e6Ieq5oS/5b6X55+l57uT5bGA55qE6K+t5rCU44CCIiwKICAgICJyb2xlcyI6ICLmj5DphpLogIXlkJHmnIvlj4vlj5Hlh7rmj5DphpLvvJvmnIvlj4vmmK/or7vkuabor4Tlubblm6DmraTnn6XpgZPnu5PlsYDnmoTkurrvvIzkuabor4TmmK/lr7zoh7Tor6Xnu5PmnpznmoTmnaHku7bjgIIiLAogICAgInRpbWUiOiAi44CM6Kqt44KA44Go44CN6KGo56S66K+75Lmm6K+E5ZCO5Lya5Ye6546w55qE57uT5p6c77yb44CMZW5kIHVwIGZpbmRpbmcgb3V044CN5L+d55WZ6Z2e5oSP5oS/44CB5oSP5aSW55+l6YGT57uT5bGA55qE5oSP5ZGz44CCIiwKICAgICJuZWdhdGlvbiI6ICLogq/lrprmnaHku7blj6XvvIzml6DlkKblrprvvJvmsqHmnInmlq3oqIDmnIvlj4vlt7Lnu4/or7vov4fkuabor4TmiJbnn6XpgZPnu5PlsYDjgIIiLAogICAgImVuZ2xpc2giOiB7CiAgICAgICJzY2VuZSI6ICJZb3Ugd2FybiBhIGZyaWVuZCB0aGF0IGEgYm9vayByZXZpZXcgd2lsbCByZXZlYWwgdGhlIGVuZGluZy4iLAogICAgICAidHJhbnNsYXRpb24iOiAiSWYgeW91IHJlYWQgdGhhdCByZXZpZXcsIHlvdSdsbCBlbmQgdXAgZmluZGluZyBvdXQgaG93IGl0IGVuZHMsIHRvby4iCiAgICB9CiAgfQpdCg==",
+              "repair/00/readings.json": "ewogICJjYXJkc0NoZWNrZWQiOiAyLAogICJkaWN0aW9uYXJ5IjogInVuaWRpYy1saXRlIiwKICAiZGljdGlvbmFyeVZlcnNpb24iOiAiMS4wLjgiLAogICJmdWdhc2hpVmVyc2lvbiI6ICIxLjUuMiIsCiAgInJldmlld0NhbmRpZGF0ZUNvdW50IjogMCwKICAicG9saWN5IjogIkNhbmRpZGF0ZXMgYXJlIG5vdCBlcnJvcnMuIENoZWNrIHNlbnNlLCBhY2NlcHRlZCByZWFkaW5ncywgY291bnRlcnMgYW5kIHRoZSBnaXZlbiB0YXJnZXQuIE5ldmVyIGF1dG8tcmVwbGFjZSBmcm9tIHRoaXMgcmVwb3J0LiIsCiAgInN0cnVjdHVyYWxJc3N1ZXMiOiBbXSwKICAiY2FuZGlkYXRlcyI6IFtdCn0K",
+              "repair/00/checks.json": "ewogICJzY2hlbWFWZXJzaW9uIjogMSwKICAiYmF0Y2hJZCI6ICJ0b25lZml4LzAwIiwKICAiY291bnQiOiAyLAogICJpZHMiOiBbCiAgICAidXNhZ2U6dGVzaGltYXU6dmVyYjrlkbzjgbY644KI44G2IiwKICAgICJ1c2FnZTp0ZXNoaW1hdTp2ZXJiOuWIhuOBi+OCizrjgo/jgYvjgosiCiAgXSwKICAic3RydWN0dXJlSXNzdWVzIjogW10sCiAgImphcGFuZXNlVGV4dFVuY2hhbmdlZCI6IHRydWUsCiAgImlkZW50aXR5Q2hlY2tlZCI6IHRydWUsCiAgImVuZ2xpc2hGaWVsZHNDaGVja2VkIjogdHJ1ZSwKICAiY2FyZE9iamVjdEhhc2hlcyI6IFsKICAgICI2ZDVhMzc1ZWQzNmQyZjJmN2E4YTYzNjA1NWNhMGVjNzgwNDJjNmIwN2E5N2E4NzZkY2Y1NGM0MjgyZWU3MThiIiwKICAgICIyNWMzZDJiNDMwM2RmNWM1YTI3ZWM3ZWExY2Y1ZGYzODhiMzZiMzc5ZjI2MDA5OGUzMDkyZTEwNTI0ZjQ0M2UwIgogIF0KfQo="
+            }
+          },
+          "reviewDelivery": {
+            "version": 1,
+            "batch": "tonefix/00",
+            "phase": "review",
+            "revision": 1,
+            "root": "deliveries/tonefix/00/rev-1-review-c41a1194-a53d-457e-86b4-de366b43046c",
+            "files": {
+              "repair/00/review.json": "deliveries/tonefix/00/rev-1-review-c41a1194-a53d-457e-86b4-de366b43046c/review.json"
+            },
+            "hashes": {
+              "deliveries/tonefix/00/rev-1-review-c41a1194-a53d-457e-86b4-de366b43046c/review.json": "e50add14aa7467babbc8ea4c7c3f4f9f1cd9820df29c9a49d38ac0fed59e6e72"
+            },
+            "sourceHashes": {
+              "repair/00/review.json": "e50add14aa7467babbc8ea4c7c3f4f9f1cd9820df29c9a49d38ac0fed59e6e72"
+            },
+            "manifest": "deliveries/tonefix/00/rev-1-review-c41a1194-a53d-457e-86b4-de366b43046c/snapshot.json",
+            "receipt": "952d4dd1d187f75d933eed4a76298a7db33e6d3028469642ed060d71b371ffc6",
+            "artifacts": {
+              "repair/00/review.json": "ewogICJzY2hlbWFWZXJzaW9uIjogMSwKICAiYmF0Y2hJZCI6ICJ0b25lZml4LzAwIiwKICAicmV2aWV3ZXIiOiAiL3Jvb3QvaGlyb3VfYmlsaW5ndWFsX3JldmlldyIsCiAgInNlbGZSZXZpZXciOiBmYWxzZSwKICAic291cmNlUmVjZWlwdCI6ICJmOTRhODEyOWE0Y2YwNmJkNWU5NjMxMzAyZmZjNWMyYmFkY2I1ZjY3NGRhYjI3NGU2NDBlNGQ1NzMwNzk0NzFmIiwKICAiY291bnQiOiAyLAogICJyb3dzIjogWwogICAgewogICAgICAiaWQiOiAidXNhZ2U6dGVzaGltYXU6dmVyYjrlkbzjgbY644KI44G2IiwKICAgICAgInN0YXR1cyI6ICJhcHByb3ZlZCIsCiAgICAgICJoYXNoIjogIjZkNWEzNzVlZDM2ZDJmMmY3YThhNjM2MDU1Y2EwZWM3ODA0MmM2YjA3YTk3YTg3NmRjZjU0YzQyODJlZTcxOGIiLAogICAgICAic291cmNlSGFzaCI6ICI2ZDVhMzc1ZWQzNmQyZjJmN2E4YTYzNjA1NWNhMGVjNzgwNDJjNmIwN2E5N2E4NzZkY2Y1NGM0MjgyZWU3MThiIiwKICAgICAgImVuZ2xpc2hIYXNoIjogIjQ1NjkxYmEzNDUwN2MwNGY1MDY3ZjkwYTRhMGRmMzQyODJlYzliYzgyNWU0OWUxY2JkYjcxMGRjYjkyNjc1OGUiLAogICAgICAic2VudGVuY2UiOiAi5YWl5Y+j44Gn5b6F44Gj44Gm44GE44KL5Lq644KS5YWo5ZOh5ZG844KT44Gn44GX44G+44GG44CCIiwKICAgICAgInJlYXNvbiI6ICLlrozmlbTlj6XpmYjov7Dor7Tor53ogIXmiZPnrpfmiorlhaXlj6PnrYnlgJnnmoTkurrlhajlj6vov5vmnaXvvJvpnZ7ov4fljrvnmoTjgIzlkbzjgpPjgafjgZfjgb7jgYbjgI3lnKjmraTooajovr7kuIDmrKHlj6vpvZDnmoTlhrPlrprjgILoi7HmlofnjrDkuLrjgIxJJ2xsIGNhbGwgaW7jgI3vvIzkuI3lho3miorlj5Hor53kurrnmoTorqHliJLor6/lhpnmiJDlr7nku5bkurrnmoTlkb3ku6TjgIIiLAogICAgICAicm9sZXMiOiAi6K6h5YiS5Y+r5Lq655qE5Li75L2T5piv5Zy65pmv5Lit55qE6K+06K+d6ICF77yb5YWl5Y+j5aSE562J5b6F55qE5omA5pyJ5Lq65piv44CM5ZG844G244CN55qE5a6+6K+t44CC44CMSeOAjeaYr+ivpeivtOivneiAheWcqOiLseivreW8leivreS4reeahOiHquensOOAgiIsCiAgICAgICJ0aW1lIjogIumdnui/h+WOu+W9ouW8j+e7k+WQiOWcuuaZr+aMh+W9k+WJjeWGs+WumuOAgemaj+WQjuWunuaWve+8m+OAjOWFqOWToeOAjemZkOWumumcgOimgeWPq+m9kOeahOaVtOe7hOS6uu+8jOayoeacieaWreiogOWKqOS9nOW3sue7j+WujOaIkOOAgiIsCiAgICAgICJuZWdhdGlvbiI6ICLml6Xoi7Hlj6XlnYfkuLrogq/lrprooajovr7vvIzmsqHmnInlkKblrprvvJvjgIzjgabjgZfjgb7jgYbjgI3lnKjmraTlvLrosIPmiorlj6vkurrov5npobnmnInnlYzku7vliqHkuIDmrKHlrozmiJDjgIIiLAogICAgICAidHJhbnNsYXRpb24iOiAi5Lit5paH44CM5oqK5Zyo5YWl5Y+j562J552A55qE5Lq65YWo6YOo5Y+r6L+H5p2l44CN5L+d55WZ562J5b6F5Zyw54K544CB5YWo6YOo5a+56LGh5LiO5Y+r5p2l5Yqo5L2c77yb5rKh5pyJ5ZG95Luk5LuW5Lq655qE6aKd5aSW5pa95LqL44CCIiwKICAgICAgInJlYWRpbmciOiAi44CM5YWl5Y+j44Gn5b6F44Gj44Gm44GE44KL5Lq644KS5YWo5ZOh44CN6K+75L2c44CM44GE44KK44GQ44Gh44Gn44G+44Gj44Gm44GE44KL44Gy44Go44KS44Gc44KT44GE44KT44CN77yb55uu5qCH44CM5ZG844KT44Gn44GX44G+44GG44CN6K+75L2c44CM44KI44KT44Gn44GX44G+44GG44CN44CCIiwKICAgICAgImVuZ2xpc2giOiB7CiAgICAgICAgInJlYXNvbiI6ICJUaGUgZmlyc3QtcGVyc29uIHBsYW4gbWF0Y2hlcyB0aGUgc3BlYWtlcidzIGRlY2lzaW9uOyAnY2FsbCBpbicgcmVuZGVycyB0aGUgaW52aXRhdGlvbiB0b3dhcmQgdGhlIHNwZWFrZXIsIGFuZCAnZXZlcnlvbmUgd2FpdGluZyBhdCB0aGUgZW50cmFuY2UnIGtlZXBzIHRoZSBmdWxsIG9iamVjdCBncm91cC4iLAogICAgICAgICJjaGVja3MiOiB7CiAgICAgICAgICAiZW5nbGlzaE5hdHVyYWwiOiB0cnVlLAogICAgICAgICAgIm1lYW5pbmciOiB0cnVlLAogICAgICAgICAgInJvbGVzIjogdHJ1ZSwKICAgICAgICAgICJ0aW1lQW5kUG9sYXJpdHkiOiB0cnVlLAogICAgICAgICAgInJlZ2lzdGVyIjogdHJ1ZSwKICAgICAgICAgICJzY2VuZSI6IHRydWUsCiAgICAgICAgICAibm9BbnN3ZXJMZWFrIjogdHJ1ZQogICAgICAgIH0KICAgICAgfQogICAgfSwKICAgIHsKICAgICAgImlkIjogInVzYWdlOnRlc2hpbWF1OnZlcmI65YiG44GL44KLOuOCj+OBi+OCiyIsCiAgICAgICJzdGF0dXMiOiAiYXBwcm92ZWQiLAogICAgICAiaGFzaCI6ICIyNWMzZDJiNDMwM2RmNWM1YTI3ZWM3ZWExY2Y1ZGYzODhiMzZiMzc5ZjI2MDA5OGUzMDkyZTEwNTI0ZjQ0M2UwIiwKICAgICAgInNvdXJjZUhhc2giOiAiMjVjM2QyYjQzMDNkZjVjNWEyN2VjN2VhMWNmNWRmMzg4YjM2YjM3OWYyNjAwOThlMzA5MmUxMDUyNGY0NDNlMCIsCiAgICAgICJlbmdsaXNoSGFzaCI6ICJhZmY3MTZiZTVhNzljMWE3MTI1OWNmNjI5MjQzY2E2NjAwMTQ4NjAzMjUzNDcyMzY4NWE3NDRiZGY0ZTdiMjVlIiwKICAgICAgInNlbnRlbmNlIjogIuOBneOBruabuOipleOCkuiqreOCgOOBqOOAgee1kOacq+OBvuOBp+WIhuOBi+OBo+OBpuOBl+OBvuOBhuOAgiIsCiAgICAgICJyZWFzb24iOiAi5a6M5pW05Y+l5Lul44CM6Kqt44KA44Go44CN5o+Q5Ye66K+75Lmm6K+E55qE5p2h5Lu277yM6ZqP5ZCO6K+05piO6L+e57uT5bGA6YO95Lya55+l6YGT55qE5Ymn6YCP57uT5p6c77yb5o+Q6YaS5pyL5Y+L55qE5Zy65pmv5YWB6K645byV6K+t55So44CMeW9144CN5oyH5ZCR6K+l5pyL5Y+L44CC6Iux5paH5bey57qg5q2j5Y6f5p2l55qE44CMSeOAje+8jOW5tuS/neeVmeaEj+WkluW+l+efpee7k+WxgOeahOivreawlOOAgiIsCiAgICAgICJyb2xlcyI6ICLor7Tor53ogIXmmK/mj5DphpLogIXvvIzmnIvlj4vmmK/ooqvmj5DphpLkuJTlj6/og73or7vkuabor4TjgIHnn6XpgZPnu5PlsYDnmoTkurrvvJvoi7Hor63lnLrmma/nmoTjgIxZb3Ugd2FybiBhIGZyaWVuZOOAjeS4juW8leivreeahOOAjHlvdeOAjeWIhuWIq+WPluWPmei/sOWSjOWvueaci+WPi+WPkeivneeahOinhueCueOAgiIsCiAgICAgICJ0aW1lIjogIuivu+S5puivhOaYr+WwmuacquWPkeeUn+eahOadoeS7tu+8jOefpemBk+e7k+WxgOaYr+ivpeadoeS7tuWPr+iDveWvvOiHtOeahOWwhuadpee7k+aenO+8m+ayoeacieivtOaci+WPi+W3suivu+i/h+aIluW3suiiq+WJp+mAj+OAgiIsCiAgICAgICJuZWdhdGlvbiI6ICLml6Xoi7Hlj6XlnYfmsqHmnInor63ms5XlkKblrprvvJvlnLrmma/nmoTmj5DphpLmhI/lm77kuI3lupTooqvor6/lhpnmiJDml6Xor63lkKvmnInnpoHmraLlvaLjgIIiLAogICAgICAidHJhbnNsYXRpb24iOiAi5Lit5paH6K+R5paH5L+d55WZ6K+75Lmm6K+E55qE5p2h5Lu244CB6L+e57uT5bGA5Lmf5Lya55+l6YGT55qE57uT5p6c77yb6Iux6K+t55qE44CMeW91J2xsIGVuZCB1cCBmaW5kaW5nIG91dCBob3cgaXQgZW5kcywgdG9v44CN5a+55bqU6KKr5o+Q6YaS6ICF55qE5r2c5Zyo5Ymn6YCP57uT5p6c44CCIiwKICAgICAgInJlYWRpbmciOiAi44CM44Gd44Gu5pu46KmV44KS6Kqt44KA44Go44CB57WQ5pyr44G+44Gn44CN6K+75L2c44CM44Gd44Gu44GX44KH44Gy44KH44GG44KS44KI44KA44Go44CB44GR44Gk44G+44Gk44G+44Gn44CN77yb55uu5qCH44CM5YiG44GL44Gj44Gm44GX44G+44GG44CN6K+75L2c44CM44KP44GL44Gj44Gm44GX44G+44GG44CN44CCIiwKICAgICAgImVuZ2xpc2giOiB7CiAgICAgICAgInJlYXNvbiI6ICJUaGUgZGlyZWN0LWFkZHJlc3MgJ3lvdScgbm93IHJlZmVycyB0byB0aGUgd2FybmVkIGZyaWVuZCwgd2hpbGUgJ2VuZCB1cCBmaW5kaW5nIG91dCcga2VlcHMgdGhlIHVud2FudGVkIGRpc2NvdmVyeSBhZnRlciByZWFkaW5nIHRoZSByZXZpZXc7ICd0b28nIGNvbnZleXMgdGhlIGVuZGluZyBhcyBpbmNsdWRlZC4iLAogICAgICAgICJjaGVja3MiOiB7CiAgICAgICAgICAiZW5nbGlzaE5hdHVyYWwiOiB0cnVlLAogICAgICAgICAgIm1lYW5pbmciOiB0cnVlLAogICAgICAgICAgInJvbGVzIjogdHJ1ZSwKICAgICAgICAgICJ0aW1lQW5kUG9sYXJpdHkiOiB0cnVlLAogICAgICAgICAgInJlZ2lzdGVyIjogdHJ1ZSwKICAgICAgICAgICJzY2VuZSI6IHRydWUsCiAgICAgICAgICAibm9BbnN3ZXJMZWFrIjogdHJ1ZQogICAgICAgIH0KICAgICAgfQogICAgfQogIF0sCiAgImNhbmRpZGF0ZXMiOiBbXQp9Cg=="
+            }
+          },
+          "paths": {
+            "input": "repair/00/input.json",
+            "assignment": "repair/00/assignment.json",
+            "cards": "repair/00/cards.json",
+            "notes": "repair/00/notes.json",
+            "readings": "repair/00/readings.json",
+            "checks": "repair/00/checks.json",
+            "report": "repair/00/review.json"
+          }
+        }
+      ]
     }
   ],
   "scopePreservation": {

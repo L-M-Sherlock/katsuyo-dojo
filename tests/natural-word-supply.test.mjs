@@ -1,5 +1,5 @@
 import { EXPECTED_SHIMAU_USER_HELD_IDS } from './helpers/shimau-user-teaching-hold-scope.mjs';
-import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS } from './helpers/current-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS, EXPECTED_COMPLETION_TONE_USER_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
 import { EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS } from './helpers/temiru-teaching-hold-scope.mjs';
 import { currentEligibilityBaseline } from '../scripts/lib/eligibility-baseline.mjs';
 import assert from 'node:assert/strict';
@@ -112,7 +112,10 @@ assert.deepEqual(shimauHold.sourceRows.map(row=>row.pair), ['verb:役立つ:や�
 const userHolds = JSON.parse(readFileSync(new URL('../docs/usage-card-shimau-user-holds-20261026.json', import.meta.url), 'utf8'));
 assert.equal(userHolds.sourceRows.length,94);
 assert.deepEqual(new Set(userHolds.sourceRows.map(row=>row.id)),EXPECTED_SHIMAU_USER_HELD_IDS);
-const pairHeldRows = [...pairHold.sourceRows, ...shimauHold.sourceRows, ...userHolds.sourceRows];
+const toneUserHolds = JSON.parse(readFileSync(new URL('../docs/usage-card-completion-tone-user-holds-20261027.json', import.meta.url), 'utf8'));
+assert.equal(toneUserHolds.sourceRows.length,9);
+assert.deepEqual(new Set(toneUserHolds.sourceRows.map(row=>row.id)),EXPECTED_COMPLETION_TONE_USER_HOLD_IDS);
+const pairHeldRows = [...pairHold.sourceRows, ...shimauHold.sourceRows, ...userHolds.sourceRows, ...toneUserHolds.sourceRows];
 assert.deepEqual(new Set(pairHeldRows.map(row=>row.id)), EXPECTED_CURRENT_TEACHING_HOLD_IDS);
 assert.deepEqual(new Set(pairHeldRows.map(row=>row.pair)), EXPECTED_CURRENT_TEACHING_HOLD_PAIRS);
 assert.deepEqual(pairHeldRows.map(row => [row.id, row.pair, row.sourceHash]),

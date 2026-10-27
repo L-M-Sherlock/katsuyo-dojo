@@ -28,6 +28,32 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
     }
   },
   {
+    "id": "usage:chau:verb:拾う:ひろう",
+    "pair": "verb:拾う:ひろう/chau",
+    "previousHash": "a81afa04a6043687f38dd04ef07f4d6ce53b460f25370a40815658e04e9d9198",
+    "finalHash": "5817eb3bd3eb0058dd896e28208884d9fbf94d78759aa30c889be54008ec34b6",
+    "card": {
+      "id": "usage:chau:verb:拾う:ひろう",
+      "senseId": "verb:拾う:ひろう",
+      "meaning": "捡；拾",
+      "form": "chau",
+      "scene": "朋友把豆子撒了一地，我主动帮忙收拾。",
+      "before": [
+        {
+          "text": "落ちた豆は僕が全部",
+          "reading": "おちたまめはぼくがぜんぶ"
+        }
+      ],
+      "after": [
+        {
+          "text": "ね。"
+        }
+      ],
+      "translation": "掉下来的豆子，我来全部捡好哦。",
+      "review": "approved"
+    }
+  },
+  {
     "id": "usage:chau:verb:食べる:たべる",
     "pair": "verb:食べる:たべる/chau",
     "previousHash": "d6204e7d90eb60c48c90dcbc27568e439cf7943c07bf1cb63ec2fda46716f8e4",
@@ -7228,6 +7254,59 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
         }
       ],
       "translation": "现在不联系的话，他就先出门了。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimau:verb:分かる:わかる",
+    "pair": "verb:分かる:わかる/teshimau",
+    "previousHash": "25c3d2b4303df5c5a27ec7ea1cf5df388b36b379f260098e3092e10524f443e0",
+    "finalHash": "25c3d2b4303df5c5a27ec7ea1cf5df388b36b379f260098e3092e10524f443e0",
+    "card": {
+      "id": "usage:teshimau:verb:分かる:わかる",
+      "senseId": "verb:分かる:わかる",
+      "meaning": "明白",
+      "form": "teshimau",
+      "scene": "提醒朋友别读书评，否则会提前知道结局。",
+      "before": [
+        {
+          "text": "その書評を読むと、結末まで",
+          "reading": "そのしょひょうをよむと、けつまつまで"
+        }
+      ],
+      "after": [
+        {
+          "text": "。",
+          "reading": "。"
+        }
+      ],
+      "translation": "读了那篇书评，连结局都会提前知道。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teshimau:verb:呼ぶ:よぶ",
+    "pair": "verb:呼ぶ:よぶ/teshimau",
+    "previousHash": "6d5a375ed36d2f2f7a8a636055ca0ec78042c6b07a97a876dcf54c4282ee718b",
+    "finalHash": "6d5a375ed36d2f2f7a8a636055ca0ec78042c6b07a97a876dcf54c4282ee718b",
+    "card": {
+      "id": "usage:teshimau:verb:呼ぶ:よぶ",
+      "senseId": "verb:呼ぶ:よぶ",
+      "meaning": "呼叫",
+      "form": "teshimau",
+      "scene": "门口队伍已经排好，打算一次叫齐大家。",
+      "before": [
+        {
+          "text": "入口で待っている人を全員",
+          "reading": "いりぐちでまっているひとをぜんいん"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "把在入口等着的人全部叫过来。",
       "review": "approved"
     }
   },

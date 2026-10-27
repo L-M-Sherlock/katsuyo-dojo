@@ -1,5 +1,5 @@
 import {EXPECTED_SHIMAU_USER_SOURCE_IDS, EXPECTED_SHIMAU_USER_RETAINED_IDS, EXPECTED_SHIMAU_USER_HELD_IDS} from './helpers/shimau-user-teaching-hold-scope.mjs';
-import {EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS, EXPECTED_PRIOR_TEACHING_HOLD_IDS} from './helpers/current-teaching-hold-scope.mjs';
+import {EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS, EXPECTED_PRIOR_TEACHING_HOLD_IDS, EXPECTED_COMPLETION_TONE_USER_HOLD_IDS} from './helpers/current-teaching-hold-scope.mjs';
 import {EXPECTED_TEMIRU_TEACHING_HOLD_IDS, EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS} from './helpers/temiru-teaching-hold-scope.mjs';
 import assert from 'node:assert/strict';
 import {test, before, after} from 'node:test';
@@ -25,7 +25,8 @@ const evidence=JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-teachi
 const hash=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const shimauEvidence=JSON.parse(readFileSync(new URL('../docs/usage-card-shimau-teaching-hold-20261026.json',import.meta.url)));
 const userEvidence=JSON.parse(readFileSync(new URL('../docs/usage-card-shimau-user-holds-20261026.json',import.meta.url)));
-const sourceById=new Map([...evidence.sourceRows,...shimauEvidence.sourceRows,...userEvidence.sourceRows].map(row=>[row.id,row]));
+const toneUserEvidence=JSON.parse(readFileSync(new URL('../docs/usage-card-completion-tone-user-holds-20261027.json',import.meta.url)));
+const sourceById=new Map([...evidence.sourceRows,...shimauEvidence.sourceRows,...userEvidence.sourceRows,...toneUserEvidence.sourceRows].map(row=>[row.id,row]));
 let server,model;
 before(async()=>{
   server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
@@ -41,7 +42,8 @@ test('exact user teaching holds retain their bilingual sources and remove only t
   assert.equal(EXPECTED_SHIMAU_USER_RETAINED_IDS.size,24);
   assert.equal(EXPECTED_SHIMAU_USER_HELD_IDS.size,94);
   assert.deepEqual(new Set(userEvidence.sourceRows.map(row=>row.id)),EXPECTED_SHIMAU_USER_HELD_IDS);
-  assert.equal(sourceById.size,103);
+  assert.deepEqual(new Set(toneUserEvidence.sourceRows.map(row=>row.id)),EXPECTED_COMPLETION_TONE_USER_HOLD_IDS);
+  assert.equal(sourceById.size,112);
   for(const retained of EXPECTED_SHIMAU_USER_RETAINED_IDS)assert.ok(USAGE_CARDS.some(card=>card.id===retained),retained);
   assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.pair)),EXPECTED_CURRENT_TEACHING_HOLD_PAIRS);
   assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.id)),EXPECTED_CURRENT_TEACHING_HOLD_IDS);
@@ -52,7 +54,7 @@ test('exact user teaching holds retain their bilingual sources and remove only t
     assert.equal(USAGE_CARDS.some(card=>card.id===hold.id),false,hold.id);
     assert.equal(EN_USAGE_CARD_OVERLAYS.some(row=>row.id===hold.id),false,hold.id);
   }
-  assert.equal(verifyTeachingPairHolds(REVIEWED_USAGE_CARDS),103);
+  assert.equal(verifyTeachingPairHolds(REVIEWED_USAGE_CARDS),112);
   assert.deepEqual(USAGE_CARDS,REVIEWED_USAGE_CARDS.filter(card=>!isUsageCardTeachingDeferred(card)));
   assert.equal(USAGE_CARDS.some(card=>card.id===id),false);
   assert.equal(EN_USAGE_CARD_OVERLAYS.some(row=>row.id===id),false);

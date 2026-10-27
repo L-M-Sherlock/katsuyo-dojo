@@ -7,6 +7,12 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = [
     "translation": "I'll relay all the changes while the teacher is still here."
   },
   {
+    "id": "usage:chau:verb:拾う:ひろう",
+    "sourceHash": "5817eb3bd3eb0058dd896e28208884d9fbf94d78759aa30c889be54008ec34b6",
+    "scene": "A friend spills beans all over the floor, and I offer to help pick them up.",
+    "translation": "I'll pick up all the beans that fell, okay?"
+  },
+  {
     "id": "usage:chau:verb:食べる:たべる",
     "sourceHash": "fd0e8d249354c95b73818496fbfba27c0bcd2fc54f6c035427a31b16df1c8e5f",
     "scene": "A child has a hard time resisting cake.",
@@ -1551,6 +1557,18 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = [
     "sourceHash": "45763e06ceebd47657e396fe592b71b66aeccf52f6b7222aab65056af37879b7",
     "scene": "I want to talk with my coworker in person, but I worry he may head out before I contact him.",
     "translation": "If I don't contact him now, he'll head out first."
+  },
+  {
+    "id": "usage:teshimau:verb:分かる:わかる",
+    "sourceHash": "25c3d2b4303df5c5a27ec7ea1cf5df388b36b379f260098e3092e10524f443e0",
+    "scene": "You warn a friend that a book review will reveal the ending.",
+    "translation": "If you read that review, you'll end up finding out how it ends, too."
+  },
+  {
+    "id": "usage:teshimau:verb:呼ぶ:よぶ",
+    "sourceHash": "6d5a375ed36d2f2f7a8a636055ca0ec78042c6b07a97a876dcf54c4282ee718b",
+    "scene": "A line has formed at the entrance, and I plan to call in everyone waiting there.",
+    "translation": "I'll call in everyone waiting at the entrance."
   },
   {
     "id": "usage:teshimau:verb:座る:すわる",

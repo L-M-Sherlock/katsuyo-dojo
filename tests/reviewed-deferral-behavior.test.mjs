@@ -22,7 +22,7 @@ test('reviewed exact deferrals remove current bilingual cards while retaining so
   assert.equal(summary.deferredCount, 1);
   assert.equal(summary.deferredCount, REVIEWED_USAGE_CARD_DEFERRALS.length);
   assert.equal(PRE_REVIEWED_USAGE_CARDS.length - REVIEWED_USAGE_CARDS.length, REVIEWED_USAGE_CARD_DEFERRALS.length);
-  assert.equal(summary.teachingHeldCount, 225);
+  assert.equal(summary.teachingHeldCount, 234);
   assert.equal(REVIEWED_USAGE_CARDS.length - USAGE_CARDS.length, summary.teachingHeldCount);
   assert.equal(PRE_REVIEWED_USAGE_CARDS.length - USAGE_CARDS.length, REVIEWED_USAGE_CARD_DEFERRALS.length + summary.teachingHeldCount);
   assert.equal(REVIEWED_USAGE_CARD_DEFERRED_PAIRS.size, REVIEWED_USAGE_CARD_DEFERRALS.length);
@@ -63,7 +63,7 @@ test('the later form-wide hold preserves its source hashes while exact-pair hold
   assert.equal(revisionHash(heldCards), record.sourceCardsHash);
   assert.equal(revisionHash(record.sourceRows.map(row => row.english)), record.sourceEnglishHash);
   assert.deepEqual(pairHeldIds, EXPECTED_CURRENT_TEACHING_HOLD_IDS);
-  assert.equal(allHeldIds.size, heldIds.size + 103);
+  assert.equal(allHeldIds.size, heldIds.size + 112);
   assert.deepEqual(new Set([...reviewedIds].filter(id => !currentById.has(id))), allHeldIds);
   assert.deepEqual(USAGE_CARDS, REVIEWED_USAGE_CARDS.filter(card => !allHeldIds.has(card.id)));
   for (const card of REVIEWED_USAGE_CARDS) {

@@ -1,0 +1,419 @@
+{
+  "schemaVersion": 1,
+  "kind": "user-directed-exact-pair-hold",
+  "sourceCommit": "5972a09efd6b30d0cd60b3610206e77aa320b461",
+  "request": "只保留自然合格的，剩下的暂缓出题。",
+  "resolutionFile": "docs/usage-card-completion-tone-user-resolution-20261027.json.gz",
+  "sourceRows": [
+    {
+      "id": "usage:chau:verb:喜ぶ:よろこぶ",
+      "pair": "verb:喜ぶ:よろこぶ/chau",
+      "senseId": "verb:喜ぶ:よろこぶ",
+      "form": "chau",
+      "sourceHash": "a4918cf222fc0d273eb67cac5fc3ea2b5a56c0036102718122fee6699e3e6377",
+      "englishHash": "e371286975915eed68bfb327799b4e271461781865c2edb451b1919fca372642",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户逐项评估25条待考察原句，明确要求只保留16条自然合格项；本配对列在其余9项中，按用户教学选择暂缓。保留原稿、构形识别与历史复测，不把反馈的一般语法或礼仪断言作为全局禁令，不虚构三轮返修失败。",
+      "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
+      "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json",
+      "card": {
+        "id": "usage:chau:verb:喜ぶ:よろこぶ",
+        "senseId": "verb:喜ぶ:よろこぶ",
+        "meaning": "高兴",
+        "form": "chau",
+        "scene": "朋友不断称赞新发型，你笑着回应。",
+        "before": [
+          {
+            "text": "そんなに褒められると、",
+            "reading": "そんなにほめられると、"
+          }
+        ],
+        "after": [
+          {
+            "text": "よ。",
+            "reading": "よ。"
+          }
+        ],
+        "translation": "被你这么夸，我可要高兴了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:喜ぶ:よろこぶ",
+        "sourceHash": "a4918cf222fc0d273eb67cac5fc3ea2b5a56c0036102718122fee6699e3e6377",
+        "scene": "A friend keeps praising someone's new hairstyle.",
+        "translation": "All those compliments are going to make me happy!"
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:止める:とめる",
+      "pair": "verb:止める:とめる/teshimau",
+      "senseId": "verb:止める:とめる",
+      "form": "teshimau",
+      "sourceHash": "a3ffd133df8babb6aebfdd7dc42c51e9ef00c3cedf7cb9ac3333361d542d779e",
+      "englishHash": "50ef225337f1480998908b1fa9bc2401480408312f0ce891db90c47772722fea",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户逐项评估25条待考察原句，明确要求只保留16条自然合格项；本配对列在其余9项中，按用户教学选择暂缓。保留原稿、构形识别与历史复测，不把反馈的一般语法或礼仪断言作为全局禁令，不虚构三轮返修失败。",
+      "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
+      "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json",
+      "card": {
+        "id": "usage:teshimau:verb:止める:とめる",
+        "senseId": "verb:止める:とめる",
+        "meaning": "停止；阻止",
+        "form": "teshimau",
+        "scene": "检修前先把车间的机器全部停下。",
+        "before": [
+          {
+            "text": "点検の前に、機械を全部",
+            "reading": "てんけんのまえに、きかいをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "检查前，把机器全部停下来。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:止める:とめる",
+        "sourceHash": "a3ffd133df8babb6aebfdd7dc42c51e9ef00c3cedf7cb9ac3333361d542d779e",
+        "scene": "The workshop machines must be shut off before inspection.",
+        "translation": "I shut down all the machines before the inspection."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:集める:あつめる",
+      "pair": "verb:集める:あつめる/teshimau",
+      "senseId": "verb:集める:あつめる",
+      "form": "teshimau",
+      "sourceHash": "f34d7d3bdc91c3a151a4337bc7ce055763b75196f41aa1fcccb44e124c4a05ef",
+      "englishHash": "2db32022314414df8ed530cd2e9348da3ebb689fd8c06eda652b8fce1a68da73",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户逐项评估25条待考察原句，明确要求只保留16条自然合格项；本配对列在其余9项中，按用户教学选择暂缓。保留原稿、构形识别与历史复测，不把反馈的一般语法或礼仪断言作为全局禁令，不虚构三轮返修失败。",
+      "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
+      "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json",
+      "card": {
+        "id": "usage:teshimau:verb:集める:あつめる",
+        "senseId": "verb:集める:あつめる",
+        "meaning": "收集",
+        "form": "teshimau",
+        "scene": "趁学生尚未离开，先收齐全部答卷。",
+        "before": [
+          {
+            "text": "生徒が帰る前に、答案を全部",
+            "reading": "せいとがかえるまえに、とうあんをぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "在学生回去之前，把答卷全部收齐。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:集める:あつめる",
+        "sourceHash": "f34d7d3bdc91c3a151a4337bc7ce055763b75196f41aa1fcccb44e124c4a05ef",
+        "scene": "The students are about to leave, and their answer sheets must be collected.",
+        "translation": "I collect all the answer sheets before the students leave."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:chau:verb:咲く:さく",
+      "pair": "verb:咲く:さく/chau",
+      "senseId": "verb:咲く:さく",
+      "form": "chau",
+      "sourceHash": "c394ab644dee32626620d47f561fca05f3de559f7b76a1b92c67b80b7fe5a1ba",
+      "englishHash": "8bb8269dfb923ad23253d9ade50d08e7de5024a8372931290850339498b42269",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户逐项评估25条待考察原句，明确要求只保留16条自然合格项；本配对列在其余9项中，按用户教学选择暂缓。保留原稿、构形识别与历史复测，不把反馈的一般语法或礼仪断言作为全局禁令，不虚构三轮返修失败。",
+      "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
+      "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json",
+      "card": {
+        "id": "usage:chau:verb:咲く:さく",
+        "senseId": "verb:咲く:さく",
+        "meaning": "开花",
+        "form": "chau",
+        "scene": "朋友说花苞已经很大，自己觉得明天就会开。",
+        "before": [
+          {
+            "text": "このつぼみ、明日には",
+            "reading": "このつぼみ、あしたには"
+          }
+        ],
+        "after": [
+          {
+            "text": "よ。"
+          }
+        ],
+        "translation": "这个花苞明天就会开啦。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:咲く:さく",
+        "sourceHash": "c394ab644dee32626620d47f561fca05f3de559f7b76a1b92c67b80b7fe5a1ba",
+        "scene": "My friend says the buds are already large, and I think they will be open by tomorrow.",
+        "translation": "This bud will be open by tomorrow."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:注ぐ:そそぐ",
+      "pair": "verb:注ぐ:そそぐ/teshimau",
+      "senseId": "verb:注ぐ:そそぐ",
+      "form": "teshimau",
+      "sourceHash": "34e0dd5fa84d5bd8145709b1205f6b26595f541f38318cdae1c8eec2b8d26564",
+      "englishHash": "2bf1bab4c7dbd0b48ab73bf68203ea465306820f1fd62d8bde2aab4ebfa9ae61",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户逐项评估25条待考察原句，明确要求只保留16条自然合格项；本配对列在其余9项中，按用户教学选择暂缓。保留原稿、构形识别与历史复测，不把反馈的一般语法或礼仪断言作为全局禁令，不虚构三轮返修失败。",
+      "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
+      "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json",
+      "card": {
+        "id": "usage:teshimau:verb:注ぐ:そそぐ",
+        "senseId": "verb:注ぐ:そそぐ",
+        "meaning": "倒入；注入",
+        "form": "teshimau",
+        "scene": "茶壶里只剩一杯茶，主人把剩茶全倒进客人的空杯。",
+        "before": [
+          {
+            "text": "急須に残ったお茶を、空になった客のカップに全部",
+            "reading": "きゅうすにのこったおちゃを、からになったきゃくのカップにぜんぶ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "我会把茶壶里剩下的茶全倒进客人的空杯里。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:注ぐ:そそぐ",
+        "sourceHash": "34e0dd5fa84d5bd8145709b1205f6b26595f541f38318cdae1c8eec2b8d26564",
+        "scene": "There is only a little tea left in the pot, and I pour it all into the guest’s empty cup.",
+        "translation": "I’ll pour all the tea left in the pot into the guest’s empty cup."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:始める:はじめる",
+      "pair": "verb:始める:はじめる/teshimau",
+      "senseId": "verb:始める:はじめる",
+      "form": "teshimau",
+      "sourceHash": "a2c7173b0081afaac0ebcc36b65ca07b73521f881ca76ccdad9544fcfcc7af53",
+      "englishHash": "42e46eeab505279823755901ba53dbd845611c8e8180c129214f0b3d0a2c1d67",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户逐项评估25条待考察原句，明确要求只保留16条自然合格项；本配对列在其余9项中，按用户教学选择暂缓。保留原稿、构形识别与历史复测，不把反馈的一般语法或礼仪断言作为全局禁令，不虚构三轮返修失败。",
+      "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
+      "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json",
+      "card": {
+        "id": "usage:teshimau:verb:始める:はじめる",
+        "senseId": "verb:始める:はじめる",
+        "meaning": "开始",
+        "form": "teshimau",
+        "scene": "会议人员已到齐，准备把说明会直接开始。",
+        "before": [
+          {
+            "text": "全員そろったので、説明会を",
+            "reading": "ぜんいんそろったので、せつめいかいを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "人到齐了，就把说明会开始吧。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:始める:はじめる",
+        "sourceHash": "a2c7173b0081afaac0ebcc36b65ca07b73521f881ca76ccdad9544fcfcc7af53",
+        "scene": "Everyone has arrived for the briefing.",
+        "translation": "Everyone's here, so I'll go ahead and start the briefing."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:chau:verb:見せる:みせる",
+      "pair": "verb:見せる:みせる/chau",
+      "senseId": "verb:見せる:みせる",
+      "form": "chau",
+      "sourceHash": "09cf7c7a185e8c52526bec63730f474a578c16bce5486c00bc5cb532d4cf44a6",
+      "englishHash": "ac25f3cea3af4bfb158c1e948e331b0e00ff12c540c67e579f065bc063d9932e",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户逐项评估25条待考察原句，明确要求只保留16条自然合格项；本配对列在其余9项中，按用户教学选择暂缓。保留原稿、构形识别与历史复测，不把反馈的一般语法或礼仪断言作为全局禁令，不虚构三轮返修失败。",
+      "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
+      "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json",
+      "card": {
+        "id": "usage:chau:verb:見せる:みせる",
+        "senseId": "verb:見せる:みせる",
+        "meaning": "给……看",
+        "form": "chau",
+        "scene": "朋友想看新画，自己准备马上给他看。",
+        "before": [
+          {
+            "text": "新しく描いた絵を",
+            "reading": "あたらしくえがいたえを"
+          }
+        ],
+        "after": [
+          {
+            "text": "ね。"
+          }
+        ],
+        "translation": "新画的画给你看看啦。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:chau:verb:見せる:みせる",
+        "sourceHash": "09cf7c7a185e8c52526bec63730f474a578c16bce5486c00bc5cb532d4cf44a6",
+        "scene": "A friend asks about the new drawing I just finished.",
+        "translation": "I'll show you the picture I just drew."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:生まれる:うまれる",
+      "pair": "verb:生まれる:うまれる/teshimau",
+      "senseId": "verb:生まれる:うまれる",
+      "form": "teshimau",
+      "sourceHash": "b9cebef7c883020ff01b53d6e505acf490dc9d154aa417f940157fb0fc7205c3",
+      "englishHash": "278e0f91c6a70393e067f2341feafbaeba9c4f13740d17acbd2ceb423cd68075",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户逐项评估25条待考察原句，明确要求只保留16条自然合格项；本配对列在其余9项中，按用户教学选择暂缓。保留原稿、构形识别与历史复测，不把反馈的一般语法或礼仪断言作为全局禁令，不虚构三轮返修失败。",
+      "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
+      "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json",
+      "card": {
+        "id": "usage:teshimau:verb:生まれる:うまれる",
+        "senseId": "verb:生まれる:うまれる",
+        "meaning": "出生",
+        "form": "teshimau",
+        "scene": "预计小猫会提前出生，照料人员还没准备好。",
+        "before": [
+          {
+            "text": "予定より早く子猫が",
+            "reading": "よていよりはやくこねこが"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "小猫会比预期早出生。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:生まれる:うまれる",
+        "sourceHash": "b9cebef7c883020ff01b53d6e505acf490dc9d154aa417f940157fb0fc7205c3",
+        "scene": "The cat's labor may begin before the caretakers are ready.",
+        "translation": "The kitten is going to be born earlier than expected."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      }
+    },
+    {
+      "id": "usage:teshimau:verb:する:する",
+      "pair": "verb:する:する/teshimau",
+      "senseId": "verb:する:する",
+      "form": "teshimau",
+      "sourceHash": "d1bb167118c21112f992af7b9e8a608e9fc7e39e0a373d8d55bbc1c9dfb522f9",
+      "englishHash": "b0803bb51a92fc54595dbffd3df00b985cb9a24747a8172642a33ca2608099a0",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户逐项评估25条待考察原句，明确要求只保留16条自然合格项；本配对列在其余9项中，按用户教学选择暂缓。保留原稿、构形识别与历史复测，不把反馈的一般语法或礼仪断言作为全局禁令，不虚构三轮返修失败。",
+      "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
+      "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json",
+      "card": {
+        "id": "usage:teshimau:verb:する:する",
+        "senseId": "verb:する:する",
+        "meaning": "做",
+        "form": "teshimau",
+        "scene": "看到任务简单，常常一下子就做完",
+        "before": [
+          {
+            "text": "簡単な仕事なら、すぐに",
+            "reading": "かんたんなしごとなら、すぐに"
+          }
+        ],
+        "after": [
+          {
+            "text": "。",
+            "reading": "。"
+          }
+        ],
+        "translation": "工作简单的话，我常常马上就做完。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teshimau:verb:する:する",
+        "sourceHash": "d1bb167118c21112f992af7b9e8a608e9fc7e39e0a373d8d55bbc1c9dfb522f9",
+        "scene": "When you get a simple task, you often finish it immediately.",
+        "translation": "When a task is simple, I tend to finish it right away."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可用于描述动作、状态、变化或程度。",
+        "reviewVersion": 7
+      }
+    }
+  ]
+}

@@ -20,9 +20,9 @@ test('committed English release proof and successor evidence match current canon
   assert.equal(proof.expansion.count, 7469);
   assert.equal(proof.unresolvedCount, 0);
   assert.equal(proof.baselineCount, 17261);
-  assert.equal(proof.currentCount, 17035);
+  assert.equal(proof.currentCount, 17026);
   assert.equal(proof.currentCount, USAGE_CARDS.length);
-  assert.equal(proof.subsequentReviews.teachingHeldCount, 225);
+  assert.equal(proof.subsequentReviews.teachingHeldCount, 234);
   assert.equal(proof.subsequentReviews.baselineCount - proof.subsequentReviews.deferredCount
     - proof.subsequentReviews.teachingHeldCount, proof.currentCount);
   assert.equal(createHash('sha256').update(readFileSync(new URL('../docs/english-usage-release-proof.v1.json.gz', import.meta.url))).digest('hex'),
@@ -41,8 +41,8 @@ test('the English display projection holds the same IDs while preserving approve
   assert.equal(reviewedEnglish.length, 17260);
   assert.equal(formHeldIds.size, 122);
   assert.deepEqual(pairHeldIds, EXPECTED_CURRENT_TEACHING_HOLD_IDS);
-  assert.equal(heldIds.size, 225);
-  assert.equal(EN_USAGE_CARD_OVERLAYS.length, 17035);
+  assert.equal(heldIds.size, 234);
+  assert.equal(EN_USAGE_CARD_OVERLAYS.length, 17026);
   assert.deepEqual(new Set(EN_USAGE_CARD_OVERLAYS.map(row => row.id)), new Set(USAGE_CARDS.map(card => card.id)));
   assert.deepEqual(EN_USAGE_CARD_OVERLAYS, reviewedEnglish.filter(row => !heldIds.has(row.id)));
   for (const row of reviewedEnglish) {
@@ -57,7 +57,7 @@ test('the English display projection holds the same IDs while preserving approve
 test('a teaching hold cannot conceal drift in historical Chinese or English source content', () => {
   const formHeld = PRE_REVIEWED_USAGE_CARDS.find(card => isTeachingFormDeferred(card.form));
   const pairHeld = PRE_REVIEWED_USAGE_CARDS.filter(card => EXPECTED_CURRENT_TEACHING_HOLD_IDS.has(card.id));
-  assert.equal(pairHeld.length,103);
+  assert.equal(pairHeld.length,112);
   const newlyHeld=[...EXPECTED_SHIMAU_USER_HELD_IDS];
   const driftSample=new Set([...EXPECTED_PRIOR_TEACHING_HOLD_IDS,newlyHeld[0],newlyHeld.at(-1)]);
   assert.equal(driftSample.size,11,'keep all original nine drift checks and add two boundaries from the new evidence group');

@@ -14,6 +14,7 @@ import { TEACHING_PAIR_DEFERRALS } from '../app/lib/teaching-pair-deferrals.mjs'
 import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
 import { EXPECTED_CURRENT_TEACHING_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
 import { EXPECTED_SHIMAU_TEXT_FIX_IDS, EXPECTED_SHIMAU_TEXT_FIX_PAIRS } from './helpers/shimau-text-fix-scope.mjs';
+import { EXPECTED_HIROU_CHAU_FIX_IDS, EXPECTED_COMPLETION_TONE_ENGLISH_FIX_IDS } from './helpers/completion-tone-fix-scope.mjs';
 import { revisionHash, verifyCurrentReviewedUsageRevisions, verifyPortableRevisionDelivery } from '../scripts/verify-reviewed-usage-revisions.mjs';
 
 const FORM = 'temiruNegative';
@@ -36,6 +37,8 @@ function reviewedProof() {
     'the original three independent rounds remain unchanged');
   assert.equal(revisionHash(proof.rounds.slice(0, 9)), '49eeb59cee4eaec0a23c76c12dc36a9d33b8491ac12e588d2c323fabbe12b42b',
     'all nine pre-repair review rounds remain unchanged');
+  assert.equal(revisionHash(proof.rounds.slice(0, 15)), '5b4f7647c553418a8ad649260696763f26d90b0528b533a9ff0f23b3ea5d3603',
+    'all fifteen rounds through the shimau text repairs remain unchanged');
   return proof;
 }
 
@@ -120,8 +123,8 @@ test('the invitation round accounts for all 123 frozen sources before later exac
   const historical = frozenState(reviewedProof().rounds.slice(0, 3));
   assert.deepEqual(new Set(historical.cards.filter(card => card.form === FORM).map(card => card.id)), approved);
   const summary = verifyCurrentReviewedUsageRevisions();
-  assert.equal(summary.sourceCount, 125 + 123 + 13 + 17);
-  assert.equal(summary.reviewedCount, 124 + approved.size + 13 + 17);
+  assert.equal(summary.sourceCount, 125 + 123 + 13 + 17 + 1 + 2);
+  assert.equal(summary.reviewedCount, 124 + approved.size + 13 + 17 + 1 + 2);
   assert.equal(summary.deferredCount, 1 + deferred.size);
 });
 
@@ -211,7 +214,7 @@ test('every original invitation approval binds its target, bilingual rewrite and
 });
 
 test('later exact subset reviews and teaching choices preserve the original invitation baseline', () => {
-  const proof = reviewedProof(), followups = proof.rounds.slice(3, 9), textFixes = proof.rounds.slice(9);
+  const proof = reviewedProof(), followups = proof.rounds.slice(3, 9), textFixes = proof.rounds.slice(9, 15);
   assert.equal(followups.length, 6);
   assert.deepEqual(new Set(followups.flatMap(round => round.scopeIds)), EXPECTED_FOLLOWUP_IDS);
   assert.equal(followups.reduce((sum, round) => sum + round.sourceCount, 0), 13);
@@ -251,12 +254,12 @@ test('later exact subset reviews and teaching choices preserve the original invi
   assert.equal(revisionHash(historicalEnglish), 'dfe9222ec82970512035009ef4f7c499bfb79e120c39ec1bd5b9de5bb3aed714');
 
   // Verify the final projection against all frozen approvals, with only the
-  // 103 explicit teaching choices removed after review verification.
+  // 112 explicit teaching choices removed after review verification.
   assert.deepEqual(REVIEWED_USAGE_CARDS, latest.cards);
   const expectedCards = latest.cards.filter(card => !isTeachingFormDeferred(card.form) && !heldIds.has(card.id));
   const expectedIds = new Set(expectedCards.map(card => card.id));
   const expectedEnglish = latest.english.filter(row => expectedIds.has(row.id));
-  assert.equal(expectedCards.length, 17035);
+  assert.equal(expectedCards.length, 17026);
   assert.deepEqual(USAGE_CARDS, expectedCards);
   assert.deepEqual(CURRENT_ENGLISH, expectedEnglish);
   const sortById = rows => [...rows].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
@@ -264,14 +267,19 @@ test('later exact subset reviews and teaching choices preserve the original invi
   assert.deepEqual(EN_REVIEWED_USAGE_CARD_OVERLAYS, sortById(latest.english.filter(row => latest.revisions.has(row.id))));
   const currentById = byId(USAGE_CARDS), currentEnglishById = byId(CURRENT_ENGLISH);
   const historicalEnglishById = byId(historicalEnglish);
-  const permittedReviewIds = new Set([...EXPECTED_FOLLOWUP_IDS, ...EXPECTED_SHIMAU_TEXT_FIX_IDS]);
+  const permittedCanonicalReviewIds = new Set([...EXPECTED_FOLLOWUP_IDS, ...EXPECTED_SHIMAU_TEXT_FIX_IDS, ...EXPECTED_HIROU_CHAU_FIX_IDS]);
+  const permittedEnglishReviewIds = new Set([...permittedCanonicalReviewIds, ...EXPECTED_COMPLETION_TONE_ENGLISH_FIX_IDS]);
   for (const id of EXPECTED_SHIMAU_TEXT_FIX_IDS) assert.ok(!heldIds.has(id), `${id}: the text repair retains this active card`);
   for (const card of historicalCards) {
     if (heldIds.has(card.id)) {
       assert.ok(!currentById.has(card.id) && !currentEnglishById.has(card.id), card.id);
-    } else if (!permittedReviewIds.has(card.id)) {
-      assert.deepEqual(currentById.get(card.id), card, `${card.id}: only the exact reviewed subset may change`);
-      assert.deepEqual(currentEnglishById.get(card.id), historicalEnglishById.get(card.id), card.id);
+    } else {
+      if (!permittedCanonicalReviewIds.has(card.id)) {
+        assert.deepEqual(currentById.get(card.id), card, `${card.id}: only the exact reviewed canonical subset may change`);
+      }
+      if (!permittedEnglishReviewIds.has(card.id)) {
+        assert.deepEqual(currentEnglishById.get(card.id), historicalEnglishById.get(card.id), card.id);
+      }
     }
   }
 });

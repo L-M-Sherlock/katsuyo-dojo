@@ -166,7 +166,7 @@ test('the frozen integration release projects to reviewed current cards and exac
   assert.ok(report.teachingHolds.rows.every(row => row.basis === 'user-directed-teaching-hold'));
   assert.equal(report.proof.releaseCount, frozen.approved.length);
   assert.equal(report.proof.currentExpectedCount, frozen.approved.length - held.size);
-  assert.equal(report.proof.reviewedProjection.rounds, 15);
+  assert.equal(report.proof.reviewedProjection.rounds, 17);
   assert.deepEqual(new Set(report.open.pairs), new Set(frozen.open));
 });
 

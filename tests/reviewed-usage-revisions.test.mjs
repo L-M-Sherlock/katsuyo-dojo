@@ -1,6 +1,7 @@
 import { EXPECTED_CURRENT_TEACHING_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
 import { EXPECTED_TEMIRU_FOLLOWUP_REVIEW_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
 import { EXPECTED_SHIMAU_TEXT_FIX_IDS } from './helpers/shimau-text-fix-scope.mjs';
+import { EXPECTED_HIROU_CHAU_FIX_IDS, EXPECTED_COMPLETION_TONE_ENGLISH_FIX_IDS } from './helpers/completion-tone-fix-scope.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -297,7 +298,10 @@ test('committed successor evidence preserves both old rounds while new reviews a
   }
   assert.equal(previousReviewedCount,260);
   assert.equal([...previousRows.values()].filter(row=>row.previousHash!==row.finalHash).length,202);
-  const textFixes=proof.rounds.slice(9);
+  assert.equal(revisionHash(proof.rounds.slice(0,15)),
+    '5b4f7647c553418a8ad649260696763f26d90b0528b533a9ff0f23b3ea5d3603',
+    'all fifteen rounds through the shimau text repairs remain immutable');
+  const textFixes=proof.rounds.slice(9,15);
   assert.equal(textFixes.length,6);
   assert.deepEqual(textFixes.map(round=>round.id),[
     'shimau-text-fix-20261026-chau', 'shimau-text-fix-20261026-teshimau',
@@ -315,13 +319,37 @@ test('committed successor evidence preserves both old rounds while new reviews a
     assert.deepEqual(round.deferrals??[],[],round.id);
   }
   assert.ok(textFixIds.every(id=>!teachingPairHeldIds.has(id)));
+  assert.equal(revisionHash(proof.rounds.slice(0,16)),
+    '0eaec0951983992b477a1f3b96ec7d7b0496854e1073c79f1cc0cef8370c9006',
+    'the approved hirou follow-up remains immutable during the English-only successor');
+  const toneFixes=proof.rounds.slice(15);
+  assert.deepEqual(toneFixes.map(round=>round.id),[
+    'hirou-chau-fix-20261027-chau', 'completion-tone-fix-20261027-teshimau',
+  ]);
+  assert.deepEqual(new Set(toneFixes[0].scopeIds),EXPECTED_HIROU_CHAU_FIX_IDS);
+  assert.deepEqual(new Set(toneFixes[1].scopeIds),EXPECTED_COMPLETION_TONE_ENGLISH_FIX_IDS);
+  assert.equal(toneFixes.reduce((sum,round)=>sum+round.sourceCount,0),3);
+  for(const round of toneFixes){
+    assert.equal(round.scopeIds.length,round.sourceCount,round.id);
+    assert.equal(new Set(round.scopeIds).size,round.sourceCount,round.id);
+    assert.deepEqual(round.sourceCards.map(card=>card.id),round.scopeIds,round.id);
+    assert.ok(round.sourceCards.every(card=>card.form===round.form),round.id);
+    assert.deepEqual(round.deferrals??[],[],round.id);
+    assert.ok(round.scopeIds.every(id=>!teachingPairHeldIds.has(id)),round.id);
+  }
+  for(const source of toneFixes[1].sourceCards){
+    const revision=REVIEWED_USAGE_CARD_REVISIONS.find(row=>row.id===source.id);
+    assert.deepEqual(revision.card,source,`${source.id}: this follow-up changes English only`);
+    assert.equal(revision.previousHash,revisionHash(source),source.id);
+    assert.equal(revision.finalHash,revisionHash(source),source.id);
+  }
   const summary = verifyCurrentReviewedUsageRevisions();
   const {changedCount,...currentScopeSummary}=summary;
-  assert.deepEqual(currentScopeSummary,{rounds:15,sourceCount:278,reviewedCount:277,approvedCount:277,
-    deferredCount:1,baselineCount:17261,cardCount:17035,teachingHeldCount:225});
-  // The original nine-round count remains 202. The approved successor adds
-  // ten changed canonical cards while retaining seven canonical objects.
-  assert.equal(changedCount,212);
+  assert.deepEqual(currentScopeSummary,{rounds:17,sourceCount:281,reviewedCount:280,approvedCount:280,
+    deferredCount:1,baselineCount:17261,cardCount:17026,teachingHeldCount:234});
+  // The original nine-round count remains 202. The shimau repairs add ten
+  // canonical changes, the hirou repair adds one, and the English-only repair retains both cards.
+  assert.equal(changedCount,213);
   assert.equal(changedCount,REVIEWED_USAGE_CARD_REVISIONS.filter(row=>row.previousHash!==row.finalHash).length);
   assert.equal(REVIEWED_USAGE_CARDS.length,summary.baselineCount-summary.deferredCount);
   assert.equal(USAGE_CARDS.length,REVIEWED_USAGE_CARDS.length-summary.teachingHeldCount);
@@ -331,7 +359,7 @@ test('committed successor evidence preserves both old rounds while new reviews a
   assert.equal(formHeldIds.size, 122);
   assert.deepEqual(teachingPairHeldIds, EXPECTED_CURRENT_TEACHING_HOLD_IDS);
   const heldIds = new Set([...formHeldIds, ...teachingPairHeldIds]);
-  assert.equal(heldIds.size, 225);
+  assert.equal(heldIds.size, 234);
   assert.deepEqual(new Set([...reviewedIds].filter(id => !currentIds.has(id))), heldIds);
   for (const row of REVIEWED_USAGE_CARD_DEFERRALS) {
     assert.ok(!reviewedIds.has(row.id) && !currentIds.has(row.id) && !heldIds.has(row.id), row.id);

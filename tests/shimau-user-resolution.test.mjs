@@ -7,6 +7,8 @@ import path from 'node:path';
 import {createDelivery} from '../.agents/skills/write-katsuyo-usage-cards/scripts/delivery-store.mjs';
 import {readReviewedUsageRevisionsProof, verifyPortableRevisionDelivery} from '../scripts/verify-reviewed-usage-revisions.mjs';
 import {readShimauUserResolution, verifyShimauUserResolution} from '../scripts/verify-shimau-user-resolution.mjs';
+import {TEACHING_PAIR_DEFERRALS} from '../app/lib/teaching-pair-deferrals.mjs';
+import {EXPECTED_COMPLETION_TONE_USER_HOLD_IDS} from './helpers/current-teaching-hold-scope.mjs';
 
 test('the frozen 24/94 choice stays intact while all 17 text findings need approved successors', () => {
   assert.deepEqual(verifyShimauUserResolution(undefined,{requireAncillaryClosure:true}), {
@@ -17,6 +19,11 @@ test('the frozen 24/94 choice stays intact while all 17 text findings need appro
     '204fc175caa21d8b61c4a793ba3446bba296fcf8d20ba22b4cd506b6a5fd3327','the original user choice bytes are immutable');
   const record = readShimauUserResolution();
   assert.equal(new Set([...record.retainedIds, ...record.holdIds]).size, 118);
+  const originalHolds = new Set([...record.priorHoldIds, ...record.holdIds]);
+  assert.equal(originalHolds.size, 103);
+  assert.equal(TEACHING_PAIR_DEFERRALS.length, 112);
+  assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.filter(row => !originalHolds.has(row.id)).map(row => row.id)),
+    EXPECTED_COMPLETION_TONE_USER_HOLD_IDS);
   for (const id of [
     'usage:teshimauNegative:verb:逃げる:にげる',
     'usage:teshimauNegative:verb:呼ぶ:よぶ',
@@ -38,6 +45,9 @@ test('user choices cannot conceal edited sources, missing entries, inflated appr
   assert.throws(() => verifyShimauUserResolution({...record, priorHoldsHash: '0'.repeat(64)}), /Earlier user holds changed/);
   const emptyHash = createHash('sha256').update('[]').digest('hex');
   assert.throws(() => verifyShimauUserResolution({...record, priorHoldIds: [], priorHoldsHash: emptyHash}), /partition the complete registry/);
+  const substituted = structuredClone(record);
+  substituted.priorHoldIds[0] = [...EXPECTED_COMPLETION_TONE_USER_HOLD_IDS][0];
+  assert.throws(() => verifyShimauUserResolution(substituted), /partition the complete registry/);
 });
 
 

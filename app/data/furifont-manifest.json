@@ -172273,9 +172273,9 @@
       "pairs": 5486,
       "lexicalPairs": 231,
       "coverage": {
-        "cards": 17035,
-        "sourcePairs": 59617,
-        "direct": 59085,
+        "cards": 17026,
+        "sourcePairs": 59608,
+        "direct": 59076,
         "constrained": 530,
         "audited": 2,
         "fallbacks": 0,
