@@ -26,6 +26,43 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = [
     "translation": "A coworker read my diary yesterday, much to my dismay."
   },
   {
+    "id": "usage:teageruNegative",
+    "sourceHash": "04687743e0583a1290311f5ad41dcd3a5ba8a4e50d8aef21c788a86c6aea23bf",
+    "scene": "After my younger sister let my secret slip, I told her I would not share the secret trick for that game with her anymore.",
+    "translation": "I told my younger sister, who had let my secret slip, “I’m not going to tell you the secret trick for that game anymore, just so you know.”",
+    "note": "もう and からね make this a pointed refusal between siblings."
+  },
+  {
+    "id": "usage:tearuNegative:verb:書く:かく",
+    "sourceHash": "8b8714bf63235e98b0f0b053629507c6899d394cabe48641470e2105ac66ef43",
+    "scene": "The application is almost due, but the name field is still blank.",
+    "translation": "Even though it is almost time to submit the application, the name field is still blank."
+  },
+  {
+    "id": "usage:tearuNegative:verb:置く:おく",
+    "sourceHash": "1410aacb0f0aa9de118739854d39bc499f87f07c88c4a56511ba7e81e510bbfd",
+    "scene": "A meeting room is being prepared before attendees arrive.",
+    "translation": "The meeting materials still haven't been set out at each seat."
+  },
+  {
+    "id": "usage:tearuNegativePast:verb:書く:かく",
+    "sourceHash": "c710adbcc38074e9d02d1ebbbdfef7e36252607945f461e2f8cc37938ed91003",
+    "scene": "At reception, I checked the guest name tags and noticed one still had no name on it.",
+    "translation": "When I checked at reception, the name tag still had no name written on it."
+  },
+  {
+    "id": "usage:tearuNegativePast:verb:置く:おく",
+    "sourceHash": "c97682819cecdf44af8b79bb4f71ba0bf907b089bfa162a9eee23f18723c6809",
+    "scene": "A guest arrives while the table is being made ready.",
+    "translation": "When the guest arrived, the water still hadn't been set out on the table."
+  },
+  {
+    "id": "usage:teikuNegative:verb:する:する",
+    "sourceHash": "22f0c6aa1a29102715b4ba2e0cb0c01ecd1f3608cf0c308701be85ede0d2e56d",
+    "scene": "At the end of a late workday, the speaker decides to leave without tidying the desk.",
+    "translation": "Since it is already late today, I decided to leave without tidying my desk."
+  },
+  {
     "id": "usage:temiru:verb:取る:とる",
     "sourceHash": "334029d9b26be80ac3c1001f377cf767d6019020dc8f6edd5bcf720590397365",
     "scene": "At a shop, I want to check the size label inside a hat.",
@@ -1553,6 +1590,20 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = [
     "translation": "I wanted to include the noise of a classroom in the school festival video, but we ran out of recording time, so I will not have my classmates make that noise."
   },
   {
+    "id": "usage:teoru:verb:来る:くる",
+    "sourceHash": "51cddaf868256d5c82de358f392058f407bdf9de55cdb108222eb66edd4ebc2f",
+    "scene": "An older shopkeeper tells someone that the customer has already arrived at the shop.",
+    "translation": "The older shopkeeper said, “The customer has already arrived at the shop!”",
+    "note": "The ておる and ぞ give this shopkeeper’s line a traditional, emphatic tone."
+  },
+  {
+    "id": "usage:teoruPast:verb:来る:くる",
+    "sourceHash": "668177e60fc1b50a20dde8f44c46cfd00380b47b676151f0de95b78399ff585c",
+    "scene": "Grandfather recalls that a familiar customer used to come here often.",
+    "translation": "Grandfather said, “That customer used to come here often.”",
+    "note": "The quoted のう adds a reflective tone to grandfather’s recollection."
+  },
+  {
     "id": "usage:teshimau:verb:出かける:でかける",
     "sourceHash": "45763e06ceebd47657e396fe592b71b66aeccf52f6b7222aab65056af37879b7",
     "scene": "I want to talk with my coworker in person, but I worry he may head out before I contact him.",
@@ -1625,6 +1676,12 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = [
     "translation": "You didn’t happen to point to a different station on the map just now, did you?"
   },
   {
+    "id": "usage:teshimauNegativePast:verb:来る:くる",
+    "sourceHash": "dcc9bd0e3be07619c11ee40ffdbb0dabac4856f446d01bddd7ec1b73b3ac04d9",
+    "scene": "After realizing the invitation listed the wrong time, the speaker checks whether the guests have already reached the venue.",
+    "translation": "Given the incorrect time on the invitation, could the guests already have arrived at the venue?"
+  },
+  {
     "id": "usage:teshimauNegativePast:verb:起きる:おきる",
     "sourceHash": "ccc040ffc661c0e518d10a3bbc1615c1fd582b695fa736ed3cc4ea6cbf6b65fd",
     "scene": "I ask a friend who had yesterday off but forgot to change their alarm whether they still got up at the usual time.",
@@ -1647,5 +1704,18 @@ export const EN_REVIEWED_USAGE_CARD_OVERLAYS = [
     "sourceHash": "e43cf043398c09cb3dbba5166645f2797793c05ffb66da1891867f6b41f88fa2",
     "scene": "The family planned to serve the fish as sashimi, but it was grilled instead.",
     "translation": "The fish the family planned to serve as sashimi ended up being grilled."
+  },
+  {
+    "id": "usage:toru:verb:する:する",
+    "sourceHash": "65157d36a5e3e7fc05d76247861c7fadd01e1f153faa52d435a52b852c39d273",
+    "scene": "Grandfather tells a family member that he is tending the garden now.",
+    "translation": "Grandpa said, “I’m taking care of the garden now.”",
+    "note": "The quoted しとる is part of this grandfather’s speech style; 今は and よ place the activity in the present."
+  },
+  {
+    "id": "usage:zu:verb:渡す:わたす",
+    "sourceHash": "f1cf9879b778bc72697337779849273718f5af5b2e138afb059a66fde65aec18",
+    "scene": "An employee keeps a document to review its contents again instead of handing it to a supervisor.",
+    "translation": "The employee checked the document’s contents again instead of handing it to the supervisor."
   }
 ];

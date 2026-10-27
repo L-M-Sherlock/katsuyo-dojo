@@ -61,7 +61,7 @@ export function createPracticePlanner(model) {
   /** @param {string} mode @param {any} profile @param {number} length @param {string | null} preferredCourseId */
   function plan(mode, profile, length = 12, preferredCourseId = null) {
     const adaptive = mode === 'adaptive';
-    const candidates = adaptive ? profile.introducedKcIds.map(id => byId.get(id)).filter(Boolean)
+    const candidates = adaptive ? profile.introducedKcIds.map(id => byId.get(id)).filter(kc => kc?.gating)
       : courseComponents(mode).filter(kc => kc.gating);
     return planPractice(candidates, profile.byKc, model.courseKcIds, { adaptive, length, rotation: profile.rotation,
       components: model.components, goalCourseId: adaptive ? preferredCourseId ?? profile.practiceGoalCourseId ?? null : mode,

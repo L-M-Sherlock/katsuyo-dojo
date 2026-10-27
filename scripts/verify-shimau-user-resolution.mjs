@@ -19,7 +19,10 @@ export const readShimauUserResolution = () => JSON.parse(zlib.gunzipSync(fs.read
 const TEXT_FIX_PREFIX = 'shimau-text-fix-20261026-';
 const TEXT_FIX_FORMS = ['chau', 'teshimau', 'teshimauPast', 'teshimauNegative', 'teshimauNegativePast', 'passiveCompletionPast'];
 const INITIAL_ROUNDS_HASH = '49eeb59cee4eaec0a23c76c12dc36a9d33b8491ac12e588d2c323fabbe12b42b';
-const LATER_HOLDS_FILE = 'docs/usage-card-completion-tone-user-holds-20261027.json';
+const LATER_HOLDS_FILES = new Set([
+  'docs/usage-card-completion-tone-user-holds-20261027.json',
+  'docs/usage-card-risk-pilot-feedback-holds-20261027.json',
+]);
 const ENGLISH_CHECKS = ['englishNatural', 'meaning', 'roles', 'timeAndPolarity', 'register', 'scene', 'noAnswerLeak'];
 const japanese = (card, side) => card[side].map(part => part.text).join('');
 const readings = card => ['before', 'after'].map(side => card[side].map(part => part.reading ?? part.text));
@@ -183,8 +186,8 @@ export function verifyShimauUserResolution(record = readShimauUserResolution(), 
   const priorIds = new Set(record.priorHoldIds);
   // Preserve the exact original 9 + 94 partition. A separately evidenced later
   // user choice may add holds without rewriting this frozen decision record.
-  const originalHolds = TEACHING_PAIR_DEFERRALS.filter(row => row.evidenceFile !== LATER_HOLDS_FILE);
-  const laterHolds = TEACHING_PAIR_DEFERRALS.filter(row => row.evidenceFile === LATER_HOLDS_FILE);
+  const originalHolds = TEACHING_PAIR_DEFERRALS.filter(row => !LATER_HOLDS_FILES.has(row.evidenceFile));
+  const laterHolds = TEACHING_PAIR_DEFERRALS.filter(row => LATER_HOLDS_FILES.has(row.evidenceFile));
   ensure(priorIds.size === 9 && priorIds.size === record.priorHoldIds.length
     && held.every(id => !priorIds.has(id))
     && same([...priorIds, ...held].sort(), originalHolds.map(row => row.id).sort())

@@ -1,4 +1,5 @@
-import { EXPECTED_CURRENT_TEACHING_HOLD_PAIRS } from './helpers/current-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_FORM_HOLDS } from './helpers/four-form-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_PAIRS, EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -97,7 +98,8 @@ test('every active teaching form and word class retains approved and fully speci
   const required=usageCardClassRequirements();
   assert.equal(registeredForms.size,170);
   assert.deepEqual(new Set([...registeredForms].filter(isTeachingFormDeferred)),USER_DIRECTED_DEFERRED_FORMS);
-  assert.equal(forms.size,169);
+  assert.deepEqual(USER_DIRECTED_DEFERRED_FORMS,EXPECTED_CURRENT_FORM_HOLDS);
+  assert.equal(forms.size,165);
   assert.equal(new Set(USAGE_CARDS.map(c=>c.form)).size,forms.size);
   assert.deepEqual(new Set(USAGE_CARDS.map(c=>c.form)),forms);
   assert.deepEqual(new Set(USAGE_CARDS.map(c=>`${c.form}/${usageCardItem(c.senseId).class}`)),new Set(required));
@@ -115,13 +117,18 @@ test('form and exact-pair teaching holds remove only their approved cards and pr
   const historicalLookup=createUsageCardLookup(REVIEWED_USAGE_CARDS);
   assert.equal(PRE_REVIEWED_USAGE_CARDS.length,17261);
   assert.equal(REVIEWED_USAGE_CARDS.length,17260);
-  assert.equal(formHeld.length,122);
-  assert.equal(pairHeld.length,112);
+  const historicalFormHeld=formHeld.filter(card=>card.form==='temiruNegativePast');
+  assert.equal(historicalFormHeld.length,122,'the original whole-form source remains frozen');
+  assert.equal(formHeld.length,357);
+  assert.equal(pairHeld.length,119);
   assert.deepEqual(new Set(pairHeld.map(card=>`${card.senseId}/${card.form}`)),EXPECTED_CURRENT_TEACHING_HOLD_PAIRS);
-  assert.equal(held.length,234);
-  assert.equal(heldIds.size,234,'form-wide and exact-pair holds do not overlap');
-  assert.equal(USAGE_CARDS.length,17026);
-  assert.deepEqual(new Set(formHeld.map(card=>card.form)),new Set(['temiruNegativePast']));
+  assert.equal(held.length,476);
+  assert.equal(heldIds.size,470,'count the union once when six exact holds also belong to held forms');
+  assert.equal(formHeld.filter(card=>teachingPairHeldIds.has(card.id)).length,6);
+  assert.equal(USAGE_CARDS.length,16790);
+  assert.deepEqual(new Set(formHeld.map(card=>card.form)),EXPECTED_CURRENT_FORM_HOLDS);
+  assert.equal(REVIEWED_USAGE_CARDS.length-new Set([...historicalFormHeld,...pairHeld.filter(card=>!EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS.has(card.id))].map(card=>card.id)).size,17026,
+    'the historical projection before the four new holds remains 17026');
   assert.deepEqual(new Set([...previousIds].filter(id=>!currentIds.has(id))),heldIds);
   assert.deepEqual(new Set([...currentIds].filter(id=>!previousIds.has(id))),new Set());
   assert.deepEqual(USAGE_CARDS,REVIEWED_USAGE_CARDS.filter(card=>!heldIds.has(card.id)));
@@ -133,7 +140,10 @@ test('form and exact-pair teaching holds remove only their approved cards and pr
     assert.ok(!REVIEWED_USAGE_CARD_DEFERRED_PAIRS.has(`${card.senseId}/${card.form}`),card.id);
     assert.equal(historicalLookup(usageCardItem(card.senseId),card.form),null,card.id);
   }
-  assert.deepEqual(new Set(fullNaturalnessSource.filter(card=>isTeachingFormDeferred(card.form)).map(card=>card.id)),new Set(formHeld.map(card=>card.id)));
+  const priorDeferredPairs=new Set([...fullNaturalnessDeferred,...USER_DIRECTED_DEFERRED_PAIRS]);
+  const historicalHeldSources=fullNaturalnessSource.filter(card=>isTeachingFormDeferred(card.form));
+  assert.equal(historicalHeldSources.length,360);
+  assert.deepEqual(new Set(historicalHeldSources.filter(card=>!priorDeferredPairs.has(`${card.senseId}/${card.form}`)).map(card=>card.id)),new Set(formHeld.map(card=>card.id)));
 });
 
 test('reviewed stages retain exact eligible coverage and preserve the original representative cards', () => {
@@ -179,11 +189,12 @@ test('published action cards match the approved review ledger and leave the hist
     .map(card=>`${card.senseId}/${card.form}`).filter(pair=>!precedingDeferrals.has(pair)));
   const pairTeachingHeldActions = new Set(fullNaturalnessSource.filter(card=>actionForms.has(card.form)&&isTeachingPairDeferred(card.senseId,card.form))
     .map(card=>`${card.senseId}/${card.form}`).filter(pair=>!precedingDeferrals.has(pair)));
-  assert.equal(formTeachingHeldActions.size,122,'preserve the original form-wide hold scope');
+  assert.equal([...formTeachingHeldActions].filter(pair=>pair.endsWith('/temiruNegativePast')).length,122,'preserve the original form-wide hold scope');
+  assert.equal(formTeachingHeldActions.size,271);
   assert.deepEqual(pairTeachingHeldActions,new Set([...EXPECTED_CURRENT_TEACHING_HOLD_PAIRS].filter(pair=>actionForms.has(pair.split('/')[1]))));
-  assert.equal(pairTeachingHeldActions.size,108);
+  assert.equal(pairTeachingHeldActions.size,115);
   const teachingHeldActions = new Set([...formTeachingHeldActions,...pairTeachingHeldActions]);
-  assert.equal(teachingHeldActions.size,230,'count only newly held pairs, excluding every earlier deferral');
+  assert.equal(teachingHeldActions.size,382,'count only held pairs, excluding every earlier deferral');
   const covered = new Set(USAGE_CARDS.map(card => `${card.senseId}/${card.form}`).filter(pair => required.has(pair)));
   assert.equal(required.size, actionReview.effectiveRequiredPairs - naturalnessDeferred.size - fullDeferredActions.size
     - userDeferredActions.size - retiredActions.size - reviewedDeferredActions.size - teachingHeldActions.size);

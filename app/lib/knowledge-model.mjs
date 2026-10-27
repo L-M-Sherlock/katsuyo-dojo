@@ -371,17 +371,26 @@ export function auditKnowledgeModel(model, { minEvidence = 5, sessionLength = 12
     if (component.gating && (/^exception\.(suru|kuru)\./.test(component.id) || component.id === "exception.iku-onbin")) {
       issues.push({ code: "isolated-lexical-gate", id: component.id });
     }
-    let deferredFacet = false;
+    let deferredComponent = false;
+    if (component.teachingDeferredGating && (!component.teachingDeferred || component.gating
+        || component.id.startsWith('facet.'))) {
+      issues.push({ code: 'invalid-teaching-deferred-gating-history', id: component.id });
+    }
     if (component.teachingDeferred) {
       const declared = model.registryExercises?.filter(exercise => exercise.kcIds.includes(component.id)) ?? [];
-      deferredFacet = !component.gating && component.id.startsWith('facet.') && declared.length > 0
+      // A rule atom may also be exclusive to held forms. The complete registry
+      // must prove that exclusivity; ordinary lexical supply gaps do not pause it.
+      deferredComponent = !component.gating && declared.length > 0
         && declared.every(exercise => isTeachingFormDeferred(exercise.form))
-        && !model.exercises.some(exercise => exercise.kcIds.includes(component.id))
-        && !model.components.some(parent => parent.coverageKcIds.includes(component.id))
+        && !model.exercises.some(exercise => exercise.kcIds.includes(component.id)
+          || exercise.prerequisites?.includes(component.id))
+        && !model.components.some(parent => parent.coverageKcIds.includes(component.id)
+          || parent.prerequisites.includes(component.id)
+          || parent.masteryPrerequisites?.some(prerequisite => (prerequisite.id ?? prerequisite) === component.id))
         && !Object.values(model.courseKcIds).some(ids => ids.includes(component.id));
-      if (!deferredFacet) issues.push({ code: 'invalid-teaching-deferred-kc', id: component.id });
+      if (!deferredComponent) issues.push({ code: 'invalid-teaching-deferred-kc', id: component.id });
     }
-    if (!component.gating && component.id.startsWith("facet.") && !deferredFacet) {
+    if (!component.gating && component.id.startsWith("facet.") && !deferredComponent) {
       const parents = model.components.filter((candidate) => candidate.coverageKcIds.includes(component.id));
       if (parents.length !== 1) issues.push({ code: "facet-parent-count", id: component.id, parentCount: parents.length });
       const parent = parents[0];

@@ -251,6 +251,7 @@ export function readReviewedUsageRevisionsProof(proofPath = REVIEWED_REVISIONS_P
 /** Prove exact reviewed forms and preserve every object outside those forms. */
 export function verifyReviewedUsageRevisions({ cards, baselineCards, baselineOverlays, revisions = [], englishRevisions = [], deferrals = [],
   proof = readReviewedUsageRevisionsProof(),
+  checkpointRound, onCheckpoint,
   naturalnessProofSha256 = sha(fs.readFileSync(path.join(ROOT, 'docs/usage-card-naturalness-full-progress.v1.json.gz'))),
   englishProofSha256 = sha(fs.readFileSync(path.join(ROOT, 'docs/english-usage-release-proof.v1.json.gz'))),
 } = {}) {
@@ -273,6 +274,13 @@ export function verifyReviewedUsageRevisions({ cards, baselineCards, baselineOve
     && Array.isArray(proof.rounds) && proof.rounds.length > 0, 'Invalid revision proof or historical proof binding');
   const latest = new Map(), latestEnglish = new Map(), latestDeferrals = new Map(), roundIds = new Set();
   let reviewedCount = 0, sourceCount = 0;
+  // Observers receive copies and are only useful after the complete verifier
+  // returns successfully. They cannot modify the replay used for validation.
+  const checkpoint = roundCount => {
+    if (roundCount === checkpointRound) onCheckpoint?.({roundCount,
+      cards: structuredClone([...expected.values()]), english: structuredClone([...beforeEnglish.values()])});
+  };
+  checkpoint(0);
   for (const round of proof.rounds) {
     ensure(text(round.id) && !roundIds.has(round.id) && text(round.form) && Array.isArray(round.batches)
       && round.batches.length > 0, 'Invalid or duplicate revision round');
@@ -309,6 +317,7 @@ export function verifyReviewedUsageRevisions({ cards, baselineCards, baselineOve
     }
     reviewedCount += roundSeen.size;
     sourceCount += scope.length;
+    checkpoint(roundIds.size);
   }
   const expectedRevisions = [...latest.values()].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
   const expectedEnglish = [...latestEnglish.values()].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);

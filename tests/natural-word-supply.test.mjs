@@ -1,5 +1,6 @@
+import { EXPECTED_CURRENT_FORM_HOLDS, EXPECTED_DEFERRED_COMPONENT_IDS, newFormHoldHistory } from './helpers/four-form-teaching-hold-scope.mjs';
 import { EXPECTED_SHIMAU_USER_HELD_IDS } from './helpers/shimau-user-teaching-hold-scope.mjs';
-import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS, EXPECTED_COMPLETION_TONE_USER_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS, EXPECTED_COMPLETION_TONE_USER_HOLD_IDS, EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
 import { EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS } from './helpers/temiru-teaching-hold-scope.mjs';
 import { currentEligibilityBaseline } from '../scripts/lib/eligibility-baseline.mjs';
 import assert from 'node:assert/strict';
@@ -85,7 +86,7 @@ const userDirectedDeferred = userDirectedBefore.entries.filter(entry => !RETIRED
 assert.deepEqual(new Set(retiredTeoruBefore.forms), RETIRED_TEORU_NEGATIVE_FORMS);
 const retiredTeoruExercises = retiredTeoruBefore.exercises;
 const reviewedRevisionDeferred = reviewedDeferralHistory(model);
-assert.deepEqual(USER_DIRECTED_DEFERRED_FORMS, new Set([formHold.form]));
+assert.deepEqual(USER_DIRECTED_DEFERRED_FORMS, EXPECTED_CURRENT_FORM_HOLDS);
 assert.equal(formHold.form, 'temiruNegativePast');
 assert.equal(formHold.sourceCount, 122);
 assert.equal(formHold.sourceRows.length, formHold.sourceCount);
@@ -115,7 +116,9 @@ assert.deepEqual(new Set(userHolds.sourceRows.map(row=>row.id)),EXPECTED_SHIMAU_
 const toneUserHolds = JSON.parse(readFileSync(new URL('../docs/usage-card-completion-tone-user-holds-20261027.json', import.meta.url), 'utf8'));
 assert.equal(toneUserHolds.sourceRows.length,9);
 assert.deepEqual(new Set(toneUserHolds.sourceRows.map(row=>row.id)),EXPECTED_COMPLETION_TONE_USER_HOLD_IDS);
-const pairHeldRows = [...pairHold.sourceRows, ...shimauHold.sourceRows, ...userHolds.sourceRows, ...toneUserHolds.sourceRows];
+const feedbackHolds = JSON.parse(readFileSync(new URL('../docs/usage-card-risk-pilot-feedback-holds-20261027.json', import.meta.url), 'utf8'));
+assert.deepEqual(new Set(feedbackHolds.sourceRows.map(row=>row.id)), EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS);
+const pairHeldRows = [...pairHold.sourceRows, ...shimauHold.sourceRows, ...userHolds.sourceRows, ...toneUserHolds.sourceRows, ...feedbackHolds.sourceRows];
 assert.deepEqual(new Set(pairHeldRows.map(row=>row.id)), EXPECTED_CURRENT_TEACHING_HOLD_IDS);
 assert.deepEqual(new Set(pairHeldRows.map(row=>row.pair)), EXPECTED_CURRENT_TEACHING_HOLD_PAIRS);
 assert.deepEqual(pairHeldRows.map(row => [row.id, row.pair, row.sourceHash]),
@@ -137,6 +140,11 @@ const find = (surface, form) => {
   assert.ok(exercise, `Expected reviewed exercise: ${surface}/${form}`);
   return exercise;
 };
+const newTeachingFormHeld=newFormHoldHistory(model);
+const newFormHeldExerciseIds=new Set(newTeachingFormHeld.map(exercise=>exercise.id));
+const additionalPairHeldExercises=pairHeldExercises.filter(exercise=>!newFormHeldExerciseIds.has(exercise.id));
+assert.equal(pairHeldExercises.length,119);
+assert.equal(additionalPairHeldExercises.length,115);
 const wordsForTarget = exercise => {
   const target = assessmentTarget(exercise);
   return [...new Set(model.exercises.filter(candidate => assessmentTarget(candidate).key === target.key)
@@ -170,7 +178,8 @@ test('reviewed supply changes retain every unrelated original teaching decision 
   // The only exceptions are the documented retirement/context delta and the
   // context IDs' review-version suffix; every unrelated text is still hashed.
   const originalExercises = [...model.exercises, ...retired, ...actionDeferred, ...fullNaturalnessDeferred,
-    ...userDirectedDeferred, ...retiredTeoruExercises, ...reviewedRevisionDeferred, ...formHeldExercises, ...pairHeldExercises].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
+    ...userDirectedDeferred, ...retiredTeoruExercises, ...reviewedRevisionDeferred, ...formHeldExercises, ...additionalPairHeldExercises,
+    ...newTeachingFormHeld].filter(exercise => originalIdentities.has(identity(exercise.item)) && !deliberateExpansion(exercise));
   assert.equal(originalExercises.length, before.counts.eligibleExercises);
   assert.equal(hash(originalExercises.map(exercise => exercise.id).sort()), before.eligibleExerciseIdsSha256,
     'unrelated old exclusions must not be relaxed and old valid questions must not disappear');
@@ -272,21 +281,24 @@ test('the historical word expansion retains all original rule signatures and kno
   const actual = model.components.map(component => ({ id: component.id, gating: component.gating, firstCourseId: component.firstCourseId,
     prerequisites: component.prerequisites, coverageKcIds: component.coverageKcIds }));
   const retiredFacets=new Set(['facet.apply.teoru.negative','facet.apply.teoru.negativePast']);
-  const heldFacets=new Set(model.components.filter(component=>component.teachingDeferred).map(component=>component.id));
-  assert.deepEqual(heldFacets,new Set(['facet.apply.temiru.negativePast']));
-  for(const id of heldFacets) {
+  const heldComponents=new Set(model.components.filter(component=>component.teachingDeferred).map(component=>component.id));
+  assert.deepEqual(heldComponents,EXPECTED_DEFERRED_COMPONENT_IDS);
+  for(const id of heldComponents) {
     const declared=model.registryExercises.filter(exercise=>exercise.kcIds.includes(id));
     assert.ok(declared.length>0);
-    assert.ok(declared.every(exercise=>isTeachingFormDeferred(exercise.form)),`${id}: only a held form may pause this facet`);
+    assert.ok(declared.every(exercise=>isTeachingFormDeferred(exercise.form)),`${id}: only held forms may pause this rule`);
   }
   const retiredPrerequisites=new Set(['stem.godan.a','suffix.negative','adj.suffix.i-past','compound.negative-past']);
   const expected=currentEligibilityBaseline().components.filter(component=>!retiredFacets.has(component.id)).map(component=>
     component.id==='apply.teoru.continuation' ? {...component,
       prerequisites:component.prerequisites.filter(id=>!retiredPrerequisites.has(id)),
       coverageKcIds:component.coverageKcIds.filter(id=>!retiredFacets.has(id))} : component)
-    .map(component=>({...component,coverageKcIds:component.coverageKcIds.filter(id=>!heldFacets.has(id))}));
+    .map(component=>({...component,
+      gating:heldComponents.has(component.id)?false:component.gating,
+      prerequisites:component.prerequisites.filter(id=>!heldComponents.has(id)),
+      coverageKcIds:component.coverageKcIds.filter(id=>!heldComponents.has(id))}));
   assert.deepEqual([...actual].sort((a,b)=>a.id.localeCompare(b.id)),expected.sort((a,b)=>a.id.localeCompare(b.id)));
-  assert.equal(model.components.filter(component => component.gating).length, 132);
+  assert.equal(model.components.filter(component => component.gating).length, 131);
   assert.equal(model.components.filter(component => component.id.startsWith('facet.')).length, 128);
 });
 

@@ -1,0 +1,492 @@
+{
+  "schemaVersion": 1,
+  "kind": "user-directed-exact-pair-hold",
+  "sourceCommit": "ba935fb863c289b1192527163a3195cd9981bd3a",
+  "request": "根据反馈，须换动词或换目标活用则直接暂缓；勝ってもらわなかった和届いていかない两项也由用户明确选择暂缓，避免勉强造句。",
+  "requestFile": "docs/usage-card-risk-pilot-feedback-request-20261027.json.gz",
+  "sourceRows": [
+    {
+      "id": "usage:tearuNegative:verb:読む:よむ",
+      "pair": "verb:読む:よむ/tearuNegative",
+      "senseId": "verb:読む:よむ",
+      "form": "tearuNegative",
+      "sourceHash": "37e064fb013ff59a5427894a4ab723c1df315fa342d02a0e72fba847889def95",
+      "englishHash": "0a755fd415b54a234ff6d761c9a05387f6e22742a75a15e69118d9f281a12cb1",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+      "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+      "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json",
+      "card": {
+        "id": "usage:tearuNegative:verb:読む:よむ",
+        "senseId": "verb:読む:よむ",
+        "meaning": "阅读",
+        "form": "tearuNegative",
+        "scene": "发表临近，资料还没有预先读好。",
+        "before": [
+          {
+            "text": "発表が近いのに、資料を",
+            "reading": "はっぴょうがちかいのに、しりょうを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "发表已临近，资料却还没有预先读好。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:tearuNegative:verb:読む:よむ",
+        "sourceHash": "37e064fb013ff59a5427894a4ab723c1df315fa342d02a0e72fba847889def95",
+        "scene": "The presentation is coming up, but the materials are still unread.",
+        "translation": "The presentation is near, but I still haven’t read the materials."
+      },
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:読む:よむ:tearu:v7",
+          "text": "为接下来的安排做准备，描述“阅读”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      },
+      "usageAtRequest": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "按用户明确选择，暂缓该完整形式在当前及未来词条中的常规及自由挑战出题；这是可恢复的教学安排，不认定该语法形式不存在，保留构形、完整词形识别和历史学习证据。",
+        "reviewVersion": 7,
+        "reasonCode": "user-directed-form-hold"
+      },
+      "previousUsageProvenance": {
+        "kind": "pre-form-hold-published-pilot-snapshot",
+        "proof": "docs/usage-card-form-risk-pilot-20261027.json.gz",
+        "proofSha256": "96d3e4f426d9a0f552d7db182ac943fd1e34233464e90b465f99b4097cab16b3",
+        "sourceReceipt": "daa6eb606659cf877533251f52c94d7608bd2b139b23aee8cf0cbf2cec40ecce",
+        "id": "usage:tearuNegative:verb:読む:よむ",
+        "sourceHash": "37e064fb013ff59a5427894a4ab723c1df315fa342d02a0e72fba847889def95",
+        "englishHash": "0a755fd415b54a234ff6d761c9a05387f6e22742a75a15e69118d9f281a12cb1"
+      }
+    },
+    {
+      "id": "usage:tearuNegative:verb:食べる:たべる",
+      "pair": "verb:食べる:たべる/tearuNegative",
+      "senseId": "verb:食べる:たべる",
+      "form": "tearuNegative",
+      "sourceHash": "d139e7af5a98ec390f5aa3bd09962d6d7c4a3d4983e01e8d1d3f0e024d3a093e",
+      "englishHash": "bac0926b1027cd89275747967987630be3c80cbff36d627af0f35e1aa96dd634",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+      "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+      "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json",
+      "card": {
+        "id": "usage:tearuNegative:verb:食べる:たべる",
+        "senseId": "verb:食べる:たべる",
+        "meaning": "吃",
+        "form": "tearuNegative",
+        "scene": "夜班即将开始，本来该先吃的晚饭还没吃。",
+        "before": [
+          {
+            "text": "夜勤",
+            "reading": "やきん"
+          },
+          {
+            "text": "が"
+          },
+          {
+            "text": "始",
+            "reading": "はじ"
+          },
+          {
+            "text": "まるのに、"
+          },
+          {
+            "text": "夕食",
+            "reading": "ゆうしょく"
+          },
+          {
+            "text": "をまだ"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "夜班就要开始了，却还没有提前吃晚饭。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:tearuNegative:verb:食べる:たべる",
+        "sourceHash": "d139e7af5a98ec390f5aa3bd09962d6d7c4a3d4983e01e8d1d3f0e024d3a093e",
+        "scene": "A night shift is about to begin, and dinner is still outstanding.",
+        "translation": "The night shift is about to start, but I still have not eaten dinner."
+      },
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:食べる:たべる:tearu:v7",
+          "text": "为接下来的安排做准备，描述“吃”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      },
+      "usageAtRequest": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "按用户明确选择，暂缓该完整形式在当前及未来词条中的常规及自由挑战出题；这是可恢复的教学安排，不认定该语法形式不存在，保留构形、完整词形识别和历史学习证据。",
+        "reviewVersion": 7,
+        "reasonCode": "user-directed-form-hold"
+      },
+      "previousUsageProvenance": {
+        "kind": "pre-form-hold-published-pilot-snapshot",
+        "proof": "docs/usage-card-form-risk-pilot-20261027.json.gz",
+        "proofSha256": "96d3e4f426d9a0f552d7db182ac943fd1e34233464e90b465f99b4097cab16b3",
+        "sourceReceipt": "daa6eb606659cf877533251f52c94d7608bd2b139b23aee8cf0cbf2cec40ecce",
+        "id": "usage:tearuNegative:verb:食べる:たべる",
+        "sourceHash": "d139e7af5a98ec390f5aa3bd09962d6d7c4a3d4983e01e8d1d3f0e024d3a093e",
+        "englishHash": "bac0926b1027cd89275747967987630be3c80cbff36d627af0f35e1aa96dd634"
+      }
+    },
+    {
+      "id": "usage:tearuNegativePast:verb:読む:よむ",
+      "pair": "verb:読む:よむ/tearuNegativePast",
+      "senseId": "verb:読む:よむ",
+      "form": "tearuNegativePast",
+      "sourceHash": "95d5d09f766285f61f7bdb1a5dcc6cdb72f31bd2b0e1c40523cb4580dee98f78",
+      "englishHash": "71f1c11a26b02716ed638aceeb9e23ec0efd82c68e76dec99b1c1c6526876e82",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+      "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+      "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json",
+      "card": {
+        "id": "usage:tearuNegativePast:verb:読む:よむ",
+        "senseId": "verb:読む:よむ",
+        "meaning": "阅读",
+        "form": "tearuNegativePast",
+        "scene": "排练开始时，我还没按要求预先读好台本。",
+        "before": [
+          {
+            "text": "稽古が始まった時点では、台本を",
+            "reading": "けいこがはじまったじてんでは、だいほんを"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "排练开始时，还没有预先读好台本。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:tearuNegativePast:verb:読む:よむ",
+        "sourceHash": "95d5d09f766285f61f7bdb1a5dcc6cdb72f31bd2b0e1c40523cb4580dee98f78",
+        "scene": "The rehearsal has begun, and I had not read the script beforehand.",
+        "translation": "When rehearsal began, I had not read the script yet."
+      },
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:読む:よむ:tearu:v7",
+          "text": "为接下来的安排做准备，描述“阅读”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      },
+      "usageAtRequest": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "按用户明确选择，暂缓该完整形式在当前及未来词条中的常规及自由挑战出题；这是可恢复的教学安排，不认定该语法形式不存在，保留构形、完整词形识别和历史学习证据。",
+        "reviewVersion": 7,
+        "reasonCode": "user-directed-form-hold"
+      },
+      "previousUsageProvenance": {
+        "kind": "pre-form-hold-published-pilot-snapshot",
+        "proof": "docs/usage-card-form-risk-pilot-20261027.json.gz",
+        "proofSha256": "96d3e4f426d9a0f552d7db182ac943fd1e34233464e90b465f99b4097cab16b3",
+        "sourceReceipt": "daa6eb606659cf877533251f52c94d7608bd2b139b23aee8cf0cbf2cec40ecce",
+        "id": "usage:tearuNegativePast:verb:読む:よむ",
+        "sourceHash": "95d5d09f766285f61f7bdb1a5dcc6cdb72f31bd2b0e1c40523cb4580dee98f78",
+        "englishHash": "71f1c11a26b02716ed638aceeb9e23ec0efd82c68e76dec99b1c1c6526876e82"
+      }
+    },
+    {
+      "id": "usage:tearuNegativePast:verb:食べる:たべる",
+      "pair": "verb:食べる:たべる/tearuNegativePast",
+      "senseId": "verb:食べる:たべる",
+      "form": "tearuNegativePast",
+      "sourceHash": "0c70a9d95c5f6b97474c9eed4c8b0ed61d2ae53c3bda54590bc867c46f1c2d47",
+      "englishHash": "af84de110b01d552d174794986e3fd224c071e8a6ec12b5478c721aa3db464c1",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+      "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+      "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json",
+      "card": {
+        "id": "usage:tearuNegativePast:verb:食べる:たべる",
+        "senseId": "verb:食べる:たべる",
+        "meaning": "吃",
+        "form": "tearuNegativePast",
+        "scene": "昨天出发远足前忘了先吃早餐，路上很饿。",
+        "before": [
+          {
+            "text": "遠足",
+            "reading": "えんそく"
+          },
+          {
+            "text": "の"
+          },
+          {
+            "text": "前",
+            "reading": "まえ"
+          },
+          {
+            "text": "に"
+          },
+          {
+            "text": "朝食",
+            "reading": "ちょうしょく"
+          },
+          {
+            "text": "を"
+          }
+        ],
+        "after": [
+          {
+            "text": "ので、"
+          },
+          {
+            "text": "途中",
+            "reading": "とちゅう"
+          },
+          {
+            "text": "でおなかがすいた。"
+          }
+        ],
+        "translation": "远足前没有提前吃早餐，所以路上饿了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:tearuNegativePast:verb:食べる:たべる",
+        "sourceHash": "0c70a9d95c5f6b97474c9eed4c8b0ed61d2ae53c3bda54590bc867c46f1c2d47",
+        "scene": "Yesterday, someone set out on a hike without eating breakfast first.",
+        "translation": "I had not eaten breakfast before setting out on the hike, so I got hungry along the way."
+      },
+      "previousUsage": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "此处采用为某个目的事先完成动作的用法。",
+        "context": {
+          "id": "verb:食べる:たべる:tearu:v7",
+          "text": "为接下来的安排做准备，描述“吃”这件事的完成情况。"
+        },
+        "reviewVersion": 7
+      },
+      "usageAtRequest": {
+        "status": "context-required",
+        "category": "context",
+        "reason": "按用户明确选择，暂缓该完整形式在当前及未来词条中的常规及自由挑战出题；这是可恢复的教学安排，不认定该语法形式不存在，保留构形、完整词形识别和历史学习证据。",
+        "reviewVersion": 7,
+        "reasonCode": "user-directed-form-hold"
+      },
+      "previousUsageProvenance": {
+        "kind": "pre-form-hold-published-pilot-snapshot",
+        "proof": "docs/usage-card-form-risk-pilot-20261027.json.gz",
+        "proofSha256": "96d3e4f426d9a0f552d7db182ac943fd1e34233464e90b465f99b4097cab16b3",
+        "sourceReceipt": "daa6eb606659cf877533251f52c94d7608bd2b139b23aee8cf0cbf2cec40ecce",
+        "id": "usage:tearuNegativePast:verb:食べる:たべる",
+        "sourceHash": "0c70a9d95c5f6b97474c9eed4c8b0ed61d2ae53c3bda54590bc867c46f1c2d47",
+        "englishHash": "af84de110b01d552d174794986e3fd224c071e8a6ec12b5478c721aa3db464c1"
+      }
+    },
+    {
+      "id": "usage:temorauNegativePast:verb:勝つ:かつ",
+      "pair": "verb:勝つ:かつ/temorauNegativePast",
+      "senseId": "verb:勝つ:かつ",
+      "form": "temorauNegativePast",
+      "sourceHash": "cb424b88609795a8cc88f367d986c882f74d8926dcd1e0303adaaed6e27ec213",
+      "englishHash": "3774be0bc05067454bde83764d12b9d766ff369164ee4c26dc61ac8310ee2dfd",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+      "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+      "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json",
+      "card": {
+        "id": "usage:temorauNegativePast:verb:勝つ:かつ",
+        "senseId": "verb:勝つ:かつ",
+        "meaning": "获胜",
+        "form": "temorauNegativePast",
+        "scene": "那次练习赛自己出场了，没有让外援代赢。",
+        "before": [
+          {
+            "text": "あの練習試合では、助っ人には",
+            "reading": "あのれんしゅうじあいでは、すけっとには"
+          }
+        ],
+        "after": [
+          {
+            "text": "。自分で戦った。",
+            "reading": "。じぶんでたたかった。"
+          }
+        ],
+        "translation": "那次练习赛没有请外援替我赢，而是自己参赛了。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:temorauNegativePast:verb:勝つ:かつ",
+        "sourceHash": "cb424b88609795a8cc88f367d986c882f74d8926dcd1e0303adaaed6e27ec213",
+        "scene": "I decided to compete myself in that practice match.",
+        "translation": "I did not ask a guest player to win for me in that practice match; I competed myself."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可以与帮助者、受益者的行动关系搭配。",
+        "reviewVersion": 7
+      },
+      "usageAtRequest": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "已审核当前词义可以与帮助者、受益者的行动关系搭配。",
+        "reviewVersion": 7
+      },
+      "previousUsageProvenance": {
+        "kind": "pre-form-hold-published-pilot-snapshot",
+        "proof": "docs/usage-card-form-risk-pilot-20261027.json.gz",
+        "proofSha256": "96d3e4f426d9a0f552d7db182ac943fd1e34233464e90b465f99b4097cab16b3",
+        "sourceReceipt": "8ab489e38f41ae4033dcb07d43839af806ac69ef8b38f615662ccc6385a3e57f",
+        "id": "usage:temorauNegativePast:verb:勝つ:かつ",
+        "sourceHash": "cb424b88609795a8cc88f367d986c882f74d8926dcd1e0303adaaed6e27ec213",
+        "englishHash": "3774be0bc05067454bde83764d12b9d766ff369164ee4c26dc61ac8310ee2dfd"
+      }
+    },
+    {
+      "id": "usage:teikuNegative:verb:届く:とどく",
+      "pair": "verb:届く:とどく/teikuNegative",
+      "senseId": "verb:届く:とどく",
+      "form": "teikuNegative",
+      "sourceHash": "7d93762f5e6b53cf6e72fcd38716409c34c7278b65d379f7b495d4665d143216",
+      "englishHash": "74632be5f24153255af146b11d59913054d741da8501fdeb2cc537c5747f374c",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+      "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+      "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json",
+      "card": {
+        "id": "usage:teikuNegative:verb:届く:とどく",
+        "senseId": "verb:届く:とどく",
+        "meaning": "送达；够得着",
+        "form": "teikuNegative",
+        "scene": "地方居民多轮协商，诉求仍未进入市级讨论。",
+        "before": [
+          {
+            "text": "会合を重ねても、地域からの声は本庁まで",
+            "reading": "かいごうをかさねても、ちいきからのこえはほんちょうまで"
+          }
+        ],
+        "after": [
+          {
+            "text": "。"
+          }
+        ],
+        "translation": "即使反复召开地方协商会，居民的声音仍未传到市政府。",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:teikuNegative:verb:届く:とどく",
+        "sourceHash": "7d93762f5e6b53cf6e72fcd38716409c34c7278b65d379f7b495d4665d143216",
+        "scene": "Residents have held repeated meetings, but their requests still have not reached city officials.",
+        "translation": "Even after repeated meetings, the community’s voices don’t make it to city hall."
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      },
+      "usageAtRequest": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      },
+      "previousUsageProvenance": {
+        "kind": "pre-form-hold-published-pilot-snapshot",
+        "proof": "docs/usage-card-form-risk-pilot-20261027.json.gz",
+        "proofSha256": "96d3e4f426d9a0f552d7db182ac943fd1e34233464e90b465f99b4097cab16b3",
+        "sourceReceipt": "5e0509d65cd5f94435744c15bc9fc76736f7cb74b0d712a56336a22488f5aca4",
+        "id": "usage:teikuNegative:verb:届く:とどく",
+        "sourceHash": "7d93762f5e6b53cf6e72fcd38716409c34c7278b65d379f7b495d4665d143216",
+        "englishHash": "74632be5f24153255af146b11d59913054d741da8501fdeb2cc537c5747f374c"
+      }
+    },
+    {
+      "id": "usage:tekuruNegativePast:verb:足りる:たりる",
+      "pair": "verb:足りる:たりる/tekuruNegativePast",
+      "senseId": "verb:足りる:たりる",
+      "form": "tekuruNegativePast",
+      "sourceHash": "2d727d98b1c2812ade370088116b3ceb68dae95a63acd8a3f09c57737a93b76c",
+      "englishHash": "d353d64bea1081a051c2a4288f8ff2b656d7b5ef86025a858ca9b10009df675a",
+      "basis": "user-directed-teaching-hold",
+      "requestedAt": "2026-10-27",
+      "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+      "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+      "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json",
+      "card": {
+        "id": "usage:tekuruNegativePast:verb:足りる:たりる",
+        "senseId": "verb:足りる:たりる",
+        "meaning": "足够",
+        "form": "tekuruNegativePast",
+        "scene": "同事回顾持续招聘后的情况，询问后来人手是否够了。",
+        "before": [
+          {
+            "text": "新人が入って、あのころは人手も",
+            "reading": "しんじんがはいって、あのころはひとでも"
+          }
+        ],
+        "after": [
+          {
+            "text": "？",
+            "reading": "？"
+          }
+        ],
+        "translation": "新人入职以后，那时候人手不是也渐渐够用了吗？",
+        "review": "approved"
+      },
+      "english": {
+        "id": "usage:tekuruNegativePast:verb:足りる:たりる",
+        "sourceHash": "2d727d98b1c2812ade370088116b3ceb68dae95a63acd8a3f09c57737a93b76c",
+        "scene": "A colleague asks about staffing after new hires arrived.",
+        "translation": "After the new hires joined, didn't staffing gradually become sufficient around that time?"
+      },
+      "previousUsage": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      },
+      "usageAtRequest": {
+        "status": "allowed",
+        "category": "semantic",
+        "reason": "这类表达可描述非意志变化、结果状态及其发展，不要求主动控制。",
+        "reviewVersion": 7
+      },
+      "previousUsageProvenance": {
+        "kind": "pre-form-hold-published-pilot-snapshot",
+        "proof": "docs/usage-card-form-risk-pilot-20261027.json.gz",
+        "proofSha256": "96d3e4f426d9a0f552d7db182ac943fd1e34233464e90b465f99b4097cab16b3",
+        "sourceReceipt": "5e0509d65cd5f94435744c15bc9fc76736f7cb74b0d712a56336a22488f5aca4",
+        "id": "usage:tekuruNegativePast:verb:足りる:たりる",
+        "sourceHash": "2d727d98b1c2812ade370088116b3ceb68dae95a63acd8a3f09c57737a93b76c",
+        "englishHash": "d353d64bea1081a051c2a4288f8ff2b656d7b5ef86025a858ca9b10009df675a"
+      }
+    }
+  ]
+}

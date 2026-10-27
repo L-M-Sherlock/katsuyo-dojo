@@ -5,7 +5,6 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {REVIEWED_USAGE_CARDS, usageCardItem} from '../app/lib/usage-cards.mjs';
 import {deriveUnified} from '../app/lib/unified-knowledge.mjs';
-import {isTeachingFormDeferred} from '../app/lib/teaching-form-deferrals.mjs';
 import {isShimauAuditForm} from './lib/shimau-audit-scope.mjs';
 import {EN_USAGE_CARD_OVERLAYS as BASELINE_ENGLISH} from '../app/lib/i18n/content/en/usage-cards.mjs';
 import {EN_REVIEWED_USAGE_CARD_OVERLAYS} from '../app/lib/i18n/content/en/reviewed-usage-card-revisions.mjs';
@@ -22,8 +21,9 @@ export const readShimauAudit = () => JSON.parse(zlib.gunzipSync(fs.readFileSync(
 /** Validate the original independent audit without converting open findings to approval. */
 export function verifyShimauAudit(proof = readShimauAudit()) {
   verifyCurrentReviewedUsageRevisions();
-  const expected = new Map(REVIEWED_USAGE_CARDS.filter(card => isShimauAuditForm(card.form)
-    && !isTeachingFormDeferred(card.form)).map(card => [card.id, card]));
+  // Use the retained reviewed inventory: later teaching holds do not change
+  // the independently reviewed historical shimau audit input.
+  const expected = new Map(REVIEWED_USAGE_CARDS.filter(card => isShimauAuditForm(card.form)).map(card => [card.id, card]));
   const history = readReviewedUsageRevisionsProof(), canonical = new Map(), english = new Map();
   const add = (map, row) => { if (!map.has(row.id)) map.set(row.id, new Set()); map.get(row.id).add(hash(row)); };
   for (const card of [...expected.values(), ...history.rounds.flatMap(round => round.sourceCards)]) add(canonical, card);

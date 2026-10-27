@@ -38,9 +38,9 @@ test('the original exact shimau hold keeps its frozen evidence after later user 
   assert.ok(EXPECTED_PRIOR_TEACHING_HOLD_IDS.has(id));
   const priorCards=REVIEWED_USAGE_CARDS.filter(card=>EXPECTED_PRIOR_TEACHING_HOLD_IDS.has(card.id));
   assert.equal(verifyTeachingPairHolds(priorCards),9,'the separately documented original nine choices remain verifiable');
-  assert.equal(EXPECTED_CURRENT_TEACHING_HOLD_IDS.size,112);
+  assert.equal(EXPECTED_CURRENT_TEACHING_HOLD_IDS.size,119);
   assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.id)),EXPECTED_CURRENT_TEACHING_HOLD_IDS);
-  assert.equal(verifyTeachingPairHolds(REVIEWED_USAGE_CARDS),112);
+  assert.equal(verifyTeachingPairHolds(REVIEWED_USAGE_CARDS),119);
   assert.ok(!USAGE_CARDS.some(card=>card.id===id));
   assert.ok(!EN_USAGE_CARD_OVERLAYS.some(row=>row.id===id));
   assert.equal(usageCardFor(item,form),null);

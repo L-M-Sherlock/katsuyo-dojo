@@ -4,6 +4,7 @@ import { assessFormUsage, eligibleVerbForm, supportsVerbForm, supportsAdjectiveF
 import { REVIEWED_VERB_SENSES, REVIEWED_ADJECTIVE_SENSES, REVIEWED_LEXICAL_SENSES, reviewedLexicalSense } from '../app/lib/lexical-usage.mjs';
 import { ADJECTIVES } from '../app/lib/adjective-catalog.mjs';
 import { FORM_LABELS } from '../app/lib/form-labels.mjs';
+import { EXPECTED_CURRENT_FORM_HOLDS } from './helpers/four-form-teaching-hold-scope.mjs';
 const word = surface => REVIEWED_LEXICAL_SENSES.find(item => item.surface === surface);
 const usage = (surface, form) => assessFormUsage(word(surface), form);
 const available = (surface, form) => eligibleVerbForm(word(surface), form);
@@ -95,7 +96,12 @@ test('continuations and contractions inherit the reviewed family without requiri
     ['要る', 'tehoshii', ['tehoshiiPast', 'tehoshiiNegative', 'tehoshiiNegativePast']],
   ]) for (const form of forms) {
     assert.equal(verbUsageFamily(form), base);
-    assert.deepEqual(usage(surface, form), usage(surface, base), `${surface}/${form}`);
+    if(EXPECTED_CURRENT_FORM_HOLDS.has(form)){
+      assert.equal(supportsVerbForm(word(surface),form),true,`${surface}/${form}`);
+      assert.equal(available(surface,form),false,`${surface}/${form}`);
+      assert.equal(usage(surface,form).reasonCode,'user-directed-form-hold',`${surface}/${form}`);
+      assert.equal(usage(surface,form).context,undefined,`${surface}/${form}`);
+    }else assert.deepEqual(usage(surface, form), usage(surface, base), `${surface}/${form}`);
   }
   for (const [surface, form] of [['読む', 'temiruDesirePast'], ['書く', 'passiveProgressivePast'], ['行く', 'causativeReceivePast'], ['待つ', 'passiveDesireNegativePast']]) {
     assert.equal(available(surface, form), true);

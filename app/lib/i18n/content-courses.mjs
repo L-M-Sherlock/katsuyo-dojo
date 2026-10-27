@@ -202,7 +202,7 @@ const EN_COURSE_CONTENT = Object.freeze({
   }),
   aspect: Object.freeze({
     title: 'ている, てある, and ておる',
-    description: 'Practice ている, てある, ておる, and their contractions. This course uses only basic and past forms of ておる.',
+    description: 'Practice ている, てある, ておる, and their contractions. For てある and ておる, this course currently uses only basic and past forms. Negative continuations use ている.',
   }),
   giving: Object.freeze({
     title: 'Giving and receiving: てあげる, てもらう, and てくれる',

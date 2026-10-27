@@ -1,3 +1,4 @@
+import { EXPECTED_CURRENT_FORM_HOLDS } from './helpers/four-form-teaching-hold-scope.mjs';
 import { CHAIN_FORM_SPECS } from '../app/lib/multi-step-forms.mjs';
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
@@ -29,7 +30,7 @@ const retiredTeoru=JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-neg
 
 test('every next-round focus has a learner-facing title and concrete explanation',()=>{
   const gating=model.components.filter(component=>component.gating);
-  assert.equal(gating.length,132);
+  assert.equal(gating.length,131);
   for(const component of gating){
     const copy=focusCopy(component);
     assert.ok(copy,component.id);
@@ -99,9 +100,10 @@ test('the unified curriculum keeps 43 courses and 170 registry forms, with only 
   assert.deepEqual(new Set(UNIFIED_COURSES.flatMap(course => course.forms)), oldForms);
   assert.deepEqual(new Set(model.registryExercises.map(e => e.form).filter(Boolean)), oldForms);
   const activeForms = new Set(model.exercises.map(e => e.form).filter(Boolean));
-  assert.equal(activeForms.size, 169);
+  assert.equal(activeForms.size, 165);
   assert.deepEqual(activeForms, new Set([...oldForms].filter(form => !isTeachingFormDeferred(form))));
   assert.deepEqual(new Set([...oldForms].filter(form => !activeForms.has(form))), USER_DIRECTED_DEFERRED_FORMS);
+  assert.deepEqual(USER_DIRECTED_DEFERRED_FORMS,EXPECTED_CURRENT_FORM_HOLDS);
   assert.ok(COURSE_ORDER.indexOf('adjectiveIBase') < COURSE_ORDER.indexOf('basicCompound'));
   assert.ok(UNIFIED_COURSES.find(c => c.id === 'desire').forms.includes('taiNegativePast'));
   assert.deepEqual(UNIFIED_COURSES.at(-1).forms, ['passiveDesireNegativePast',...Object.keys(CHAIN_FORM_SPECS)]);

@@ -1,4 +1,4 @@
-import { EXPECTED_CURRENT_TEACHING_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -22,7 +22,7 @@ test('reviewed exact deferrals remove current bilingual cards while retaining so
   assert.equal(summary.deferredCount, 1);
   assert.equal(summary.deferredCount, REVIEWED_USAGE_CARD_DEFERRALS.length);
   assert.equal(PRE_REVIEWED_USAGE_CARDS.length - REVIEWED_USAGE_CARDS.length, REVIEWED_USAGE_CARD_DEFERRALS.length);
-  assert.equal(summary.teachingHeldCount, 234);
+  assert.equal(summary.teachingHeldCount, 470);
   assert.equal(REVIEWED_USAGE_CARDS.length - USAGE_CARDS.length, summary.teachingHeldCount);
   assert.equal(PRE_REVIEWED_USAGE_CARDS.length - USAGE_CARDS.length, REVIEWED_USAGE_CARD_DEFERRALS.length + summary.teachingHeldCount);
   assert.equal(REVIEWED_USAGE_CARD_DEFERRED_PAIRS.size, REVIEWED_USAGE_CARD_DEFERRALS.length);
@@ -51,10 +51,11 @@ test('reviewed exact deferrals remove current bilingual cards while retaining so
 
 test('the later form-wide hold preserves its source hashes while exact-pair holds remain separate', () => {
   const record = JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json', import.meta.url)));
-  const heldCards = REVIEWED_USAGE_CARDS.filter(card => isTeachingFormDeferred(card.form));
+  const heldCards = REVIEWED_USAGE_CARDS.filter(card => card.form === record.form);
   const heldIds = new Set(heldCards.map(card => card.id));
+  const currentFormHeldIds = new Set(REVIEWED_USAGE_CARDS.filter(card => isTeachingFormDeferred(card.form)).map(card => card.id));
   const pairHeldIds = new Set(TEACHING_PAIR_DEFERRALS.map(row => row.id));
-  const allHeldIds = new Set([...heldIds, ...pairHeldIds]);
+  const allHeldIds = new Set([...currentFormHeldIds, ...pairHeldIds]);
   const reviewedIds = new Set(REVIEWED_USAGE_CARDS.map(card => card.id));
   const currentById = new Map(USAGE_CARDS.map(card => [card.id, card]));
   assert.equal(record.sourceCount, 122);
@@ -63,7 +64,9 @@ test('the later form-wide hold preserves its source hashes while exact-pair hold
   assert.equal(revisionHash(heldCards), record.sourceCardsHash);
   assert.equal(revisionHash(record.sourceRows.map(row => row.english)), record.sourceEnglishHash);
   assert.deepEqual(pairHeldIds, EXPECTED_CURRENT_TEACHING_HOLD_IDS);
-  assert.equal(allHeldIds.size, heldIds.size + 112);
+  assert.equal(heldIds.size + [...pairHeldIds].filter(id=>!EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS.has(id)).length,234,'the earlier one-form and exact-pair projection remains frozen');
+  assert.equal(currentFormHeldIds.size,357);
+  assert.equal(allHeldIds.size,470,'form-wide and exact holds share six IDs');
   assert.deepEqual(new Set([...reviewedIds].filter(id => !currentById.has(id))), allHeldIds);
   assert.deepEqual(USAGE_CARDS, REVIEWED_USAGE_CARDS.filter(card => !allHeldIds.has(card.id)));
   for (const card of REVIEWED_USAGE_CARDS) {

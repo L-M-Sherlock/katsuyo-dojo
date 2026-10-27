@@ -4,7 +4,10 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {REVIEWED_USAGE_CARDS} from '../app/lib/usage-cards.mjs';
 import {TEACHING_PAIR_DEFERRALS} from '../app/lib/teaching-pair-deferrals.mjs';
+import {isTeachingFormDeferred} from '../app/lib/teaching-form-deferrals.mjs';
 import {EN_USAGE_CARD_OVERLAYS} from '../app/lib/i18n/content/en/current-usage-cards.mjs';
+import {EN_USAGE_CARD_OVERLAYS as BASELINE_ENGLISH} from '../app/lib/i18n/content/en/usage-cards.mjs';
+import {EN_REVIEWED_USAGE_CARD_OVERLAYS} from '../app/lib/i18n/content/en/reviewed-usage-card-revisions.mjs';
 import {verifyTemiruAudit} from './verify-temiru-volition-audit.mjs';
 import {readReviewedUsageRevisionsProof, revisionHash, verifyPortableRevisionDelivery} from './verify-reviewed-usage-revisions.mjs';
 
@@ -34,6 +37,7 @@ export function verifyTemiruResolution(record = readTemiruResolution()) {
   }
   const cards = new Map(REVIEWED_USAGE_CARDS.map(card => [card.id, card]));
   const english = new Map(EN_USAGE_CARD_OVERLAYS.map(row => [row.id, row]));
+  const retainedEnglish = new Map([...BASELINE_ENGLISH, ...EN_REVIEWED_USAGE_CARD_OVERLAYS].map(row => [row.id, row]));
   const holds = new Map(TEACHING_PAIR_DEFERRALS.map(row => [row.id, row]));
   const expected = new Set([...audit.rows.filter(row => row.status !== 'approved').map(row => row.id), 'usage:temiruPast:verb:いる:いる']);
   const seen = new Set(); let userHeld = 0, revised = 0, retained = 0;
@@ -50,10 +54,14 @@ export function verifyTemiruResolution(record = readTemiruResolution()) {
       userHeld++;
     } else {
       const review = reviewed.get(row.id);
+      // A later whole-form hold removes current exercises and English output,
+      // while this older resolution still binds its approved retained object.
+      const overlay = english.get(row.id) ?? (isTeachingFormDeferred(cards.get(row.id)?.form)
+        ? retainedEnglish.get(row.id) : undefined);
       ensure(['revise', 'retain'].includes(row.action) && review?.disposition === row.action
         && review.reviewer === row.reviewer && !holds.has(row.id)
         && revisionHash(cards.get(row.id)) === row.finalHash
-        && revisionHash(english.get(row.id)) === row.englishHash,
+        && overlay && revisionHash(overlay) === row.englishHash,
       `${row.id}: missing or stale independent repair`);
       if (row.action === 'retain') {
         ensure(row.finalHash === row.sourceHash, `${row.id}: retained source changed`); retained++;

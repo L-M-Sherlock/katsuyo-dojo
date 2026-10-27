@@ -68,7 +68,7 @@ type Verb = { domain: "verb"; surface: string; reading: string; meaning: string;
 type Adjective = { domain: "adjective"; surface: string; reading: string; meaning: string; class: AdjectiveClass; iiFamily: boolean };
 type PracticeItem = Verb | Adjective;
 type Course = { id: ModeId; domain: PracticeDomain; title: string; description?: string; lesson: string; url: string; forms: readonly Form[]; stage?: number; stageId?: string; stageLabel?: string; stageObjective?: string; review?: boolean; order?: number };
-type KnowledgeComponent = { id: string; order: number; label: string; family: keyof typeof KC_FAMILY_LABELS; gating: boolean; firstCourseId: ModeId; firstCourseIndex: number; firstLesson: string; prerequisites: string[]; coverageKcIds: string[]; coverageOnly?: boolean; unlockByPrerequisites?: boolean; masteryPrerequisites?: KnowledgeComponent[] };
+type KnowledgeComponent = { id: string; order: number; label: string; family: keyof typeof KC_FAMILY_LABELS; gating: boolean; firstCourseId: ModeId; firstCourseIndex: number; firstLesson: string; prerequisites: string[]; coverageKcIds: string[]; coverageOnly?: boolean; teachingDeferred?: boolean; unlockByPrerequisites?: boolean; masteryPrerequisites?: KnowledgeComponent[] };
 type Exercise = { id: string; courseId: ModeId; courseIndex: number; form: Form | null; item: PracticeItem; kcIds: string[]; sourceUrl?: string; prerequisites?: string[]; context?: { id: string; text: string }; usageReviewVersion?: number };
 type SkillStats = ReturnType<typeof emptySkillStats>;
 type AssessmentState = LearningAssessment & { migration?: { at: string; changes: { kcId: string; before: SkillStats | null; after: SkillStats | null }[]; unverifiedKcIds: string[]; baselineByKc: Record<string, SkillStats> } };
@@ -1165,8 +1165,8 @@ function HomeContent({ locale, onLocaleChange }: { locale: string; onLocaleChang
   const evidenceKc = KC_BY_ID.get(evidenceKcId);
   const currentPercent = Math.round((evidenceKc ? componentConfidence(evidenceKc, profile.byKc) : profile.byKc[evidenceKcId]?.confidence ?? 0) * 100);
   const introducedSet = new Set(profile.introducedKcIds);
-  const activeKcs = ALL_KCS;
-  const introducedKcs = profile.introducedKcIds.map((id) => KC_BY_ID.get(id)).filter((kc): kc is KnowledgeComponent => Boolean(kc));
+  const activeKcs = ALL_KCS.filter(kc => !kc.teachingDeferred);
+  const introducedKcs = profile.introducedKcIds.map((id) => KC_BY_ID.get(id)).filter((kc): kc is KnowledgeComponent => kc !== undefined && !kc.teachingDeferred);
   const masteredKcCount = GATING_KCS.filter((item) => isComponentMastered(item, profile.byKc)).length;
   const activeRouteComplete = practiceRetests.length === 0 && activeKcs.filter((kc) => kc.gating).every((kc) => isComponentMastered(kc, profile.byKc));
   const unfinishedReview = COURSES.find(value => {

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {verifyTemiruResolution, readTemiruResolution} from '../scripts/verify-temiru-user-resolution.mjs';
 import {USAGE_CARDS, REVIEWED_USAGE_CARDS, resolveUsageCard, usageCardIssues, usageCardItem} from '../app/lib/usage-cards.mjs';
 import {assessFormUsage} from '../app/lib/form-eligibility.mjs';
+import { EXPECTED_CURRENT_FORM_HOLDS } from './helpers/four-form-teaching-hold-scope.mjs';
 
 test('every user-adjudicated finding is held, repaired or retained with a complete independent chain',()=>{
   assert.deepEqual(verifyTemiruResolution(),{userHeld:8,revised:8,retained:5,openFindings:0});
@@ -12,7 +13,9 @@ test('every user-adjudicated finding is held, repaired or retained with a comple
   const change=USAGE_CARDS.find(card=>card.id==='usage:temiruNegative:verb:変わる:かわる');
   assert.equal([...change.before,resolveUsageCard(change).target,...change.after].map(part=>part.text).join(''),'いつも聞き役だけど、たまには少し変わってみない？');
   for(const id of ['usage:temiruNegative:verb:届ける:とどける','usage:temiruRequest:verb:開ける:あける','usage:temiruDesireNegative']){
-    const card=USAGE_CARDS.find(row=>row.id===id);
+    const card=REVIEWED_USAGE_CARDS.find(row=>row.id===id);
+    assert.ok(card,id);
+    assert.equal(USAGE_CARDS.includes(card),!EXPECTED_CURRENT_FORM_HOLDS.has(card.form),id);
     const text=card.before.map(part=>part.text).join(''),reading=card.before.map(part=>part.reading??part.text).join('');
     const katakana=text.match(/トマト|ドア|コーヒー/)[0];
     assert.ok(reading.includes(katakana),id);

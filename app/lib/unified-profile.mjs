@@ -35,7 +35,10 @@ function parseUnifiedImportValue(value, { today, components, legacyComponents, e
   }
   const current = source.version >= 6;
   const definitions = current ? components : legacyComponents;
-  const options = { today, kcIds: definitions.map(k => k.id), gatingKcIds: definitions.filter(k => k.gating).map(k => k.id), initialKcIds: [] };
+  // A teaching pause changes current scheduling, not whether an earlier
+  // profile introduced that gate. Coverage facets never receive this flag.
+  const historicalGate = kc => kc?.gating || kc?.teachingDeferredGating === true;
+  const options = { today, kcIds: definitions.map(k => k.id), gatingKcIds: definitions.filter(historicalGate).map(k => k.id), initialKcIds: [] };
   const parsed = parseLegacy(current ? { ...source, version: 5 } : source, options);
   const allowed = new Set(components.map(k => k.id));
   const rawByKc = Object.fromEntries(Object.entries(parsed.byKc).filter(([id]) => allowed.has(id) && (current || !ambiguous(id)))
@@ -78,11 +81,11 @@ function parseUnifiedImportValue(value, { today, components, legacyComponents, e
   // Imported applications with missing prerequisites recommend the missing
   // primitives first; historical access never fabricates mastery.
   const byId = new Map(components.map(k => [k.id,k]));
-  const visit = id => { const kc=byId.get(id); for(const dependency of kc?.prerequisites ?? []) if(!introduced.has(dependency)) { introduced.add(dependency); visit(dependency); } };
+  const visit = id => { const kc=byId.get(id); if(kc?.teachingDeferred)return; for(const dependency of kc?.prerequisites ?? []) if(!introduced.has(dependency)) { introduced.add(dependency); visit(dependency); } };
   for(const id of [...introduced]) visit(id);
   const preserved = Object.keys(byKc).length;
   let result = { version: 7, curriculumVersion: CURRICULUM_VERSION, date: parsed.date, attempted: parsed.attempted, correct: parsed.correct, streak: parsed.streak, rotation: parsed.rotation,
-    byKc, introducedKcIds: [...introduced].filter(id => byId.get(id)?.gating),
+    byKc, introducedKcIds: [...introduced].filter(id => historicalGate(byId.get(id))),
     assessment: restored.assessment,
     ...(source.practiceGoalCourseId === undefined ? {} : { practiceGoalCourseId: source.practiceGoalCourseId }),
     accessibleCourseIds: [...new Set(legacyAccess)].filter(id => validCourses.has(id)),

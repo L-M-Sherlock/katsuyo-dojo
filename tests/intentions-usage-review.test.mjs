@@ -1,5 +1,6 @@
+import { EXPECTED_CURRENT_FORM_HOLDS, newFormHoldHistory } from './helpers/four-form-teaching-hold-scope.mjs';
 import { EXPECTED_SHIMAU_USER_HELD_IDS } from './helpers/shimau-user-teaching-hold-scope.mjs';
-import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS, EXPECTED_COMPLETION_TONE_USER_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_CURRENT_TEACHING_HOLD_PAIRS, EXPECTED_COMPLETION_TONE_USER_HOLD_IDS, EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
 import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS, EXPECTED_TEMIRU_TEACHING_HOLD_PAIRS } from './helpers/temiru-teaching-hold-scope.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
@@ -82,7 +83,7 @@ const userDirectedRetired=userDirectedBefore.entries.filter(entry=>!RETIRED_TEOR
 const retiredTeoruExercises=retiredTeoruBefore.exercises;
 const reviewedRevisionRetired=reviewedDeferralHistory(model);
 const formHold=JSON.parse(readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json',import.meta.url),'utf8'));
-const formHeldCards=REVIEWED_USAGE_CARDS.filter(card=>isTeachingFormDeferred(card.form));
+const formHeldCards=REVIEWED_USAGE_CARDS.filter(card=>card.form===formHold.form);
 assert.equal(formHold.sourceCount,122);
 assert.deepEqual(formHold.sourceRows.map(row=>row.card),formHeldCards);
 assert.equal(hash(formHeldCards),formHold.sourceCardsHash);
@@ -108,7 +109,9 @@ assert.deepEqual(new Set(userHolds.sourceRows.map(row=>row.id)),EXPECTED_SHIMAU_
 const toneUserHolds=JSON.parse(readFileSync(new URL('../docs/usage-card-completion-tone-user-holds-20261027.json',import.meta.url),'utf8'));
 assert.equal(toneUserHolds.sourceRows.length,9);
 assert.deepEqual(new Set(toneUserHolds.sourceRows.map(row=>row.id)),EXPECTED_COMPLETION_TONE_USER_HOLD_IDS);
-const pairHeldRows=[...pairHold.sourceRows,...shimauHold.sourceRows,...userHolds.sourceRows,...toneUserHolds.sourceRows];
+const feedbackHolds=JSON.parse(readFileSync(new URL('../docs/usage-card-risk-pilot-feedback-holds-20261027.json',import.meta.url),'utf8'));
+assert.deepEqual(new Set(feedbackHolds.sourceRows.map(row=>row.id)),EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS);
+const pairHeldRows=[...pairHold.sourceRows,...shimauHold.sourceRows,...userHolds.sourceRows,...toneUserHolds.sourceRows,...feedbackHolds.sourceRows];
 assert.deepEqual(new Set(pairHeldRows.map(row=>row.id)),EXPECTED_CURRENT_TEACHING_HOLD_IDS);
 const teachingPairHeld=pairHeldRows.map(row=>{
   const source=REVIEWED_USAGE_CARDS.find(card=>card.id===row.id);
@@ -120,6 +123,9 @@ const teachingPairHeld=pairHeldRows.map(row=>{
   assert.ok(row.previousUsage?.status==='allowed'||(row.previousUsage?.status==='context-required'&&row.previousUsage.context),row.pair);
   return {...exercise,context:row.previousUsage.context};
 });
+const newTeachingFormHeld=newFormHoldHistory(model);
+const newFormHeldExerciseIds=new Set(newTeachingFormHeld.map(exercise=>exercise.id));
+const additionalPairHeld=teachingPairHeld.filter(exercise=>!newFormHeldExerciseIds.has(exercise.id));
 assert.equal(retiredTeoruExercises.length,292);
 const naturalnessPrevious=new Map(naturalnessReview.approvedRevisions.map(row=>[row.id,row.previousCard]));
 
@@ -131,14 +137,16 @@ test('approved intention and action-pair deferrals change only the documented ex
   const precedingRetiredIds=new Set(precedingRetired.map(e=>e.id));
   assert.equal(teachingFormHeld.length,122);
   assert.ok(teachingFormHeld.every(e=>!precedingRetiredIds.has(e.id)),'the form hold counts only newly removed exercises');
-  assert.equal(teachingPairHeld.length,112);
+  assert.equal(teachingPairHeld.length,119);
+  assert.equal(additionalPairHeld.length,115);
   assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.map(row=>row.pair)),EXPECTED_CURRENT_TEACHING_HOLD_PAIRS);
   const priorTeachingHeldIds=new Set([...precedingRetiredIds,...teachingFormHeld.map(e=>e.id)]);
   assert.ok(teachingPairHeld.every(e=>!priorTeachingHeldIds.has(e.id)),'the exact-pair hold is additional and disjoint');
   for(const e of [...precedingRetired,...teachingFormHeld,...teachingPairHeld])assert.ok(!currentIds.has(e.id),e.id);
   const reconstructed=[...model.exercises,...retired,...actionRetired,...naturalnessRetired,...fullNaturalnessRetired,
-    ...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired,...teachingFormHeld,...teachingPairHeld];
-  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length-userDirectedRetired.length-retiredTeoruExercises.length-reviewedRevisionRetired.length-teachingFormHeld.length-teachingPairHeld.length);
+    ...userDirectedRetired,...retiredTeoruExercises,...reviewedRevisionRetired,...teachingFormHeld,...additionalPairHeld,...newTeachingFormHeld];
+  assert.equal(model.exercises.length+newTeachingFormHeld.length+3,17269,'reconstruct the prior exercise count including three later exact exits');
+  assert.equal(model.exercises.length,baseline.counts.exercises-5-actionRetired.length-naturalnessRetired.length-fullNaturalnessRetired.length-userDirectedRetired.length-retiredTeoruExercises.length-reviewedRevisionRetired.length-teachingFormHeld.length-additionalPairHeld.length-newTeachingFormHeld.length);
   assert.equal(hash(reconstructed.map(e=>e.id).sort()),baseline.eligibleExerciseIdsSha256,
     'no unrelated exercise may disappear or become eligible');
   // Preserve the frozen historical hash while accounting for the four
@@ -194,7 +202,7 @@ test('deferred forms remain constructible and recognizable with their usage limi
     const usage=assessFormUsage(item,form);
     assert.equal(usage.status,'context-required',exercise.id);
     assert.equal(usage.context,undefined,exercise.id);
-    assert.equal(usage.reasonCode,'naturalness-full-deferred',exercise.id);
+    assert.equal(usage.reasonCode,isTeachingFormDeferred(form)?'user-directed-form-hold':'naturalness-full-deferred',exercise.id);
     const answer=conjugate(item.surface,item.class,form);
     assert.ok(recognizeForms(item,answer,normalizeAnswer).some(x=>x.form===form),exercise.id);
   }
@@ -205,7 +213,7 @@ test('deferred forms remain constructible and recognizable with their usage limi
     const usage=assessFormUsage(item,form);
     assert.equal(usage.status,'context-required',exercise.id);
     assert.equal(usage.context,undefined,exercise.id);
-    assert.equal(usage.reasonCode,'user-directed-naturalness-hold',exercise.id);
+    assert.equal(usage.reasonCode,isTeachingFormDeferred(form)?'user-directed-form-hold':'user-directed-naturalness-hold',exercise.id);
     const answer=conjugate(item.surface,item.class,form);
     assert.ok(recognizeForms(item,answer,normalizeAnswer).some(x=>x.form===form),exercise.id);
   }
@@ -268,17 +276,23 @@ test('a newly deferred sole-word target keeps its historical failure until an ex
   assert.equal(resumed.suspendedPending[target.key],undefined);
 });
 
-test('user-requested holds preserve every old failed target for a different-word retest',()=>{
+test('user-requested holds preserve old failed targets, suspending only paths covered by later form holds',()=>{
   for(const exercise of userDirectedRetired){
     const target=assessmentTarget(exercise);
     const alternatives=model.exercises.filter(candidate=>assessmentTarget(candidate).key===target.key);
-    assert.ok(alternatives.some(candidate=>assessmentTarget(candidate).wordKey!==target.wordKey),exercise.id);
+    if(isTeachingFormDeferred(exercise.form))assert.equal(alternatives.length,0,exercise.id);
+    else assert.ok(alternatives.some(candidate=>assessmentTarget(candidate).wordKey!==target.wordKey),exercise.id);
     const failed=recordIndependentAttempt(emptyAssessment(),{
       exercise,questionId:`user-hold:${exercise.id}`,correct:false,at:'2026-09-24T00:00:00Z',
     });
     const restored=restoreLearningAssessment({byKc:{},assessment:failed},
       {components:model.components,exercises:model.exercises}).assessment;
-    assert.deepEqual(restored.pending[target.key],failed.pending[target.key],exercise.id);
+    if(isTeachingFormDeferred(exercise.form)){
+      assert.equal(restored.pending[target.key],undefined,exercise.id);
+      const {suspension,...preserved}=restored.suspendedPending[target.key];
+      assert.equal(suspension.reason,'no-eligible-exercise',exercise.id);
+      assert.deepEqual(preserved,failed.pending[target.key],exercise.id);
+    }else assert.deepEqual(restored.pending[target.key],failed.pending[target.key],exercise.id);
     assert.equal(restored.byTarget[target.key].eligibleRetestCorrect,0,exercise.id);
   }
 });
@@ -291,7 +305,7 @@ test('every eligible intention pair has an approved example and all course forms
   const userHeldIntentions=USER_DIRECTED_USAGE_DEFERRALS.filter(row=>intentionForms.has(row.pair.split('/')[1]));
   assert.equal(requirements.length,3681-deferredIntentions.length-userHeldIntentions.length);
   assert.ok(requirements.every(pair=>pairs.has(pair)));
-  assert.equal(model.components.filter(c=>c.gating).length,132);
+  assert.equal(model.components.filter(c=>c.gating).length,131);
   assert.equal(model.components.filter(c=>c.id.startsWith('facet.')).length,128);
   const heldForms=new Set();
   for(const course of UNIFIED_COURSES)for(const form of course.forms){
@@ -300,4 +314,5 @@ test('every eligible intention pair has an approved example and all course forms
     if(isTeachingFormDeferred(form))heldForms.add(form);
   }
   assert.deepEqual(heldForms,USER_DIRECTED_DEFERRED_FORMS);
+  assert.deepEqual(heldForms,EXPECTED_CURRENT_FORM_HOLDS);
 });

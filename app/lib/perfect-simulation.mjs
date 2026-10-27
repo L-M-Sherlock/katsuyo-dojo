@@ -34,7 +34,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
   const rounds = [];
 
   while (rounds.length < maxRounds) {
-    let introduced = introducedKcIds.map((id) => byId.get(id)).filter(Boolean);
+    let introduced = introducedKcIds.map((id) => byId.get(id)).filter(component => component?.gating);
     if (targetReached() || (introduced.length === gating.length && introduced.every((component) => isComponentMastered(component, byKc)))) break;
     const roundFocusIds = new Set();
     const usedKeys = new Set();
@@ -48,7 +48,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     let roundMasteredOnlyQuestions = 0;
 
     while (answered < sessionLength) {
-      introduced = introducedKcIds.map((id) => byId.get(id)).filter(Boolean);
+      introduced = introducedKcIds.map((id) => byId.get(id)).filter(component => component?.gating);
       const next = planner.plan(mode, state(), sessionLength - answered, heldCourseId);
       heldCourseId = next.goalCourseId;
       if (remainingPlan?.focusId === next.focus?.id) next.plan = remainingPlan.plan;
@@ -120,7 +120,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     rotation += 1;
   }
 
-  const completed = targetReached() || introducedKcIds.length === gating.length && gating.every((component) => introducedKcIds.includes(component.id) && isComponentMastered(component, byKc));
+  const completed = targetReached() || gating.every((component) => introducedKcIds.includes(component.id) && isComponentMastered(component, byKc));
   const attempts = gating.map((component) => byKc[component.id]?.attempts ?? 0);
   const repeatedFocusKcs = [...focusRounds].filter(([, count]) => count > 1).map(([id, count]) => ({ id, rounds: count }));
   const longestFocusRun = repeatedFocusKcs.sort((a, b) => b.rounds - a.rounds)[0] ?? { id: [...focusRounds.keys()][0] ?? null, rounds: focusRounds.size ? 1 : 0 };
@@ -132,7 +132,7 @@ export function simulateLearning(model, { maxRounds = 1000, sessionLength = 12, 
     gatingCount: gating.length,
     facetCount: model.components.filter((component) => component.id.startsWith("facet.") && !component.teachingDeferred).length,
     deferredFacetCount: model.components.filter((component) => component.id.startsWith("facet.") && component.teachingDeferred).length,
-    introducedCount: introducedKcIds.length,
+    introducedCount: gating.filter(component => introducedKcIds.includes(component.id)).length,
     masteredCount: gating.filter((component) => isComponentMastered(component, byKc)).length,
     redundantFocusQuestions,
     masteredOnlyQuestions,

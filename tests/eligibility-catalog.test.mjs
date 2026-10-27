@@ -9,6 +9,7 @@ import { reconcileAssessmentCatalog } from '../app/lib/learning-assessment.mjs';
 import { readFileSync } from 'node:fs';
 import { USER_DIRECTED_DEFERRED_FORMS } from '../app/lib/teaching-form-deferrals.mjs';
 import { auditKnowledgeModel } from '../app/lib/knowledge-model.mjs';
+import { EXPECTED_CURRENT_FORM_HOLDS, EXPECTED_DEFERRED_COMPONENT_IDS } from './helpers/four-form-teaching-hold-scope.mjs';
 
 const allowed = () => ({ status: 'allowed', category: 'semantic', reason: '已审核' });
 const retiredTeoru=JSON.parse(readFileSync(new URL('./fixtures/retired-teoru-negatives-before.json',import.meta.url)));
@@ -116,7 +117,7 @@ function teachingHoldFixture() {
 test('only an explicit teaching hold can pause an exclusive facet while preserving frozen registry requirements', () => {
   const f = teachingHoldFixture(), report = f.report();
   assert.deepEqual(report.issues, []);
-  assert.deepEqual(report.intentionalTeachingHolds, { forms: [...USER_DIRECTED_DEFERRED_FORMS], facets: [f.facetId] });
+  assert.deepEqual(report.intentionalTeachingHolds, { forms: [...USER_DIRECTED_DEFERRED_FORMS], facets: [f.facetId], components: [f.facetId] });
   assert.equal(report.courseForms.find(row => row.key === 'past:temiruNegativePast').before.exercises, 12);
   assert.equal(report.courseForms.find(row => row.key === 'past:temiruNegativePast').after.exercises, 0);
   assert.equal(report.summary.components, f.baseline.components.length);
@@ -160,9 +161,12 @@ test('all declared courses, forms, gating knowledge and coverage remain trainabl
       reviewVersion: usage.USAGE_REVIEW_VERSION, reviewedLexicalSense, baseline,
       retiredForms: RETIRED_TEORU_NEGATIVE_FORMS });
     assert.deepEqual(report.issues, []);
-    assert.deepEqual(report.intentionalTeachingHolds, { forms: ['temiruNegativePast'], facets: ['facet.apply.temiru.negativePast'] });
+    assert.deepEqual(new Set(report.intentionalTeachingHolds.forms),EXPECTED_CURRENT_FORM_HOLDS);
+    assert.deepEqual(new Set(report.intentionalTeachingHolds.components),EXPECTED_DEFERRED_COMPONENT_IDS);
+    assert.deepEqual(new Set(report.intentionalTeachingHolds.facets),new Set([...EXPECTED_DEFERRED_COMPONENT_IDS].filter(id=>id.startsWith('facet.'))));
+    assert.equal(baseline.summary.gating,132,'the frozen historical requirement retains all original gating rules');
     for (const field of ['courses', 'forms', 'components', 'gating', 'facets']) {
-      const expected=baseline.summary[field]-(['forms','components','facets'].includes(field)?RETIRED_TEORU_NEGATIVE_FORMS.size:0);
+      const expected=baseline.summary[field]-(['forms','components','facets'].includes(field)?RETIRED_TEORU_NEGATIVE_FORMS.size:field==='gating'?1:0);
       assert.equal(report.summary[field], expected, field);
     }
     const retiredRegistry=[...RETIRED_TEORU_NEGATIVE_FORMS].reduce((sum,form)=>sum+baseline.courseForms[`aspect:${form}`].exercises,0);

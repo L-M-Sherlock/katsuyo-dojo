@@ -16,6 +16,7 @@ import {USER_DIRECTED_USAGE_CORRECTIONS} from '../app/lib/usage-cards/user-direc
 import {RETIRED_TEORU_NEGATIVE_FORMS} from '../app/lib/compound-forms.mjs';
 import {TEACHING_PAIR_DEFERRALS} from '../app/lib/teaching-pair-deferrals.mjs';
 import {REVIEWED_USAGE_CARDS} from '../app/lib/usage-cards.mjs';
+import { EXPECTED_NEW_FORM_HOLDS } from './helpers/four-form-teaching-hold-scope.mjs';
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const actionReview = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-actions-review.json', import.meta.url)));
@@ -136,14 +137,19 @@ test('the frozen integration release projects to reviewed current cards and exac
   verifyCurrentReviewedUsageRevisions();
   const teachingHolds = TEACHING_PAIR_DEFERRALS.filter(row => original.required.includes(row.pair));
   assert.equal(teachingHolds.length, 4);
-  const held = new Set(teachingHolds.map(row => row.pair));
-  assert.deepEqual(held, new Set([
+  const exactHeld = new Set(teachingHolds.map(row => row.pair));
+  assert.deepEqual(exactHeld, new Set([
     'verb:帰る:かえる/temiruDesireNegativePast',
     'verb:手伝う:てつだう/temiruDesireNegativePast',
     'verb:貸す:かす/temiruRequest',
     'verb:変える:かえる/passiveCompletionPast',
   ]));
-  assert.equal(current.size, 1297);
+  const formHeld=original.required.filter(pair=>EXPECTED_NEW_FORM_HOLDS.has(pair.split('/')[1]));
+  const held=new Set([...exactHeld,...formHeld]);
+  assert.equal(formHeld.length,86);
+  assert.equal(held.size,88);
+  assert.equal(original.required.length-exactHeld.size,1297,'preserve the historical four-exact-hold projection');
+  assert.equal(current.size, 1213);
   assert.deepEqual(new Set([...current, ...frozen.deferred, ...held]), new Set(original.required));
   assert.deepEqual([...current].filter(pair => held.has(pair)), []);
   const covered = CURRENT_USAGE_CARDS.filter(card => current.has(`${card.senseId}/${card.form}`));
@@ -159,14 +165,14 @@ test('the frozen integration release projects to reviewed current cards and exac
   const report = await auditIntegrationCoverage({project: fileURLToPath(new URL('../', import.meta.url)),
     requirements: 'docs/integration-stage-requirements.v3.json', proofPath, strict: true});
   assert.equal(report.valid, true, report.errors.join('\n'));
-  assert.equal(report.cards.approvedPairs.length, 1297);
+  assert.equal(report.cards.approvedPairs.length, 1213);
   assert.deepEqual(new Set(report.cards.approvedPairs), new Set(frozen.approved.filter(pair => !held.has(pair))));
   assert.deepEqual(new Set(report.deferred.pairs), held);
   assert.deepEqual(new Set(report.teachingHolds.pairs), held);
   assert.ok(report.teachingHolds.rows.every(row => row.basis === 'user-directed-teaching-hold'));
   assert.equal(report.proof.releaseCount, frozen.approved.length);
   assert.equal(report.proof.currentExpectedCount, frozen.approved.length - held.size);
-  assert.equal(report.proof.reviewedProjection.rounds, 17);
+  assert.equal(report.proof.reviewedProjection.rounds, 26);
   assert.deepEqual(new Set(report.open.pairs), new Set(frozen.open));
 });
 

@@ -5,7 +5,6 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {REVIEWED_USAGE_CARDS, usageCardItem} from '../app/lib/usage-cards.mjs';
 import {deriveUnified} from '../app/lib/unified-knowledge.mjs';
-import {isTeachingFormDeferred} from '../app/lib/teaching-form-deferrals.mjs';
 import {verifyPortableRevisionDelivery, verifyCurrentReviewedUsageRevisions, readReviewedUsageRevisionsProof} from './verify-reviewed-usage-revisions.mjs';
 
 const hash = value => crypto.createHash('sha256').update(value).digest('hex');
@@ -19,8 +18,14 @@ export function verifyTemiruAudit(proof = readTemiruAudit()) {
   // Later repairs do not overwrite the judgments on this frozen audit input.
   // Validate the full successor chain before accepting its historical sources.
   verifyCurrentReviewedUsageRevisions();
+  // This audit predates the later four-form teaching choice. Its published
+  // input excluded only the original, separately frozen negative-past hold;
+  // current teaching eligibility must not shrink that historical sample.
+  const historicalHold = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json', import.meta.url), 'utf8'));
+  ensure(historicalHold.form === 'temiruNegativePast' && historicalHold.sourceCount === 122,
+    'Invalid historical temiru teaching-hold scope');
   const expected = new Map(REVIEWED_USAGE_CARDS.filter(card => card.form.startsWith('temiru')
-    && !isTeachingFormDeferred(card.form)).map(card => [card.id, card]));
+    && card.form !== historicalHold.form).map(card => [card.id, card]));
   const historical = new Map();
   for (const card of [...expected.values(), ...readReviewedUsageRevisionsProof().rounds.flatMap(round => round.sourceCards)]) {
     if (!historical.has(card.id)) historical.set(card.id, new Set());

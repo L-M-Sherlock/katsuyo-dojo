@@ -8,7 +8,7 @@ import {createDelivery} from '../.agents/skills/write-katsuyo-usage-cards/script
 import {readReviewedUsageRevisionsProof, verifyPortableRevisionDelivery} from '../scripts/verify-reviewed-usage-revisions.mjs';
 import {readShimauUserResolution, verifyShimauUserResolution} from '../scripts/verify-shimau-user-resolution.mjs';
 import {TEACHING_PAIR_DEFERRALS} from '../app/lib/teaching-pair-deferrals.mjs';
-import {EXPECTED_COMPLETION_TONE_USER_HOLD_IDS} from './helpers/current-teaching-hold-scope.mjs';
+import {EXPECTED_COMPLETION_TONE_USER_HOLD_IDS,EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS} from './helpers/current-teaching-hold-scope.mjs';
 
 test('the frozen 24/94 choice stays intact while all 17 text findings need approved successors', () => {
   assert.deepEqual(verifyShimauUserResolution(undefined,{requireAncillaryClosure:true}), {
@@ -21,9 +21,9 @@ test('the frozen 24/94 choice stays intact while all 17 text findings need appro
   assert.equal(new Set([...record.retainedIds, ...record.holdIds]).size, 118);
   const originalHolds = new Set([...record.priorHoldIds, ...record.holdIds]);
   assert.equal(originalHolds.size, 103);
-  assert.equal(TEACHING_PAIR_DEFERRALS.length, 112);
+  assert.equal(TEACHING_PAIR_DEFERRALS.length, 119);
   assert.deepEqual(new Set(TEACHING_PAIR_DEFERRALS.filter(row => !originalHolds.has(row.id)).map(row => row.id)),
-    EXPECTED_COMPLETION_TONE_USER_HOLD_IDS);
+    new Set([...EXPECTED_COMPLETION_TONE_USER_HOLD_IDS,...EXPECTED_RISK_PILOT_FEEDBACK_HOLD_IDS]));
   for (const id of [
     'usage:teshimauNegative:verb:逃げる:にげる',
     'usage:teshimauNegative:verb:呼ぶ:よぶ',

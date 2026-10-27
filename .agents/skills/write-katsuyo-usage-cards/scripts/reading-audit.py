@@ -17,19 +17,20 @@ import {pathToFileURL} from 'node:url';
 const root=path.resolve(process.argv[1]);
 const lib=await import(pathToFileURL(path.join(root,'app/lib/usage-cards.mjs')));
 const file=process.argv[2];
+const allowTeachingHolds=process.argv[3]==='true';
 const cards=!file ? lib.USAGE_CARDS : file.endsWith('.json')
   ? JSON.parse(fs.readFileSync(path.resolve(file),'utf8'))
   : (await import(pathToFileURL(path.resolve(file)))).default;
 if(!Array.isArray(cards))throw new Error('Input must be a card array');
 const rows=cards.map(card=>{
-  const resolved=lib.resolveUsageCard(card);
+  const resolved=lib.resolveUsageCard(card,{allowTeachingHolds});
   if(!resolved)throw new Error(`Cannot resolve ${card.id}`);
   const parts=[...card.before.map(p=>({...p,role:'before'})),
     {...resolved.target,role:'target'},...card.after.map(p=>({...p,role:'after'}))];
   return {id:card.id,senseId:card.senseId,form:card.form,scene:card.scene,translation:card.translation,
     sentence:parts.map(p=>p.text).join(''),reading:parts.map(p=>p.reading??p.text).join(''),parts};
 });
-console.log(JSON.stringify({rows,structuralIssues:lib.usageCardIssues(cards)}));
+console.log(JSON.stringify({rows,structuralIssues:lib.usageCardIssues(cards,{allowTeachingHolds})}));
 """
 
 
@@ -44,6 +45,7 @@ def main():
     parser.add_argument('--project', type=Path, default=Path.cwd())
     parser.add_argument('--input', type=Path, help='Optional .mjs default export or JSON card array; defaults to the full catalog')
     parser.add_argument('--output', type=Path, help='Write a JSON review report; never edits cards')
+    parser.add_argument('--allow-teaching-holds', action='store_true', help='Inspect retained teaching-held drafts without restoring teaching eligibility')
     args = parser.parse_args()
     try:
         import fugashi
@@ -51,8 +53,8 @@ def main():
         parser.error("Use uv run --no-project --with 'fugashi[unidic-lite]' python reading-audit.py ...")
 
     command = ['node', '--input-type=module', '-e', NODE_EXPORT, str(args.project.resolve())]
-    if args.input:
-        command.append(str(args.input.resolve()))
+    command.append(str(args.input.resolve()) if args.input else '')
+    command.append('true' if args.allow_teaching_holds else 'false')
     exported = subprocess.run(command, check=True, capture_output=True, text=True)
     payload = json.loads(exported.stdout)
     tagger = fugashi.Tagger()

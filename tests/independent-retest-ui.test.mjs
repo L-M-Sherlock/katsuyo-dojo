@@ -814,8 +814,10 @@ test('knowledge progress nests coverage under its declared parent without duplic
     for(const child of expected)assert.equal(list.querySelectorAll(`[data-kc-id="${child}"]`).length,1);
   }
   const rendered=[...list.querySelectorAll('[data-kc-id]')].map(row=>row.dataset.kcId);
-  assert.equal(new Set(rendered).size,ALL_KCS.length);
-  assert.equal(rendered.length,ALL_KCS.length);
+  const active=ALL_KCS.filter(kc=>!kc.teachingDeferred);
+  assert.deepEqual(new Set(rendered),new Set(active.map(kc=>kc.id)));
+  assert.equal(rendered.length,active.length);
+  for(const paused of ALL_KCS.filter(kc=>kc.teachingDeferred))assert.equal(list.querySelector(`[data-kc-id="${paused.id}"]`),null);
   // A coverage item's original family does not prevent nesting under its parent.
   const past=ALL_KCS.find(kc=>kc.id==='suffix.past');
   const pastGroup=list.querySelector('[data-coverage-parent="suffix.past"]');

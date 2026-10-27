@@ -13,6 +13,7 @@ import { scoreLearningEvidence } from '../app/lib/learning-evidence.mjs';
 import { assessmentTarget, emptyAssessment, recordIndependentAttempt, reconcileAssessmentCatalog } from '../app/lib/learning-assessment.mjs';
 import { restoreLearningAssessment } from '../app/lib/assessment-transfer.mjs';
 import { assignPracticeExercises } from '../app/lib/exercise-selection.mjs';
+import { EXPECTED_CURRENT_FORM_HOLDS } from './helpers/four-form-teaching-hold-scope.mjs';
 
 // Fixed expected strings, independent of the production recipe composition.
 const expected = {
@@ -36,10 +37,11 @@ let page;
 try { page = await server.ssrLoadModule('/app/page.tsx'); } finally { await server.close(); }
 const model = page.KNOWLEDGE;
 
-test('the expanded course contains 42 curated targets in 17 application families',()=>{
+test('the expanded course registers 42 curated targets and teaches the 40 targets outside explicit holds',()=>{
   assert.deepEqual(Object.keys(CHAIN_FORM_SPECS).sort(),Object.keys(expected).sort());
   assert.equal(new Set(Object.values(CHAIN_FORM_SPECS).map(s=>s.kcId)).size,16);
-  assert.equal(new Set(model.exercises.filter(e=>e.courseId==='multiStepCompound').map(e=>e.form)).size,42);
+  assert.equal(new Set(model.registryExercises.filter(e=>e.courseId==='multiStepCompound').map(e=>e.form)).size,42);
+  assert.equal(new Set(model.exercises.filter(e=>e.courseId==='multiStepCompound').map(e=>e.form)).size,40);
 });
 for(const [form,answer] of Object.entries(expected))test(`${form}: spelling, recognition, full path and guided continuation`,()=>{
   const kana=answer.replace('読','よ'), spec=CHAIN_FORM_SPECS[form];
@@ -90,6 +92,13 @@ test('common errors inside the new chains are diagnosed and correct other forms 
 test('every family has enough natural words, explicit coverage ownership and usable variant pools',()=>{
   for(const [form,spec] of Object.entries(CHAIN_FORM_SPECS)){
     const pool=model.exercises.filter(e=>e.courseId==='multiStepCompound'&&e.form===form);
+    if(EXPECTED_CURRENT_FORM_HOLDS.has(form)){
+      assert.equal(pool.length,0,form);
+      assert.ok(model.registryExercises.some(e=>e.courseId==='multiStepCompound'&&e.form===form),`${form}: historical target remains registered`);
+      assert.equal(model.components.find(kc=>kc.id===spec.facetId).teachingDeferred,true,form);
+      assert.ok(!model.components.some(kc=>kc.coverageKcIds.includes(spec.facetId)),form);
+      continue;
+    }
     assert.ok(new Set(pool.map(e=>e.item.surface)).size>=12,form);
     assert.ok(pool.every(e=>!['いる','できる','降る','要る'].includes(e.item.surface)),form);
     if(spec.context&&form!=='causativeReceivePast')assert.ok(pool.every(e=>e.context?.text),form);
@@ -138,7 +147,7 @@ test('a supplied potential stem is retained when several polite-request operatio
 });
 
 
-test('four challenge rounds visit all 42 forms and the first round varies application families',()=>{
+test('four challenge rounds visit all 40 active forms and the first round varies application families',()=>{
   const planner=createChallengePlanner(model),forms=new Set();
   for(let rotation=0;rotation<4;rotation++){
     const round=planner.questions(['multiStepCompound'],{byKc:{},rotation,recentWordKeys:[]},{seed:19});
@@ -146,7 +155,8 @@ test('four challenge rounds visit all 42 forms and the first round varies applic
     round.forEach(({candidate})=>forms.add(candidate.form));
     if(!rotation)assert.equal(new Set(round.map(({candidate})=>CHAIN_FORM_SPECS[candidate.form]?.kcId??'compound.multi-step')).size,12);
   }
-  assert.equal(forms.size,42);
+  assert.equal(forms.size,40);
+  assert.deepEqual(forms,new Set(['passiveDesireNegativePast',...Object.keys(CHAIN_FORM_SPECS)].filter(form=>!EXPECTED_CURRENT_FORM_HOLDS.has(form))));
 });
 
 

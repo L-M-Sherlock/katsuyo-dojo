@@ -108,6 +108,190 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
     }
   },
   {
+    "id": "usage:teageruNegative",
+    "pair": "verb:教える:おしえる/teageruNegative",
+    "previousHash": "2163a9bae65c84582fae2824505b39ba9c6d15e0eae142f1d67791b86823407f",
+    "finalHash": "04687743e0583a1290311f5ad41dcd3a5ba8a4e50d8aef21c788a86c6aea23bf",
+    "card": {
+      "id": "usage:teageruNegative",
+      "senseId": "verb:教える:おしえる",
+      "meaning": "教；告诉",
+      "form": "teageruNegative",
+      "scene": "妹妹泄露了我的秘密，我赌气说以后不再告诉她游戏秘技。",
+      "before": [
+        {
+          "text": "秘密をばらした妹に「もうそのゲームの裏技は",
+          "reading": "ひみつをばらしたいもうとに「もうそのゲームのうらわざは"
+        }
+      ],
+      "after": [
+        {
+          "text": "からね」と言った。",
+          "reading": "からね」といった。"
+        }
+      ],
+      "translation": "我对泄露我秘密的妹妹说：“那款游戏的秘技我以后不再告诉你了。”",
+      "note": "用「もう」「からね」表明说话人赌气拒绝再告诉妹妹。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:tearuNegative:verb:書く:かく",
+    "pair": "verb:書く:かく/tearuNegative",
+    "previousHash": "80e0df33311790d37db290f3d5be48ce23467522de1e4519b1a00157420251da",
+    "finalHash": "8b8714bf63235e98b0f0b053629507c6899d394cabe48641470e2105ac66ef43",
+    "card": {
+      "id": "usage:tearuNegative:verb:書く:かく",
+      "senseId": "verb:書く:かく",
+      "meaning": "写；书写",
+      "form": "tearuNegative",
+      "scene": "申请表即将提交，姓名栏却还是空着。",
+      "before": [
+        {
+          "text": "提出前なのに、申込書にまだ名前が",
+          "reading": "ていしゅつまえなのに、もうしこみしょにまだなまえが"
+        }
+      ],
+      "after": [
+        {
+          "text": "。",
+          "reading": "。"
+        }
+      ],
+      "translation": "明明快要提交了，申请表上还没写姓名。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:tearuNegative:verb:置く:おく",
+    "pair": "verb:置く:おく/tearuNegative",
+    "previousHash": "1410aacb0f0aa9de118739854d39bc499f87f07c88c4a56511ba7e81e510bbfd",
+    "finalHash": "1410aacb0f0aa9de118739854d39bc499f87f07c88c4a56511ba7e81e510bbfd",
+    "card": {
+      "id": "usage:tearuNegative:verb:置く:おく",
+      "senseId": "verb:置く:おく",
+      "meaning": "放置",
+      "form": "tearuNegative",
+      "scene": "开会需要的资料尚未摆到座位上。",
+      "before": [
+        {
+          "text": "会議の資料は、まだ各席に",
+          "reading": "かいぎのしりょうは、まだかくせきに"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "会议资料还没有在各个座位上放好。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:tearuNegativePast:verb:書く:かく",
+    "pair": "verb:書く:かく/tearuNegativePast",
+    "previousHash": "c710adbcc38074e9d02d1ebbbdfef7e36252607945f461e2f8cc37938ed91003",
+    "finalHash": "c710adbcc38074e9d02d1ebbbdfef7e36252607945f461e2f8cc37938ed91003",
+    "card": {
+      "id": "usage:tearuNegativePast:verb:書く:かく",
+      "senseId": "verb:書く:かく",
+      "meaning": "写；书写",
+      "form": "tearuNegativePast",
+      "scene": "会前检查准备好的名牌，发现漏写了姓名。",
+      "before": [
+        {
+          "text": "受付",
+          "reading": "うけつけ"
+        },
+        {
+          "text": "で"
+        },
+        {
+          "text": "確認",
+          "reading": "かくにん"
+        },
+        {
+          "text": "すると、"
+        },
+        {
+          "text": "名札",
+          "reading": "なふだ"
+        },
+        {
+          "text": "には"
+        },
+        {
+          "text": "名前",
+          "reading": "なまえ"
+        },
+        {
+          "text": "がまだ"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "在接待处检查时，名牌上还没写姓名。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:tearuNegativePast:verb:置く:おく",
+    "pair": "verb:置く:おく/tearuNegativePast",
+    "previousHash": "c97682819cecdf44af8b79bb4f71ba0bf907b089bfa162a9eee23f18723c6809",
+    "finalHash": "c97682819cecdf44af8b79bb4f71ba0bf907b089bfa162a9eee23f18723c6809",
+    "card": {
+      "id": "usage:tearuNegativePast:verb:置く:おく",
+      "senseId": "verb:置く:おく",
+      "meaning": "放置",
+      "form": "tearuNegativePast",
+      "scene": "客人到场时，供饮用的水尚未摆好。",
+      "before": [
+        {
+          "text": "客が来たとき、テーブルには水がまだ",
+          "reading": "きゃくがきたとき、テーブルにはみずがまだ"
+        }
+      ],
+      "after": [
+        {
+          "text": "。"
+        }
+      ],
+      "translation": "客人来的时候，桌上还没有放好水。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teikuNegative:verb:する:する",
+    "pair": "verb:する:する/teikuNegative",
+    "previousHash": "9c22e9583898bcb55dd015012f8955aad02ea1d32ec3ac1615a099d833e165d6",
+    "finalHash": "22f0c6aa1a29102715b4ba2e0cb0c01ecd1f3608cf0c308701be85ede0d2e56d",
+    "card": {
+      "id": "usage:teikuNegative:verb:する:する",
+      "senseId": "verb:する:する",
+      "meaning": "做",
+      "form": "teikuNegative",
+      "scene": "下班时已经很晚，他决定不整理桌面就离开。",
+      "before": [
+        {
+          "text": "今日はもう遅いので、机の整理は",
+          "reading": "きょうはもうおそいので、つくえのせいりは"
+        }
+      ],
+      "after": [
+        {
+          "text": "ことにした。",
+          "reading": "ことにした。"
+        }
+      ],
+      "translation": "今天已经很晚了，所以我决定不整理桌面就离开。",
+      "review": "approved"
+    }
+  },
+  {
     "id": "usage:temiru:verb:取る:とる",
     "pair": "verb:取る:とる/temiru",
     "previousHash": "61d94950e50dfc2ff1277f35928153810e4b19d8f8fbec2acc829445d138effc",
@@ -7232,6 +7416,62 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
     }
   },
   {
+    "id": "usage:teoru:verb:来る:くる",
+    "pair": "verb:来る:くる/teoru",
+    "previousHash": "ad482ef897c1697f9d10de823394df42ba589e3d6d03a883c7d5879e7c167e51",
+    "finalHash": "51cddaf868256d5c82de358f392058f407bdf9de55cdb108222eb66edd4ebc2f",
+    "card": {
+      "id": "usage:teoru:verb:来る:くる",
+      "senseId": "verb:来る:くる",
+      "meaning": "来",
+      "form": "teoru",
+      "scene": "年长店主说客人已经到店里了。",
+      "before": [
+        {
+          "text": "年配の店主は「客がもう店に",
+          "reading": "ねんぱいのてんしゅは「きゃくがもうみせに"
+        }
+      ],
+      "after": [
+        {
+          "text": "ぞ」と言った。",
+          "reading": "ぞ」といった。"
+        }
+      ],
+      "translation": "年长的店主说：“客人已经到店里了！”",
+      "note": "用「ぞ」强调店主报告客人已到。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:teoruPast:verb:来る:くる",
+    "pair": "verb:来る:くる/teoruPast",
+    "previousHash": "1978c2197d1a3a91669753b2fe7e41112ec40fa4a6e7a5f29d6ab0e04cc626b9",
+    "finalHash": "668177e60fc1b50a20dde8f44c46cfd00380b47b676151f0de95b78399ff585c",
+    "card": {
+      "id": "usage:teoruPast:verb:来る:くる",
+      "senseId": "verb:来る:くる",
+      "meaning": "来",
+      "form": "teoruPast",
+      "scene": "祖父回忆那位熟客以前常来店里。",
+      "before": [
+        {
+          "text": "祖父は「あの客は昔ここへよく",
+          "reading": "そふは「あのきゃくはむかしここへよく"
+        }
+      ],
+      "after": [
+        {
+          "text": "のう」と言った。",
+          "reading": "のう」といった。"
+        }
+      ],
+      "translation": "祖父说：“那位客人以前常来这里啊。”",
+      "note": "「のう」与祖父回忆熟客过往来访的口吻相应。",
+      "review": "approved"
+    }
+  },
+  {
     "id": "usage:teshimau:verb:出かける:でかける",
     "pair": "verb:出かける:でかける/teshimau",
     "previousHash": "45763e06ceebd47657e396fe592b71b66aeccf52f6b7222aab65056af37879b7",
@@ -7551,6 +7791,33 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
     }
   },
   {
+    "id": "usage:teshimauNegativePast:verb:来る:くる",
+    "pair": "verb:来る:くる/teshimauNegativePast",
+    "previousHash": "c8a4825265e7c203cb0894ca63a598dcd97b267aa37a5e91c94156c39420682e",
+    "finalHash": "dcc9bd0e3be07619c11ee40ffdbb0dabac4856f446d01bddd7ec1b73b3ac04d9",
+    "card": {
+      "id": "usage:teshimauNegativePast:verb:来る:くる",
+      "senseId": "verb:来る:くる",
+      "meaning": "来",
+      "form": "teshimauNegativePast",
+      "scene": "邀请函时间写错后，向同事核对客人是否已经到场。",
+      "before": [
+        {
+          "text": "案内状の時間を間違えたせいで、お客さんがもう会場に",
+          "reading": "あんないじょうのじかんをまちがえたせいで、おきゃくさんがもうかいじょうに"
+        }
+      ],
+      "after": [
+        {
+          "text": "？",
+          "reading": "？"
+        }
+      ],
+      "translation": "邀请函上的时间弄错了，客人该不会已经到会场了吧？",
+      "review": "approved"
+    }
+  },
+  {
     "id": "usage:teshimauNegativePast:verb:起きる:おきる",
     "pair": "verb:起きる:おきる/teshimauNegativePast",
     "previousHash": "6eb4a4b72fa74c2eeaf61bc7bb2c88e7203c0b1750d69b62603870e02be71bcd",
@@ -7654,6 +7921,61 @@ export const REVIEWED_USAGE_CARD_REVISIONS = [
         }
       ],
       "translation": "家人原本计划把这条鱼做成刺身，结果却被烤了。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:toru:verb:する:する",
+    "pair": "verb:する:する/toru",
+    "previousHash": "3789abc99f9cba4aaac14268800507d2d6f20fac7cedace9a0ce717e05a90178",
+    "finalHash": "65157d36a5e3e7fc05d76247861c7fadd01e1f153faa52d435a52b852c39d273",
+    "card": {
+      "id": "usage:toru:verb:する:する",
+      "senseId": "verb:する:する",
+      "meaning": "做",
+      "form": "toru",
+      "scene": "祖父告诉家人，他现在正在整理庭院。",
+      "before": [
+        {
+          "text": "祖父は「今は庭の手入れを",
+          "reading": "そふは「いまはにわのていれを"
+        }
+      ],
+      "after": [
+        {
+          "text": "よ」と言った。",
+          "reading": "よ」といった。"
+        }
+      ],
+      "translation": "祖父说：“我现在正在整理庭院。”",
+      "note": "「今は」「よ」把这句限定为祖父在说眼下的活动。",
+      "review": "approved"
+    }
+  },
+  {
+    "id": "usage:zu:verb:渡す:わたす",
+    "pair": "verb:渡す:わたす/zu",
+    "previousHash": "0bc290984d4daa11e187849608bee06c91a79614a018bf4661b13a8c5009a2de",
+    "finalHash": "f1cf9879b778bc72697337779849273718f5af5b2e138afb059a66fde65aec18",
+    "card": {
+      "id": "usage:zu:verb:渡す:わたす",
+      "senseId": "verb:渡す:わたす",
+      "meaning": "交给",
+      "form": "zu",
+      "scene": "员工暂不把文件交给上司，先复核内容。",
+      "before": [
+        {
+          "text": "書類を上司には",
+          "reading": "しょるいをじょうしには"
+        }
+      ],
+      "after": [
+        {
+          "text": "、もう一度内容を確認した。",
+          "reading": "、もういちどないようをかくにんした。"
+        }
+      ],
+      "translation": "员工没有把文件交给上司，而是再次核对了内容。",
       "review": "approved"
     }
   }

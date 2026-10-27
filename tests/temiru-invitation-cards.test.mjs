@@ -1,3 +1,4 @@
+import { EXPECTED_CURRENT_FORM_HOLDS } from './helpers/four-form-teaching-hold-scope.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
@@ -12,7 +13,7 @@ import { normalizeAnswer } from '../app/lib/answer-analysis.mjs';
 import { isTeachingFormDeferred, USER_DIRECTED_FORM_DEFERRALS } from '../app/lib/teaching-form-deferrals.mjs';
 import { TEACHING_PAIR_DEFERRALS } from '../app/lib/teaching-pair-deferrals.mjs';
 import { EXPECTED_TEMIRU_TEACHING_HOLD_IDS } from './helpers/temiru-teaching-hold-scope.mjs';
-import { EXPECTED_CURRENT_TEACHING_HOLD_IDS } from './helpers/current-teaching-hold-scope.mjs';
+import { EXPECTED_CURRENT_TEACHING_HOLD_IDS, EXPECTED_RISK_PILOT_FEEDBACK_REVIEW_IDS } from './helpers/current-teaching-hold-scope.mjs';
 import { EXPECTED_SHIMAU_TEXT_FIX_IDS, EXPECTED_SHIMAU_TEXT_FIX_PAIRS } from './helpers/shimau-text-fix-scope.mjs';
 import { EXPECTED_HIROU_CHAU_FIX_IDS, EXPECTED_COMPLETION_TONE_ENGLISH_FIX_IDS } from './helpers/completion-tone-fix-scope.mjs';
 import { revisionHash, verifyCurrentReviewedUsageRevisions, verifyPortableRevisionDelivery } from '../scripts/verify-reviewed-usage-revisions.mjs';
@@ -123,8 +124,8 @@ test('the invitation round accounts for all 123 frozen sources before later exac
   const historical = frozenState(reviewedProof().rounds.slice(0, 3));
   assert.deepEqual(new Set(historical.cards.filter(card => card.form === FORM).map(card => card.id)), approved);
   const summary = verifyCurrentReviewedUsageRevisions();
-  assert.equal(summary.sourceCount, 125 + 123 + 13 + 17 + 1 + 2);
-  assert.equal(summary.reviewedCount, 124 + approved.size + 13 + 17 + 1 + 2);
+  assert.equal(summary.sourceCount, 125 + 123 + 13 + 17 + 1 + 2 + 11);
+  assert.equal(summary.reviewedCount, 124 + approved.size + 13 + 17 + 1 + 2 + 11);
   assert.equal(summary.deferredCount, 1 + deferred.size);
 });
 
@@ -245,7 +246,7 @@ test('later exact subset reviews and teaching choices preserve the original invi
   const heldIds = new Set(TEACHING_PAIR_DEFERRALS.map(row => row.id));
   assert.deepEqual(heldIds, EXPECTED_CURRENT_TEACHING_HOLD_IDS);
   const historical = frozenState(proof.rounds.slice(0, 3)), latest = frozenState(proof.rounds);
-  const historicalCards = historical.cards.filter(card => card.form !== FORM && !isTeachingFormDeferred(card.form));
+  const historicalCards = historical.cards.filter(card => card.form !== FORM && card.form !== 'temiruNegativePast');
   const historicalIds = new Set(historicalCards.map(card => card.id));
   const historicalEnglish = historical.english.filter(row => historicalIds.has(row.id));
   assert.equal(historicalCards.length, 17015);
@@ -253,13 +254,13 @@ test('later exact subset reviews and teaching choices preserve the original invi
   assert.equal(revisionHash(historicalCards), 'a18ab642dca021106d85d0072dcfe22f91b57039a235d647e8d32462b4b19208');
   assert.equal(revisionHash(historicalEnglish), 'dfe9222ec82970512035009ef4f7c499bfb79e120c39ec1bd5b9de5bb3aed714');
 
-  // Verify the final projection against all frozen approvals, with only the
-  // 112 explicit teaching choices removed after review verification.
+  // Verify the current policy projection only after the complete historical
+  // approvals have passed. Form-wide and exact choices may overlap.
   assert.deepEqual(REVIEWED_USAGE_CARDS, latest.cards);
   const expectedCards = latest.cards.filter(card => !isTeachingFormDeferred(card.form) && !heldIds.has(card.id));
   const expectedIds = new Set(expectedCards.map(card => card.id));
   const expectedEnglish = latest.english.filter(row => expectedIds.has(row.id));
-  assert.equal(expectedCards.length, 17026);
+  assert.equal(expectedCards.length, 16790);
   assert.deepEqual(USAGE_CARDS, expectedCards);
   assert.deepEqual(CURRENT_ENGLISH, expectedEnglish);
   const sortById = rows => [...rows].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
@@ -267,11 +268,11 @@ test('later exact subset reviews and teaching choices preserve the original invi
   assert.deepEqual(EN_REVIEWED_USAGE_CARD_OVERLAYS, sortById(latest.english.filter(row => latest.revisions.has(row.id))));
   const currentById = byId(USAGE_CARDS), currentEnglishById = byId(CURRENT_ENGLISH);
   const historicalEnglishById = byId(historicalEnglish);
-  const permittedCanonicalReviewIds = new Set([...EXPECTED_FOLLOWUP_IDS, ...EXPECTED_SHIMAU_TEXT_FIX_IDS, ...EXPECTED_HIROU_CHAU_FIX_IDS]);
+  const permittedCanonicalReviewIds = new Set([...EXPECTED_FOLLOWUP_IDS, ...EXPECTED_SHIMAU_TEXT_FIX_IDS, ...EXPECTED_HIROU_CHAU_FIX_IDS, ...EXPECTED_RISK_PILOT_FEEDBACK_REVIEW_IDS]);
   const permittedEnglishReviewIds = new Set([...permittedCanonicalReviewIds, ...EXPECTED_COMPLETION_TONE_ENGLISH_FIX_IDS]);
   for (const id of EXPECTED_SHIMAU_TEXT_FIX_IDS) assert.ok(!heldIds.has(id), `${id}: the text repair retains this active card`);
   for (const card of historicalCards) {
-    if (heldIds.has(card.id)) {
+    if (heldIds.has(card.id) || isTeachingFormDeferred(card.form)) {
       assert.ok(!currentById.has(card.id) && !currentEnglishById.has(card.id), card.id);
     } else {
       if (!permittedCanonicalReviewIds.has(card.id)) {
@@ -288,7 +289,8 @@ test('the past-negative teaching hold keeps its original sources and morphology 
   const heldForm = 'temiruNegativePast';
   const record = JSON.parse(fs.readFileSync(new URL('../docs/usage-card-temiru-negative-past-hold-20261017.json', import.meta.url)));
   const held = REVIEWED_USAGE_CARDS.filter(card => card.form === heldForm);
-  assert.deepEqual(USER_DIRECTED_FORM_DEFERRALS.map(row => row.form), [heldForm]);
+  assert.deepEqual(USER_DIRECTED_FORM_DEFERRALS.filter(row=>row.requestedAt==='2026-10-17').map(row => row.form), [heldForm]);
+  assert.deepEqual(new Set(USER_DIRECTED_FORM_DEFERRALS.map(row => row.form)),EXPECTED_CURRENT_FORM_HOLDS);
   assert.equal(isTeachingFormDeferred(FORM), false);
   assert.equal(USAGE_CARDS.filter(card => card.form === heldForm).length, 0);
   assert.equal(held.length, 122);

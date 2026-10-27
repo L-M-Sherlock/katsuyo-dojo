@@ -1451,6 +1451,97 @@ export const TEACHING_PAIR_DEFERRALS = Object.freeze([
     "restoreCondition": "用户明确同意恢复，且固定词义与目标形式的新用法通过所需独立自然度、中英文及注音审核，并核验教学供应与历史复测后逐对恢复。",
     "evidenceFile": "docs/usage-card-completion-tone-user-holds-20261027.json"
   }),
+  Object.freeze({
+    "id": "usage:tearuNegative:verb:読む:よむ",
+    "pair": "verb:読む:よむ/tearuNegative",
+    "senseId": "verb:読む:よむ",
+    "form": "tearuNegative",
+    "sourceHash": "37e064fb013ff59a5427894a4ab723c1df315fa342d02a0e72fba847889def95",
+    "englishHash": "0a755fd415b54a234ff6d761c9a05387f6e22742a75a15e69118d9f281a12cb1",
+    "basis": "user-directed-teaching-hold",
+    "requestedAt": "2026-10-27",
+    "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+    "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+    "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json"
+  }),
+  Object.freeze({
+    "id": "usage:tearuNegative:verb:食べる:たべる",
+    "pair": "verb:食べる:たべる/tearuNegative",
+    "senseId": "verb:食べる:たべる",
+    "form": "tearuNegative",
+    "sourceHash": "d139e7af5a98ec390f5aa3bd09962d6d7c4a3d4983e01e8d1d3f0e024d3a093e",
+    "englishHash": "bac0926b1027cd89275747967987630be3c80cbff36d627af0f35e1aa96dd634",
+    "basis": "user-directed-teaching-hold",
+    "requestedAt": "2026-10-27",
+    "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+    "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+    "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json"
+  }),
+  Object.freeze({
+    "id": "usage:tearuNegativePast:verb:読む:よむ",
+    "pair": "verb:読む:よむ/tearuNegativePast",
+    "senseId": "verb:読む:よむ",
+    "form": "tearuNegativePast",
+    "sourceHash": "95d5d09f766285f61f7bdb1a5dcc6cdb72f31bd2b0e1c40523cb4580dee98f78",
+    "englishHash": "71f1c11a26b02716ed638aceeb9e23ec0efd82c68e76dec99b1c1c6526876e82",
+    "basis": "user-directed-teaching-hold",
+    "requestedAt": "2026-10-27",
+    "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+    "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+    "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json"
+  }),
+  Object.freeze({
+    "id": "usage:tearuNegativePast:verb:食べる:たべる",
+    "pair": "verb:食べる:たべる/tearuNegativePast",
+    "senseId": "verb:食べる:たべる",
+    "form": "tearuNegativePast",
+    "sourceHash": "0c70a9d95c5f6b97474c9eed4c8b0ed61d2ae53c3bda54590bc867c46f1c2d47",
+    "englishHash": "af84de110b01d552d174794986e3fd224c071e8a6ec12b5478c721aa3db464c1",
+    "basis": "user-directed-teaching-hold",
+    "requestedAt": "2026-10-27",
+    "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+    "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+    "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json"
+  }),
+  Object.freeze({
+    "id": "usage:temorauNegativePast:verb:勝つ:かつ",
+    "pair": "verb:勝つ:かつ/temorauNegativePast",
+    "senseId": "verb:勝つ:かつ",
+    "form": "temorauNegativePast",
+    "sourceHash": "cb424b88609795a8cc88f367d986c882f74d8926dcd1e0303adaaed6e27ec213",
+    "englishHash": "3774be0bc05067454bde83764d12b9d766ff369164ee4c26dc61ac8310ee2dfd",
+    "basis": "user-directed-teaching-hold",
+    "requestedAt": "2026-10-27",
+    "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+    "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+    "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json"
+  }),
+  Object.freeze({
+    "id": "usage:teikuNegative:verb:届く:とどく",
+    "pair": "verb:届く:とどく/teikuNegative",
+    "senseId": "verb:届く:とどく",
+    "form": "teikuNegative",
+    "sourceHash": "7d93762f5e6b53cf6e72fcd38716409c34c7278b65d379f7b495d4665d143216",
+    "englishHash": "74632be5f24153255af146b11d59913054d741da8501fdeb2cc537c5747f374c",
+    "basis": "user-directed-teaching-hold",
+    "requestedAt": "2026-10-27",
+    "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+    "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+    "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json"
+  }),
+  Object.freeze({
+    "id": "usage:tekuruNegativePast:verb:足りる:たりる",
+    "pair": "verb:足りる:たりる/tekuruNegativePast",
+    "senseId": "verb:足りる:たりる",
+    "form": "tekuruNegativePast",
+    "sourceHash": "2d727d98b1c2812ade370088116b3ceb68dae95a63acd8a3f09c57737a93b76c",
+    "englishHash": "d353d64bea1081a051c2a4288f8ff2b656d7b5ef86025a858ca9b10009df675a",
+    "basis": "user-directed-teaching-hold",
+    "requestedAt": "2026-10-27",
+    "reason": "用户根据本次18项反馈，要求必须更换动词或目标表达的配对直接暂缓，并另确认勝つ／届く两项不再勉强抢救。这里记录精确教学取舍，保留原稿、构形和历史，不把反馈的一般语法断言写成全局禁令，也不虚构三次返修失败。",
+    "restoreCondition": "用户明确同意恢复该精确配对，且固定词义和目标形式的新用法通过必要的独立自然度、双语及注音核验；整形式暂停和其他精确暂停仍分别有效。",
+    "evidenceFile": "docs/usage-card-risk-pilot-feedback-holds-20261027.json"
+  }),
 ]);
 
 const byPair = new Map(TEACHING_PAIR_DEFERRALS.map(row => [row.pair, row]));

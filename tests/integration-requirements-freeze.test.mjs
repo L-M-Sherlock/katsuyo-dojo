@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import {usageCardStageRequirements} from '../app/lib/usage-cards.mjs';
 import {TEACHING_PAIR_DEFERRALS} from '../app/lib/teaching-pair-deferrals.mjs';
 import {verifyCurrentReviewedUsageRevisions} from '../scripts/verify-reviewed-usage-revisions.mjs';
+import { EXPECTED_NEW_FORM_HOLDS } from './helpers/four-form-teaching-hold-scope.mjs';
 
 const file = 'docs/integration-stage-requirements.v1.json';
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
@@ -24,9 +25,15 @@ test('integration requirement snapshot stays immutable while current exact teach
     'verb:貸す:かす/temiruRequest',
     'verb:変える:かえる/passiveCompletionPast',
   ]));
-  assert.equal(current.length, 1297);
-  assert.deepEqual(new Set([...current, ...holds.map(row => row.pair)]), new Set(snapshot.required));
-  assert.deepEqual(current.filter(pair => holds.some(row => row.pair === pair)), []);
+  const formHolds=snapshot.required.filter(pair=>EXPECTED_NEW_FORM_HOLDS.has(pair.split('/')[1]));
+  const allHeld=new Set([...formHolds,...holds.map(row=>row.pair)]);
+  assert.equal(formHolds.length,86);
+  assert.equal(formHolds.filter(pair=>holds.some(row=>row.pair===pair)).length,2);
+  assert.equal(allHeld.size,88);
+  assert.equal(snapshot.required.length-holds.length,1297,'preserve the historical four-exact-hold projection');
+  assert.equal(current.length, 1213);
+  assert.deepEqual(new Set([...current, ...allHeld]), new Set(snapshot.required));
+  assert.deepEqual(current.filter(pair => allHeld.has(pair)), []);
   assert.ok(holds.every(row => row.basis === 'user-directed-teaching-hold'));
   for (const name of ['required', 'approved', 'deferred', 'open']) {
     assert.ok(Array.isArray(snapshot[name]));

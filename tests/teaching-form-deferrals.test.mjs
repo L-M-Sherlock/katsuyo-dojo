@@ -1,3 +1,4 @@
+import { EXPECTED_CURRENT_FORM_HOLDS, EXPECTED_DEFERRED_COMPONENT_IDS } from './helpers/four-form-teaching-hold-scope.mjs';
 import assert from 'node:assert/strict';
 import test, { before, after } from 'node:test';
 import { createServer } from 'vite';
@@ -40,7 +41,9 @@ const profile = () => ({ byKc: mastered(), assessment: emptyAssessment(), rotati
   accessibleCourseIds: UNIFIED_COURSES.map(course => course.id), coursePractice: {}, recentWordKeys: [] });
 
 test('the exact teaching hold blocks every old and newly supplied card while preserving sibling forms', () => {
-  assert.deepEqual(USER_DIRECTED_FORM_DEFERRALS.map(row => row.form), [form]);
+  const historicalHold = USER_DIRECTED_FORM_DEFERRALS.filter(row => row.requestedAt === '2026-10-17');
+  assert.deepEqual(historicalHold.map(row => row.form), [form]);
+  assert.deepEqual(new Set(USER_DIRECTED_FORM_DEFERRALS.map(row => row.form)), EXPECTED_CURRENT_FORM_HOLDS);
   assert.ok(heldCards.length > 0);
   assert.equal(USAGE_CARDS.some(card => card.form === form), false);
   assert.equal(model.exercises.some(exercise => exercise.form === form), false);
@@ -68,7 +71,7 @@ test('the exact teaching hold blocks every old and newly supplied card while pre
     assert.ok(model.exercises.some(exercise => exercise.form === sibling), sibling);
     assert.ok(USAGE_CARDS.some(card => card.form === sibling), sibling);
   }
-  for (const sibling of ['temiruDesireNegativePast', 'temiruRequest', 'temiruTara']) {
+  for (const sibling of ['temiruDesire', 'temiruDesirePast', 'temiruRequest', 'temiruTara']) {
     assert.equal(isTeachingFormDeferred(sibling), false);
     assert.ok(model.exercises.some(exercise => exercise.form === sibling), sibling);
   }
@@ -90,9 +93,9 @@ test('whole forms remain constructible and recognizable for regular and irregula
   }
 });
 
-test('the current teaching projection pauses only the exclusive facet without weakening shared rules', () => {
-  assert.equal(model.components.filter(component => component.gating).length, 132);
-  assert.deepEqual(model.components.filter(component => component.teachingDeferred).map(component => component.id), [facetId]);
+test('the current teaching projection pauses exclusive held rules without weakening shared rules', () => {
+  assert.equal(model.components.filter(component => component.gating).length, 131);
+  assert.deepEqual(new Set(model.components.filter(component => component.teachingDeferred).map(component => component.id)), EXPECTED_DEFERRED_COMPONENT_IDS);
   const parent = model.components.find(component => component.id === 'apply.temiru.continuation');
   assert.deepEqual(parent.coverageKcIds, ['facet.apply.temiru.past', 'facet.apply.temiru.negative']);
   assert.equal(model.courseKcIds.temiru.includes(facetId), false);

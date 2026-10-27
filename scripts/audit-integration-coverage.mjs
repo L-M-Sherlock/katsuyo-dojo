@@ -256,9 +256,10 @@ async function currentTeachingProjection(root, runtime) {
     baselineCards: runtime.PRE_REVIEWED_USAGE_CARDS});
   const revisionProof = path.join(root, 'docs/usage-card-reviewed-revisions.v1.json');
   const holdModule = await import(pathToFileURL(path.join(root, 'app/lib/teaching-pair-deferrals.mjs')).href);
+  const formHoldModule = await import(pathToFileURL(path.join(root, 'app/lib/teaching-form-deferrals.mjs')).href);
   const reviewed = new Map(runtime.REVIEWED_USAGE_CARDS.map(card => [card.id, card]));
   const current = new Map(runtime.USAGE_CARDS.map(card => [card.id, card]));
-  const teachingHolds = (holdModule.TEACHING_PAIR_DEFERRALS ?? []).map(hold => {
+  const exactHolds = (holdModule.TEACHING_PAIR_DEFERRALS ?? []).map(hold => {
     const source = reviewed.get(hold.id);
     if (!source || cardHash(source) !== hold.sourceHash || current.has(hold.id)
         || pairKey(source) !== hold.pair || hold.basis !== 'user-directed-teaching-hold') {
@@ -266,8 +267,34 @@ async function currentTeachingProjection(root, runtime) {
     }
     return {...hold};
   });
+  const formChoices = new Map((formHoldModule.USER_DIRECTED_FORM_DEFERRALS ?? []).map(hold => [hold.form, hold]));
+  // Whole-form choices have their own portable source and policy binding. They
+  // extend this current projection without rewriting the frozen requirements,
+  // integration release objects, or any historical language approvals.
+  let formHoldProof = null;
+  const formVerifierFile = path.join(root, 'scripts/verify-four-form-hold.mjs');
+  if (fs.existsSync(formVerifierFile)) {
+    const formVerifier = await import(pathToFileURL(formVerifierFile).href);
+    if (typeof formVerifier.verifyFourFormHold !== 'function') fail('Whole-form teaching-hold verifier is unavailable');
+    const formSummary = formVerifier.verifyFourFormHold();
+    const formBaseline = path.join(root, 'docs/form-hold-baseline-20261027.json.gz');
+    formHoldProof = {path: formBaseline, fileHash: digest(fs.readFileSync(formBaseline)), ...formSummary};
+  } else if (formChoices.size > 1) fail('Whole-form teaching holds lack their portable verifier');
+  const formHolds = [...reviewed.values()].filter(source => formChoices.has(source.form)).map(source => {
+    const hold = formChoices.get(source.form);
+    if (current.has(source.id) || hold.basis !== 'user-directed-teaching-hold'
+        || !hold.reason || !hold.restoreCondition || !hold.requestedAt) {
+      fail(`Reviewed projection has a stale whole-form teaching hold: ${source.id}`);
+    }
+    return {...hold, id: source.id, pair: pairKey(source), senseId: source.senseId,
+      sourceHash: cardHash(source), holdKind: 'whole-form'};
+  });
+  // Two exact holds also belong to a later whole-form hold. Preserve the exact
+  // evidence row while counting each retained card once in the current union.
+  const teachingHolds = [...new Map([...formHolds, ...exactHolds].map(hold => [hold.id, hold])).values()];
   return {baselineCards: runtime.PRE_REVIEWED_USAGE_CARDS, current, teachingHolds,
-    report: {path: revisionProof, fileHash: digest(fs.readFileSync(revisionProof)), ...summary}};
+    report: {path: revisionProof, fileHash: digest(fs.readFileSync(revisionProof)), ...summary,
+      ...(formHoldProof ? {formHoldProof} : {})}};
 }
 
 function auditProof(file, cards, required, runtime, errors, naturalnessFile, naturalnessStatusFile, projection) {
@@ -325,7 +352,7 @@ function auditProof(file, cards, required, runtime, errors, naturalnessFile, nat
     const currentExpected = projection
       ? expected.filter(card => !heldIds.has(card.id)).map(card => projection.current.get(card.id))
       : expected.map(card => verifiedHistorical.get(card.id) ?? card);
-    if (currentExpected.some(card => !card)) fail('Reviewed projection removed an integration card without a verified exact teaching hold');
+    if (currentExpected.some(card => !card)) fail('Reviewed projection removed an integration card without a verified teaching hold');
     const currentById = new Map(currentExpected.map(card => [card.id, card]));
     const missing = currentExpected.filter(card => !actualById.has(card.id)).map(card => card.id);
     const extra = actual.filter(card => !currentById.has(card?.id)).map(card => card?.id ?? '(missing id)');

@@ -1,3 +1,4 @@
+import { EXPECTED_DEFERRED_COMPONENT_IDS } from './helpers/four-form-teaching-hold-scope.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createServer } from 'vite';
@@ -79,13 +80,13 @@ test('the real mixed learner no longer pads the final masu recovery with mastere
         : n === 2 ? { correct: false, revealed: true, failedKcId: focus.id } : n === 3 ? { correct: false } : { correct: true };
     } });
     assert.equal(report.completed, true);
-    assert.equal(report.masteredCount, 132);
+    assert.equal(report.masteredCount, 131);
     const historicalFacets = KNOWLEDGE.components.filter(component => component.id.startsWith('facet.'));
     const deferredFacets = historicalFacets.filter(component => component.teachingDeferred);
     assert.equal(historicalFacets.length, 128);
-    assert.deepEqual(deferredFacets.map(component => component.id), ['facet.apply.temiru.negativePast']);
-    assert.equal(report.facetCount, 127);
-    assert.equal(report.deferredFacetCount, 1);
+    assert.deepEqual(new Set(deferredFacets.map(component => component.id)),new Set([...EXPECTED_DEFERRED_COMPONENT_IDS].filter(id=>id.startsWith('facet.'))));
+    assert.equal(report.facetCount, 123);
+    assert.equal(report.deferredFacetCount, 5);
     assert.equal(report.facetCount + report.deferredFacetCount, historicalFacets.length);
     assert.equal(report.completedFacetCount, report.facetCount);
     for (const component of deferredFacets) assert.equal(report.byKc[component.id]?.attempts ?? 0, 0, 'paused coverage is not practiced or awarded');
